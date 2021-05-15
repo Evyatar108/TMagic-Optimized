@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using RimWorld;
 using AbilityUser;
@@ -46,9 +45,9 @@ namespace TorannMagic
             effVal = eff.level;
             verVal = ver.level;
 
-            if(!(comp.maxMP < .6f - (.07f * verVal)))
+            if (!(comp.maxMP < .6f - (.07f * verVal)))
             {
-                if(this.currentTarget.IsValid && this.currentTarget.CenterVector3.InBounds(base.CasterPawn.Map))
+                if (this.currentTarget.IsValid && this.currentTarget.CenterVector3.InBounds(base.CasterPawn.Map))
                 {
                     Building isBuilding = null;
                     TerrainDef terrain = null;
@@ -61,7 +60,7 @@ namespace TorannMagic
                         if (mineable != null)
                         {
                             Area spriteArea = TM_Calc.GetSpriteArea();
-                            if(spriteArea != null && spriteArea.ActiveCells != null && spriteArea.ActiveCells.Contains(this.currentTarget.Cell))
+                            if (spriteArea != null && spriteArea.ActiveCells != null && spriteArea.ActiveCells.Contains(this.currentTarget.Cell))
                             {
                                 comp.earthSpritesInArea = true;
                             }
@@ -91,7 +90,7 @@ namespace TorannMagic
                         comp.earthSpriteMap = this.CasterPawn.Map;
                         comp.nextEarthSpriteAction = Find.TickManager.TicksGame + 20000;
                     }
-                    else if(terrain != null && !terrain.defName.Contains("water") && !terrain.defName.Contains("Water"))
+                    else if (terrain != null && !terrain.defName.Contains("water") && !terrain.defName.Contains("Water"))
                     {
                         ShatterTerrain(this.currentTarget.Cell, terrain);
                     }
@@ -125,14 +124,11 @@ namespace TorannMagic
 
         public void ShatterTerrain(IntVec3 center, TerrainDef terrainDef)
         {
-            List<IntVec3> cellList = GenRadial.RadialCellsAround(center, 2f, true).ToList();
-            Building bldg = null;
-            TerrainDef terrain = null;
-            for (int i = 0; i < cellList.Count; i++)
+            IEnumerable<IntVec3> cellList = GenRadial.RadialCellsAround(center, 2f, true);
+            foreach (var cell in cellList)
             {
-                IntVec3 cell = cellList[i];                
-                bldg = cell.GetFirstBuilding(this.CasterPawn.Map);
-                terrain = cell.GetTerrain(this.CasterPawn.Map);
+                Building bldg = cell.GetFirstBuilding(this.CasterPawn.Map);
+                TerrainDef terrain = cell.GetTerrain(this.CasterPawn.Map);
                 if (cell.InBounds(this.CasterPawn.Map) && bldg == null && terrain == terrainDef)
                 {
                     this.CasterPawn.Map.terrainGrid.SetTerrain(cell, TerrainDef.Named("Gravel"));
@@ -141,7 +137,6 @@ namespace TorannMagic
                     TM_MoteMaker.ThrowGenericMote(ThingDef.Named("Mote_Rubble"), cell.ToVector3Shifted(), this.CasterPawn.Map, Rand.Range(.3f, .6f), .2f, .02f, .05f, Rand.Range(-100, 100), Rand.Range(2f, 4f), (Quaternion.AngleAxis(90, Vector3.up) * moteDirection).ToAngleFlat(), 0);
                     TM_MoteMaker.ThrowGenericMote(ThingDefOf.Mote_Smoke, cell.ToVector3Shifted(), this.CasterPawn.Map, Rand.Range(.9f, 1.2f), .3f, .02f, Rand.Range(.25f, .4f), Rand.Range(-100, 100), Rand.Range(2f, 4f), (Quaternion.AngleAxis(90, Vector3.up) * moteDirection).ToAngleFlat(), 0);
                 }
-                bldg = null;
             }
             TM_MoteMaker.ThrowGenericMote(TorannMagicDefOf.Mote_EarthCrack, center.ToVector3Shifted(), this.CasterPawn.Map, Rand.Range(2f, 2.3f), .2f, .25f, 1.5f, 0, 0f, 0f, Rand.Range(0, 360));
             TM_MoteMaker.ThrowGenericMote(TorannMagicDefOf.Mote_EarthCrack, center.ToVector3Shifted(), this.CasterPawn.Map, Rand.Range(3f, 3.5f), .2f, .25f, 1.7f, 0, 0f, 0f, Rand.Range(0, 360));

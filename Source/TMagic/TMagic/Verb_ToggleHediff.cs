@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using RimWorld;
+﻿using RimWorld;
 using AbilityUser;
 using Verse;
-using UnityEngine;
 
 
 namespace TorannMagic
@@ -14,7 +10,6 @@ namespace TorannMagic
         protected override bool TryCastShot()
         {
             Pawn caster = base.CasterPawn;
-            Pawn pawn = this.currentTarget.Thing as Pawn;
 
             bool flag = caster != null && !caster.Dead;
             if (flag)
@@ -39,10 +34,10 @@ namespace TorannMagic
                     }
 
                     CompAbilityUserMagic magicComp = caster.TryGetComp<CompAbilityUserMagic>();
-                    if(magicComp != null && magicComp.MagicData != null)
+                    if (magicComp != null && magicComp.MagicData != null)
                     {
                         MagicPower mp = magicComp.MagicData.ReturnMatchingMagicPower(ability);
-                        if(mp != null)
+                        if (mp != null)
                         {
                             mp.autocast = caster.health.hediffSet.HasHediff(hdDef);
                         }
@@ -62,7 +57,7 @@ namespace TorannMagic
                 {
                     Log.Warning("Unrecognized ability or no hediff assigned for this ability.");
                 }
-                
+
             }
             return true;
         }

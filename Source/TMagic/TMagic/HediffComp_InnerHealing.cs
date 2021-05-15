@@ -51,20 +51,20 @@ namespace TorannMagic
                     this.Initialize();
                 }
             }
-            if(Find.TickManager.TicksGame % 900 == 0)
+            if (Find.TickManager.TicksGame % 900 == 0)
             {
                 TickAction();
             }
-            if(comp != null)
+            if (comp != null)
             {
                 if (Find.TickManager.TicksGame % 1200 == 0)
                 {
-                    if(comp.MightData.MightPowerSkill_FieldTraining.FirstOrDefault((MightPowerSkill x) => x.label == "TM_FieldTraining_ver").level >= 4)
+                    if (comp.MightData.MightPowerSkill_FieldTraining.FirstOrDefault((MightPowerSkill x) => x.label == "TM_FieldTraining_ver").level >= 4)
                     {
                         TickAction();
                     }
                 }
-                if(Find.TickManager.TicksGame % 2000 ==0)
+                if (Find.TickManager.TicksGame % 2000 == 0)
                 {
                     if (comp.MightData.MightPowerSkill_FieldTraining.FirstOrDefault((MightPowerSkill x) => x.label == "TM_FieldTraining_ver").level >= 11)
                     {
@@ -95,7 +95,7 @@ namespace TorannMagic
                         IEnumerable<Hediff_Injury> arg_BB_0 = pawn.health.hediffSet.GetHediffs<Hediff_Injury>();
                         Func<Hediff_Injury, bool> arg_BB_1;
 
-                        arg_BB_1 = ((Hediff_Injury injury) => injury.Part == rec);
+                        arg_BB_1 = (Hediff_Injury injury) => injury.Part == rec;
 
                         foreach (Hediff_Injury current in arg_BB_0.Where(arg_BB_1))
                         {
@@ -132,7 +132,7 @@ namespace TorannMagic
                         IEnumerable<Hediff_Injury> arg_BB_0 = pawn.health.hediffSet.GetHediffs<Hediff_Injury>();
                         Func<Hediff_Injury, bool> arg_BB_1;
 
-                        arg_BB_1 = ((Hediff_Injury injury) => injury.Part == rec);
+                        arg_BB_1 = (Hediff_Injury injury) => injury.Part == rec;
 
                         foreach (Hediff_Injury current in arg_BB_0.Where(arg_BB_1))
                         {

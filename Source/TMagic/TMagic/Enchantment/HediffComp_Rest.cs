@@ -1,9 +1,4 @@
-﻿using Verse;
-using RimWorld;
-using System.Linq;
-using UnityEngine;
-using System;
-using System.Collections.Generic;
+﻿using RimWorld;
 
 namespace TorannMagic.Enchantment
 {
@@ -11,13 +6,13 @@ namespace TorannMagic.Enchantment
     {
 
         public override void CompExposeData()
-        {            
+        {
             base.CompExposeData();
         }
 
         public override void PostInitialize()
         {
-            this.hediffActionRate = 1800;            
+            this.hediffActionRate = 1800;
         }
 
         public override void HediffActionTick()
@@ -25,7 +20,7 @@ namespace TorannMagic.Enchantment
             Need rest = this.Pawn.needs.rest;
             if (rest != null)
             {
-                rest.CurLevel += .0065f;               
+                rest.CurLevel += .0065f;
             }
         }
 

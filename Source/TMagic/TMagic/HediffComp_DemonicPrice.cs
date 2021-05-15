@@ -1,6 +1,4 @@
 ﻿using RimWorld;
-using System.Collections.Generic;
-using System.Linq;
 using Verse;
 using UnityEngine;
 
@@ -25,16 +23,6 @@ namespace TorannMagic
             }
         }
 
-
-        private void Initialize()
-        {
-            bool spawned = base.Pawn.Spawned;
-            if (spawned)
-            {
-                
-            }
-        }
-
         public override void CompPostTick(ref float severityAdjustment)
         {
             base.CompPostTick(ref severityAdjustment);
@@ -46,8 +34,8 @@ namespace TorannMagic
                     if (Find.TickManager.TicksGame % 4 == 0)
                     {
                         TM_MoteMaker.ThrowGenericMote(TorannMagicDefOf.Mote_ArcaneFlame, this.Pawn.DrawPos, this.Pawn.Map, Rand.Range(.2f, .3f), .1f, .05f, .2f, 0, Rand.Range(1.5f, 2f), Rand.Range(-60, 60), 0);
-                    }    
-                    if(Find.TickManager.TicksGame % 60 == 0)
+                    }
+                    if (Find.TickManager.TicksGame % 60 == 0)
                     {
                         DamageEntities(this.Pawn, Rand.Range(4, 8), DamageDefOf.Flame);
                     }

@@ -1,5 +1,4 @@
 ﻿using RimWorld;
-using System;
 using UnityEngine;
 using Verse;
 
@@ -38,7 +37,7 @@ namespace TorannMagic
         {
             get
             {
-                
+
                 bool flag = base.SelPawn.story != null && base.SelPawn.IsColonist;
                 if (flag)
                 {
@@ -94,13 +93,13 @@ namespace TorannMagic
                 }
 
                 return false;
-                
+
             }
         }
 
         public ITab_Pawn_Might()
         {
-            this.size = MightCardUtility.MightCardSize + new Vector2(17f, 17f) * 2f;
+            this.size = MightCardUtility.MightCardSize + (new Vector2(17f, 17f) * 2f);
             this.labelKey = "TM_TabMight";
         }
 

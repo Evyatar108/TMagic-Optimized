@@ -5,7 +5,6 @@ using UnityEngine;
 using RimWorld;
 using System.Collections.Generic;
 using System;
-using System.Linq;
 
 namespace TorannMagic
 {
@@ -18,14 +17,14 @@ namespace TorannMagic
         public override void Tick()
         {
             base.Tick();
-            if(Find.TickManager.TicksGame % 2 == 0 && daggerCount > 0 && this.launcher != null && this.launcher is Pawn)
+            if (Find.TickManager.TicksGame % 2 == 0 && daggerCount > 0 && this.launcher != null && this.launcher is Pawn)
             {
                 Pawn caster = this.launcher as Pawn;
                 CompAbilityUserMight comp = caster.TryGetComp<CompAbilityUserMight>();
-                if(comp != null)
+                if (comp != null)
                 {
                     ModOptions.SettingsRef settingsRef = new ModOptions.SettingsRef();
-                    if((comp.MightData.MightPowerSkill_FieldTraining.FirstOrDefault((MightPowerSkill x) => x.label == "TM_FieldTraining_pwr").level >= 12) || (!caster.IsColonist && settingsRef.AIHardMode))
+                    if ((comp.MightData.MightPowerSkill_FieldTraining.FirstOrDefault((MightPowerSkill x) => x.label == "TM_FieldTraining_pwr").level >= 12) || (!caster.IsColonist && settingsRef.AIHardMode))
                     {
                         Projectile_Spinning newProjectile = (Projectile_Spinning)ThingMaker.MakeThing(this.def, null);
                         newProjectile.daggerCount = 0;
@@ -72,11 +71,11 @@ namespace TorannMagic
                             {
                                 HealthUtility.AdjustSeverity(victim, TorannMagicDefOf.TM_Poisoned_HD, Rand.Range(2, 4));
                             }
-                        }                        
+                        }
                     }
                 }
             }
-            catch (NullReferenceException ex)
+            catch (NullReferenceException)
             {
                 //
             }
@@ -85,12 +84,12 @@ namespace TorannMagic
         public override void Draw()
         {
             this.rotationOffset += Rand.Range(20, 36);
-            if(this.rotationOffset > 360)
+            if (this.rotationOffset > 360)
             {
                 this.rotationOffset = 0;
             }
             Mesh mesh = MeshPool.GridPlane(this.def.graphicData.drawSize);
-            Graphics.DrawMesh(mesh, DrawPos, (Quaternion.AngleAxis(rotationOffset, Vector3.up) * ExactRotation), def.DrawMatSingle, 0);
+            Graphics.DrawMesh(mesh, DrawPos, Quaternion.AngleAxis(rotationOffset, Vector3.up) * ExactRotation, def.DrawMatSingle, 0);
             Comps_PostDraw();
         }
 
@@ -122,7 +121,7 @@ namespace TorannMagic
             }
         }
 
-    }    
+    }
 }
 
 

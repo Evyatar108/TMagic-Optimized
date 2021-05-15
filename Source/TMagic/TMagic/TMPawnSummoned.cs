@@ -155,7 +155,6 @@ namespace TorannMagic
                         }
                         else
                         {
-                            LocalTargetInfo localTargetInfo = this;
                             bool spawned2 = base.Spawned;
                             if (spawned2)
                             {
@@ -165,12 +164,12 @@ namespace TorannMagic
                             bool flag5 = mote != null;
                             if (flag5)
                             {
-                                float value = 1f - (float)(this.TicksToDestroy - this.ticksLeft) / (float)this.TicksToDestroy;
+                                float value = 1f - ((float)(this.TicksToDestroy - this.ticksLeft) / (float)this.TicksToDestroy);
                                 mote.progress = Mathf.Clamp01(value);
                                 mote.offsetZ = -0.5f;
                             }
                         }
-                        if(Find.TickManager.TicksGame % 120 == 0)
+                        if (Find.TickManager.TicksGame % 120 == 0)
                         {
                             CheckAndTrain();
                         }
@@ -187,7 +186,7 @@ namespace TorannMagic
                 {
                     if (base.Map != null)
                     {
-                        MoteMaker.ThrowSmoke(this.Position.ToVector3(), base.Map, 3); 
+                        MoteMaker.ThrowSmoke(this.Position.ToVector3(), base.Map, 3);
                     }
                     else
                     {
@@ -196,7 +195,7 @@ namespace TorannMagic
                     if (CompSummoner != null)
                     {
                         CompSummoner.summonedMinions.Remove(this);
-                    }                    
+                    }
                 }
                 catch
                 {
@@ -205,11 +204,11 @@ namespace TorannMagic
                     ));
                 }
             }
-            if(this.def == TorannMagicDefOf.TM_SpiritWolfR)
+            if (this.def == TorannMagicDefOf.TM_SpiritWolfR)
             {
                 try
                 {
-                    if(base.Map != null)
+                    if (base.Map != null)
                     {
                         MoteMaker.ThrowSmoke(this.DrawPos, base.Map, Rand.Range(1f, 3f));
                         MoteMaker.ThrowSmoke(this.DrawPos, base.Map, Rand.Range(1f, 2f));
@@ -218,7 +217,7 @@ namespace TorannMagic
                     else
                     {
                         this.holdingOwner.Remove(this);
-                    }                
+                    }
                 }
                 catch
                 {
@@ -227,7 +226,7 @@ namespace TorannMagic
                     ));
                 }
             }
-            if(this.original != null)
+            if (this.original != null)
             {
                 //Log.Message("pre destroy");
                 CopyDamage(this);
@@ -237,7 +236,7 @@ namespace TorannMagic
         }
 
         public override void DeSpawn(DestroyMode mode = DestroyMode.Vanish)
-        {            
+        {
             bool flag = this.effecter != null;
             if (flag)
             {
@@ -277,7 +276,7 @@ namespace TorannMagic
                     BodyPartRecord rec = enumerator.Current;
                     IEnumerable<Hediff_Injury> arg_BB_0 = pawn.health.hediffSet.GetHediffs<Hediff_Injury>();
                     Func<Hediff_Injury, bool> arg_BB_1;
-                    arg_BB_1 = ((Hediff_Injury injury) => injury.Part == rec);
+                    arg_BB_1 = (Hediff_Injury injury) => injury.Part == rec;
 
                     foreach (Hediff_Injury current in arg_BB_0.Where(arg_BB_1))
                     {
@@ -287,8 +286,8 @@ namespace TorannMagic
                             this.injuries.Add(current);
                             //this.bodypartDamage.Add(current.Severity);
                             //this.bodypartDamageType.Add(current.)
-                        }                            
-                    }                    
+                        }
+                    }
                 }
             }
         }
@@ -300,10 +299,10 @@ namespace TorannMagic
 
         public void ApplyDamage(Pawn pawn)
         {
-            List<BodyPartRecord> bodyparts = pawn.health.hediffSet.GetNotMissingParts().ToList();
-            for(int i =0; i < this.injuries.Count; i++)
+            IEnumerable<BodyPartRecord> bodyParts = pawn.health.hediffSet.GetNotMissingParts().ToList();
+            for (int i = 0; i < this.injuries.Count; i++)
             {
-                pawn.health.AddHediff(this.injuries[i], bodyparts.RandomElement());
+                pawn.health.AddHediff(this.injuries[i], bodyParts.RandomElement());
             }
         }
 

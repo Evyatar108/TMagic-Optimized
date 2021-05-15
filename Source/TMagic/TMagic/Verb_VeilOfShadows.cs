@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using RimWorld;
-using AbilityUser;
+﻿using AbilityUser;
 using Verse;
 using UnityEngine;
 
@@ -28,14 +24,14 @@ namespace TorannMagic
                 HealthUtility.AdjustSeverity(caster, TorannMagicDefOf.TM_ShadowCloakHD, .2f + (comp.mightPwr * verVal));
 
                 HediffComp_Disappears hdComp = caster.health.hediffSet.GetFirstHediffOfDef(TorannMagicDefOf.TM_ShadowCloakHD).TryGetComp<HediffComp_Disappears>();
-                if(hdComp != null)
+                if (hdComp != null)
                 {
                     hdComp.ticksToDisappear = 600 + (60 * pwrVal);
                 }
 
                 ThingDef fog = TorannMagicDefOf.Fog_Shadows;
                 fog.gas.expireSeconds.min = 10 + pwrVal;
-                fog.gas.expireSeconds.max = 11  + pwrVal;
+                fog.gas.expireSeconds.max = 11 + pwrVal;
                 GenExplosion.DoExplosion(caster.Position, caster.Map, 3f + (.3f * verVal), TMDamageDefOf.DamageDefOf.TM_Toxin, caster, 0, 0, TMDamageDefOf.DamageDefOf.TM_Toxin.soundExplosion, null, null, null, fog, 1f, 1, false, null, 0f, 0, 0.0f, false);
 
                 for (int i = 0; i < 6; i++)

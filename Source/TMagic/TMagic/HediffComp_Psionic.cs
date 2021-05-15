@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using Verse;
 using Verse.AI;
 using Verse.Sound;
@@ -21,7 +19,7 @@ namespace TorannMagic
         private bool doPsionicAttack = false;
         private int ticksTillPsionicStrike = 0;
         private int nextPsionicAttack = 0;
-        Pawn threat =  null;
+        Pawn threat = null;
         CompAbilityUserMight comp;
 
         public int PwrVal
@@ -80,7 +78,7 @@ namespace TorannMagic
         {
             this.parent.Severity = 90f;
             MoteMaker.ThrowLightningGlow(base.Pawn.TrueCenter(), base.Pawn.Map, 1f);
-            DeterminePsionicHD();            
+            DeterminePsionicHD();
         }
 
         private void DeterminePsionicHD()
@@ -108,7 +106,7 @@ namespace TorannMagic
                 if (Find.TickManager.TicksGame % 60 == 0 && initialized)
                 {
                     DeterminePsionicHD();
-                    severityAdjustment += (this.Pawn.GetStatValue(StatDefOf.PsychicSensitivity, false) * Rand.Range(.04f, .12f));
+                    severityAdjustment += this.Pawn.GetStatValue(StatDefOf.PsychicSensitivity, false) * Rand.Range(.04f, .12f);
                     if (Find.Selector.FirstSelectedObject == this.Pawn)
                     {
                         HediffStage hediffStage = this.Pawn.health.hediffSet.GetFirstHediffOfDef(HediffDef.Named("TM_PsionicHD"), false).CurStage;
@@ -119,14 +117,14 @@ namespace TorannMagic
                     float maxSev = 100;
                     if (hediff != null)
                     {
-                        maxSev += hediff.Severity; 
+                        maxSev += hediff.Severity;
                     }
                     this.parent.Severity = Mathf.Clamp(this.parent.Severity, 0, maxSev);
 
                 }
 
                 if (base.Pawn.Spawned && !this.Pawn.Downed && base.Pawn.Map != null && comp != null)
-                {                    
+                {
                     if (this.doPsionicAttack)
                     {
                         this.ticksTillPsionicStrike--;
@@ -136,11 +134,11 @@ namespace TorannMagic
                             if (threat != null && !threat.Destroyed && !threat.Dead && !threat.Downed)
                             {
                                 TM_MoteMaker.MakePowerBeamMotePsionic(threat.DrawPos.ToIntVec3(), threat.Map, 2f, 2f, .7f, .1f, .6f);
-                                DamageInfo dinfo2 = new DamageInfo(TMDamageDefOf.DamageDefOf.TM_PsionicInjury, Rand.Range(6, 12) * this.Pawn.GetStatValue(StatDefOf.PsychicSensitivity, false) + (2 * VerVal), 0, -1, this.Pawn, null, null, DamageInfo.SourceCategory.ThingOrUnknown, this.threat);
+                                DamageInfo dinfo2 = new DamageInfo(TMDamageDefOf.DamageDefOf.TM_PsionicInjury, (Rand.Range(6, 12) * this.Pawn.GetStatValue(StatDefOf.PsychicSensitivity, false)) + (2 * VerVal), 0, -1, this.Pawn, null, null, DamageInfo.SourceCategory.ThingOrUnknown, this.threat);
                                 this.threat.TakeDamage(dinfo2);
                             }
                         }
-                    }                    
+                    }
 
                     if (comp.usePsionicAugmentationToggle && this.Pawn.drafter != null && this.Pawn.CurJob != null)
                     {
@@ -153,19 +151,19 @@ namespace TorannMagic
                                     this.parent.Severity -= 10f;
                                     if (this.EffVal == 0)
                                     {
-                                        HealthUtility.AdjustSeverity(this.Pawn, HediffDef.Named("TM_PsionicSpeedHD"), 1f + .02f * this.EffVal);
+                                        HealthUtility.AdjustSeverity(this.Pawn, HediffDef.Named("TM_PsionicSpeedHD"), 1f + (.02f * this.EffVal));
                                     }
                                     else if (this.EffVal == 1)
                                     {
-                                        HealthUtility.AdjustSeverity(this.Pawn, HediffDef.Named("TM_PsionicSpeedHD_I"), 1f + .02f * this.EffVal);
+                                        HealthUtility.AdjustSeverity(this.Pawn, HediffDef.Named("TM_PsionicSpeedHD_I"), 1f + (.02f * this.EffVal));
                                     }
                                     else if (this.EffVal == 2)
                                     {
-                                        HealthUtility.AdjustSeverity(this.Pawn, HediffDef.Named("TM_PsionicSpeedHD_II"), 1f + .02f * this.EffVal);
+                                        HealthUtility.AdjustSeverity(this.Pawn, HediffDef.Named("TM_PsionicSpeedHD_II"), 1f + (.02f * this.EffVal));
                                     }
                                     else
                                     {
-                                        HealthUtility.AdjustSeverity(this.Pawn, HediffDef.Named("TM_PsionicSpeedHD_III"), 1f + .02f * this.EffVal);
+                                        HealthUtility.AdjustSeverity(this.Pawn, HediffDef.Named("TM_PsionicSpeedHD_III"), 1f + (.02f * this.EffVal));
                                     }
                                     for (int i = 0; i < 12; i++)
                                     {
@@ -179,19 +177,19 @@ namespace TorannMagic
                                     this.parent.Severity -= 12f;
                                     if (this.PwrVal == 0)
                                     {
-                                        HealthUtility.AdjustSeverity(this.Pawn, HediffDef.Named("TM_PsionicManipulationHD"), 1f + .02f * this.PwrVal);
+                                        HealthUtility.AdjustSeverity(this.Pawn, HediffDef.Named("TM_PsionicManipulationHD"), 1f + (.02f * this.PwrVal));
                                     }
                                     else if (this.PwrVal == 1)
                                     {
-                                        HealthUtility.AdjustSeverity(this.Pawn, HediffDef.Named("TM_PsionicManipulationHD_I"), 1f + .02f * this.PwrVal);
+                                        HealthUtility.AdjustSeverity(this.Pawn, HediffDef.Named("TM_PsionicManipulationHD_I"), 1f + (.02f * this.PwrVal));
                                     }
                                     else if (this.PwrVal == 2)
                                     {
-                                        HealthUtility.AdjustSeverity(this.Pawn, HediffDef.Named("TM_PsionicManipulationHD_II"), 1f + .02f * this.PwrVal);
+                                        HealthUtility.AdjustSeverity(this.Pawn, HediffDef.Named("TM_PsionicManipulationHD_II"), 1f + (.02f * this.PwrVal));
                                     }
                                     else
                                     {
-                                        HealthUtility.AdjustSeverity(this.Pawn, HediffDef.Named("TM_PsionicManipulationHD_III"), 1f + .02f * this.PwrVal);
+                                        HealthUtility.AdjustSeverity(this.Pawn, HediffDef.Named("TM_PsionicManipulationHD_III"), 1f + (.02f * this.PwrVal));
                                     }
                                     for (int i = 0; i < 12; i++)
                                     {
@@ -199,7 +197,7 @@ namespace TorannMagic
                                         TM_MoteMaker.ThrowGenericMote(ThingDef.Named("Mote_Psi"), this.Pawn.DrawPos, this.Pawn.Map, Rand.Range(.1f, .4f), 0.2f, .02f, .1f, 0, Rand.Range(8, 10), direction, direction);
                                     }
                                     comp.MightUserXP += Rand.Range(10, 15);
-                                }                                
+                                }
                             }
                         }
 
@@ -267,7 +265,7 @@ namespace TorannMagic
                                         {
                                             weaponModifier = .4f;
                                         }
-                                        this.nextPsionicAttack = Find.TickManager.TicksGame + (int)(Mathf.Clamp((600 - (60 * verVal)) * weaponModifier, 120, 900));
+                                        this.nextPsionicAttack = Find.TickManager.TicksGame + (int)Mathf.Clamp((600 - (60 * verVal)) * weaponModifier, 120, 900);
                                         float energyCost = Mathf.Clamp((10f - VerVal) * weaponModifier, 2f, 12f);
                                         HealthUtility.AdjustSeverity(this.Pawn, HediffDef.Named("TM_PsionicHD"), -energyCost);
                                         comp.MightUserXP += Rand.Range(8, 12);
@@ -280,15 +278,6 @@ namespace TorannMagic
                     }
                 }
             }
-        }
-
-        private float GetAngleFromTo(Vector3 from, Vector3 to)
-        {
-            Vector3 heading = (to - from);
-            float distance = heading.magnitude;
-            Vector3 direction = heading / distance;
-            float directionAngle = (Quaternion.AngleAxis(90, Vector3.up) * direction).ToAngleFlat();
-            return directionAngle;
         }
 
         public override bool CompShouldRemove

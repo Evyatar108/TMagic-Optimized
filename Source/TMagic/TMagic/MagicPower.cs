@@ -4,7 +4,7 @@ using System.Linq;
 using UnityEngine;
 using Verse;
 
-namespace TorannMagic 
+namespace TorannMagic
 {
     public class MagicPower : IExposable
     {
@@ -21,7 +21,7 @@ namespace TorannMagic
         public bool requiresScroll = false;
         public int maxLevel = 3;
         public int costToLevel = 1;
-        
+
         public bool AutoCast
         {
             get
@@ -48,7 +48,7 @@ namespace TorannMagic
         {
             get
             {
-                return this.abilityDef;                
+                return this.abilityDef;
             }
         }
 
@@ -56,7 +56,7 @@ namespace TorannMagic
         {
             get
             {
-                return this.nextLevelAbilityDef;                
+                return this.nextLevelAbilityDef;
             }
         }
 
@@ -65,7 +65,7 @@ namespace TorannMagic
             get
             {
                 SetMaxLevel();
-                return this.TMabilityDefs[level];                
+                return this.TMabilityDefs[level];
             }
         }
 
@@ -81,7 +81,7 @@ namespace TorannMagic
                 else
                 {
                     return this.TMabilityDefs[level + 1];
-                }               
+                }
             }
         }
 
@@ -102,7 +102,7 @@ namespace TorannMagic
             catch
             {
                 return this.TMabilityDefs[0];
-            }            
+            }
         }
 
         public AbilityDef HasAbilityDef(AbilityDef defToFind)
@@ -139,7 +139,7 @@ namespace TorannMagic
                 this.learnCost = 1;
             }
 
-            if(this.abilityDef.defName == "TM_Fireball" || this.abilityDef.defName == "TM_LightningStorm" || this.abilityDef.defName == "TM_SummonElemental" || this.abilityDef == TorannMagicDefOf.TM_DeathBolt ||
+            if (this.abilityDef.defName == "TM_Fireball" || this.abilityDef.defName == "TM_LightningStorm" || this.abilityDef.defName == "TM_SummonElemental" || this.abilityDef == TorannMagicDefOf.TM_DeathBolt ||
                 this.abilityDef == TorannMagicDefOf.TM_Sunfire || this.abilityDef == TorannMagicDefOf.TM_Refraction || this.abilityDef == TorannMagicDefOf.TM_ChainLightning)
             {
                 this.learnCost = 3;

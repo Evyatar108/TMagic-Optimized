@@ -11,7 +11,7 @@ using System.Text;
 namespace TorannMagic
 {
     [StaticConstructorOnStartup]
-    public class Verb_LightSkipGlobal : Verb_UseAbility  
+    public class Verb_LightSkipGlobal : Verb_UseAbility
     {
         int pwrVal = 0;
         float arcaneDmg = 1;
@@ -21,7 +21,6 @@ namespace TorannMagic
         List<Pawn> pawnList = new List<Pawn>();
         List<IntVec3> unroofedCells = new List<IntVec3>();
         List<CompTransporter> podTList = new List<CompTransporter>();
-        IntVec3 safePos = default(IntVec3);
         private int gi = 0;
         private int MaxLaunchDistance = 300;
 
@@ -31,7 +30,7 @@ namespace TorannMagic
 
         private static readonly Texture2D TargeterMouseAttachment = ContentFinder<Texture2D>.Get("Other/PortalBldg", true);
         bool validTarg;
-        CompLaunchable cl = null;
+
         //Used specifically for non-unique verbs that ignore LOS (can be used with shield belt), Light Skip requires unroofed destination
 
         public override bool CanHitTargetFrom(IntVec3 root, LocalTargetInfo targ)
@@ -75,9 +74,9 @@ namespace TorannMagic
                 pods.Clear();
 
                 List<Pawn> tmpList = TM_Calc.FindAllPawnsAround(this.CasterPawn.Map, launcherPosition, 5f, this.pawn.Faction, true);
-                for(int i = 0; i < tmpList.Count; i++)
+                for (int i = 0; i < tmpList.Count; i++)
                 {
-                    if(!tmpList[i].Position.Roofed(map))
+                    if (!tmpList[i].Position.Roofed(map))
                     {
                         if (ModCheck.Validate.GiddyUp.Core_IsInitialized())
                         {
@@ -89,7 +88,7 @@ namespace TorannMagic
                         pawnList.Add(tmpList[i]);
                     }
                 }
-                StartChoosingDestination();         
+                StartChoosingDestination();
             }
             else
             {
@@ -118,7 +117,7 @@ namespace TorannMagic
                     GenSpawn.Spawn(pod, p.Position, p.Map, WipeMode.Vanish);
                     podT.groupID = 12;
                     p.DeSpawn();
-                    if(mount != null)
+                    if (mount != null)
                     {
                         mount.DeSpawn();
                         podT.innerContainer.TryAddOrTransfer(mount);
@@ -156,15 +155,15 @@ namespace TorannMagic
             if (!map.mapPawns.AnyColonistSpawned && !map.IsPlayerHome)
             {
                 StringBuilder stringBuilder = new StringBuilder();
-                stringBuilder.Append("TM_AbandoningMap".Translate(map.Parent.LabelCap));                    
+                stringBuilder.Append("TM_AbandoningMap".Translate(map.Parent.LabelCap));
                 Find.WindowStack.Add(Dialog_MessageBox.CreateConfirmation(stringBuilder.ToString(), delegate
-                {         
+                {
                     Settlement sm = map.Parent as Settlement;
                     WorldTransport.TM_DelayedDestroyMap ddm = new WorldTransport.TM_DelayedDestroyMap();
                     ddm.parent = sm;
                     ddm.delayTicks = 120;
                     sm.AllComps.Add(ddm);
-                }));                               
+                }));
             }
         }
 
@@ -198,7 +197,7 @@ namespace TorannMagic
             CameraJumper.TryJump(CameraJumper.GetWorldTarget(CasterPawn.Map.Parent));
             Find.WorldSelector.ClearSelection();
             int tile = CasterPawn.Map.Tile;
-            Find.WorldTargeter.BeginTargeting(new Func<GlobalTargetInfo, bool>(this.ChooseWorldTarget), true, Verb_LightSkipGlobal.TargeterMouseAttachment, true, delegate
+            Find.WorldTargeter.BeginTargeting_NewTemp(new Func<GlobalTargetInfo, bool>(this.ChooseWorldTarget), true, Verb_LightSkipGlobal.TargeterMouseAttachment, true, delegate
             {
                 GenDraw.DrawWorldRadiusRing(tile, 300);
             }, delegate (GlobalTargetInfo target)
@@ -248,8 +247,8 @@ namespace TorannMagic
                 Messages.Message("TM_UnableToTravel".Translate(), MessageTypeDefOf.RejectInput, historical: false);
                 return false;
             }
-            IEnumerable<FloatMenuOption> transportPodsFloatMenuOptionsAt = GetTransportPodsFloatMenuOptionsAt(target.Tile, target);
-            if (!transportPodsFloatMenuOptionsAt.Any())
+            IList<FloatMenuOption> transportPodsFloatMenuOptionsAt = GetTransportPodsFloatMenuOptionsAt(target.Tile, target).ToList();
+            if (transportPodsFloatMenuOptionsAt.Count == 0)
             {
                 if (Find.World.Impassable(target.Tile))
                 {
@@ -260,11 +259,11 @@ namespace TorannMagic
                 return true;
             }
 
-            if (transportPodsFloatMenuOptionsAt.Count() == 1)
+            if (transportPodsFloatMenuOptionsAt.Count == 1)
             {
-                if (!transportPodsFloatMenuOptionsAt.First().Disabled)
+                if (!transportPodsFloatMenuOptionsAt[0].Disabled)
                 {
-                    transportPodsFloatMenuOptionsAt.First().action();
+                    transportPodsFloatMenuOptionsAt[0].action();
                 }
                 return false;
             }
@@ -274,12 +273,11 @@ namespace TorannMagic
 
         public IEnumerable<FloatMenuOption> GetTransportPodsFloatMenuOptionsAt(int tile, GlobalTargetInfo target)
         {
-            bool anything = false;
             MapParent mapParent = target.WorldObject as MapParent;
             if (mapParent != null && mapParent.HasMap)
             {
                 yield return new FloatMenuOption("TM_SelectTargetOnMap".Translate(mapParent.LabelCap), delegate
-                {                  
+                {
                     Map map = mapParent.Map;
                     Current.Game.CurrentMap = map;
                     CameraJumper.TryHideWorld();

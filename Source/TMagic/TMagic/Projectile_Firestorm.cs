@@ -6,8 +6,8 @@ using System.Linq;
 
 namespace TorannMagic
 {
-	public class Projectile_Firestorm : Projectile_AbilityBase
-	{
+    public class Projectile_Firestorm : Projectile_AbilityBase
+    {
         private int age = 0;
         private int duration = 420;
         private int lastStrikeTiny = 0;
@@ -41,7 +41,7 @@ namespace TorannMagic
 
         public void Initialize(Map map)
         {
-            
+
             pawn = this.launcher as Pawn;
             CompAbilityUserMagic comp = pawn.GetComp<CompAbilityUserMagic>();
             pwr = pawn.GetComp<CompAbilityUserMagic>().MagicData.MagicPowerSkill_Firestorm.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_Firestorm_pwr");
@@ -55,7 +55,7 @@ namespace TorannMagic
                 verVal = 1;
             }
             duration = (int)((duration + (60 * verVal)) * comp.arcaneDmg);
-            cellRect = CellRect.CenteredOn(base.Position, (int)(base.def.projectile.explosionRadius + .5*(pwrVal + verVal)));
+            cellRect = CellRect.CenteredOn(base.Position, (int)(base.def.projectile.explosionRadius + (.5 * (pwrVal + verVal))));
             cellRect.ClipInsideMap(map);
             initialized = true;
         }
@@ -72,7 +72,7 @@ namespace TorannMagic
             }
 
             impactPos = cellRect.RandomCell;
-            if (this.age > lastStrikeLarge + Rand.Range((200/(1+pwrVal))+20, (duration/(1+pwrVal))+40) && impactPos.Standable(map) && impactPos.InBounds(map))
+            if (this.age > lastStrikeLarge + Rand.Range((200 / (1 + pwrVal)) + 20, (duration / (1 + pwrVal)) + 40) && impactPos.Standable(map) && impactPos.InBounds(map))
             {
                 this.lastStrikeLarge = this.age;
                 SkyfallerMaker.SpawnSkyfaller(TorannMagicDefOf.TM_Firestorm_Large, impactPos, map);
@@ -82,16 +82,16 @@ namespace TorannMagic
                     this.shrapnelPos[heavyCount] = cellRectSec.RandomCell;
                     this.ticksTillHeavy[heavyCount] = TorannMagicDefOf.TM_Firestorm_Large.skyfaller.ticksToImpactRange.RandomInRange + 8;
                     heavyCount++;
-                }                
+                }
             }
             impactPos = cellRect.RandomCell;
-            if (this.age > lastStrikeTiny + Rand.Range(7-pwrVal, 20-pwrVal) && impactPos.Standable(map) && impactPos.InBounds(map))
+            if (this.age > lastStrikeTiny + Rand.Range(7 - pwrVal, 20 - pwrVal) && impactPos.Standable(map) && impactPos.InBounds(map))
             {
                 this.lastStrikeTiny = this.age;
                 SkyfallerMaker.SpawnSkyfaller(TorannMagicDefOf.TM_Firestorm_Tiny, impactPos, map);
             }
             impactPos = cellRect.RandomCell;
-            if ( this.age > lastStrikeSmall + Rand.Range(18-(2*pwrVal), 42-(2*pwrVal)) && impactPos.Standable(map) && impactPos.InBounds(map))
+            if (this.age > lastStrikeSmall + Rand.Range(18 - (2 * pwrVal), 42 - (2 * pwrVal)) && impactPos.Standable(map) && impactPos.InBounds(map))
             {
                 this.lastStrikeSmall = this.age;
                 SkyfallerMaker.SpawnSkyfaller(TorannMagicDefOf.TM_Firestorm_Small, impactPos, map);
@@ -101,7 +101,7 @@ namespace TorannMagic
             {
                 if (ticksTillHeavy[i] == 0)
                 {
-                    GenExplosion.DoExplosion(shrapnelPos[heavyCount], map, .4f, TMDamageDefOf.DamageDefOf.TM_Firestorm_Small, this.launcher, Rand.Range(5, this.def.projectile.GetDamageAmount(1,null)), 0, SoundDefOf.BulletImpact_Ground, def, this.equipmentDef, null, null, 0f, 1, false, null, 0f, 1, 0.2f, false);
+                    GenExplosion.DoExplosion(shrapnelPos[heavyCount], map, .4f, TMDamageDefOf.DamageDefOf.TM_Firestorm_Small, this.launcher, Rand.Range(5, this.def.projectile.GetDamageAmount(1, null)), 0, SoundDefOf.BulletImpact_Ground, def, this.equipmentDef, null, null, 0f, 1, false, null, 0f, 1, 0.2f, false);
                     ticksTillHeavy[i]--;
                 }
                 else

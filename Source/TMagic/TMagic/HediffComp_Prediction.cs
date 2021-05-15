@@ -1,9 +1,5 @@
-﻿using RimWorld;
-using Verse;
-using System;
-using System.Collections.Generic;
+﻿using Verse;
 using System.Linq;
-using UnityEngine;
 
 namespace TorannMagic
 {
@@ -15,7 +11,6 @@ namespace TorannMagic
         public bool removeNow = false;
 
         public int blurTick = 0;
-        private int predictionFrequency = 120;
 
         public string labelCap
         {
@@ -64,7 +59,7 @@ namespace TorannMagic
                     initialized = true;
                     this.Initialize();
                 }
-                else if(initialized && !base.Pawn.Dead && !base.Pawn.Downed && base.Pawn.Spawned)
+                else if (initialized && !base.Pawn.Dead && !base.Pawn.Downed && base.Pawn.Spawned)
                 {
                     //if(Find.TickManager.TicksGame % this.predictionFrequency == 0)
                     //{
@@ -77,7 +72,7 @@ namespace TorannMagic
                     {
                         UpdateSeverity();
                     }
-                }                
+                }
             }
         }
 
@@ -103,11 +98,11 @@ namespace TorannMagic
                 {
                     this.removeNow = true;
                 }
-                else if(!this.Pawn.IsColonist && settingsRef.AIHardMode)
+                else if (!this.Pawn.IsColonist && settingsRef.AIHardMode)
                 {
                     this.parent.Severity = 5;
                 }
-                else if(sev != pwrVal + .5f)
+                else if (sev != pwrVal + .5f)
                 {
                     this.parent.Severity = pwrVal + .5f;
                 }

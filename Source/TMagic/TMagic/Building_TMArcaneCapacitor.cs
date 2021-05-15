@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using Verse;
 using Verse.AI;
-using System.Diagnostics;
 using UnityEngine;
 using RimWorld;
 
@@ -73,7 +70,7 @@ namespace TorannMagic
                 list.Add(new FloatMenuOption("CannotUseNoPath".Translate(), null, MenuOptionPriority.Default, null, null, 0f, null, null));
             }
             else
-            {                
+            {
                 if (comp.IsMagicUser && this.CapacitorIsOn)
                 {
                     list.Add(new FloatMenuOption("TM_ChargeManaStorage".Translate(
@@ -121,22 +118,21 @@ namespace TorannMagic
             if (Find.TickManager.TicksGame % 120 == 0 && this.CapacitorIsOn)
             {
                 List<Pawn> mapPawns = this.Map.mapPawns.AllPawnsSpawned;
-                Pawn pawn = null;
-                for(int i = 0; i < mapPawns.Count; i++)
+                for (int i = 0; i < mapPawns.Count; i++)
                 {
-                    pawn = mapPawns[i];
-                    if(!pawn.DestroyedOrNull() && !pawn.Dead && !pawn.Downed && pawn.RaceProps.Humanlike && pawn.Faction != null && pawn.Faction == this.Faction)
+                    Pawn pawn = mapPawns[i];
+                    if (!pawn.DestroyedOrNull() && !pawn.Dead && !pawn.Downed && pawn.RaceProps.Humanlike && pawn.Faction != null && pawn.Faction == this.Faction)
                     {
                         CompAbilityUserMagic comp = pawn.GetComp<CompAbilityUserMagic>();
                         float rangeToTarget = (pawn.Position - this.Position).LengthHorizontal;
-                        if (pawn.drafter != null && TM_Calc.IsMagicUser(pawn) &&  rangeToTarget <= effectRadius && comp != null && comp.Mana != null)
+                        if (pawn.drafter != null && TM_Calc.IsMagicUser(pawn) && rangeToTarget <= effectRadius && comp != null && comp.Mana != null)
                         {
-                            if( pawn.Drafted && comp.Mana.CurLevelPercentage <= .9f && this.ArcaneEnergyCur > .05f)
+                            if (pawn.Drafted && comp.Mana.CurLevelPercentage <= .9f && this.ArcaneEnergyCur > .05f)
                             {
                                 TransferMana(comp, rangeToTarget * .4f);
                             }
 
-                            if(!pawn.Drafted && (2.5f*comp.Mana.CurLevelPercentage < this.ArcaneEnergyCur))
+                            if (!pawn.Drafted && (2.5f * comp.Mana.CurLevelPercentage < this.ArcaneEnergyCur))
                             {
                                 TransferMana(comp, rangeToTarget * .4f);
                             }
@@ -153,7 +149,7 @@ namespace TorannMagic
             for (int i = 0; i < 4; i++)
             {
                 Vector3 moteDirection = TM_Calc.GetVector(this.Position, comp.Pawn.Position);
-                TM_MoteMaker.ThrowGenericMote(ThingDef.Named("Mote_ArcaneStream"), this.DrawPos, this.Map, Rand.Range(.4f, .8f), 0.15f, .02f + (.08f * i), .3f - (.04f * i), Rand.Range(-10, 10), magnitude + magnitude*i, (Quaternion.AngleAxis(90, Vector3.up) * moteDirection).ToAngleFlat(), Rand.Chance(.5f) ? (Quaternion.AngleAxis(90, Vector3.up) * moteDirection).ToAngleFlat() : (Quaternion.AngleAxis(-90, Vector3.up) * moteDirection).ToAngleFlat());                           
+                TM_MoteMaker.ThrowGenericMote(ThingDef.Named("Mote_ArcaneStream"), this.DrawPos, this.Map, Rand.Range(.4f, .8f), 0.15f, .02f + (.08f * i), .3f - (.04f * i), Rand.Range(-10, 10), magnitude + (magnitude * i), (Quaternion.AngleAxis(90, Vector3.up) * moteDirection).ToAngleFlat(), Rand.Chance(.5f) ? (Quaternion.AngleAxis(90, Vector3.up) * moteDirection).ToAngleFlat() : (Quaternion.AngleAxis(-90, Vector3.up) * moteDirection).ToAngleFlat());
             }
             for (int i = 0; i < 10; i++)
             {

@@ -60,9 +60,9 @@ namespace TorannMagic
                             }
                         }
                         CompAbilityUserMagic compMagic = mapPawns[i].GetComp<CompAbilityUserMagic>();
-                        if(compMagic.IsMagicUser && compMagic.bondedSpirit != null)
+                        if (compMagic.IsMagicUser && compMagic.bondedSpirit != null)
                         {
-                            if(compMagic.bondedSpirit == this.Pawn)
+                            if (compMagic.bondedSpirit == this.Pawn)
                             {
                                 this.bonderPawn = compMagic.Pawn;
                                 break;
@@ -104,7 +104,7 @@ namespace TorannMagic
                             IEnumerable<Hediff_Injury> arg_BB_0 = pawn.health.hediffSet.GetHediffs<Hediff_Injury>();
                             Func<Hediff_Injury, bool> arg_BB_1;
 
-                            arg_BB_1 = ((Hediff_Injury injury) => injury.Part == rec);
+                            arg_BB_1 = (Hediff_Injury injury) => injury.Part == rec;
 
                             foreach (Hediff_Injury current in arg_BB_0.Where(arg_BB_1))
                             {
@@ -114,7 +114,7 @@ namespace TorannMagic
                                     bool flag5 = current.CanHealNaturally() && !current.IsPermanent();
                                     if (flag5)
                                     {
-                                        current.Heal(1.0f + this.parent.Severity/3f);
+                                        current.Heal(1.0f + (this.parent.Severity / 3f));
                                         num--;
                                         num2--;
                                     }
@@ -132,19 +132,19 @@ namespace TorannMagic
                 if (this.bonderPawn != null && !this.bonderPawn.Destroyed && !this.bonderPawn.Dead)
                 {
                     RefreshBond();
-                    UpdateBond();                    
+                    UpdateBond();
                 }
                 else
                 {
                     this.Pawn.health.RemoveHediff(this.Pawn.health.hediffSet.GetFirstHediffOfDef(this.parent.def));
-                    if(this.Pawn.def.thingClass == typeof(TMPawnSummoned))
+                    if (this.Pawn.def.thingClass == typeof(TMPawnSummoned))
                     {
                         if (this.Pawn.Map != null)
                         {
                             MoteMaker.ThrowSmoke(this.Pawn.DrawPos, this.Pawn.Map, 1f);
                             TM_MoteMaker.ThrowGenericMote(TorannMagicDefOf.Mote_Ghost, this.Pawn.DrawPos, this.Pawn.Map, 1.3f, .25f, .1f, .45f, 0, Rand.Range(1f, 2f), 0, 0);
                         }
-                        this.Pawn.Destroy(DestroyMode.Vanish);                        
+                        this.Pawn.Destroy(DestroyMode.Vanish);
                     }
                     //this.Pawn.SetFactionDirect(null);
                 }
@@ -160,7 +160,7 @@ namespace TorannMagic
                 verVal = comp.MightData.MightPowerSkill_AnimalFriend.FirstOrDefault((MightPowerSkill x) => x.label == "TM_AnimalFriend_ver").level;
             }
             CompAbilityUserMagic compMagic = this.bonderPawn.GetComp<CompAbilityUserMagic>();
-            if(compMagic != null && compMagic.IsMagicUser)
+            if (compMagic != null && compMagic.IsMagicUser)
             {
                 verVal = compMagic.MagicData.MagicPowerSkill_GuardianSpirit.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_GuardianSpirit_ver").level;
             }

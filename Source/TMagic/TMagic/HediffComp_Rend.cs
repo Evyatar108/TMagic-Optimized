@@ -1,10 +1,7 @@
 ﻿using RimWorld;
 using Verse;
 using UnityEngine;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using HarmonyLib;
 
 namespace TorannMagic
 {
@@ -21,9 +18,6 @@ namespace TorannMagic
         private int rendPwr = 0;  //increased amount blood levels affect ability power
         private int rendVer = 0;  //increased blood per bleed rate and blood gift use
         private float arcaneDmg = 1;
-
-        private float bleedRate = 0;
-
         public Pawn linkedPawn = null;
 
         public override void CompExposeData()
@@ -62,13 +56,13 @@ namespace TorannMagic
                 rendPwr = comp.MagicData.MagicPowerSkill_Rend.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_Rend_pwr").level;
                 rendVer = comp.MagicData.MagicPowerSkill_Rend.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_Rend_ver").level;
                 arcaneDmg = comp.arcaneDmg;
-                arcaneDmg *= (1 + .1f * bpwr.level);
+                arcaneDmg *= 1 + (.1f * bpwr.level);
             }
             else
             {
                 this.removeNow = true;
             }
-        }        
+        }
 
         public override void CompPostTick(ref float severityAdjustment)
         {
@@ -82,7 +76,7 @@ namespace TorannMagic
                     this.Initialize();
                 }
 
-                if(this.Pawn.DestroyedOrNull() || this.Pawn.Dead || this.Pawn.Map == null || this.Pawn.RaceProps.BloodDef == null)
+                if (this.Pawn.DestroyedOrNull() || this.Pawn.Dead || this.Pawn.Map == null || this.Pawn.RaceProps.BloodDef == null)
                 {
                     this.removeNow = true;
                 }
@@ -98,11 +92,11 @@ namespace TorannMagic
                 this.initializeDelay++;
             }
         }
-        
+
         public void DamagePawn()
         {
-            if(this.Pawn != null && this.Pawn.Map != null)
-            { 
+            if (this.Pawn != null && this.Pawn.Map != null)
+            {
                 TM_Action.DamageEntities(this.Pawn, null, Mathf.RoundToInt(2f * (this.arcaneDmg + (.15f * this.rendPwr))), TMDamageDefOf.DamageDefOf.TM_BloodyCut, this.linkedPawn);
 
                 TM_MoteMaker.ThrowGenericMote(ThingDef.Named("Mote_CrossStrike"), this.Pawn.DrawPos, this.Pawn.Map, Rand.Range(.3f, 0.45f), .45f, .05f, .20f, 0, 0, 0, Rand.Range(0, 360));
@@ -115,7 +109,7 @@ namespace TorannMagic
                     {
                         FilthMaker.TryMakeFilth(rndPos, this.Pawn.Map, this.Pawn.RaceProps.BloodDef, 1);
                         TM_MoteMaker.ThrowGenericMote(ThingDef.Named("Mote_BloodSquirt"), this.Pawn.DrawPos, this.Pawn.Map, Rand.Range(.6f, 1.0f), .15f, .05f, .66f, Rand.Range(-100, 100), Rand.Range(1, 2), Rand.Range(0, 360), Rand.Range(0f, 360f));
-                    }                    
+                    }
                 }
             }
         }
@@ -126,6 +120,6 @@ namespace TorannMagic
             {
                 return base.CompShouldRemove || this.removeNow;
             }
-        }        
+        }
     }
 }

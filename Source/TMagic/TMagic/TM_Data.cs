@@ -1,219 +1,189 @@
-﻿using UnityEngine;
-using Verse;
+﻿using Verse;
 using System.Collections.Generic;
 using System.Linq;
-using Verse.AI;
 using RimWorld;
-using System;
 
 namespace TorannMagic
 {
     public static class TM_Data
     {
-        public static List<ThingDef> SpellList()
-        {
-            IEnumerable<ThingDef> enumerable = from def in DefDatabase<ThingDef>.AllDefs
-                                               where (def.defName.Contains("SpellOf_"))
-                                               select def;
-            return enumerable.ToList();
-        }
+        public static HashSet<ThingDef> SpellList = (from def in DefDatabase<ThingDef>.AllDefs
+                                                         where def.defName.Contains("SpellOf_")
+                                                         select def).ToHashSet(); 
 
-        public static List<ThingDef> MasterSpellList()
-        {
-            List<ThingDef> masterSpellList = new List<ThingDef>();
-            masterSpellList.Add(TorannMagicDefOf.SpellOf_Firestorm);
-            masterSpellList.Add(TorannMagicDefOf.SpellOf_Blizzard);
-            masterSpellList.Add(TorannMagicDefOf.SpellOf_EyeOfTheStorm);
-            masterSpellList.Add(TorannMagicDefOf.SpellOf_RegrowLimb);
-            masterSpellList.Add(TorannMagicDefOf.SpellOf_FoldReality);
-            masterSpellList.Add(TorannMagicDefOf.SpellOf_Resurrection);
-            masterSpellList.Add(TorannMagicDefOf.SpellOf_HolyWrath);
-            masterSpellList.Add(TorannMagicDefOf.SpellOf_LichForm);
-            masterSpellList.Add(TorannMagicDefOf.SpellOf_SummonPoppi);
-            masterSpellList.Add(TorannMagicDefOf.SpellOf_BattleHymn);
-            masterSpellList.Add(TorannMagicDefOf.SpellOf_PsychicShock);
-            masterSpellList.Add(TorannMagicDefOf.SpellOf_Scorn);
-            masterSpellList.Add(TorannMagicDefOf.SpellOf_Meteor);
-            masterSpellList.Add(TorannMagicDefOf.SpellOf_OrbitalStrike);
-            masterSpellList.Add(TorannMagicDefOf.SpellOf_BloodMoon);
-            masterSpellList.Add(TorannMagicDefOf.SpellOf_Shapeshift);
-            masterSpellList.Add(TorannMagicDefOf.SpellOf_Recall);
-            masterSpellList.Add(TorannMagicDefOf.SpellOf_SpiritOfLight);
-            masterSpellList.Add(TorannMagicDefOf.SpellOf_GuardianSpirit);
-            return masterSpellList;
-        }
-
-        public static List<ThingDef> RestrictedAbilities
-        {
-            get
+        public static HashSet<ThingDef> MasterSpellList = new HashSet<ThingDef>()
             {
-                List<ThingDef> restricted = new List<ThingDef>();
-                restricted.Add(TorannMagicDefOf.SpellOf_BattleHymn);
-                restricted.Add(TorannMagicDefOf.SpellOf_BlankMind);
-                restricted.Add(TorannMagicDefOf.SpellOf_Blizzard);
-                restricted.Add(TorannMagicDefOf.SpellOf_BloodMoon);
-                restricted.Add(TorannMagicDefOf.SpellOf_BriarPatch);
-                restricted.Add(TorannMagicDefOf.SpellOf_CauterizeWound);
-                restricted.Add(TorannMagicDefOf.SpellOf_ChargeBattery);
-                restricted.Add(TorannMagicDefOf.SpellOf_DryGround);
-                restricted.Add(TorannMagicDefOf.SpellOf_EyeOfTheStorm);
-                restricted.Add(TorannMagicDefOf.SpellOf_FertileLands);
-                restricted.Add(TorannMagicDefOf.SpellOf_Firestorm);
-                restricted.Add(TorannMagicDefOf.SpellOf_FoldReality);
-                restricted.Add(TorannMagicDefOf.SpellOf_HolyWrath);
-                restricted.Add(TorannMagicDefOf.SpellOf_LichForm);
-                restricted.Add(TorannMagicDefOf.SpellOf_MechaniteReprogramming);
-                restricted.Add(TorannMagicDefOf.SpellOf_Meteor);
-                restricted.Add(TorannMagicDefOf.SpellOf_OrbitalStrike);
-                restricted.Add(TorannMagicDefOf.SpellOf_Overdrive);
-                restricted.Add(TorannMagicDefOf.SpellOf_PsychicShock);
-                restricted.Add(TorannMagicDefOf.SpellOf_Recall);
-                restricted.Add(TorannMagicDefOf.SpellOf_RegrowLimb);
-                restricted.Add(TorannMagicDefOf.SpellOf_Resurrection);
-                restricted.Add(TorannMagicDefOf.SpellOf_Sabotage);
-                restricted.Add(TorannMagicDefOf.SpellOf_Scorn);
-                restricted.Add(TorannMagicDefOf.SpellOf_Shapeshift);
-                restricted.Add(TorannMagicDefOf.SpellOf_SummonPoppi);
-                restricted.Add(TorannMagicDefOf.SpellOf_TechnoShield);
-                restricted.Add(TorannMagicDefOf.SpellOf_WetGround);
-                restricted.Add(TorannMagicDefOf.SpellOf_SpiritOfLight);
-                restricted.Add(TorannMagicDefOf.SpellOf_GuardianSpirit);
-                restricted.Add(TorannMagicDefOf.SpellOf_Discord);
-                restricted.Add(TorannMagicDefOf.SpellOf_ShieldOther);
-                return restricted;
-            }
-        }
+                TorannMagicDefOf.SpellOf_Firestorm,
+                TorannMagicDefOf.SpellOf_Blizzard,
+                TorannMagicDefOf.SpellOf_EyeOfTheStorm,
+                TorannMagicDefOf.SpellOf_RegrowLimb,
+                TorannMagicDefOf.SpellOf_FoldReality,
+                TorannMagicDefOf.SpellOf_Resurrection,
+                TorannMagicDefOf.SpellOf_HolyWrath,
+                TorannMagicDefOf.SpellOf_LichForm,
+                TorannMagicDefOf.SpellOf_SummonPoppi,
+                TorannMagicDefOf.SpellOf_BattleHymn,
+                TorannMagicDefOf.SpellOf_PsychicShock,
+                TorannMagicDefOf.SpellOf_Scorn,
+                TorannMagicDefOf.SpellOf_Meteor,
+                TorannMagicDefOf.SpellOf_OrbitalStrike,
+                TorannMagicDefOf.SpellOf_BloodMoon,
+                TorannMagicDefOf.SpellOf_Shapeshift,
+                TorannMagicDefOf.SpellOf_Recall,
+                TorannMagicDefOf.SpellOf_SpiritOfLight,
+                TorannMagicDefOf.SpellOf_GuardianSpirit
+            };
 
-        public static List<ThingDef> StandardSpellList()
-        {
-            return SpellList().Except(MasterSpellList()).ToList();
-        }
+        public static HashSet<ThingDef> RestrictedAbilities = new HashSet<ThingDef>
+                {
+                    TorannMagicDefOf.SpellOf_BattleHymn,
+                    TorannMagicDefOf.SpellOf_BlankMind,
+                    TorannMagicDefOf.SpellOf_Blizzard,
+                    TorannMagicDefOf.SpellOf_BloodMoon,
+                    TorannMagicDefOf.SpellOf_BriarPatch,
+                    TorannMagicDefOf.SpellOf_CauterizeWound,
+                    TorannMagicDefOf.SpellOf_ChargeBattery,
+                    TorannMagicDefOf.SpellOf_DryGround,
+                    TorannMagicDefOf.SpellOf_EyeOfTheStorm,
+                    TorannMagicDefOf.SpellOf_FertileLands,
+                    TorannMagicDefOf.SpellOf_Firestorm,
+                    TorannMagicDefOf.SpellOf_FoldReality,
+                    TorannMagicDefOf.SpellOf_HolyWrath,
+                    TorannMagicDefOf.SpellOf_LichForm,
+                    TorannMagicDefOf.SpellOf_MechaniteReprogramming,
+                    TorannMagicDefOf.SpellOf_Meteor,
+                    TorannMagicDefOf.SpellOf_OrbitalStrike,
+                    TorannMagicDefOf.SpellOf_Overdrive,
+                    TorannMagicDefOf.SpellOf_PsychicShock,
+                    TorannMagicDefOf.SpellOf_Recall,
+                    TorannMagicDefOf.SpellOf_RegrowLimb,
+                    TorannMagicDefOf.SpellOf_Resurrection,
+                    TorannMagicDefOf.SpellOf_Sabotage,
+                    TorannMagicDefOf.SpellOf_Scorn,
+                    TorannMagicDefOf.SpellOf_Shapeshift,
+                    TorannMagicDefOf.SpellOf_SummonPoppi,
+                    TorannMagicDefOf.SpellOf_TechnoShield,
+                    TorannMagicDefOf.SpellOf_WetGround,
+                    TorannMagicDefOf.SpellOf_SpiritOfLight,
+                    TorannMagicDefOf.SpellOf_GuardianSpirit,
+                    TorannMagicDefOf.SpellOf_Discord,
+                    TorannMagicDefOf.SpellOf_ShieldOther
+                };
 
-        public static List<ThingDef> StandardSkillList()
-        {
-            IEnumerable<ThingDef> enumerable = from def in DefDatabase<ThingDef>.AllDefs
-                                               where (def.defName.Contains("SkillOf_"))
-                                               select def;
-            return enumerable.ToList();
-        }
+        public static HashSet<ThingDef> StandardSpellList = SpellList.Except(MasterSpellList).ToHashSet();
 
-        public static List<ThingDef> FighterBookList()
-        {
-            List<ThingDef> fighterBookList = new List<ThingDef>();
-            fighterBookList.Add(TorannMagicDefOf.BookOfGladiator);
-            fighterBookList.Add(TorannMagicDefOf.BookOfBladedancer);
-            fighterBookList.Add(TorannMagicDefOf.BookOfDeathKnight);
-            fighterBookList.Add(TorannMagicDefOf.BookOfFaceless);
-            fighterBookList.Add(TorannMagicDefOf.BookOfPsionic);
-            fighterBookList.Add(TorannMagicDefOf.BookOfRanger);
-            fighterBookList.Add(TorannMagicDefOf.BookOfSniper);
-            fighterBookList.Add(TorannMagicDefOf.BookOfMonk);
-            fighterBookList.Add(TorannMagicDefOf.BookOfCommander);
-            fighterBookList.Add(TorannMagicDefOf.BookOfSuperSoldier);
-            return fighterBookList;
-        }
+        public static HashSet<ThingDef> StandardSkillList = (from def in DefDatabase<ThingDef>.AllDefs
+                                                          where def.defName.Contains("SkillOf_")
+                                                          select def).ToHashSet();
 
-        public static List<ThingDef> MageBookList()
-        {
-            IEnumerable<ThingDef> enumerable = from def in DefDatabase<ThingDef>.AllDefs
-                                               where (def.defName.Contains("BookOf"))
-                                               select def;
-
-            enumerable = enumerable.Except(MageTornScriptList());
-            return enumerable.Except(FighterBookList()).ToList();
-        }
-
-        public static List<ThingDef> AllBooksList()
-        {
-            IEnumerable<ThingDef> enumerable = from def in DefDatabase<ThingDef>.AllDefs
-                                               where (def.defName.Contains("BookOf"))
-                                               select def;
-
-            return enumerable.Except(MageTornScriptList()).ToList();
-        }
-
-        public static List<ThingDef> MageTornScriptList()
-        {
-            IEnumerable<ThingDef> enumerable = from def in DefDatabase<ThingDef>.AllDefs
-                                               where (def.defName.Contains("Torn_BookOf"))
-                                               select def;
-
-            return enumerable.ToList();
-        }
-
-        public static List<TraitDef> MagicTraits
-        {
-            get
+        public static HashSet<ThingDef> FighterBookList = new HashSet<ThingDef>
             {
-                List<TraitDef> magicTraits = new List<TraitDef>();
-                magicTraits.Clear();
-                magicTraits.Add(TorannMagicDefOf.Arcanist);
-                magicTraits.Add(TorannMagicDefOf.InnerFire);
-                magicTraits.Add(TorannMagicDefOf.HeartOfFrost);
-                magicTraits.Add(TorannMagicDefOf.StormBorn);
-                magicTraits.Add(TorannMagicDefOf.Druid);
-                magicTraits.Add(TorannMagicDefOf.Priest);
-                magicTraits.Add(TorannMagicDefOf.Necromancer);
-                magicTraits.Add(TorannMagicDefOf.Technomancer);
-                magicTraits.Add(TorannMagicDefOf.Geomancer);
-                magicTraits.Add(TorannMagicDefOf.Warlock);
-                magicTraits.Add(TorannMagicDefOf.Succubus);
-                magicTraits.Add(TorannMagicDefOf.ChaosMage);
-                magicTraits.Add(TorannMagicDefOf.Paladin);
-                magicTraits.Add(TorannMagicDefOf.Summoner);
-                magicTraits.Add(TorannMagicDefOf.Lich);
-                magicTraits.Add(TorannMagicDefOf.TM_Bard);
-                magicTraits.Add(TorannMagicDefOf.Chronomancer);
-                magicTraits.Add(TorannMagicDefOf.Enchanter);
-                magicTraits.Add(TorannMagicDefOf.BloodMage);
-                magicTraits.Add(TorannMagicDefOf.TM_Wanderer);
-                magicTraits.Add(TorannMagicDefOf.TM_Gifted);
-                magicTraits.Add(TorannMagicDefOf.TM_Brightmage);
-                magicTraits.Add(TorannMagicDefOf.TM_Shaman);
-                return magicTraits;
-            }
-        }
+                TorannMagicDefOf.BookOfGladiator,
+                TorannMagicDefOf.BookOfBladedancer,
+                TorannMagicDefOf.BookOfDeathKnight,
+                TorannMagicDefOf.BookOfFaceless,
+                TorannMagicDefOf.BookOfPsionic,
+                TorannMagicDefOf.BookOfRanger,
+                TorannMagicDefOf.BookOfSniper,
+                TorannMagicDefOf.BookOfMonk,
+                TorannMagicDefOf.BookOfCommander,
+                TorannMagicDefOf.BookOfSuperSoldier
+            };
 
-        public static List<TraitDef> MightTraits
-        {
-            get
-            {
-                List<TraitDef> mightTraits = new List<TraitDef>();
-                mightTraits.Clear();
-                mightTraits.Add(TorannMagicDefOf.Bladedancer);
-                mightTraits.Add(TorannMagicDefOf.Gladiator);
-                mightTraits.Add(TorannMagicDefOf.Faceless);
-                mightTraits.Add(TorannMagicDefOf.TM_Sniper);
-                mightTraits.Add(TorannMagicDefOf.Ranger);
-                mightTraits.Add(TorannMagicDefOf.TM_Psionic);
-                mightTraits.Add(TorannMagicDefOf.TM_Monk);
-                mightTraits.Add(TorannMagicDefOf.TM_Commander);
-                mightTraits.Add(TorannMagicDefOf.TM_SuperSoldier);
-                mightTraits.Add(TorannMagicDefOf.TM_Wayfarer);
-                mightTraits.Add(TorannMagicDefOf.PhysicalProdigy);
-                return mightTraits;
-            }
-        }
+        public static HashSet<ThingDef> MageBookList = GetMageBookList();
 
-        public static List<TraitDef> AllClassTraits
+        private static HashSet<ThingDef> GetMageBookList()
         {
-            get
-            {
-                List<TraitDef> allClassTraits = new List<TraitDef>();
-                allClassTraits.Clear();
-                allClassTraits.AddRange(MightTraits);
-                allClassTraits.AddRange(MagicTraits);
-                allClassTraits.AddRange(TM_ClassUtility.CustomClassTraitDefs);
-                return allClassTraits;
-            }
-        }
-
-        public static List<ThingDef> MagicFociList()
-        {
-            List<ThingDef> magicFocis = new List<ThingDef>();
-            magicFocis.Clear();
             IEnumerable<ThingDef> enumerable = from def in DefDatabase<ThingDef>.AllDefs
-                                               where (true)
+                                               where def.defName.Contains("BookOf")
+                                               select def;
+
+            enumerable = enumerable.Except(GetMageTornScriptList());
+            return enumerable.Except(FighterBookList).ToHashSet();
+        }
+
+        public static HashSet<ThingDef> AllBooksList = GetAllBooksList();
+
+        private static HashSet<ThingDef> GetAllBooksList()
+        {
+            IEnumerable<ThingDef> enumerable = from def in DefDatabase<ThingDef>.AllDefs
+                                               where def.defName.Contains("BookOf")
+                                               select def;
+
+            return enumerable.Except(GetMageTornScriptList()).ToHashSet();
+        }
+
+        public static HashSet<ThingDef> MageTornScriptList = GetMageTornScriptList();
+
+        private static HashSet<ThingDef> GetMageTornScriptList()
+        {
+            IEnumerable<ThingDef> enumerable = from def in DefDatabase<ThingDef>.AllDefs
+                                               where def.defName.Contains("Torn_BookOf")
+                                               select def;
+
+            return enumerable.ToHashSet();
+        }
+
+        public static HashSet<TraitDef> MagicTraits = new HashSet<TraitDef>
+            {
+                TorannMagicDefOf.Arcanist,
+                TorannMagicDefOf.InnerFire,
+                TorannMagicDefOf.HeartOfFrost,
+                TorannMagicDefOf.StormBorn,
+                TorannMagicDefOf.Druid,
+                TorannMagicDefOf.Priest,
+                TorannMagicDefOf.Necromancer,
+                TorannMagicDefOf.Technomancer,
+                TorannMagicDefOf.Geomancer,
+                TorannMagicDefOf.Warlock,
+                TorannMagicDefOf.Succubus,
+                TorannMagicDefOf.ChaosMage,
+                TorannMagicDefOf.Paladin,
+                TorannMagicDefOf.Summoner,
+                TorannMagicDefOf.Lich,
+                TorannMagicDefOf.TM_Bard,
+                TorannMagicDefOf.Chronomancer,
+                TorannMagicDefOf.Enchanter,
+                TorannMagicDefOf.BloodMage,
+                TorannMagicDefOf.TM_Wanderer,
+                TorannMagicDefOf.TM_Gifted,
+                TorannMagicDefOf.TM_Brightmage,
+                TorannMagicDefOf.TM_Shaman
+            };
+
+        public static HashSet<TraitDef> MightTraits = new HashSet<TraitDef>
+                {
+                    TorannMagicDefOf.Bladedancer,
+                    TorannMagicDefOf.Gladiator,
+                    TorannMagicDefOf.Faceless,
+                    TorannMagicDefOf.TM_Sniper,
+                    TorannMagicDefOf.Ranger,
+                    TorannMagicDefOf.TM_Psionic,
+                    TorannMagicDefOf.TM_Monk,
+                    TorannMagicDefOf.TM_Commander,
+                    TorannMagicDefOf.TM_SuperSoldier,
+                    TorannMagicDefOf.TM_Wayfarer,
+                    TorannMagicDefOf.PhysicalProdigy
+                };
+
+        public static HashSet<TraitDef> AllClassTraits = GetAllClassTraits();
+
+        private static HashSet<TraitDef> GetAllClassTraits()
+        {
+            HashSet<TraitDef> allClassTraits = new HashSet<TraitDef>();
+            allClassTraits.AddRange(MightTraits);
+            allClassTraits.AddRange(MagicTraits);
+            allClassTraits.AddRange(TM_ClassUtility.CustomClassTraitDefs);
+            return allClassTraits;
+        }
+
+        public static HashSet<ThingDef> MagicFociList = GetMagicFociList();
+
+        private static HashSet<ThingDef> GetMagicFociList()
+        {
+            HashSet<ThingDef> magicFocis = new HashSet<ThingDef>();
+            IEnumerable<ThingDef> enumerable = from def in DefDatabase<ThingDef>.AllDefs
+                                               where true
                                                select def;
             List<string> magicFociList = WeaponCategoryList.Named("TM_Category_MagicalFoci").weaponDefNames;
             foreach (ThingDef current in enumerable)
@@ -223,19 +193,20 @@ namespace TorannMagic
                     if (current.defName == magicFociList[i].ToString() || magicFociList[i].ToString() == "*")
                     {
                         //Log.Message("adding magicFoci def " + current.defName);
-                        magicFocis.AddDistinct(current);
+                        magicFocis.Add(current);
                     }
                 }
             }
             return magicFocis;
         }
 
-        public static List<ThingDef> BowList()
+        public static HashSet<ThingDef> BowList = GetBowList();
+
+        private static HashSet<ThingDef> GetBowList()
         {
-            List<ThingDef> bows = new List<ThingDef>();
-            bows.Clear();
+            HashSet<ThingDef> bows = new HashSet<ThingDef>();
             IEnumerable<ThingDef> enumerable = from def in DefDatabase<ThingDef>.AllDefs
-                                               where (true)
+                                               where true
                                                select def;
             List<string> bowList = WeaponCategoryList.Named("TM_Category_Bows").weaponDefNames;
             foreach (ThingDef current in enumerable)
@@ -245,19 +216,20 @@ namespace TorannMagic
                     if (current.defName == bowList[i].ToString() || bowList[i].ToString() == "*")
                     {
                         //Log.Message("adding bow def " + current.defName);
-                        bows.AddDistinct(current);
+                        bows.Add(current);
                     }
                 }
             }
             return bows;
         }
 
-        public static List<ThingDef> PistolList()
+        public static HashSet<ThingDef> PistolList = GetPistolList();
+
+        private static HashSet<ThingDef> GetPistolList()
         {
-            List<ThingDef> pistols = new List<ThingDef>();
-            pistols.Clear();
+            HashSet<ThingDef> pistols = new HashSet<ThingDef>();
             IEnumerable<ThingDef> enumerable = from def in DefDatabase<ThingDef>.AllDefs
-                                               where (true)
+                                               where true
                                                select def;
             List<string> pistolList = WeaponCategoryList.Named("TM_Category_Pistols").weaponDefNames;
             foreach (ThingDef current in enumerable)
@@ -267,19 +239,21 @@ namespace TorannMagic
                     if (current.defName == pistolList[i].ToString() || pistolList[i].ToString() == "*")
                     {
                         //Log.Message("adding pistol def " + current.defName);
-                        pistols.AddDistinct(current);
+                        pistols.Add(current);
                     }
                 }
             }
             return pistols;
         }
 
-        public static List<ThingDef> RifleList()
+        public static HashSet<ThingDef> RifleList = GetRifleList();
+
+        private static HashSet<ThingDef> GetRifleList()
         {
-            List<ThingDef> rifles = new List<ThingDef>();
+            HashSet<ThingDef> rifles = new HashSet<ThingDef>();
             rifles.Clear();
             IEnumerable<ThingDef> enumerable = from def in DefDatabase<ThingDef>.AllDefs
-                                               where (true)
+                                               where true
                                                select def;
             List<string> rifleList = WeaponCategoryList.Named("TM_Category_Rifles").weaponDefNames;
             foreach (ThingDef current in enumerable)
@@ -289,19 +263,20 @@ namespace TorannMagic
                     if (current.defName == rifleList[i].ToString() || rifleList[i].ToString() == "*")
                     {
                         //Log.Message("adding rifle def " + current.defName);
-                        rifles.AddDistinct(current);
+                        rifles.Add(current);
                     }
                 }
             }
             return rifles;
         }
 
-        public static List<ThingDef> ShotgunList()
+        public static HashSet<ThingDef> ShotgunList = GetShotgunList();
+
+        private static HashSet<ThingDef> GetShotgunList()
         {
-            List<ThingDef> shotguns = new List<ThingDef>();
-            shotguns.Clear();
+            HashSet<ThingDef> shotguns = new HashSet<ThingDef>();
             IEnumerable<ThingDef> enumerable = from def in DefDatabase<ThingDef>.AllDefs
-                                               where (true)
+                                               where true
                                                select def;
             List<string> shotgunList = WeaponCategoryList.Named("TM_Category_Shotguns").weaponDefNames;
             foreach (ThingDef current in enumerable)
@@ -311,20 +286,22 @@ namespace TorannMagic
                     if (current.defName == shotgunList[i].ToString() || shotgunList[i].ToString() == "*")
                     {
                         //Log.Message("adding shotgun def " + current.defName);
-                        shotguns.AddDistinct(current);
+                        shotguns.Add(current);
                     }
                 }
             }
             return shotguns;
         }
 
-        public static List<HediffDef> AilmentList()
+        public static HashSet<HediffDef> AilmentList = GetAilmentList();
+
+        private static HashSet<HediffDef> GetAilmentList()
         {
-            List<HediffDef> ailments = new List<HediffDef>();
+            HashSet<HediffDef> ailments = new HashSet<HediffDef>();
             ailments.Clear();
             IEnumerable<HediffDef> enumerable = from def in DefDatabase<HediffDef>.AllDefs
-                                               where (true)
-                                               select def;
+                                                where true
+                                                select def;
             List<TMDefs.TM_CategoryHediff> ailmentList = HediffCategoryList.Named("TM_Category_Hediffs").ailments;
             foreach (HediffDef current in enumerable)
             {
@@ -333,19 +310,20 @@ namespace TorannMagic
                     if (current.defName == ailmentList[i].hediffDefname || (ailmentList[i].containsDefnameString && current.defName.Contains(ailmentList[i].hediffDefname)) || ailmentList[i].ToString() == "*")
                     {
                         //Log.Message("adding shotgun def " + current.defName);
-                        ailments.AddDistinct(current);
+                        ailments.Add(current);
                     }
                 }
             }
             return ailments;
         }
 
-        public static List<HediffDef> AddictionList()
+        public static HashSet<HediffDef> AddictionList = GetAddictionList();
+
+        private static HashSet<HediffDef> GetAddictionList()
         {
-            List<HediffDef> addictions = new List<HediffDef>();
-            addictions.Clear();
+            HashSet<HediffDef> addictions = new HashSet<HediffDef>();
             IEnumerable<HediffDef> enumerable = from def in DefDatabase<HediffDef>.AllDefs
-                                                where (true)
+                                                where true
                                                 select def;
             List<TMDefs.TM_CategoryHediff> addictionList = HediffCategoryList.Named("TM_Category_Hediffs").addictions;
             foreach (HediffDef current in enumerable)
@@ -355,19 +333,20 @@ namespace TorannMagic
                     if (current.defName == addictionList[i].hediffDefname || (addictionList[i].containsDefnameString && current.defName.Contains(addictionList[i].hediffDefname)) || addictionList[i].ToString() == "*")
                     {
                         //Log.Message("adding shotgun def " + current.defName);
-                        addictions.AddDistinct(current);
+                        addictions.Add(current);
                     }
                 }
             }
             return addictions;
         }
 
-        public static List<HediffDef> MechaniteList()
+        public static HashSet<HediffDef> MechaniteList = GetMechaniteList();
+
+        private static HashSet<HediffDef> GetMechaniteList()
         {
-            List<HediffDef> mechanites = new List<HediffDef>();
-            mechanites.Clear();
+            HashSet<HediffDef> mechanites = new HashSet<HediffDef>();
             IEnumerable<HediffDef> enumerable = from def in DefDatabase<HediffDef>.AllDefs
-                                                where (true)
+                                                where true
                                                 select def;
             List<TMDefs.TM_CategoryHediff> mechaniteList = HediffCategoryList.Named("TM_Category_Hediffs").mechanites;
             foreach (HediffDef current in enumerable)
@@ -377,19 +356,20 @@ namespace TorannMagic
                     if (current.defName == mechaniteList[i].hediffDefname || (mechaniteList[i].containsDefnameString && current.defName.Contains(mechaniteList[i].hediffDefname)) || mechaniteList[i].ToString() == "*")
                     {
                         //Log.Message("adding shotgun def " + current.defName);
-                        mechanites.AddDistinct(current);
+                        mechanites.Add(current);
                     }
                 }
             }
             return mechanites;
         }
 
-        public static List<HediffDef> DiseaseList()
+        public static HashSet<HediffDef> DiseaseList = GetDiseaseList();
+
+        private static HashSet<HediffDef> GetDiseaseList()
         {
-            List<HediffDef> diseases = new List<HediffDef>();
-            diseases.Clear();
+            HashSet<HediffDef> diseases = new HashSet<HediffDef>();
             IEnumerable<HediffDef> enumerable = from def in DefDatabase<HediffDef>.AllDefs
-                                                where (true)
+                                                where true
                                                 select def;
             List<TMDefs.TM_CategoryHediff> diseaseList = HediffCategoryList.Named("TM_Category_Hediffs").diseases;
             foreach (HediffDef current in enumerable)
@@ -399,27 +379,31 @@ namespace TorannMagic
                     if (current.defName == diseaseList[i].hediffDefname || (diseaseList[i].containsDefnameString && current.defName.Contains(diseaseList[i].hediffDefname)) || diseaseList[i].ToString() == "*")
                     {
                         //Log.Message("adding shotgun def " + current.defName);
-                        diseases.AddDistinct(current);
+                        diseases.Add(current);
                     }
                 }
             }
             return diseases;
         }
 
-        public static IEnumerable<TM_CustomPowerDef> CustomFighterPowerDefs()
+        public static HashSet<TM_CustomPowerDef> CustomFighterPowerDefs = GetCustomFighterPowerDefs();
+
+        private static HashSet<TM_CustomPowerDef> GetCustomFighterPowerDefs()
         {
             IEnumerable<TM_CustomPowerDef> enumerable = from def in DefDatabase<TM_CustomPowerDef>.AllDefs
-                                                        where (def.customPower != null && def.customPower.forFighter)
+                                                        where def.customPower != null && def.customPower.forFighter
                                                         select def;
-            return enumerable;
+            return enumerable.ToHashSet();
         }
 
-        public static IEnumerable<TM_CustomPowerDef> CustomMagePowerDefs()
+        public static HashSet<TM_CustomPowerDef> CustomMagePowerDefs = GetCustomMagePowerDefs();
+
+        private static HashSet<TM_CustomPowerDef> GetCustomMagePowerDefs()
         {
             IEnumerable<TM_CustomPowerDef> enumerable = from def in DefDatabase<TM_CustomPowerDef>.AllDefs
-                                                        where (def.customPower != null && def.customPower.forMage)
+                                                        where def.customPower != null && def.customPower.forMage
                                                         select def;
-            return enumerable;
+            return enumerable.ToHashSet();
         }
 
     }

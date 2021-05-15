@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Verse.AI;
 using Verse;
 using RimWorld;
@@ -19,10 +18,10 @@ namespace TorannMagic
 
         protected override IEnumerable<Toil> MakeNewToils()
         {
-            this.FailOnDestroyedOrNull(building);            
+            this.FailOnDestroyedOrNull(building);
             portalBldg = TargetA.Thing as Building_TMPortal;
             yield return Toils_Reserve.Reserve(building);
-            
+
             Toil gotoPortal = new Toil()
             {
                 initAction = () =>
@@ -58,7 +57,7 @@ namespace TorannMagic
                     if (thingList != null)
                     {
                         while (z < thingList.Count)
-                        {                            
+                        {
                             bool validator = thingList[z] is Pawn;
                             if (validator)
                             {
@@ -85,6 +84,6 @@ namespace TorannMagic
             };
             yield return portalStockpile;
 
-        }        
+        }
     }
 }

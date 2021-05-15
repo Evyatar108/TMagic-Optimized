@@ -1,13 +1,6 @@
-﻿using UnityEngine;
-using Verse;
+﻿using Verse;
 using System.Collections.Generic;
-using System.Linq;
 using Verse.AI;
-using Verse.AI.Group;
-using Verse.Sound;
-using RimWorld;
-using System;
-using AbilityUser;
 
 namespace TorannMagic
 {
@@ -16,8 +9,6 @@ namespace TorannMagic
         private int age = -1;
         public int durationTicks = 600;
         public int totalWaitDuration = 0;
-        Pawn waitForPawn = null;
-        Thing waitForThing = null;
         public JobDef targetJobDef = null;
         public Building_TMMagicCircleBase circle = null;
 
@@ -50,7 +41,7 @@ namespace TorannMagic
                     if (circle != null)
                     {
                         this.pawn.rotationTracker.FaceTarget(circle.GetCircleCenter);
-                        
+
                     }
                     if (this.age > this.durationTicks)
                     {
@@ -65,7 +56,7 @@ namespace TorannMagic
                     }
                     else
                     {
-                        if(TargetB.Thing != null && TargetB.Thing is Building_TMMagicCircleBase)
+                        if (TargetB.Thing != null && TargetB.Thing is Building_TMMagicCircleBase)
                         {
                             circle = TargetB.Thing as Building_TMMagicCircleBase;
                         }
@@ -77,7 +68,7 @@ namespace TorannMagic
                             if (circle.IsPending)
                             {
                                 this.totalWaitDuration += age;
-                                if(totalWaitDuration >= (15 * this.durationTicks))
+                                if (totalWaitDuration >= (15 * this.durationTicks))
                                 {
                                     this.EndJobWith(JobCondition.Incompletable);
                                 }
@@ -104,7 +95,7 @@ namespace TorannMagic
                 {
                     return 1f;
                 }
-                return (float)((float)age / (float)this.durationTicks); 
+                return (float)((float)age / (float)this.durationTicks);
 
             }, false, 0f);
             yield return waitFor;

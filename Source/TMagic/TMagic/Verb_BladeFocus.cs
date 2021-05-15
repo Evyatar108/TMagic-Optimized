@@ -47,8 +47,8 @@ namespace TorannMagic
             {
                 if (traits[i].def.defName == "Bladedancer")
                 {
-                    
-                    if ( traits[i].Degree < pwr.level)
+
+                    if (traits[i].Degree < pwr.level)
                     {
                         traits.Remove(traits[i]);
                         this.CasterPawn.story.traits.GainTrait(new Trait(TraitDef.Named("Bladedancer"), pwr.level, false));
@@ -56,7 +56,7 @@ namespace TorannMagic
                     }
                 }
             }
-            
+
             this.burstShotsLeft = 0;
             return false;
         }

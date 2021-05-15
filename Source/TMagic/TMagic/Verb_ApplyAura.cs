@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using RimWorld;
 using AbilityUser;
 using Verse;
-using UnityEngine;
 
 
 namespace TorannMagic
@@ -15,7 +12,7 @@ namespace TorannMagic
         {
             bool auraApplied = true;
             bool removedAura = RemoveAura();
-            if(!removedAura)
+            if (!removedAura)
             {
                 auraApplied = ApplyAura();
             }
@@ -29,13 +26,12 @@ namespace TorannMagic
         private bool RemoveAura()
         {
             bool auraRemoved = false;
-            Hediff hediff = null;
             for (int h = 0; h < this.CasterPawn.health.hediffSet.hediffs.Count; h++)
             {
                 if (this.CasterPawn.health.hediffSet.hediffs[h].def == TorannMagicDefOf.TM_Shadow_AuraHD || this.CasterPawn.health.hediffSet.hediffs[h].def == TorannMagicDefOf.TM_RayOfHope_AuraHD ||
                     this.CasterPawn.health.hediffSet.hediffs[h].def == TorannMagicDefOf.TM_SoothingBreeze_AuraHD || this.CasterPawn.health.hediffSet.hediffs[h].def == TorannMagicDefOf.TM_InnerFire_AuraHD)
                 {
-                    hediff = this.CasterPawn.health.hediffSet.hediffs[h];
+                    Hediff hediff = this.CasterPawn.health.hediffSet.hediffs[h];
                     this.CasterPawn.health.RemoveHediff(hediff);
                     auraRemoved = true;
                     break;
@@ -131,7 +127,7 @@ namespace TorannMagic
             MagicPower magicPower = null;
             if (this.Ability.Def == TorannMagicDefOf.TM_Shadow)
             {
-               magicPower = this.CasterPawn.GetComp<CompAbilityUserMagic>().MagicData.MagicPowersA.FirstOrDefault<MagicPower>((MagicPower x) => x.abilityDef == TorannMagicDefOf.TM_Shadow);
+                magicPower = this.CasterPawn.GetComp<CompAbilityUserMagic>().MagicData.MagicPowersA.FirstOrDefault<MagicPower>((MagicPower x) => x.abilityDef == TorannMagicDefOf.TM_Shadow);
             }
             else if (this.Ability.Def == TorannMagicDefOf.TM_Shadow_I)
             {

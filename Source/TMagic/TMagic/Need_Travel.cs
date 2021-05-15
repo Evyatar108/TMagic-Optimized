@@ -1,12 +1,10 @@
 ﻿using RimWorld;
-using System.Linq;
 using System.Collections.Generic;
-using UnityEngine;
 using Verse;
 
 namespace TorannMagic
 {
-    public class Need_Travel : Need  
+    public class Need_Travel : Need
     {
         public int lastTravelTick = -999;
 
@@ -44,11 +42,11 @@ namespace TorannMagic
         }
 
         public Need_Travel(Pawn pawn) : base(pawn)
-		{
+        {
             this.lastTravelTick = -999;
             this.threshPercents = new List<float>();
-            this.threshPercents.Add((0.3f / this.MaxLevel));
-            this.threshPercents.Add((0.7f / this.MaxLevel));       
+            this.threshPercents.Add(0.3f / this.MaxLevel);
+            this.threshPercents.Add(0.7f / this.MaxLevel);
         }
 
         public override void SetInitialLevel()
@@ -58,9 +56,9 @@ namespace TorannMagic
 
         public override void NeedInterval()
         {
-            if(!base.IsFrozen)
+            if (!base.IsFrozen)
             {
-                if(InCaravan(this.pawn))
+                if (InCaravan(this.pawn))
                 {
                     CurLevel += this.needGain;
                 }
@@ -69,11 +67,11 @@ namespace TorannMagic
                     CurLevel -= this.needLoss;
                 }
             }
-        }       
+        }
 
         public bool InCaravan(Pawn p)
         {
-            if(p.Map == null)
+            if (p.Map == null)
             {
                 if (p.ParentHolder.ToString().Contains("Caravan"))
                 {

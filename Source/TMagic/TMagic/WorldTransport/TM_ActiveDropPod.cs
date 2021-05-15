@@ -1,5 +1,4 @@
-﻿using System;
-using RimWorld;
+﻿using RimWorld;
 using System.Collections.Generic;
 using Verse;
 using Verse.Sound;
@@ -86,7 +85,7 @@ namespace TorannMagic.WorldTransport
                 Thing lastResultingThing = default(Thing);
                 if (contents.spawnWipeMode.HasValue)
                 {
-                    lastResultingThing = ((!contents.setRotation.HasValue) ? GenSpawn.Spawn(thing, base.Position, map, contents.spawnWipeMode.Value) : GenSpawn.Spawn(thing, base.Position, map, contents.setRotation.Value, contents.spawnWipeMode.Value));
+                    lastResultingThing = (!contents.setRotation.HasValue) ? GenSpawn.Spawn(thing, base.Position, map, contents.spawnWipeMode.Value) : GenSpawn.Spawn(thing, base.Position, map, contents.setRotation.Value, contents.spawnWipeMode.Value);
                 }
                 else
                 {
@@ -100,13 +99,13 @@ namespace TorannMagic.WorldTransport
                 }
                 Pawn pawn = lastResultingThing as Pawn;
                 if (pawn != null)
-                {                    
+                {
                     if (pawn.RaceProps.Humanlike)
                     {
                         TaleRecorder.RecordTale(TaleDefOf.LandedInPod, pawn);
                     }
                     if (pawn.drafter != null && ((pawn.IsColonist && pawn.Spawned && !map.IsPlayerHome) || draftFlag))
-                    {                        
+                    {
                         pawn.drafter.Drafted = true;
                     }
                     if (pawn.guest != null && pawn.guest.IsPrisoner)

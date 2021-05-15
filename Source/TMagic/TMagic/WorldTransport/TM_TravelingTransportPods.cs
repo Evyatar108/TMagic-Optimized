@@ -18,7 +18,6 @@ namespace TorannMagic.WorldTransport
         private bool arrived;
         private float traveledPct;
         public float TravelSpeed = 0.00025f;
-        private bool initialized = false;
 
         private float TraveledPctStepPerTick
         {
@@ -44,7 +43,7 @@ namespace TorannMagic.WorldTransport
             for (int i = 0; i < this.AllComps.Count; i++)
             {
                 AllComps[i].CompTick();
-            }            
+            }
 
             traveledPct += TraveledPctStepPerTick;
             if (traveledPct >= 1f)
@@ -67,7 +66,7 @@ namespace TorannMagic.WorldTransport
                     {
                         if (maps[i].Tile == destinationTile)
                         {
-                            if(destinationCell != default(IntVec3))
+                            if (destinationCell != default(IntVec3))
                             {
                                 arrivalAction = new WorldTransport.TM_TransportPodsArrivalAction_LandAtExactCell(maps[i].Parent, destinationCell, draftFlag);
                                 break;
@@ -121,7 +120,7 @@ namespace TorannMagic.WorldTransport
             {
                 try
                 {
-                    arrivalAction.Arrived(pods, destinationTile);                    
+                    arrivalAction.Arrived(pods, destinationTile);
                 }
                 catch (Exception arg)
                 {

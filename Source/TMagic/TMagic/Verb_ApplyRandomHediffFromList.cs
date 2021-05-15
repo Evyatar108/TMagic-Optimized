@@ -1,9 +1,6 @@
 ﻿using Verse;
 using AbilityUser;
-using UnityEngine;
-using System.Linq;
 using System.Collections.Generic;
-using RimWorld;
 
 namespace TorannMagic
 {
@@ -43,7 +40,7 @@ namespace TorannMagic
             if (target != null)
             {
                 int amountToApply = Properties.baseCount + CountUpgrade;
-                float severity = Properties.baseSeverity + Properties.severityIncreasePerUpgrade * SeverityUpgrade;
+                float severity = Properties.baseSeverity + (Properties.severityIncreasePerUpgrade * SeverityUpgrade);
 
                 if (Properties.useEachOnceMax)
                 {
@@ -59,7 +56,7 @@ namespace TorannMagic
                         {
                             float rand = Rand.Value;
                             Log.Message("rand: " + rand);
-                            Log.Message("target: " + (amountToApply - toApply.Count) / (float)(Effects.Count - i));
+                            Log.Message("target: " + ((amountToApply - toApply.Count) / (float)(Effects.Count - i)));
                             if (rand < (amountToApply - toApply.Count) / (float)(Effects.Count - i))
                             {
                                 toApply.Add(Effects[i]);

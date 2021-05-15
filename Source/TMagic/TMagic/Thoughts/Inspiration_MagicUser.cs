@@ -1,5 +1,4 @@
-﻿using System;
-using Verse;
+﻿using Verse;
 using RimWorld;
 
 namespace TorannMagic.Thoughts
@@ -11,7 +10,7 @@ namespace TorannMagic.Thoughts
             bool baseInspiration = base.InspirationCanOccur(pawn);
             bool magicInspiration = false;
             CompAbilityUserMagic comp = pawn.GetComp<CompAbilityUserMagic>();
-            if(comp.IsMagicUser)
+            if (comp.IsMagicUser)
             {
                 if (!pawn.story.traits.HasTrait(TorannMagicDefOf.Faceless))
                 {

@@ -1,7 +1,5 @@
 ﻿using RimWorld;
 using Verse;
-using System.Collections.Generic;
-using System.Linq;
 using TorannMagic.Enchantment;
 using UnityEngine;
 
@@ -16,12 +14,12 @@ namespace TorannMagic
             CompAbilityUserMagic compMagic = user.GetComp<CompAbilityUserMagic>();
             CompAbilityUserMight compMight = user.GetComp<CompAbilityUserMight>();
 
-            if(this.parent.def == TorannMagicDefOf.TM_MagicArtifact_MightEssence && compMight != null && compMight.IsMightUser)
+            if (this.parent.def == TorannMagicDefOf.TM_MagicArtifact_MightEssence && compMight != null && compMight.IsMightUser)
             {
                 CompEnchantedItem compItem = this.parent.TryGetComp<CompEnchantedItem>();
                 if (compItem != null && compItem.HasEnchantment)
                 {
-                    if(compItem.mightEssence != 0)
+                    if (compItem.mightEssence != 0)
                     {
                         compMight.MightUserXP += compItem.mightEssence;
                     }

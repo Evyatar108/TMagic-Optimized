@@ -1,5 +1,4 @@
 ﻿using RimWorld;
-using System;
 using System.Collections.Generic;
 using Verse;
 using AbilityUser;
@@ -7,7 +6,7 @@ using UnityEngine;
 
 namespace TorannMagic.Enchantment
 {
-    public class Verb_OrbTraitThief : Verb_UseAbility  
+    public class Verb_OrbTraitThief : Verb_UseAbility
     {
 
         bool validTarg;
@@ -22,8 +21,7 @@ namespace TorannMagic.Enchantment
             {
                 if ((root - targ.Cell).LengthHorizontal < this.verbProps.range)
                 {
-                    ShootLine shootLine;
-                    validTarg = this.TryFindShootLineFromTo(root, targ, out shootLine);
+                    validTarg = this.TryFindShootLineFromTo(root, targ, out _);
                 }
                 else
                 {
@@ -34,19 +32,19 @@ namespace TorannMagic.Enchantment
             {
                 validTarg = false;
             }
-            return validTarg;        
+            return validTarg;
         }
 
         protected override bool TryCastShot()
         {
             bool result = false;
-            
+
             if (this.currentTarget != null && base.CasterPawn != null)
             {
-                if(this.currentTarget.Thing != null && this.currentTarget.Thing is Pawn)
+                if (this.currentTarget.Thing != null && this.currentTarget.Thing is Pawn)
                 {
                     Pawn victim = this.currentTarget.Thing as Pawn;
-                    if(victim.Faction != null && victim.RaceProps.Humanlike && victim.story != null && victim.story.traits != null && victim.story.traits.allTraits.Count > 0 && !TM_Calc.IsUndead(victim))
+                    if (victim.Faction != null && victim.RaceProps.Humanlike && victim.story != null && victim.story.traits != null && victim.story.traits.allTraits.Count > 0 && !TM_Calc.IsUndead(victim))
                     {
                         if (Rand.Chance(TM_Calc.GetSpellSuccessChance(this.CasterPawn, victim, true)))
                         {
@@ -57,22 +55,21 @@ namespace TorannMagic.Enchantment
                             {
                                 if (orbComp != null)
                                 {
-                                    orbComp.SoulOrbTraits = new List<Trait>();
-                                    orbComp.SoulOrbTraits.Clear();
+                                    orbComp.SoulOrbTraits = new HashSet<Trait>();
                                     List<Trait> allTraits = victim.story.traits.allTraits;
                                     int iterations = Mathf.Max(allTraits.Count, 1);
                                     for (int i = 0; i < iterations; i++)
                                     {
                                         Trait transferTrait = allTraits.RandomElement();
-                                        orbComp.SoulOrbTraits.AddDistinct(transferTrait);
+                                        orbComp.SoulOrbTraits.Add(transferTrait);
                                         RemoveTrait(victim, allTraits, transferTrait.def);
                                         result = true;
                                     }
-                                    if(Rand.Chance(.6f))
+                                    if (Rand.Chance(.6f))
                                     {
                                         victim.mindState.mentalStateHandler.TryStartMentalState(MentalStateDefOf.Berserk);
                                     }
-                                    else if(Rand.Chance(.2f))
+                                    else if (Rand.Chance(.2f))
                                     {
                                         victim.Kill(null, null);
                                     }
@@ -86,14 +83,13 @@ namespace TorannMagic.Enchantment
                             {
                                 if (orbComp != null)
                                 {
-                                    orbComp.SoulOrbTraits = new List<Trait>();
-                                    orbComp.SoulOrbTraits.Clear();
+                                    orbComp.SoulOrbTraits = new HashSet<Trait>();
                                     List<Trait> allTraits = victim.story.traits.allTraits;
                                     int iterations = Mathf.Max(allTraits.Count, 1);
                                     for (int i = 0; i < iterations; i++)
                                     {
                                         Trait transferTrait = allTraits.RandomElement();
-                                        orbComp.SoulOrbTraits.AddDistinct(transferTrait);
+                                        orbComp.SoulOrbTraits.Add(transferTrait);
                                         RemoveTrait(victim, allTraits, transferTrait.def);
                                         Effects(victim.Position);
                                         result = true;
@@ -181,7 +177,7 @@ namespace TorannMagic.Enchantment
 
         public void PostCastShot(bool inResult)
         {
-            if(inResult)
+            if (inResult)
             {
                 List<Apparel> apparel = this.CasterPawn.apparel.WornApparel;
                 if (apparel != null)
@@ -196,7 +192,7 @@ namespace TorannMagic.Enchantment
                     }
                 }
                 CompAbilityUser comp = this.CasterPawn.GetComp<CompAbilityUser>();
-                if(comp != null)
+                if (comp != null)
                 {
                     comp.RemoveApparelAbility(TorannMagicDefOf.TM_Artifact_TraitThief);
                 }

@@ -1,19 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Verse;
 using Verse.Sound;
 using RimWorld;
 using Verse.AI;
 using UnityEngine;
-using AbilityUser;
 
 namespace TorannMagic
 {
     internal class JobDriver_Teach : JobDriver
     {
-        private const TargetIndex caster = TargetIndex.B;
-
         int age = -1;
         int lastEffect = 0;
         int ticksTillEffects = 200;
@@ -49,19 +45,19 @@ namespace TorannMagic
             {
                 CompAbilityUserMagic compMagic = student.GetComp<CompAbilityUserMagic>();
                 CompAbilityUserMight compMight = student.GetComp<CompAbilityUserMight>();
-                if(compMagic != null && compMagic.IsMagicUser && !student.story.traits.HasTrait(TorannMagicDefOf.Faceless))
+                if (compMagic != null && compMagic.IsMagicUser && !student.story.traits.HasTrait(TorannMagicDefOf.Faceless))
                 {
                     this.isMageTeaching = true;
-                    if(compMight != null && compMight.IsMightUser)
+                    if (compMight != null && compMight.IsMightUser)
                     {
-                        if(Rand.Chance(.5f))
+                        if (Rand.Chance(.5f))
                         {
                             this.isMageTeaching = false;
                             this.isFighterTeaching = true;
                         }
                     }
                 }
-                else if(compMight.IsMightUser)
+                else if (compMight.IsMightUser)
                 {
                     this.isFighterTeaching = true;
                 }
@@ -71,7 +67,7 @@ namespace TorannMagic
                     Log.Message("ending teaching job due to undetected class - should never occur unless initializing verb is faulty");
                     this.EndJobWith(JobCondition.Incompletable);
                 }
-                    
+
                 if (age > duration)
                 {
                     success = false;
@@ -109,14 +105,14 @@ namespace TorannMagic
                         student.jobs.TryTakeOrderedJob(job, JobTag.Misc);
                     }
                 }
-                if(student.Drafted && student.CurJobDef != JobDefOf.Wait_Combat)
+                if (student.Drafted && student.CurJobDef != JobDefOf.Wait_Combat)
                 {
                     success = false;
                     this.EndJobWith(JobCondition.InterruptForced);
                 }
                 age++;
                 ticksLeftThisToil = duration - age;
-                if((student.Position - this.pawn.Position).LengthHorizontal > 5)
+                if ((student.Position - this.pawn.Position).LengthHorizontal > 5)
                 {
                     success = false;
                     age = duration + 1;
@@ -134,7 +130,7 @@ namespace TorannMagic
                 {
                     return 1f;
                 }
-                return 1f - (float)doTeaching.actor.jobs.curDriver.ticksLeftThisToil / this.duration;
+                return 1f - ((float)doTeaching.actor.jobs.curDriver.ticksLeftThisToil / this.duration);
 
             }, false, 0f);
             doTeaching.AddFinishAction(delegate
@@ -161,7 +157,7 @@ namespace TorannMagic
             Color randomColor = new Color(Rand.Range(0f, 1f), Rand.Range(0f, 1f), Rand.Range(0f, 1f), Rand.Range(.7f, 1f));
             Vector3 drawPos;
             int rangeMax = Rand.Range(8, 15);
-            if(Rand.Chance(.5f))
+            if (Rand.Chance(.5f))
             {
                 drawPos = this.pawn.DrawPos;
             }
@@ -170,13 +166,12 @@ namespace TorannMagic
                 drawPos = student.DrawPos;
             }
 
-            if(effectNum == 0)
+            if (effectNum == 0)
             {
                 for (int i = 0; i < rangeMax; i++)
                 {
                     float direction = Rand.Range(0, 360);
-                    ThingDef mote = new ThingDef();
-                    mote = ThingDef.Named("Mote_Psi_Grayscale");
+                    ThingDef mote = ThingDef.Named("Mote_Psi_Grayscale");
                     mote.graphicData.color = randomColor;
                     TM_MoteMaker.ThrowGenericMote(mote, drawPos, this.pawn.Map, Rand.Range(.1f, .3f), 0.2f, .02f, .1f, 0, Rand.Range(8, 10), direction, direction);
                     SoundInfo info = SoundInfo.InMap(new TargetInfo(this.pawn.Position, this.pawn.Map, false), MaintenanceType.None);
@@ -185,7 +180,7 @@ namespace TorannMagic
                     TorannMagicDefOf.ItemEnchanted.PlayOneShot(info);
                 }
             }
-            else if(effectNum ==1)
+            else if (effectNum == 1)
             {
                 for (int i = 0; i < rangeMax / 2; i++)
                 {
@@ -201,7 +196,7 @@ namespace TorannMagic
                     TorannMagicDefOf.TM_AirWoosh.PlayOneShot(info);
                 }
             }
-            else if(effectNum == 2)
+            else if (effectNum == 2)
             {
                 for (int i = 0; i < rangeMax; i++)
                 {
@@ -217,11 +212,11 @@ namespace TorannMagic
                     SoundDefOf.Artillery_ShellLoaded.PlayOneShot(info);
                 }
             }
-            else if(effectNum == 3)
+            else if (effectNum == 3)
             {
                 for (int i = 0; i < rangeMax; i++)
                 {
-                    float direction = Rand.Range(0,360);
+                    float direction = Rand.Range(0, 360);
                     Vector3 rndPos = drawPos;
                     rndPos.x += Rand.Range(-.3f, .3f);
                     rndPos.z += Rand.Range(-.3f, .3f);
@@ -242,7 +237,7 @@ namespace TorannMagic
                     rndPos.x += Rand.Range(-1f, 1f);
                     rndPos.z += Rand.Range(-1f, 1f);
                     ThingDef mote = ThingDef.Named("Mote_Twinkle");
-                    TM_MoteMaker.ThrowGenericMote(mote, rndPos, this.pawn.Map, Rand.Range(.2f, .7f), Rand.Range(.2f, .6f), Rand.Range(0f, .8f), Rand.Range(.5f,.8f), Rand.Range(-50, 50), Rand.Range(.5f, 1f), direction, direction);
+                    TM_MoteMaker.ThrowGenericMote(mote, rndPos, this.pawn.Map, Rand.Range(.2f, .7f), Rand.Range(.2f, .6f), Rand.Range(0f, .8f), Rand.Range(.5f, .8f), Rand.Range(-50, 50), Rand.Range(.5f, 1f), direction, direction);
                     SoundInfo info = SoundInfo.InMap(new TargetInfo(this.pawn.Position, this.pawn.Map, false), MaintenanceType.None);
                     info.pitchFactor = 1.2f;
                     info.volumeFactor = .6f;
@@ -286,7 +281,7 @@ namespace TorannMagic
                         student.needs.joy.GainJoy(.2f, TorannMagicDefOf.Social);
                     }
                 }
-                catch(NullReferenceException ex)
+                catch (NullReferenceException)
                 {
                     //failed
                 }
@@ -310,7 +305,7 @@ namespace TorannMagic
                     {
                         xpGain = 600;
                     }
-                    if(xpGain < 100)
+                    if (xpGain < 100)
                     {
                         xpGain = 100;
                     }
@@ -328,7 +323,7 @@ namespace TorannMagic
                         student.needs.joy.GainJoy(.2f, TorannMagicDefOf.Social);
                     }
                 }
-                catch (NullReferenceException ex)
+                catch (NullReferenceException)
                 {
                     //failed
                 }

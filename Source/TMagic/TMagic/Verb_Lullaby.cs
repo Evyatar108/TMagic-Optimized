@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using RimWorld;
 using AbilityUser;
 using Verse;
@@ -60,11 +58,11 @@ namespace TorannMagic
             for (int i = 0; i < this.TargetsAoE.Count; i++)
             {
                 Pawn newPawn = this.TargetsAoE[i].Thing as Pawn;
-                if(newPawn.RaceProps.IsFlesh)
+                if (newPawn.RaceProps.IsFlesh)
                 {
-                    if (Rand.Chance(.4f + (.1f * pwr.level) * TM_Calc.GetSpellSuccessChance(this.CasterPawn, newPawn, true)))
+                    if (Rand.Chance(.4f + (.1f * pwr.level * TM_Calc.GetSpellSuccessChance(this.CasterPawn, newPawn, true))))
                     {
-                        if(newPawn.InMentalState)
+                        if (newPawn.InMentalState)
                         {
                             newPawn.mindState.mentalStateHandler.Reset();
                         }
@@ -86,6 +84,6 @@ namespace TorannMagic
             this.PostCastShot(flag, out flag);
             return flag;
         }
-        
+
     }
 }

@@ -1,5 +1,4 @@
-﻿using System;
-using Verse;
+﻿using Verse;
 using RimWorld;
 
 namespace TorannMagic.Thoughts
@@ -10,7 +9,7 @@ namespace TorannMagic.Thoughts
         {
             if (pawn != null && other != null)
             {
-                
+
                 if (!other.RaceProps.Humanlike || other.Dead)
                 {
                     return false;
@@ -37,7 +36,7 @@ namespace TorannMagic.Thoughts
                         {
                             return ThoughtState.ActiveAtStage(0);
                         }
-                        else if(magicComp.IsMagicUser)
+                        else if (magicComp.IsMagicUser)
                         {
                             return ThoughtState.ActiveAtStage(1);
                         }

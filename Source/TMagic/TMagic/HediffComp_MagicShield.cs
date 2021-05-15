@@ -1,6 +1,4 @@
 ﻿using RimWorld;
-using System.Linq;
-using System.Collections.Generic;
 using UnityEngine;
 using Verse;
 using Verse.Sound;
@@ -12,31 +10,8 @@ namespace TorannMagic
     {
         private static readonly Color shieldColor = new Color(160f, 160f, 160f);
 
-        private int shieldFade;
-        public int ShieldFade
-        {
-            get
-            {
-                return this.shieldFade;
-            }
-            set
-            {
-                this.shieldFade = value;
-            }
-        }
-
-        private float sevChange;
-        public float SevChange
-        {
-            get
-            {
-                return this.sevChange;
-            }
-            set
-            {
-                this.sevChange = value;
-            }
-        }
+        public int ShieldFade { get; set; }
+        public float SevChange { get; set; }
 
         private float lastSev = 0;
 
@@ -62,7 +37,7 @@ namespace TorannMagic
             }
         }
 
-        private float EnergyLossPerTick  
+        private float EnergyLossPerTick
         {
             get
             {
@@ -89,7 +64,7 @@ namespace TorannMagic
             this.energy = 2700; //45s
         }
 
-        public override void CompPostTick(ref float severityAdjustment) 
+        public override void CompPostTick(ref float severityAdjustment)
         {
             base.CompPostTick(ref severityAdjustment);
             bool flag = base.Pawn != null;
@@ -119,7 +94,7 @@ namespace TorannMagic
 
         private void ResolveSeverityChange()
         {
-            SevChange = this.lastSev - this.parent.Severity; 
+            SevChange = this.lastSev - this.parent.Severity;
         }
 
         private void Break()
@@ -130,7 +105,7 @@ namespace TorannMagic
                 MoteMaker.MakeStaticMote(base.Pawn.TrueCenter(), base.Pawn.Map, ThingDefOf.Mote_ExplosionFlash, 12f);
                 for (int i = 0; i < 6; i++)
                 {
-                    Vector3 loc = base.Pawn.TrueCenter() + Vector3Utility.HorizontalVectorFromAngle((float)Rand.Range(0, 360)) * Rand.Range(0.3f, 0.6f);
+                    Vector3 loc = base.Pawn.TrueCenter() + (Vector3Utility.HorizontalVectorFromAngle((float)Rand.Range(0, 360)) * Rand.Range(0.3f, 0.6f));
                     MoteMaker.ThrowDustPuff(loc, base.Pawn.Map, Rand.Range(0.8f, 1.2f));
                 }
                 this.energy = 0f;

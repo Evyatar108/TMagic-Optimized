@@ -1,25 +1,19 @@
 ﻿using RimWorld;
-using System;
 using RimWorld.Planet;
 using Verse;
 using AbilityUser;
-using UnityEngine;
-using System.Linq;
 
 namespace TorannMagic
 {
-    class Verb_ShadowCall : Verb_UseAbility  
+    class Verb_ShadowCall : Verb_UseAbility
     {
-        bool arg_41_0;
-        bool arg_42_0;
-
         protected override bool TryCastShot()
         {
             bool result = false;
             CompAbilityUserMagic comp = this.CasterPawn.GetComp<CompAbilityUserMagic>();
             Pawn soulPawn = comp.soulBondPawn;
 
-            if(soulPawn != null && !soulPawn.Dead && !soulPawn.Destroyed)
+            if (soulPawn != null && !soulPawn.Dead && !soulPawn.Destroyed)
             {
                 if (ModCheck.Validate.GiddyUp.Core_IsInitialized())
                 {
@@ -28,10 +22,9 @@ namespace TorannMagic
                 bool drafted = soulPawn.Drafted;
                 bool soulPawnSpawned = soulPawn.Spawned;
                 Map map = soulPawn.Map;
-                if(map == null)
+                if (map == null)
                 {
-                    Hediff bondHediff = null;
-                    bondHediff = soulPawn.health.hediffSet.GetFirstHediffOfDef(HediffDef.Named("TM_SoulBondPhysicalHD"), false);
+                    Hediff bondHediff = soulPawn.health.hediffSet.GetFirstHediffOfDef(HediffDef.Named("TM_SoulBondPhysicalHD"), false);
                     if (bondHediff != null)
                     {
                         HediffComp_SoulBondHost compS = bondHediff.TryGetComp<HediffComp_SoulBondHost>();
@@ -41,7 +34,6 @@ namespace TorannMagic
                             soulPawn = compS.polyHost;
                         }
                     }
-                    bondHediff = null;
 
                     bondHediff = soulPawn.health.hediffSet.GetFirstHediffOfDef(HediffDef.Named("TM_SoulBondMentalHD"), false);
                     if (bondHediff != null)
@@ -60,11 +52,11 @@ namespace TorannMagic
                         Caravan van = soulPawn.ParentHolder as Caravan;
                         van.RemovePawn(soulPawn);
                         GenPlace.TryPlaceThing(soulPawn, this.CasterPawn.Position, this.CasterPawn.Map, ThingPlaceMode.Near);
-                        if(van.PawnsListForReading != null && van.PawnsListForReading.Count <= 0)
+                        if (van.PawnsListForReading != null && van.PawnsListForReading.Count <= 0)
                         {
                             CaravanEnterMapUtility.Enter(van, this.CasterPawn.Map, CaravanEnterMode.Center, CaravanDropInventoryMode.DropInstantly, false);
                         }
-                        
+
                         //Messages.Message("" + p.LabelShort + " has shadow stepped to a caravan with " + soulPawn.LabelShort, MessageTypeDefOf.NeutralEvent);
                         goto fin;
                     }
@@ -101,7 +93,7 @@ namespace TorannMagic
             {
                 Log.Warning("No soul bond found to shadow call.");
             }
-            fin:;
+        fin:;
             this.burstShotsLeft = 0;
             //this.ability.TicksUntilCasting = (int)base.UseAbilityProps.SecondsToRecharge * 60;
             return result;

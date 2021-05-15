@@ -10,11 +10,11 @@ namespace TorannMagic.SihvRMagicScrollScribe
             CompAbilityUserMagic comp = user.GetComp<CompAbilityUserMagic>();
 
             if (parent.def != null && comp.spell_Rain == true)
-            {}
+            { }
             else
             {
                 Messages.Message("NotSpellKnown".Translate(), MessageTypeDefOf.RejectInput);
             }
         }
-    }        
+    }
 }

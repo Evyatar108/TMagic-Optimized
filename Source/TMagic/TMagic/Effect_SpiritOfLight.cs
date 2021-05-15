@@ -1,14 +1,10 @@
 ﻿using Verse;
 using AbilityUser;
-using System.Collections.Generic;
-using RimWorld;
 
 namespace TorannMagic
-{    
+{
     public class Effect_SpiritOfLight : Verb_UseAbility
     {
-        bool validTarg;
-
         public virtual void Effect()
         {
             CompAbilityUserMagic comp = CasterPawn.TryGetComp<CompAbilityUserMagic>();
@@ -41,9 +37,8 @@ namespace TorannMagic
             if (inResult)
             {
                 this.Effect();
-                outResult = true;
             }
             outResult = inResult;
         }
-    }    
+    }
 }

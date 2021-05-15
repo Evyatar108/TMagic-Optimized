@@ -19,7 +19,7 @@ namespace TorannMagic
                 if (comp.IsMightUser)
                 {
                     HealthUtility.AdjustSeverity(pawn, TorannMagicDefOf.TM_BladeArtHD, -5f);
-                    HealthUtility.AdjustSeverity(pawn, TorannMagicDefOf.TM_BladeArtHD, (.5f)+ pwr.level);
+                    HealthUtility.AdjustSeverity(pawn, TorannMagicDefOf.TM_BladeArtHD, .5f + pwr.level);
                     ModOptions.SettingsRef settingsRef = new ModOptions.SettingsRef();
                     if (!pawn.IsColonist && settingsRef.AIHardMode)
                     {

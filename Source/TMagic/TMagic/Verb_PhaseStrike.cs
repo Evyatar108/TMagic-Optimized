@@ -1,5 +1,4 @@
 ﻿using RimWorld;
-using System;
 using Verse;
 using AbilityUser;
 using UnityEngine;
@@ -9,14 +8,11 @@ using System.Collections.Generic;
 namespace TorannMagic
 {
     [StaticConstructorOnStartup]
-    class Verb_PhaseStrike : Verb_UseAbility  
+    class Verb_PhaseStrike : Verb_UseAbility
     {
         bool arg_41_0;
         bool arg_42_0;
-        MightPowerSkill pwr;
         MightPowerSkill ver;
-        MightPowerSkill str;
-
         private int verVal;
         private int pwrVal;
         private int dmgNum = 0;
@@ -56,7 +52,7 @@ namespace TorannMagic
             float weaponDPS = weaponComp.GetStatValue(StatDefOf.MeleeWeapon_AverageDPS, false) * .7f;
             float dmgMultiplier = weaponComp.GetStatValue(StatDefOf.MeleeWeapon_DamageMultiplier, false);
             float pawnDPS = pawn.GetStatValue(StatDefOf.MeleeDPS, false);
-            float skillMultiplier = (.6f) * comp.mightPwr;
+            float skillMultiplier = .6f * comp.mightPwr;
             return Mathf.RoundToInt(skillMultiplier * dmgMultiplier * (pawnDPS + weaponDPS));
         }
 
@@ -119,16 +115,16 @@ namespace TorannMagic
                                 ThingSelectionUtility.SelectNextColonist();
                                 this.CasterPawn.DeSpawn();
                                 //p.SetPositionDirect(this.currentTarget.Cell);
-                                SearchForTargets(arg_29_0, (2f + (float)(.5f * verVal)), map, p);
+                                SearchForTargets(arg_29_0, 2f + (float)(.5f * verVal), map, p);
                                 GenSpawn.Spawn(p, this.currentTarget.Cell, map);
-                                DrawBlade(p.Position.ToVector3Shifted(), 4f + (float)(verVal));
+                                DrawBlade(p.Position.ToVector3Shifted(), 4f + (float)verVal);
                                 p.drafter.Drafted = drafted;
                                 CameraJumper.TryJumpAndSelect(p);
-                                TM_MoteMaker.ThrowGenericMote(ThingDef.Named("Mote_BladeSweep"), this.CasterPawn.DrawPos, this.CasterPawn.Map, 1.4f + .4f * ver.level, .04f, 0f, .18f, 1000, 0, 0, Rand.Range(0, 360));
+                                TM_MoteMaker.ThrowGenericMote(ThingDef.Named("Mote_BladeSweep"), this.CasterPawn.DrawPos, this.CasterPawn.Map, 1.4f + (.4f * ver.level), .04f, 0f, .18f, 1000, 0, 0, Rand.Range(0, 360));
                             }
                             catch
                             {
-                                if(!CasterPawn.Spawned)
+                                if (!CasterPawn.Spawned)
                                 {
                                     GenSpawn.Spawn(p, pLoc, map);
                                     p.drafter.Drafted = true;
@@ -140,11 +136,11 @@ namespace TorannMagic
                         else
                         {
                             this.CasterPawn.DeSpawn();
-                            SearchForTargets(arg_29_0, (2f + (float)(.5f * verVal)), map, p);
+                            SearchForTargets(arg_29_0, 2f + (float)(.5f * verVal), map, p);
                             GenSpawn.Spawn(p, this.currentTarget.Cell, map);
-                            DrawBlade(p.Position.ToVector3Shifted(), 4f + (float)(verVal));
+                            DrawBlade(p.Position.ToVector3Shifted(), 4f + (float)verVal);
                         }
-                    
+
                         //this.CasterPawn.SetPositionDirect(this.currentTarget.Cell);
                         //base.CasterPawn.SetPositionDirect(this.currentTarget.Cell);
                         //this.CasterPawn.pather.ResetToCurrentPosition();
@@ -152,7 +148,7 @@ namespace TorannMagic
                     }
                     else
                     {
-                    
+
                         Messages.Message("InvalidTargetLocation".Translate(), MessageTypeDefOf.RejectInput);
                     }
                 }
@@ -173,11 +169,11 @@ namespace TorannMagic
         public void SearchForTargets(IntVec3 center, float radius, Map map, Pawn pawn)
         {
             Pawn victim = null;
-            IntVec3 curCell;            
+            IntVec3 curCell;
             IEnumerable<IntVec3> targets = GenRadial.RadialCellsAround(center, radius, true);
-            for (int i = 0; i < targets.Count(); i++)
+            foreach (var cell in targets)
             {
-                curCell = targets.ToArray<IntVec3>()[i];
+                curCell = cell;
                 MoteMaker.ThrowDustPuff(curCell, map, .2f);
                 if (curCell.InBounds(map) && curCell.IsValid)
                 {
@@ -186,7 +182,7 @@ namespace TorannMagic
 
                 if (victim != null && victim.Faction != pawn.Faction)
                 {
-                    if(Rand.Chance(.1f + .15f*pwrVal))
+                    if (Rand.Chance(.1f + (.15f * pwrVal)))
                     {
                         this.dmgNum *= 3;
                         MoteMaker.ThrowText(victim.DrawPos, victim.Map, "Critical Hit", -1f);
@@ -194,7 +190,6 @@ namespace TorannMagic
                     DrawStrike(center, victim.Position.ToVector3(), map);
                     damageEntities(victim, null, this.dmgNum, TMDamageDefOf.DamageDefOf.TM_PhaseStrike);
                 }
-                targets.GetEnumerator().MoveNext();
             }
         }
 
@@ -209,7 +204,7 @@ namespace TorannMagic
 
             Vector3 vector = center;
             vector.y = Altitudes.AltitudeFor(AltitudeLayer.MoteOverhead);
-            Vector3 s = new Vector3(magnitude, magnitude, (1.5f * magnitude));
+            Vector3 s = new Vector3(magnitude, magnitude, 1.5f * magnitude);
             Matrix4x4 matrix = default(Matrix4x4);
 
             for (int i = 0; i < 6; i++)

@@ -1,5 +1,4 @@
-﻿using System;
-using RimWorld;
+﻿using RimWorld;
 using Verse;
 using AbilityUser;
 
@@ -12,10 +11,9 @@ namespace TorannMagic.Weapon
             Map map = base.Map;
             base.Impact(hitThing);
             ThingDef def = this.def;
-            Pawn pawn = this.launcher as Pawn;
             try
             {
-                GenExplosion.DoExplosion(base.Position, map, 0.4f, TMDamageDefOf.DamageDefOf.Iceshard, this.launcher, this.def.projectile.GetDamageAmount(1,null), 3, this.def.projectile.soundExplode, def, this.equipmentDef, null, null, 0f, 1, false, null, 0f, 1, 0f, false);
+                GenExplosion.DoExplosion(base.Position, map, 0.4f, TMDamageDefOf.DamageDefOf.Iceshard, this.launcher, this.def.projectile.GetDamageAmount(1, null), 3, this.def.projectile.soundExplode, def, this.equipmentDef, null, null, 0f, 1, false, null, 0f, 1, 0f, false);
             }
             catch
             {
@@ -46,7 +44,7 @@ namespace TorannMagic.Weapon
 
         public static void Explosion(int pwr, IntVec3 center, Map map, float radius, DamageDef damType, Thing instigator, SoundDef explosionSound = null, ThingDef projectile = null, ThingDef source = null, ThingDef postExplosionSpawnThingDef = null, float postExplosionSpawnChance = 0f, int postExplosionSpawnThingCount = 1, bool applyDamageToExplosionCellsNeighbors = false, ThingDef preExplosionSpawnThingDef = null, float preExplosionSpawnChance = 0f, int preExplosionSpawnThingCount = 1)
         {
-            int modDamAmountRand = GenMath.RoundRandom(Rand.Range(3, projectile.projectile.GetDamageAmount(1,null) / 2));  
+            int modDamAmountRand = GenMath.RoundRandom(Rand.Range(3, projectile.projectile.GetDamageAmount(1, null) / 2));
             if (map == null)
             {
                 Log.Warning("Tried to do explosion in a null map.");
@@ -59,7 +57,7 @@ namespace TorannMagic.Weapon
             explosion.radius = radius;
             explosion.damType = damType;
             explosion.instigator = instigator;
-            explosion.damAmount = ((projectile == null) ? GenMath.RoundRandom((float)damType.defaultDamage) : modDamAmountRand);
+            explosion.damAmount = (projectile == null) ? GenMath.RoundRandom((float)damType.defaultDamage) : modDamAmountRand;
             explosion.armorPenetration = 2;
             explosion.weapon = source;
             explosion.preExplosionSpawnThingDef = preExplosionSpawnThingDef;

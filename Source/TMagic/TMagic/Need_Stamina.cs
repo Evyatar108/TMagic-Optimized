@@ -1,5 +1,4 @@
 ﻿using RimWorld;
-using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using Verse;
@@ -111,55 +110,55 @@ namespace TorannMagic
         }
 
         public Need_Stamina(Pawn pawn) : base(pawn)
-		    {
+        {
             this.lastGainTick = -999;
             this.threshPercents = new List<float>();
-            this.threshPercents.Add((0.25f / this.MaxLevel));
-            this.threshPercents.Add((0.5f / this.MaxLevel));
-            this.threshPercents.Add((0.75f / this.MaxLevel));
+            this.threshPercents.Add(0.25f / this.MaxLevel);
+            this.threshPercents.Add(0.5f / this.MaxLevel);
+            this.threshPercents.Add(0.75f / this.MaxLevel);
         }
 
         private void AdjustThresh()
         {
             this.threshPercents.Clear();
-            this.threshPercents.Add((0.25f / this.MaxLevel));
-            this.threshPercents.Add((0.5f / this.MaxLevel));
-            this.threshPercents.Add((0.75f / this.MaxLevel));
+            this.threshPercents.Add(0.25f / this.MaxLevel);
+            this.threshPercents.Add(0.5f / this.MaxLevel);
+            this.threshPercents.Add(0.75f / this.MaxLevel);
             if (this.MaxLevel > 1)
             {
-                this.threshPercents.Add((1f / this.MaxLevel));
+                this.threshPercents.Add(1f / this.MaxLevel);
             }
             if (this.MaxLevel > 1.25f)
             {
-                this.threshPercents.Add((1.25f / this.MaxLevel));
+                this.threshPercents.Add(1.25f / this.MaxLevel);
             }
             if (this.MaxLevel > 1.5f)
             {
-                this.threshPercents.Add((1.5f / this.MaxLevel));
+                this.threshPercents.Add(1.5f / this.MaxLevel);
             }
             if (this.MaxLevel > 1.75f)
             {
-                this.threshPercents.Add((1.75f / this.MaxLevel));
+                this.threshPercents.Add(1.75f / this.MaxLevel);
             }
             if (this.MaxLevel > 2f)
             {
-                this.threshPercents.Add((2f / this.MaxLevel));
+                this.threshPercents.Add(2f / this.MaxLevel);
             }
             if (this.MaxLevel > 2.5f)
             {
-                this.threshPercents.Add((2.5f / this.MaxLevel));
+                this.threshPercents.Add(2.5f / this.MaxLevel);
             }
             if (this.MaxLevel > 3f)
             {
-                this.threshPercents.Add((3f / this.MaxLevel));
+                this.threshPercents.Add(3f / this.MaxLevel);
             }
             if (this.MaxLevel > 4f)
             {
-                this.threshPercents.Add((4f / this.MaxLevel));
+                this.threshPercents.Add(4f / this.MaxLevel);
             }
             if (this.MaxLevel > 5f)
             {
-                this.threshPercents.Add((5f / this.MaxLevel));
+                this.threshPercents.Add(5f / this.MaxLevel);
             }
         }
 
@@ -175,9 +174,9 @@ namespace TorannMagic
                 Pawn pawn = base.pawn;
                 CompAbilityUserMight comp = pawn.GetComp<CompAbilityUserMight>();
                 ModOptions.SettingsRef settingsRef = new ModOptions.SettingsRef();
-                amount = amount * (0.015f);
+                amount = amount * 0.015f;
                 this.baseStaminaGain = amount * settingsRef.needMultiplier;
-                amount *= comp.spRegenRate;               
+                amount *= comp.spRegenRate;
                 if (pawn.health != null && pawn.health.hediffSet != null)
                 {
                     Hediff hdRegen = pawn.health.hediffSet.GetFirstHediffOfDef(TorannMagicDefOf.TM_EnergyRegenHD);
@@ -218,7 +217,7 @@ namespace TorannMagic
                 "\n",
                 this.def.description
             });
-        }    
+        }
 
         public override void DrawOnGUI(Rect rect, int maxThresholdMarkers = 2147483647, float customMargin = -1f, bool drawArrows = true, bool doTooltip = true)
         {
@@ -242,14 +241,14 @@ namespace TorannMagic
             {
                 num2 *= Mathf.InverseLerp(0f, 50f, rect.height);
             }
-            Text.Font = ((rect.height <= 55f) ? GameFont.Tiny : GameFont.Small);
+            Text.Font = (rect.height <= 55f) ? GameFont.Tiny : GameFont.Small;
             Text.Anchor = TextAnchor.LowerLeft;
-            Rect rect2 = new Rect(rect.x + num3 + rect.width * 0.1f, rect.y, rect.width - num3 - rect.width * 0.1f, rect.height / 2f);
+            Rect rect2 = new Rect(rect.x + num3 + (rect.width * 0.1f), rect.y, rect.width - num3 - (rect.width * 0.1f), rect.height / 2f);
             Widgets.Label(rect2, base.LabelCap);
             GUI.color = Color.yellow;
             Text.Anchor = TextAnchor.UpperLeft;
-            Rect rect3 = new Rect(rect.x, rect.y + rect.height / 2f, rect.width, rect.height / 2f);
-            rect3 = new Rect(rect3.x + num3, rect3.y, rect3.width - num3 * 2f, rect3.height - num2);
+            Rect rect3 = new Rect(rect.x, rect.y + (rect.height / 2f), rect.width, rect.height / 2f);
+            rect3 = new Rect(rect3.x + num3, rect3.y, rect3.width - (num3 * 2f), rect3.height - num2);
             Widgets.FillableBar(rect3, base.CurLevelPercentage);
             bool flag4 = this.threshPercents != null;
             if (flag4)
@@ -276,7 +275,7 @@ namespace TorannMagic
         private void DrawBarThreshold(Rect barRect, float threshPct)
         {
             float num = (float)((barRect.width <= 60f) ? 1 : 2);
-            Rect position = new Rect(barRect.x + barRect.width * threshPct - (num - 1f), barRect.y + barRect.height / 2f, num, barRect.height / 2f);
+            Rect position = new Rect(barRect.x + (barRect.width * threshPct) - (num - 1f), barRect.y + (barRect.height / 2f), num, barRect.height / 2f);
             bool flag = threshPct < base.CurLevelPercentage;
             Texture2D image;
             if (flag)

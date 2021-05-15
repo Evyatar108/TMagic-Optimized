@@ -1,19 +1,17 @@
-﻿using System;
-using RimWorld;
+﻿using RimWorld;
 using Verse;
-using AbilityUser;
 
 
 namespace TorannMagic
 {
-	[DefOf]
-	public static class TorannMagicDefOf
-	{
+    [DefOf]
+    public static class TorannMagicDefOf
+    {
         //Magic
         public static NeedDef TM_Mana;
-        
+
         public static HediffDef TM_MagicUserHD;
-        
+
         public static ThingDef BookOfInnerFire;
         public static ThingDef Torn_BookOfInnerFire;
         public static ThingDef BookOfHeartOfFrost;
@@ -56,7 +54,7 @@ namespace TorannMagic
 
         public static ThingDef BookOfQuestion;
 
-        public static HediffDef TM_Uncertainty;        
+        public static HediffDef TM_Uncertainty;
 
         public static ThingDef SpellOf_Rain;
         public static ThingDef SpellOf_Blink;
@@ -190,48 +188,48 @@ namespace TorannMagic
         //public static SitePartDef EnemyRaidOnArrival;
         public static SitePartDef ArcaneBanditSquad;
         //public static IncidentDef ArcaneEnemyRaid;
-        
+
         public static TraitDef TM_Gifted;
         public static TraitDef TM_OKWithDeath;
         public static TraitDef TM_ManaWellTD;
         public static TraitDef TM_ArcaneConduitTD;
-        
+
 
         //Wanderer
         public static TraitDef TM_Wanderer;
 
         public static TMAbilityDef TM_WandererCraft;
-        public static TMAbilityDef TM_Cantrips ;
+        public static TMAbilityDef TM_Cantrips;
         public static HediffDef TM_FrostSlowHD;
         public static HediffDef TM_CoolHD;
         public static HediffDef TM_WarmHD;
         public static HediffDef TM_RefreshedHD;
         public static HediffDef TM_JoltHD;
         public static HediffDef TM_ShockTherapyHD;
-        
-		//Fire
-		public static TraitDef InnerFire;
+
+        //Fire
+        public static TraitDef InnerFire;
 
         public static HediffDef InnerFireHD;
         public static HediffDef InnerFire_IHD;
         public static HediffDef InnerFire_IIHD;
         public static HediffDef InnerFire_IIIHD;
         public static HediffDef TM_InnerFire_AuraHD;
-        public static TMAbilityDef TM_RayofHope;        
-        public static TMAbilityDef TM_RayofHope_I;        
-        public static TMAbilityDef TM_RayofHope_II;        
-        public static TMAbilityDef TM_RayofHope_III;        
+        public static TMAbilityDef TM_RayofHope;
+        public static TMAbilityDef TM_RayofHope_I;
+        public static TMAbilityDef TM_RayofHope_II;
+        public static TMAbilityDef TM_RayofHope_III;
         public static TMAbilityDef TM_Firebolt;
         public static TMAbilityDef TM_Fireball;
-		public static TMAbilityDef TM_Fireclaw;
-		public static TMAbilityDef TM_Firestorm;
+        public static TMAbilityDef TM_Fireclaw;
+        public static TMAbilityDef TM_Firestorm;
 
         public static ThingDef TM_Firestorm_Small;
         public static ThingDef TM_Firestorm_Tiny;
         public static ThingDef TM_Firestorm_Large;
 
-		//Ice
-		public static TraitDef HeartOfFrost;
+        //Ice
+        public static TraitDef HeartOfFrost;
 
         public static TMAbilityDef TM_Soothe;
         public static HediffDef SoothingBreeze;
@@ -243,7 +241,7 @@ namespace TorannMagic
         public static HediffDef SoothingBreeze_III;
         public static HediffDef TM_SoothingBreeze_AuraHD;
         public static TMAbilityDef TM_Icebolt;
-		public static TMAbilityDef TM_Snowball;
+        public static TMAbilityDef TM_Snowball;
         public static TMAbilityDef TM_FrostRay;
         public static TMAbilityDef TM_FrostRay_I;
         public static TMAbilityDef TM_FrostRay_II;
@@ -264,20 +262,20 @@ namespace TorannMagic
         public static TMAbilityDef TM_AMP_III;
         public static TMAbilityDef TM_LightningBolt;
         public static TMAbilityDef TM_LightningCloud;
-		public static TMAbilityDef TM_LightningStorm;
+        public static TMAbilityDef TM_LightningStorm;
         public static TMAbilityDef TM_EyeOfTheStorm;
         public static ThingDef FlyingObject_EyeOfTheStorm;
-        
 
-		//Arcane
-		public static TraitDef Arcanist;
+
+        //Arcane
+        public static TraitDef Arcanist;
 
         public static TMAbilityDef TM_Shadow;
         public static HediffDef Shadow;
         public static TMAbilityDef TM_Shadow_I;
         public static HediffDef Shadow_I;
         public static TMAbilityDef TM_Shadow_II;
-        public static HediffDef Shadow_II;        
+        public static HediffDef Shadow_II;
         public static TMAbilityDef TM_Shadow_III;
         public static HediffDef Shadow_III;
         public static HediffDef TM_Shadow_AuraHD;
@@ -601,7 +599,7 @@ namespace TorannMagic
         public static ThoughtDef Polymorphed;
         public static ThoughtDef Polymorphed_Transhumanist;
         public static TMAbilityDef TM_ShapeshiftDW;
-        public static HediffDef TM_ShapeshiftHD;        
+        public static HediffDef TM_ShapeshiftHD;
 
         //Chronomancer
         public static TraitDef Chronomancer;
@@ -647,7 +645,7 @@ namespace TorannMagic
         public static TMAbilityDef TM_LightSkipMass;   //standalone
         public static TMAbilityDef TM_LightSkip;
         public static TMAbilityDef TM_LightSkipGlobal; //standalone
-        public static TMAbilityDef TM_Refraction;       
+        public static TMAbilityDef TM_Refraction;
         public static TMAbilityDef TM_SpiritOfLight;
         public static TMAbilityDef TM_SoL_Equalize;
         public static TMAbilityDef TM_SoL_CreateLight;
@@ -711,7 +709,7 @@ namespace TorannMagic
         public static TMAbilityDef TM_ShadowStrike; //might
         public static TMAbilityDef TM_Nightshade; //might
         public static HediffDef TM_NightshadeHD;
-        public static HediffDef TM_NightshadeToxinHD;         
+        public static HediffDef TM_NightshadeToxinHD;
 
         //Might 
         public static NeedDef TM_Stamina;
@@ -736,7 +734,7 @@ namespace TorannMagic
         public static TraitDef TM_Wayfarer;
 
         public static TMAbilityDef TM_WayfarerCraft;
-        public static TMAbilityDef TM_FieldTraining;        
+        public static TMAbilityDef TM_FieldTraining;
 
         //Might (Gladiator)
         public static TraitDef Gladiator;
@@ -847,7 +845,7 @@ namespace TorannMagic
         public static ThingDef FlyingObject_PsionicDash;
         public static ThingDef FlyingObject_PsionicStorm;
         public static ThingDef FlyingObject_PsiStorm;
-        public static ThingDef FlyingObject_PsionicLeap;        
+        public static ThingDef FlyingObject_PsionicLeap;
 
         //Death Knight
         public static TraitDef DeathKnight;
@@ -1107,7 +1105,7 @@ namespace TorannMagic
         public static ThingDef Mote_SpiritWolf_West;
         public static ThingDef Mote_Healing_Small;
 
-        public static ThingDef Projectile_FogOfTorment;        
+        public static ThingDef Projectile_FogOfTorment;
 
         public static EffecterDef GiantExplosion;
         public static EffecterDef TM_GiantExplosion;
@@ -1241,7 +1239,7 @@ namespace TorannMagic
         public static MentalStateDef TM_WanderSad;
         public static MentalStateDef TM_WanderConfused;
         public static MentalStateDef WanderConfused;
-        public static ThoughtDef TM_MemoryWipe;        
+        public static ThoughtDef TM_MemoryWipe;
 
         //Joy kinds
         public static JoyKindDef Social;
@@ -1282,7 +1280,7 @@ namespace TorannMagic
         public static NeedDef TM_Travel;
 
         //Stats
-        public static StatDef ArmorRating_Alignment;        
+        public static StatDef ArmorRating_Alignment;
 
         //Armor Categories
         public static DamageArmorCategoryDef Dark;

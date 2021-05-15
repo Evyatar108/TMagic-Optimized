@@ -1,24 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using RimWorld;
-using Verse;
+﻿using System.Collections.Generic;
 
 namespace TorannMagic
 {
     public class TM_ChaosPowers //: IExposable
     {
         private List<MagicPowerSkill> skills = null;
-        private TMAbilityDef ability = null;
-
-
 
         public List<MagicPowerSkill> Skills
         {
             get
             {
-                if(skills == null)
+                if (skills == null)
                 {
                     skills = new List<MagicPowerSkill>();
                     skills.Clear();
@@ -36,17 +28,7 @@ namespace TorannMagic
             }
         }
 
-        public TMAbilityDef Ability
-        {
-            get
-            {
-                return ability;
-            }
-            set
-            {
-                ability = value;
-            }
-        }
+        public TMAbilityDef Ability { get; set; } = null;
 
         public TM_ChaosPowers(TMAbilityDef _ability, List<MagicPowerSkill> _skills)
         {

@@ -3,7 +3,6 @@ using AbilityUser;
 using UnityEngine;
 using System.Linq;
 using System.Collections.Generic;
-using System;
 using RimWorld;
 
 namespace TorannMagic
@@ -54,11 +53,11 @@ namespace TorannMagic
         }
 
         protected override void Impact(Thing hitThing)
-        {            
+        {
             base.Impact(hitThing);
-           
+
             ThingDef def = this.def;
-            Pawn victim = null;            
+            Pawn victim = null;
 
             if (!this.initialized)
             {
@@ -81,7 +80,7 @@ namespace TorannMagic
                 {
                     pwrVal = 3;
                     verVal = 3;
-                }                
+                }
                 this.strikeDelay = this.strikeDelay - verVal;
                 this.radius = this.def.projectile.explosionRadius;
                 this.duration = Mathf.RoundToInt(this.radius * this.strikeDelay);
@@ -95,7 +94,7 @@ namespace TorannMagic
             {
                 int force = Mathf.RoundToInt((10 + (2 * pwrVal) - strikeNum) * casterSensitivity);
                 IntVec3 curCell;
-                for (int i =0; i < cellList.Count; i++)
+                for (int i = 0; i < cellList.Count; i++)
                 {
                     curCell = cellList[i];
                     Vector3 angle = GetVector(base.Position, curCell);
@@ -168,5 +167,5 @@ namespace TorannMagic
                 e.TakeDamage(dinfo);
             }
         }
-    }    
+    }
 }

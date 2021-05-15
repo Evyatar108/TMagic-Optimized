@@ -30,8 +30,8 @@ namespace TorannMagic
 
         float xProbOrigin;
         IntVec3 originPos;
-        
-        
+
+
         bool xflag = false;
         bool zflag = false;
 
@@ -51,7 +51,7 @@ namespace TorannMagic
             base.Impact(hitThing);
             ThingDef def = this.def;
 
-            CellRect cellRect = CellRect.CenteredOn(base.Position, 1); 
+            CellRect cellRect = CellRect.CenteredOn(base.Position, 1);
             cellRect.ClipInsideMap(map);
             IntVec3 centerCell = cellRect.CenterCell;
             IntVec3 expCell1 = centerCell;
@@ -105,9 +105,9 @@ namespace TorannMagic
             }
             else
             {
-               // Log.Message("arg_40_0:" + arg_40_0 + " arg_41_0:" + arg_41_0 + " arg_42_0:" + arg_42_0);
+                // Log.Message("arg_40_0:" + arg_40_0 + " arg_41_0:" + arg_41_0 + " arg_42_0:" + arg_42_0);
                 Messages.Message("InvalidTargetLocation".Translate(), MessageTypeDefOf.RejectInput);
-                destinationReached = true;                
+                destinationReached = true;
             }
 
             if (destinationReached)
@@ -115,8 +115,8 @@ namespace TorannMagic
                 zflag = false;
                 xflag = false;
                 SoundDefOf.Ambient_AltitudeWind.sustainFadeoutTime.Equals(30.0f);
-                this.FireExplosion(pwr.level, ver.level, centerCell, map, (1.2f + (float)(ver.level * .8f)));
-                MoteMaker.ThrowSmoke(pawn.Position.ToVector3(), map, (0.8f + (float)(ver.level * .8f)));
+                this.FireExplosion(pwr.level, ver.level, centerCell, map, 1.2f + (float)(ver.level * .8f));
+                MoteMaker.ThrowSmoke(pawn.Position.ToVector3(), map, 0.8f + (float)(ver.level * .8f));
 
                 pawn.mindState.priorityWork.ClearPrioritizedWorkAndJobQueue();
                 pawn.Map.pawnDestinationReservationManager.ReleaseAllClaimedBy(pawn);
@@ -132,16 +132,16 @@ namespace TorannMagic
                     expCell2 = GetNewPos(expCell2, originPos.x <= target.x, originPos.z <= target.z, false, 0, 0, 1 - xProbOrigin, xProbOrigin);
                     MoteMaker.ThrowSmoke(expCell2.ToVector3(), map, 1.6f);
                 }
-                for (int i = 0; i < (4 + (3*ver.level)); i++)
+                for (int i = 0; i < (4 + (3 * ver.level)); i++)
                 {
-                    cellRect = CellRect.CenteredOn(expCell1, (1 + ver.level));
+                    cellRect = CellRect.CenteredOn(expCell1, 1 + ver.level);
                     IntVec3 randomCell = cellRect.RandomCell;
                     this.FireExplosion(pwr.level, ver.level, randomCell, map, .4f);
-                    cellRect = CellRect.CenteredOn(expCell2, (1 + ver.level));
+                    cellRect = CellRect.CenteredOn(expCell2, 1 + ver.level);
                     randomCell = cellRect.RandomCell;
                     this.FireExplosion(pwr.level, ver.level, randomCell, map, .4f);
                 }
-                
+
             }
 
         }
@@ -154,8 +154,8 @@ namespace TorannMagic
                 arg_41_0 = target.ToVector3().InBounds(pawn.Map);
                 arg_42_0 = true; // target.Standable(pawn.Map);
                 vflag = arg_40_0 && arg_41_0 && arg_42_0;
-                if(vflag)
-                {                    
+                if (vflag)
+                {
                     newPos = pawn.Position;
                     originPos = pawn.Position;
                     MoteMaker.MakeStaticMote(pawn.TrueCenter(), pawn.Map, ThingDefOf.Mote_ExplosionFlash, 12f);
@@ -163,7 +163,7 @@ namespace TorannMagic
                     MoteMaker.ThrowDustPuff(originPos, pawn.Map, Rand.Range(1.2f, 1.8f));
                     XProb(target, pawn);
                     xProbOrigin = xProb;
-                } 
+                }
             }
             else
             {
@@ -173,9 +173,9 @@ namespace TorannMagic
             initialize = false;
         }
 
-        private void XProb (IntVec3 target, Pawn pawn)
+        private void XProb(IntVec3 target, Pawn pawn)
         {
-            hyp = Mathf.Sqrt((Mathf.Pow(pawn.Position.x - target.x, 2)) + (Mathf.Pow(pawn.Position.z - target.z, 2)));
+            hyp = Mathf.Sqrt(Mathf.Pow(pawn.Position.x - target.x, 2) + Mathf.Pow(pawn.Position.z - target.z, 2));
             angleRad = Mathf.Asin(Mathf.Abs(pawn.Position.x - target.x) / hyp);
             angleDeg = Mathf.Rad2Deg * angleRad;
             xProb = angleDeg / 90;
@@ -189,8 +189,8 @@ namespace TorannMagic
 
             if (halfway)
             {
-                xvar = (-1 * xvar);
-                zvar = (-1 * zvar);
+                xvar = -1 * xvar;
+                zvar = -1 * zvar;
             }
 
             if (xdir && zdir)
@@ -278,7 +278,7 @@ namespace TorannMagic
         {
 
             System.Random rnd = new System.Random();
-            int modDamAmountRand = (1 + pwr) * GenMath.RoundRandom(rnd.Next(1, projectile.projectile.GetDamageAmount(1,null) / 2));
+            int modDamAmountRand = (1 + pwr) * GenMath.RoundRandom(rnd.Next(1, projectile.projectile.GetDamageAmount(1, null) / 2));
             if (map == null)
             {
                 Log.Warning("Tried to do explosion in a null map.");
@@ -291,7 +291,7 @@ namespace TorannMagic
             explosion.radius = radius;
             explosion.damType = damType;
             explosion.instigator = instigator;
-            explosion.damAmount = ((projectile == null) ? GenMath.RoundRandom((float)damType.defaultDamage) : modDamAmountRand);
+            explosion.damAmount = (projectile == null) ? GenMath.RoundRandom((float)damType.defaultDamage) : modDamAmountRand;
             explosion.weapon = source;
             explosion.preExplosionSpawnThingDef = preExplosionSpawnThingDef;
             explosion.preExplosionSpawnChance = preExplosionSpawnChance;
@@ -308,10 +308,8 @@ namespace TorannMagic
             bool flag = !shieldedPawn.Dead && !shieldedPawn.Downed;
             if (flag)
             {
-                float num = Mathf.Lerp(1.2f, 1.55f, magnitude);
                 Vector3 vector = shieldedPawn.Drawer.DrawPos;
                 vector.y = Altitudes.AltitudeFor(AltitudeLayer.MoteOverhead);
-                float angle = (float)Rand.Range(0, 360);
                 Vector3 s = new Vector3(3f, 3f, 3f);
                 Matrix4x4 matrix = default(Matrix4x4);
                 matrix.SetTRS(vector, Quaternion.AngleAxis(0f, Vector3.up), s);
@@ -349,7 +347,7 @@ namespace TorannMagic
                 else
                 {
                     HediffSet expr_26 = expr_1A.hediffSet;
-                    arg_32_1 = ((expr_26 != null) ? expr_26.hediffs : null);
+                    arg_32_1 = (expr_26 != null) ? expr_26.hediffs : null;
                 }
             }
             arg_32_0.AddRange(arg_32_1);
@@ -369,7 +367,7 @@ namespace TorannMagic
                 else
                 {
                     HediffSet expr_66 = expr_52.hediffSet;
-                    arg_84_0 = ((expr_66 != null) ? new int?(expr_66.hediffs.Count<Hediff>()) : null);
+                    arg_84_0 = (expr_66 != null) ? new int?(expr_66.hediffs.Count<Hediff>()) : null;
                 }
             }
             bool flag = (arg_84_0 ?? 0) > 0;
@@ -389,7 +387,6 @@ namespace TorannMagic
                 }
             }
             list.Clear();
-            list = null;
         }
 
         public override void Tick()

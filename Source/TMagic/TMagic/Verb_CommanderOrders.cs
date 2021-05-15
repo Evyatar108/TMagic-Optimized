@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using RimWorld;
 using AbilityUser;
 using Verse;
-using Verse.AI;
 using UnityEngine;
 
 namespace TorannMagic
@@ -23,7 +21,7 @@ namespace TorannMagic
         protected override bool TryCastShot()
         {
             bool flag = false;
-            
+
             Pawn caster = base.CasterPawn;
             this.TargetsAoE.Clear();
             //this.UpdateTargets();
@@ -50,7 +48,7 @@ namespace TorannMagic
             for (int i = 0; i < this.TargetsAoE.Count; i++)
             {
                 Pawn newPawn = this.TargetsAoE[i].Thing as Pawn;
-                if(newPawn.RaceProps.Humanlike && newPawn != caster)
+                if (newPawn.RaceProps.Humanlike && newPawn != caster)
                 {
                     float socialChance = (float)(caster.skills.GetSkill(SkillDefOf.Social).Level / 20f);
                     float rChance = Mathf.Clamp(socialChance * 2f, .1f, 1f);
@@ -58,7 +56,7 @@ namespace TorannMagic
                     {
                         rChance = Mathf.Clamp(socialChance * 3f, .5f, 1f);
                         ModOptions.SettingsRef settingsRef = new ModOptions.SettingsRef();
-                        if(settingsRef.AIHardMode)
+                        if (settingsRef.AIHardMode)
                         {
                             socialChance = 1f;
                         }
@@ -68,30 +66,30 @@ namespace TorannMagic
                         float targetCountFactor = Mathf.Clamp(5f / (float)this.TargetsAoE.Count, .1f, 1f);
                         if (flagSA)
                         {
-                            if(newPawn.needs != null && newPawn.needs.rest != null)
+                            if (newPawn.needs != null && newPawn.needs.rest != null)
                             {
-                                newPawn.needs.rest.CurLevel += ((0.5f *targetCountFactor) + .05f * pwrVal);
+                                newPawn.needs.rest.CurLevel += (0.5f * targetCountFactor) + (.05f * pwrVal);
                             }
-                            if(newPawn.health != null && newPawn.health.hediffSet != null)
+                            if (newPawn.health != null && newPawn.health.hediffSet != null)
                             {
                                 HealthUtility.AdjustSeverity(newPawn, TorannMagicDefOf.TM_StayAlertHD, (.7f * targetCountFactor) + (.1f * pwrVal));
                             }
                             TM_MoteMaker.ThrowGenericMote(TorannMagicDefOf.Mote_PowerWave, newPawn.DrawPos, newPawn.Map, .8f, .2f, .1f, .1f, 0, 1f, 0, Rand.Chance(.5f) ? 0 : 180);
                         }
-                        else if(flagMO)
+                        else if (flagMO)
                         {
-                            if(newPawn.health != null && newPawn.health.hediffSet != null)
+                            if (newPawn.health != null && newPawn.health.hediffSet != null)
                             {
                                 HealthUtility.AdjustSeverity(newPawn, TorannMagicDefOf.TM_MoveOutHD, Mathf.Clamp(.6f * targetCountFactor, .25f, .6f) + (.13f * pwrVal));
                             }
                             TM_MoteMaker.ThrowGenericMote(TorannMagicDefOf.Mote_PowerWave, newPawn.DrawPos, newPawn.Map, .8f, .2f, .1f, .1f, 0, 1f, 0, Rand.Chance(.5f) ? 0 : 180);
                         }
-                        else if(flagHTL)
+                        else if (flagHTL)
                         {
-                            if(newPawn.health != null && newPawn.health.hediffSet != null)
+                            if (newPawn.health != null && newPawn.health.hediffSet != null)
                             {
                                 HealthUtility.AdjustSeverity(newPawn, TorannMagicDefOf.TM_HTLShieldHD, Mathf.Clamp(35f * targetCountFactor, 10f, 35f) + (5f * pwrVal));
-                                HealthUtility.AdjustSeverity(newPawn, TorannMagicDefOf.TM_HoldTheLineHD, Mathf.Clamp(.7f *targetCountFactor, .3f, .7f) + (.1f * pwrVal));
+                                HealthUtility.AdjustSeverity(newPawn, TorannMagicDefOf.TM_HoldTheLineHD, Mathf.Clamp(.7f * targetCountFactor, .3f, .7f) + (.1f * pwrVal));
                                 Effecter HTLShieldED = TorannMagicDefOf.TM_HTL_EffecterED.Spawn();
                                 HTLShieldED.Trigger(new TargetInfo(newPawn.Position, newPawn.Map, false), new TargetInfo(newPawn.Position, newPawn.Map, false));
                                 OrderED.Cleanup();

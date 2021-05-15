@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using RimWorld;
 using Verse;
 
@@ -22,14 +19,8 @@ namespace TorannMagic.ModOptions
 
         public void SetFactionSettings(string f, float fighter, float mage)
         {
-            if(Settings.Instance.FactionFighterSettings.ContainsKey(f))
-            {
-                Settings.Instance.FactionFighterSettings.Remove(f);
-            }
-            if(Settings.Instance.FactionMageSettings.ContainsKey(f))
-            {
-                Settings.Instance.FactionMageSettings.Remove(f);
-            }
+            Settings.Instance.FactionFighterSettings.Remove(f);
+            Settings.Instance.FactionMageSettings.Remove(f);
             Settings.Instance.FactionFighterSettings.Add(f, fighter);
             Settings.Instance.FactionMageSettings.Add(f, mage);
         }
@@ -37,7 +28,7 @@ namespace TorannMagic.ModOptions
         public static void InitializeFactionSettings()
         {
             IEnumerable<FactionDef> factionDefs = from def in DefDatabase<FactionDef>.AllDefs
-                                                  where (!def.isPlayer && !def.hidden)
+                                                  where !def.isPlayer && !def.hidden
                                                   select def;
 
             if (Settings.Instance.FactionFighterSettings == null || (Settings.Instance.FactionFighterSettings.Count != Settings.Instance.FactionMageSettings.Count))
@@ -63,15 +54,13 @@ namespace TorannMagic.ModOptions
             else
             {
                 Dictionary<string, float> fList = new Dictionary<string, float>();
-                fList.Clear();
                 Dictionary<string, float> mList = new Dictionary<string, float>();
-                mList.Clear();
                 foreach (FactionDef current in factionDefs)
                 {
                     if (Settings.Instance.FactionFighterSettings.ContainsKey(current.defName))
                     {
                         fList.Add(current.defName, Settings.Instance.FactionFighterSettings[current.defName]);
-                    }       
+                    }
                     else
                     {
                         fList.Add(current.defName, 1f);

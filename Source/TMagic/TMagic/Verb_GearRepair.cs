@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using RimWorld;
 using AbilityUser;
 using Verse;
-using UnityEngine;
 
 
 namespace TorannMagic
@@ -14,12 +11,11 @@ namespace TorannMagic
         protected override bool TryCastShot()
         {
             Pawn caster = base.CasterPawn;
-            Pawn pawn = this.currentTarget.Thing as Pawn;
 
             bool flag = caster != null && !caster.Dead;
             if (flag)
             {
-                if(caster.health.hediffSet.HasHediff(HediffDef.Named("TM_HediffGearRepair")))
+                if (caster.health.hediffSet.HasHediff(HediffDef.Named("TM_HediffGearRepair")))
                 {
                     using (IEnumerator<Hediff> enumerator = caster.health.hediffSet.GetHediffs<Hediff>().GetEnumerator())
                     {

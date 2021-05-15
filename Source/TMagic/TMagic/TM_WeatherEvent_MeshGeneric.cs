@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using Verse;
-using Verse.Sound;
-using RimWorld;
 
 namespace TorannMagic
 {
@@ -20,7 +18,6 @@ namespace TorannMagic
         private Vector2 shadowVector; //currently unused
         private Vector3 meshStart = default(Vector3);
         private Vector3 meshEnd = default(Vector3);
-        private bool startIsVec = false;
         private Mesh boltMesh = null;
         private static List<Mesh> boltMeshes = new List<Mesh>();
         private static readonly SkyColorSet MeshSkyColors = new SkyColorSet(new Color(0.9f, 0.95f, 1f), new Color(0.784313738f, 0.8235294f, 0.847058833f), new Color(0.9f, 0.95f, 1f), 1.15f);
@@ -131,7 +128,7 @@ namespace TorannMagic
                 }
                 else
                 {
-                    result = 1f - (float)(this.age - this.durationSolid) / (float)this.fadeOutTicks;
+                    result = 1f - ((float)(this.age - this.durationSolid) / (float)this.fadeOutTicks);
                 }
                 return result;
             }
@@ -139,7 +136,7 @@ namespace TorannMagic
 
         public Vector3 GetVector(Vector3 start, Vector3 end)
         {
-            Vector3 heading = (end - start);
+            Vector3 heading = end - start;
             float distance = heading.magnitude;
             Vector3 direction = heading / distance;
             this.angle = (Quaternion.AngleAxis(90, Vector3.up) * direction).ToAngleFlat();

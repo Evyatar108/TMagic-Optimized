@@ -1,10 +1,5 @@
 ﻿using Verse;
-using Verse.Sound;
-using RimWorld;
 using AbilityUser;
-using System;
-using System.Linq;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace TorannMagic
@@ -37,11 +32,11 @@ namespace TorannMagic
             GenExplosion.DoExplosion(this.strikePos, map, this.def.projectile.explosionRadius, this.def.projectile.damageDef, this.launcher as Pawn, Mathf.RoundToInt((this.def.projectile.GetDamageAmount(1f) + (1.5f * verVal)) * mightPwr), 3, this.def.projectile.soundExplode, def, this.equipmentDef, null, null, 0f, 1, false, null, 0f, 1, 0f, true);
             strikePos.x += Mathf.RoundToInt(Rand.Range(-radius, radius));
             strikePos.z += Mathf.RoundToInt(Rand.Range(-radius, radius));
-            GenExplosion.DoExplosion(this.strikePos, map, this.def.projectile.explosionRadius/2f, this.def.projectile.damageDef, this.launcher as Pawn, Mathf.RoundToInt(((this.def.projectile.GetDamageAmount(1f)/2f) + (1f * verVal)) * mightPwr), 0, this.def.projectile.soundExplode, def, this.equipmentDef, null, null, 0f, 1, false, null, 0f, 1, 0f, true);
+            GenExplosion.DoExplosion(this.strikePos, map, this.def.projectile.explosionRadius / 2f, this.def.projectile.damageDef, this.launcher as Pawn, Mathf.RoundToInt(((this.def.projectile.GetDamageAmount(1f) / 2f) + (1f * verVal)) * mightPwr), 0, this.def.projectile.soundExplode, def, this.equipmentDef, null, null, 0f, 1, false, null, 0f, 1, 0f, true);
             strikePos = base.Position;
             strikePos.x += Mathf.RoundToInt(Rand.Range(-radius, radius));
             strikePos.z += Mathf.RoundToInt(Rand.Range(-radius, radius));
-            GenExplosion.DoExplosion(this.strikePos, map, this.def.projectile.explosionRadius/2f, this.def.projectile.damageDef, this.launcher as Pawn, Mathf.RoundToInt(((this.def.projectile.GetDamageAmount(1f) / 2f) + (1f * verVal)) * mightPwr), 0, this.def.projectile.soundExplode, def, this.equipmentDef, null, null, 0f, 1, false, null, 0f, 1, 0f, true);
+            GenExplosion.DoExplosion(this.strikePos, map, this.def.projectile.explosionRadius / 2f, this.def.projectile.damageDef, this.launcher as Pawn, Mathf.RoundToInt(((this.def.projectile.GetDamageAmount(1f) / 2f) + (1f * verVal)) * mightPwr), 0, this.def.projectile.soundExplode, def, this.equipmentDef, null, null, 0f, 1, false, null, 0f, 1, 0f, true);
         }
 
     }

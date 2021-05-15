@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Verse;
-using RimWorld;
 using Verse.AI;
 using UnityEngine;
 
@@ -11,8 +9,6 @@ namespace TorannMagic
 {
     internal class JobDriver_PsionicBarrier : JobDriver
     {
-        private const TargetIndex building = TargetIndex.A;
-
         int age = -1;
         int barrierSearchFrequency = 1;
         int duration = 900;
@@ -29,7 +25,7 @@ namespace TorannMagic
         {
             CompAbilityUserMight comp = this.pawn.GetComp<CompAbilityUserMight>();
             float radius = 2.5f;
-            radius += (.75f * TM_Calc.GetMightSkillLevel(pawn, comp.MightData.MightPowerSkill_PsionicBarrier, "TM_PsionicBarrier", "_ver", true));
+            radius += .75f * TM_Calc.GetMightSkillLevel(pawn, comp.MightData.MightPowerSkill_PsionicBarrier, "TM_PsionicBarrier", "_ver", true);
             //if (this.pawn.story.traits.HasTrait(TorannMagicDefOf.TM_Psionic))
             //{
             //    radius = 2 + (.5f * comp.MightData.MightPowerSkill_PsionicBarrier.FirstOrDefault((MightPowerSkill x) => x.label == "TM_PsionicBarrier_ver").level);
@@ -45,13 +41,13 @@ namespace TorannMagic
                 if (age > duration)
                 {
                     this.EndJobWith(JobCondition.Succeeded);
-                }                
+                }
                 Map map = this.pawn.Map;
                 this.barrierCells = new List<IntVec3>();
                 this.barrierCells.Clear();
                 this.GetCellList(radius);
                 ticksLeftThisToil = 10;
-                comp.shouldDrawPsionicShield = true;                
+                comp.shouldDrawPsionicShield = true;
             };
             psionicBarrier.tickAction = delegate
             {
@@ -60,7 +56,7 @@ namespace TorannMagic
                 {
                     if (psiFlag)
                     {
-                        if(Rand.Chance(.15f * comp.MightData.MightPowerSkill_PsionicBarrier.FirstOrDefault((MightPowerSkill x) => x.label == "TM_PsionicBarrier_pwr").level))
+                        if (Rand.Chance(.15f * comp.MightData.MightPowerSkill_PsionicBarrier.FirstOrDefault((MightPowerSkill x) => x.label == "TM_PsionicBarrier_pwr").level))
                         {
                             RepelProjectiles(false, radius);
                         }
@@ -76,7 +72,7 @@ namespace TorannMagic
                         {
                             HealthUtility.AdjustSeverity(this.pawn, HediffDef.Named("TM_PsionicHD"), -.04f);
                         }
-                        
+
                         psiEnergy = this.pawn.health.hediffSet.GetFirstHediffOfDef(HediffDef.Named("TM_PsionicHD"), false).Severity;
                         if (psiEnergy < 1)
                         {
@@ -92,20 +88,20 @@ namespace TorannMagic
                         RepelProjectiles(false, radius);
                         comp.Stamina.CurLevel -= .00035f;
                     }
-                }                
-                age++;                
-                if(!psiFlag)
+                }
+                age++;
+                if (!psiFlag)
                 {
-                    ticksLeftThisToil = Mathf.RoundToInt(((float)(duration - age) / (float)duration)*100f);
+                    ticksLeftThisToil = Mathf.RoundToInt((float)(duration - age) / (float)duration * 100f);
                     if (age > duration)
                     {
                         this.EndJobWith(JobCondition.Succeeded);
                     }
-                    if(comp.Stamina.CurLevel < .01f)
+                    if (comp.Stamina.CurLevel < .01f)
                     {
                         this.EndJobWith(JobCondition.Succeeded);
                     }
-                }               
+                }
             };
             psionicBarrier.defaultCompleteMode = ToilCompleteMode.Delay;
             psionicBarrier.defaultDuration = this.duration;
@@ -115,18 +111,18 @@ namespace TorannMagic
                 {
                     return 1f;
                 }
-                return 1f - (float)psionicBarrier.actor.jobs.curDriver.ticksLeftThisToil/100;
+                return 1f - ((float)psionicBarrier.actor.jobs.curDriver.ticksLeftThisToil / 100);
 
             }, false, 0f);
             psionicBarrier.AddFinishAction(delegate
             {
-                if(this.pawn.story.traits.HasTrait(TorannMagicDefOf.Faceless))
-                {                    
+                if (this.pawn.story.traits.HasTrait(TorannMagicDefOf.Faceless))
+                {
                     CompAbilityUserMight mightComp = this.pawn.GetComp<CompAbilityUserMight>();
                     if (mightComp.mimicAbility != null)
                     {
                         mightComp.RemovePawnAbility(mightComp.mimicAbility);
-                    }                  
+                    }
                 }
                 comp.shouldDrawPsionicShield = false;
                 //do soemthing?
@@ -144,7 +140,7 @@ namespace TorannMagic
                     if (cellList[j] is Projectile)
                     {
                         Projectile p = cellList[j] as Projectile;
-                        if (p.Launcher != null && p.Launcher.Position.DistanceTo(TargetLocA) > (radius +.5f))
+                        if (p.Launcher != null && p.Launcher.Position.DistanceTo(TargetLocA) > (radius + .5f))
                         {
                             Vector3 displayEffect = this.barrierCells[i].ToVector3Shifted();
                             displayEffect.x += Rand.Range(-.3f, .3f);
@@ -152,17 +148,17 @@ namespace TorannMagic
                             displayEffect.z += Rand.Range(-.3f, .3f);
                             float projectileDamage = cellList[j].def.projectile.GetDamageAmount(1, null);
                             TM_MoteMaker.ThrowGenericMote(ThingDef.Named("Mote_LightningGlow"), displayEffect, this.Map, projectileDamage / 8f, .2f, .1f, .3f, 0, 0, 0, Rand.Range(0, 360));
-                            if(usePsionicEnergy)
+                            if (usePsionicEnergy)
                             {
                                 int eff = this.pawn.GetComp<CompAbilityUserMight>().MightData.MightPowerSkill_PsionicBarrier.FirstOrDefault((MightPowerSkill x) => x.label == "TM_PsionicBarrier_eff").level;
-                                float sevReduct = (projectileDamage / (12 + eff));
+                                float sevReduct = projectileDamage / (12 + eff);
                                 HealthUtility.AdjustSeverity(this.pawn, HediffDef.Named("TM_PsionicHD"), -sevReduct);
                             }
                             else
                             {
-                                this.pawn.GetComp<CompAbilityUserMight>().Stamina.CurLevel -= (projectileDamage / 600);
+                                this.pawn.GetComp<CompAbilityUserMight>().Stamina.CurLevel -= projectileDamage / 600;
                             }
-                            if(cellList[j].def.projectile.explosionRadius > 0 && cellList[j].def != TorannMagicDefOf.Projectile_FogOfTorment)
+                            if (cellList[j].def.projectile.explosionRadius > 0 && cellList[j].def != TorannMagicDefOf.Projectile_FogOfTorment)
                             {
                                 GenExplosion.DoExplosion(barrierCells[i], this.pawn.Map, cellList[j].def.projectile.explosionRadius, cellList[j].def.projectile.damageDef, this.pawn, (int)projectileDamage, cellList[j].def.projectile.GetArmorPenetration(1, null), cellList[j].def.projectile.soundExplode,
                                     null, cellList[j].def, null, cellList[j].def.projectile.postExplosionSpawnThingDef, cellList[j].def.projectile.postExplosionSpawnChance, cellList[j].def.projectile.postExplosionSpawnThingCount, cellList[j].def.projectile.applyDamageToExplosionCellsNeighbors,
@@ -173,18 +169,6 @@ namespace TorannMagic
                     }
                 }
             }
-        }        
-
-        private void DrawBarrier(float radius)
-        {
-            float drawRadius = radius * .23f;
-            float num = Mathf.Lerp(drawRadius, 9.5f, drawRadius);
-            Vector3 vector = this.TargetLocA.ToVector3Shifted();
-            vector.y = Altitudes.AltitudeFor(AltitudeLayer.VisEffects);
-            Vector3 s = new Vector3(num, 9.5f, num);
-            Matrix4x4 matrix = default(Matrix4x4);
-            matrix.SetTRS(vector, Quaternion.AngleAxis(Rand.Range(0,360), Vector3.up), s);
-            Graphics.DrawMesh(MeshPool.plane10, matrix, TM_MatPool.PsionicBarrier, 0);
         }
 
         private void GetCellList(float radius)

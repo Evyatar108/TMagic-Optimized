@@ -10,7 +10,7 @@ using AbilityUser;
 namespace TorannMagic
 {
     public class CompSentinel : ThingComp
-	{
+    {
         private bool initialized = false;
         List<Pawn> threatList = new List<Pawn>();
         public LocalTargetInfo target = null;
@@ -95,10 +95,10 @@ namespace TorannMagic
 
                                 }
 
-                                if(this.target.Thing is Pawn)
+                                if (this.target.Thing is Pawn)
                                 {
                                     Pawn prisonerPawn = this.target.Thing as Pawn;
-                                    if(prisonerPawn.IsPrisoner)
+                                    if (prisonerPawn.IsPrisoner)
                                     {
                                         Job job = new Job(JobDefOf.AttackMelee, prisonerPawn);
                                         this.Pawn.jobs.TryTakeOrderedJob(job, JobTag.Misc);
@@ -123,13 +123,13 @@ namespace TorannMagic
                         this.killNow++;
                     }
 
-                    if(this.ShouldDespawn && this.Pawn.Position == this.sentinelLoc)
+                    if (this.ShouldDespawn && this.Pawn.Position == this.sentinelLoc)
                     {
                         SingleSpawnLoop();
                         this.Pawn.Destroy(DestroyMode.Vanish);
                     }
-                    
-                }                
+
+                }
             }
             age++;
         }
@@ -142,14 +142,14 @@ namespace TorannMagic
         public override void PostPreApplyDamage(DamageInfo dinfo, out bool absorbed)
         {
             base.PostPreApplyDamage(dinfo, out absorbed);
-            if(dinfo.Instigator != null)
+            if (dinfo.Instigator != null)
             {
                 Thing instigatorThing = dinfo.Instigator;
-                if(instigatorThing is Building)
+                if (instigatorThing is Building)
                 {
                     if (instigatorThing.Faction != null && instigatorThing.Faction != this.Pawn.Faction)
                     {
-                        
+
                     }
                 }
             }
@@ -157,7 +157,7 @@ namespace TorannMagic
 
         private void DetermineSustainerPawn()
         {
-            if(this.sustainerPawn.DestroyedOrNull() || this.sustainerPawn.Dead)
+            if (this.sustainerPawn.DestroyedOrNull() || this.sustainerPawn.Dead)
             {
                 this.Pawn.Kill(null, null);
             }
@@ -167,7 +167,7 @@ namespace TorannMagic
         {
             this.target = null;
             try
-            {                
+            {
                 List<Pawn> allPawns = this.Pawn.Map.mapPawns.AllPawnsSpawned;
                 for (int i = 0; i < allPawns.Count(); i++)
                 {
@@ -181,19 +181,19 @@ namespace TorannMagic
                                 {
                                     if (FactionUtility.HostileTo(this.Pawn.Faction, allPawns[i].Faction))
                                     {
-                                        if(ModCheck.Validate.PrisonLabor.IsInitialized())
+                                        if (ModCheck.Validate.PrisonLabor.IsInitialized())
                                         {
-                                            if(!allPawns[i].IsPrisoner)
+                                            if (!allPawns[i].IsPrisoner)
                                             {
                                                 this.target = allPawns[i];
                                                 break;
-                                            }                                            
+                                            }
                                         }
                                         else
                                         {
                                             this.target = allPawns[i];
                                             break;
-                                        }                                      
+                                        }
                                     }
                                 }
                             }
@@ -214,7 +214,7 @@ namespace TorannMagic
                     this.shouldDespawn = true;
                 }
             }
-            catch(NullReferenceException ex)
+            catch (NullReferenceException)
             {
                 //Log.Message("Error processing threats" + ex);
             }
@@ -223,7 +223,7 @@ namespace TorannMagic
         public void DamageEntities(Thing e, float d, DamageDef type, Thing instigator)
         {
             int amt = Mathf.RoundToInt(Rand.Range(.75f, 1.25f) * d);
-            DamageInfo dinfo = new DamageInfo(type, amt, Rand.Range(0,amt), (float)-1, instigator, null, null, DamageInfo.SourceCategory.ThingOrUnknown);
+            DamageInfo dinfo = new DamageInfo(type, amt, Rand.Range(0, amt), (float)-1, instigator, null, null, DamageInfo.SourceCategory.ThingOrUnknown);
             bool flag = e != null;
             if (flag)
             {
@@ -233,23 +233,23 @@ namespace TorannMagic
 
         public bool TargetIsValid(Thing target)
         {
-            if(target.DestroyedOrNull())
+            if (target.DestroyedOrNull())
             {
                 return false;
             }
-            if(!target.Spawned)
+            if (!target.Spawned)
             {
                 return false;
             }
-            if(target is Pawn)
+            if (target is Pawn)
             {
                 return !(target as Pawn).Downed;
             }
-            if(target.Position.DistanceToEdge(this.Pawn.Map) < 8)
+            if (target.Position.DistanceToEdge(this.Pawn.Map) < 8)
             {
                 return false;
             }
-            if(target.Faction != null)
+            if (target.Faction != null)
             {
                 return target.Faction != this.Pawn.Faction;
             }
@@ -286,10 +286,10 @@ namespace TorannMagic
                         IEnumerable<Hediff_Injury> arg_BB_0 = this.Pawn.health.hediffSet.GetHediffs<Hediff_Injury>();
                         Func<Hediff_Injury, bool> arg_BB_1;
 
-                        arg_BB_1 = ((Hediff_Injury injury) => injury.Part == rec);
+                        arg_BB_1 = (Hediff_Injury injury) => injury.Part == rec;
 
                         foreach (Hediff_Injury current in arg_BB_0.Where(arg_BB_1))
-                        {                            
+                        {
                             healthDeficit += current.Severity;
                         }
                     }
@@ -297,7 +297,7 @@ namespace TorannMagic
                 CompAbilityUserMagic comp = this.sustainerPawn.GetComp<CompAbilityUserMagic>();
                 comp.summonedSentinels.Remove(this.Pawn);
                 comp.summonedSentinels.Add(spawnedThing);
-                DamageInfo dinfo = new DamageInfo(DamageDefOf.Blunt, 10*healthDeficit, 0, (float)-1, this.Pawn, null, null, DamageInfo.SourceCategory.ThingOrUnknown);
+                DamageInfo dinfo = new DamageInfo(DamageDefOf.Blunt, 10 * healthDeficit, 0, (float)-1, this.Pawn, null, null, DamageInfo.SourceCategory.ThingOrUnknown);
                 spawnedThing.TakeDamage(dinfo);
 
             }

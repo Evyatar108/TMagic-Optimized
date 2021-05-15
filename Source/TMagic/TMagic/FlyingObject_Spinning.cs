@@ -1,10 +1,8 @@
 ﻿using RimWorld;
-using System;
 using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using Verse;
-using AbilityUser;
 
 namespace TorannMagic
 {
@@ -38,8 +36,6 @@ namespace TorannMagic
         public int weaponDmg = 0;
 
         Pawn pawn;
-        CompAbilityUserMagic comp;
-
         TMPawnSummoned newPawn = new TMPawnSummoned();
 
         protected new int StartingTicksToImpact
@@ -68,8 +64,8 @@ namespace TorannMagic
         {
             get
             {
-                Vector3 b = (this.destination - this.origin) * (1f - (float)this.ticksToImpact / (float)this.StartingTicksToImpact);
-                return this.origin + b + Vector3.up * this.def.Altitude;
+                Vector3 b = (this.destination - this.origin) * (1f - ((float)this.ticksToImpact / (float)this.StartingTicksToImpact));
+                return this.origin + b + (Vector3.up * this.def.Altitude);
             }
         }
 
@@ -131,15 +127,15 @@ namespace TorannMagic
         }
 
         public void Launch(Thing launcher, Vector3 origin, LocalTargetInfo targ, Thing flyingThing, DamageInfo? newDamageInfo = null)
-        { 
-            bool spawned = flyingThing != null && flyingThing.Spawned;            
+        {
+            bool spawned = flyingThing != null && flyingThing.Spawned;
             pawn = launcher as Pawn;
             if (pawn != null && pawn.Drafted)
             {
                 this.drafted = true;
             }
             if (spawned)
-            {               
+            {
                 flyingThing.DeSpawn();
             }
             this.speed = this.speed * this.force;
@@ -156,12 +152,11 @@ namespace TorannMagic
             this.destination = targ.Cell.ToVector3Shifted();
             this.ticksToImpact = this.StartingTicksToImpact;
             this.Initialize();
-        }        
+        }
 
         public override void Tick()
         {
             //base.Tick();
-            Vector3 exactPosition = this.ExactPosition;
             this.ticksToImpact--;
             bool flag = !this.ExactPosition.InBounds(base.Map);
             if (flag)
@@ -170,7 +165,7 @@ namespace TorannMagic
                 base.Position = this.ExactPosition.ToIntVec3();
                 this.Destroy(DestroyMode.Vanish);
             }
-            else if(!this.ExactPosition.ToIntVec3().Walkable(base.Map))
+            else if (!this.ExactPosition.ToIntVec3().Walkable(base.Map))
             {
                 this.earlyImpact = true;
                 this.impactForce = (this.DestinationCell - this.ExactPosition.ToIntVec3()).LengthHorizontal + (this.speed * .2f);
@@ -179,11 +174,11 @@ namespace TorannMagic
             else
             {
                 base.Position = this.ExactPosition.ToIntVec3();
-                if(Find.TickManager.TicksGame % 3 == 0)
+                if (Find.TickManager.TicksGame % 3 == 0)
                 {
                     MoteMaker.ThrowDustPuff(base.Position, base.Map, Rand.Range(0.6f, .8f));
-                }               
-                
+                }
+
                 bool flag2 = this.ticksToImpact <= 0;
                 if (flag2)
                 {
@@ -193,7 +188,7 @@ namespace TorannMagic
                         base.Position = this.DestinationCell;
                     }
                     this.ImpactSomething();
-                }                
+                }
             }
         }
 
@@ -204,10 +199,10 @@ namespace TorannMagic
             {
                 if (this.spinRate > 0)
                 {
-                    if(Find.TickManager.TicksGame % this.spinRate ==0)
+                    if (Find.TickManager.TicksGame % this.spinRate == 0)
                     {
                         this.rotation++;
-                        if(this.rotation >= 4)
+                        if (this.rotation >= 4)
                         {
                             this.rotation = 0;
                         }
@@ -230,22 +225,20 @@ namespace TorannMagic
                     }
                 }
 
-                bool flag2 = this.flyingThing is Pawn;                
+                bool flag2 = this.flyingThing is Pawn;
                 if (flag2)
                 {
-                    Vector3 arg_2B_0 = this.DrawPos;
                     bool flag4 = !this.DrawPos.ToIntVec3().IsValid;
                     if (flag4)
                     {
                         return;
                     }
                     Pawn pawn = this.flyingThing as Pawn;
-                    pawn.Drawer.DrawAt(this.DrawPos);  
-                    
+                    pawn.Drawer.DrawAt(this.DrawPos);
+
                 }
-                else if(this.flyingThing is Corpse)
+                else if (this.flyingThing is Corpse)
                 {
-                    Vector3 arg_2B_0 = this.DrawPos;
                     bool flag4 = !this.DrawPos.ToIntVec3().IsValid;
                     if (flag4)
                     {
@@ -289,18 +282,9 @@ namespace TorannMagic
                         this.Rotation = Rot4.South;
                     }
                 }
-                Graphics.DrawMesh(MeshPool.plane10, this.DrawPos, (this.ExactRotation), this.def.DrawMatSingle, 0);
+                Graphics.DrawMesh(MeshPool.plane10, this.DrawPos, this.ExactRotation, this.def.DrawMatSingle, 0);
             }
             base.Comps_PostDraw();
-        }
-
-        private void DrawEffects(Vector3 pawnVec, Pawn flyingPawn, int magnitude)
-        {
-            bool flag = !pawn.Dead && !pawn.Downed;
-            if (flag)
-            {
-
-            }
         }
 
         private void ImpactSomething()
@@ -331,7 +315,7 @@ namespace TorannMagic
             if (flag)
             {
                 Pawn pawn;
-                bool flag2 = (pawn = (base.Position.GetThingList(base.Map).FirstOrDefault((Thing x) => x == this.assignedTarget) as Pawn)) != null;
+                bool flag2 = (pawn = base.Position.GetThingList(base.Map).FirstOrDefault((Thing x) => x == this.assignedTarget) as Pawn) != null;
                 if (flag2)
                 {
                     hitThing = pawn;
@@ -380,15 +364,15 @@ namespace TorannMagic
                             if ((!wallFlag90 && !wallFlag90neg) || (wallFlag90 && wallFlag90neg))
                             {
                                 //fragment energy bounces in reverse direction of travel
-                                center = center + ((Quaternion.AngleAxis(180, Vector3.up) * this.direction) * 3);
+                                center = center + (Quaternion.AngleAxis(180, Vector3.up) * this.direction * 3);
                             }
                             else if (wallFlag90)
                             {
-                                center = center + ((Quaternion.AngleAxis(90, Vector3.up) * this.direction) * 3);
+                                center = center + (Quaternion.AngleAxis(90, Vector3.up) * this.direction * 3);
                             }
                             else if (wallFlag90neg)
                             {
-                                center = center + ((Quaternion.AngleAxis(-90, Vector3.up) * this.direction) * 3);
+                                center = center + (Quaternion.AngleAxis(-90, Vector3.up) * this.direction * 3);
                             }
 
                         }
@@ -400,13 +384,14 @@ namespace TorannMagic
                             List<Thing> allThings = damageRing[i].GetThingList(base.Map);
                             for (int j = 0; j < allThings.Count; j++)
                             {
-                                if (allThings[j] is Pawn)
+                                var thing = allThings[j];
+                                if (thing is Pawn)
                                 {
-                                    damageEntities(allThings[j], Rand.Range(14, 22), DamageDefOf.Blunt);
+                                    damageEntities(thing, Rand.Range(14, 22), DamageDefOf.Blunt);
                                 }
-                                else if (allThings[j] is Building)
+                                else if (thing is Building)
                                 {
-                                    damageEntities(allThings[j], Rand.Range(56, 88), DamageDefOf.Blunt);
+                                    damageEntities(thing, Rand.Range(56, 88), DamageDefOf.Blunt);
                                 }
                                 else
                                 {
@@ -432,7 +417,7 @@ namespace TorannMagic
                         //damageEntities(this.flyingThing, 305, DamageDefOf.Blunt);
                         this.flyingThing.Destroy(DestroyMode.Vanish);
                     }
-                    else if ((flyingThing.def.thingCategories != null && (flyingThing.def.thingCategories.Contains(ThingCategoryDefOf.Corpses))) || this.flyingThing is Corpse)
+                    else if ((flyingThing.def.thingCategories != null && flyingThing.def.thingCategories.Contains(ThingCategoryDefOf.Corpses)) || this.flyingThing is Corpse)
                     {
                         Corpse flyingCorpse = this.flyingThing as Corpse;
                         float radius = 3f;
@@ -451,15 +436,15 @@ namespace TorannMagic
                             if ((!wallFlag90 && !wallFlag90neg) || (wallFlag90 && wallFlag90neg))
                             {
                                 //fragment energy bounces in reverse direction of travel
-                                center = center + ((Quaternion.AngleAxis(180, Vector3.up) * this.direction) * 3);
+                                center = center + (Quaternion.AngleAxis(180, Vector3.up) * this.direction * 3);
                             }
                             else if (wallFlag90)
                             {
-                                center = center + ((Quaternion.AngleAxis(90, Vector3.up) * this.direction) * 3);
+                                center = center + (Quaternion.AngleAxis(90, Vector3.up) * this.direction * 3);
                             }
                             else if (wallFlag90neg)
                             {
-                                center = center + ((Quaternion.AngleAxis(-90, Vector3.up) * this.direction) * 3);
+                                center = center + (Quaternion.AngleAxis(-90, Vector3.up) * this.direction * 3);
                             }
 
                         }
@@ -472,13 +457,14 @@ namespace TorannMagic
                             List<Thing> allThings = damageRing[i].GetThingList(base.Map);
                             for (int j = 0; j < allThings.Count; j++)
                             {
-                                if (allThings[j] is Pawn)
+                                var thing = allThings[j];
+                                if (thing is Pawn)
                                 {
-                                    damageEntities(allThings[j], Rand.Range(18, 28), DamageDefOf.Blunt);
+                                    damageEntities(thing, Rand.Range(18, 28), DamageDefOf.Blunt);
                                 }
-                                else if (allThings[j] is Building)
+                                else if (thing is Building)
                                 {
-                                    damageEntities(allThings[j], Rand.Range(56, 88), DamageDefOf.Blunt);
+                                    damageEntities(thing, Rand.Range(56, 88), DamageDefOf.Blunt);
                                 }
                                 else
                                 {
@@ -535,15 +521,15 @@ namespace TorannMagic
                         if ((!wallFlag90 && !wallFlag90neg) || (wallFlag90 && wallFlag90neg))
                         {
                             //fragment energy bounces in reverse direction of travel
-                            center = center + ((Quaternion.AngleAxis(180, Vector3.up) * this.direction) * 3);
+                            center = center + (Quaternion.AngleAxis(180, Vector3.up) * this.direction * 3);
                         }
                         else if (wallFlag90)
                         {
-                            center = center + ((Quaternion.AngleAxis(90, Vector3.up) * this.direction) * 3);
+                            center = center + (Quaternion.AngleAxis(90, Vector3.up) * this.direction * 3);
                         }
                         else if (wallFlag90neg)
                         {
-                            center = center + ((Quaternion.AngleAxis(-90, Vector3.up) * this.direction) * 3);
+                            center = center + (Quaternion.AngleAxis(-90, Vector3.up) * this.direction * 3);
                         }
 
                     }
@@ -555,13 +541,14 @@ namespace TorannMagic
                         List<Thing> allThings = damageRing[i].GetThingList(base.Map);
                         for (int j = 0; j < allThings.Count; j++)
                         {
-                            if (allThings[j] is Pawn)
+                            var thing = allThings[j];
+                            if (thing is Pawn)
                             {
-                                damageEntities(allThings[j], Rand.Range(10, 16), DamageDefOf.Blunt);
+                                damageEntities(thing, Rand.Range(10, 16), DamageDefOf.Blunt);
                             }
-                            else if (allThings[j] is Building)
+                            else if (thing is Building)
                             {
-                                damageEntities(allThings[j], Rand.Range(32, 88), DamageDefOf.Blunt);
+                                damageEntities(thing, Rand.Range(32, 88), DamageDefOf.Blunt);
                             }
                             else
                             {
@@ -599,7 +586,7 @@ namespace TorannMagic
                 }
                 this.Destroy(DestroyMode.Vanish);
             }
-}
+        }
 
         public void damageEntities(Thing e, float d, DamageDef type)
         {

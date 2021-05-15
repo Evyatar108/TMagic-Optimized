@@ -1,13 +1,9 @@
-﻿using RimWorld;
-using Verse;
-using UnityEngine;
+﻿using Verse;
 
 namespace TorannMagic
 {
     public class HediffComp_ShadowSlayerCloak : HediffComp
     {
-        private bool initialized = false;
-
         public string labelCap
         {
             get
@@ -44,7 +40,7 @@ namespace TorannMagic
                             InvisEffect.Cleanup();
                         }
                     }
-                }                
+                }
             }
         }
     }

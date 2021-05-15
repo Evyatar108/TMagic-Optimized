@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Verse;
 using Verse.AI;
-using System.Diagnostics;
 using UnityEngine;
 using RimWorld;
 using AbilityUser;
@@ -18,13 +16,7 @@ namespace TorannMagic
         private static readonly Vector2 BarSize = new Vector2(1.2f, 0.2f);
         private static readonly Material EnergyBarFilledMat = SolidColorMaterials.SimpleSolidColorMaterial(new Color(0.0f, 0.0f, 1f), false);
         private static readonly Material EnergyBarUnfilledMat = SolidColorMaterials.SimpleSolidColorMaterial(new Color(0.4f, 0.4f, 0.4f), false);
-
-        private bool hasPendingJob = false;
-        private bool isActive = false;
         private int activeDuration = 0;
-        private int matRng = 0;
-        private float matMagnitude = 5.2f;
-
         private int nextCircleEffect = 0;
         private int circleRotation = 0;
 
@@ -44,24 +36,22 @@ namespace TorannMagic
         private List<Pawn> RandomPosIndexMages = new List<Pawn>();
         private List<IntVec3> RandomPosIndexPosition = new List<IntVec3>();
 
-        private List<Pawn> mageList = new List<Pawn>();
-        public List<Pawn> MageList
+        private HashSet<Pawn> mageList = new HashSet<Pawn>();
+        public HashSet<Pawn> MageList
         {
             get
             {
-                if(mageList == null)
+                if (mageList == null)
                 {
-                    mageList = new List<Pawn>();
-                    mageList.Clear();
+                    mageList = new HashSet<Pawn>();
                 }
                 return mageList;
             }
             set
             {
-                if(mageList == null)
+                if (mageList == null)
                 {
-                    mageList = new List<Pawn>();
-                    mageList.Clear();
+                    mageList = new HashSet<Pawn>();
                 }
                 mageList = value;
             }
@@ -96,9 +86,9 @@ namespace TorannMagic
         {
             get
             {
-                if(MageList.Count > 0)
+                if (MageList.Count > 0)
                 {
-                    return this.MageList[0].CurJob;
+                    return this.MageList.First().CurJob;
                 }
                 else
                 {
@@ -111,7 +101,7 @@ namespace TorannMagic
         {
             get
             {
-                if(Stuff != null)
+                if (Stuff != null)
                 {
                     if (this.Stuff == ThingDef.Named("Jade"))
                     {
@@ -120,8 +110,8 @@ namespace TorannMagic
                     else if (this.Stuff == ThingDef.Named("Uranium"))
                     {
                         return .15f;
-                    }      
-                    else if(this.Stuff == TorannMagicDefOf.TM_Arcalleum)
+                    }
+                    else if (this.Stuff == TorannMagicDefOf.TM_Arcalleum)
                     {
                         return .1f;
                     }
@@ -155,7 +145,7 @@ namespace TorannMagic
                     {
                         return .2f;
                     }
-                    else if(this.Stuff == ThingDef.Named("Uranium"))
+                    else if (this.Stuff == ThingDef.Named("Uranium"))
                     {
                         return .15f;
                     }
@@ -189,7 +179,7 @@ namespace TorannMagic
                     {
                         return .1f;
                     }
-                    else if(this.Stuff == ThingDefOf.Plasteel)
+                    else if (this.Stuff == ThingDefOf.Plasteel)
                     {
                         return .15f;
                     }
@@ -206,31 +196,15 @@ namespace TorannMagic
             Scribe_Defs.Look<MagicRecipeDef>(ref this.magicRecipeDef, "magicRecipeDef");
         }
 
-        public bool IsPending
-        {
-            get
-            {
-                return this.hasPendingJob;
-            }
-            set
-            {
-                this.hasPendingJob = value;
-            }
-        }
+        public bool IsPending { get; set; } = false;
 
-        public bool IsActive
-        {
-            get
-            {
-                return this.isActive;
-            }
-        }
+        public bool IsActive { get; private set; } = false;
 
         public float PercentComplete
         {
             get
             {
-                if(IsActive)
+                if (IsActive)
                 {
                     return 1 - (this.activeDuration / (this.magicRecipeDef.workAmount / 100f));
                 }
@@ -245,14 +219,13 @@ namespace TorannMagic
         {
             get
             {
-                return Mathf.RoundToInt((this.magicRecipeDef.workAmount/3000)*360*(this.PercentComplete*this.PercentComplete));
+                return Mathf.RoundToInt(this.magicRecipeDef.workAmount / 3000 * 360 * (this.PercentComplete * this.PercentComplete));
             }
         }
 
         public virtual IEnumerable<ThingDef> PotentiallyMissingIngredients(MagicRecipeDef mrDef, bool launch = false)
         {
             this.launchableThings = new List<Thing>();
-            this.launchableThings.Clear();
             List<IngredientCount> ingredients = mrDef.ingredients;
             for (int i = 0; i < ingredients.Count; i++)
             {
@@ -291,18 +264,16 @@ namespace TorannMagic
                     {
                         bool hasCorpses = false;
                         List<Thing> ingredient = new List<Thing>();
-                        ingredient.Clear();
                         for (int u = 0; u < ActiveJob.RecipeDef.ingredients.Count; u++)
                         {
-                            List<ThingDef> allowedThings = ActiveJob.RecipeDef.ingredients[u].filter.AllowedThingDefs.ToList();
+                            ICollection<ThingDef> allowedThings = (ICollection<ThingDef>)ActiveJob.RecipeDef.ingredients[u].filter.AllowedThingDefs;
                             if (allowedThings != null && allowedThings.Count > 0)
                             {
-                                
                                 int corpseCount = 0;
                                 List<IntVec3> cellList = GenRadial.RadialCellsAround(this.InteractionCell, 3, true).ToList();
                                 for (int j = 0; j < cellList.Count; j++)
                                 {
-                                    List<Thing> cellThings = cellList[j].GetThingList(this.Map).ToList();
+                                    List<Thing> cellThings = cellList[j].GetThingList(this.Map);
                                     for (int k = 0; k < cellThings.Count; k++)
                                     {
                                         if (cellThings[k].def.IsCorpse)
@@ -312,12 +283,12 @@ namespace TorannMagic
                                     }
                                     if (ActiveJob.RecipeDef.ingredients[i].GetBaseCount() <= corpseCount)
                                     {
-                                        hasCorpses = true;                                        
+                                        hasCorpses = true;
                                     }
                                 }
                             }
                         }
-                        if(hasCorpses)
+                        if (hasCorpses)
                         {
                             continue;
                         }
@@ -348,10 +319,10 @@ namespace TorannMagic
                         if (missingThing == null)
                         {
                             result = true;
-                        }                        
+                        }
                     }
                 }
-                return result;                       
+                return result;
             }
         }
 
@@ -362,20 +333,19 @@ namespace TorannMagic
         }
 
         public override void Tick()
-        { 
-            bool billsActionable = false;
+        {
             if (this.suspendReset)
             {
-                if(this.resetDelay < Find.TickManager.TicksGame)
+                if (this.resetDelay < Find.TickManager.TicksGame)
                 {
                     this.suspendReset = false;
                 }
             }
-            else if(IsActive)
+            else if (IsActive)
             {
                 //rotate magic circle (draw) and do effects until job is complete
                 this.activeDuration--;
-                if(this.nextCircleEffect <= Find.TickManager.TicksGame)
+                if (this.nextCircleEffect <= Find.TickManager.TicksGame)
                 {
                     Vector3 rndPos = GetCircleCenter.ToVector3Shifted();
                     rndPos.x += Rand.Range(-3, 3);
@@ -384,7 +354,7 @@ namespace TorannMagic
                     this.circleRotation = Mathf.Max(this.circleRotation - 2, 8);
                     this.nextCircleEffect = Find.TickManager.TicksGame + Mathf.Clamp(this.circleRotation, 8, 300);
                 }
-                if(this.activeDuration <= 0)
+                if (this.activeDuration <= 0)
                 {
                     ModOptions.Constants.SetBypassPrediction(true);
                     if (Rand.Chance(Mathf.Clamp01(this.magicRecipeDef.failChance - SpellSuccessModifier))) //- clamp on 0 and look for circle construction material for fail chance reduction
@@ -398,7 +368,7 @@ namespace TorannMagic
                         DoSuccessActions();
                     }
                     DoActiveEffecter();
-                    this.isActive = false;
+                    this.IsActive = false;
                     this.magicRecipeDef = null;
                     ClearAllJobs();
                     ModOptions.Constants.SetBypassPrediction(false);
@@ -408,16 +378,14 @@ namespace TorannMagic
             {
                 if (Find.TickManager.TicksGame % 51 == 0)
                 {
-                    billsActionable = false;
+                    bool billsActionable = false;
                     for (int i = 0; i < this.BillStack.Bills.Count; i++)
-                    {                        
+                    {
                         Bill bill = this.BillStack.Bills[i];
-                        MagicRecipeDef mrDef = this.BillStack.Bills[i].recipe as MagicRecipeDef;
-                        List<Pawn> billDoers = new List<Pawn>();
-                        if (CanEverDoBill(bill, out billDoers))
+                        if (CanEverDoBill(bill, out _))
                         {
                             bill.suspended = false;
-                            billsActionable = true;                            
+                            billsActionable = true;
                         }
                         else
                         {
@@ -427,7 +395,7 @@ namespace TorannMagic
                     if (billsActionable)
                     {
                         this.GetComp<CompRefuelable>().Refuel(1);
-                        if(this.MageList.Count == 0)
+                        if (this.MageList.Count == 0)
                         {
                             ScanForRepeatJob();
                         }
@@ -435,7 +403,7 @@ namespace TorannMagic
                     else
                     {
                         this.GetComp<CompRefuelable>().ConsumeFuel(1);
-                        if(this.hasPendingJob)
+                        if (this.IsPending)
                         {
                             ClearAllJobs();
                         }
@@ -446,7 +414,7 @@ namespace TorannMagic
                 {
                     if (Find.TickManager.TicksGame % 81 == 0)
                     {
-                        if(this.magicRecipeDef == null && this.ActiveJob != null)
+                        if (this.magicRecipeDef == null && this.ActiveJob != null)
                         {
                             this.magicRecipeDef = this.ActiveJob.RecipeDef as MagicRecipeDef;
                         }
@@ -460,7 +428,7 @@ namespace TorannMagic
                             bool ingredientsAvailable = HasIngredients;
                             bool magesReady = false;
                             if (magesAvailable)
-                            {                                
+                            {
                                 magesReady = MagesReadyToAssist(this.MageList);
                             }
                             else
@@ -470,10 +438,10 @@ namespace TorannMagic
                             //Log.Message("mages available " + magesAvailable + " ready: " + magesReady + " ingredients " + ingredientsAvailable);
                             if (magesAvailable && ingredientsAvailable && magesReady)
                             {
-                                this.ActiveJob.bill.Notify_IterationCompleted(mageList[0], null);
-                                this.isActive = true;
+                                this.ActiveJob.bill.Notify_IterationCompleted(mageList.First(), null);
+                                this.IsActive = true;
                                 this.activeDuration = Mathf.RoundToInt(this.magicRecipeDef.workAmount / 100);
-                                this.circleRotation = (int)(this.magicRecipeDef.workAmount / (1000));
+                                this.circleRotation = (int)(this.magicRecipeDef.workAmount / 1000);
                                 this.nextCircleEffect = Find.TickManager.TicksGame + this.circleRotation;
                                 LaunchJobPawns();
                                 LaunchIngredients();
@@ -490,21 +458,21 @@ namespace TorannMagic
 
         public virtual void DoFailActions()
         {
-            if(this.mageList != null && this.mageList.Count > 0 && this.magicRecipeDef != null)
+            if (this.mageList != null && this.mageList.Count > 0 && this.magicRecipeDef != null)
             {
-                for(int i =0; i < this.mageList.Count; i++)
+                foreach (var mage in mageList)
                 {
-                    TM_Action.ConsumeManaXP(mageList[i], (this.magicRecipeDef.manaCost/this.mageList.Count) * (this.magicRecipeDef.failManaConsumed * (1f - ManaCostModifer)), .75f, true);
-                    if(this.magicRecipeDef.failDamageApplied != 0)
+                    TM_Action.ConsumeManaXP(mage, this.magicRecipeDef.manaCost / this.mageList.Count * (this.magicRecipeDef.failManaConsumed * (1f - ManaCostModifer)), .75f, true);
+                    if (this.magicRecipeDef.failDamageApplied != 0)
                     {
-                        TM_Action.DamageEntities(this.mageList[i], null, Rand.Range(this.magicRecipeDef.failDamageApplied * .75f, this.magicRecipeDef.failDamageApplied * 1.25f), TMDamageDefOf.DamageDefOf.TM_Arcane, this.mageList[i]);
+                        TM_Action.DamageEntities(mage, null, Rand.Range(this.magicRecipeDef.failDamageApplied * .75f, this.magicRecipeDef.failDamageApplied * 1.25f), TMDamageDefOf.DamageDefOf.TM_Arcane, mage);
                     }
                 }
-            }            
+            }
             string letterLabel = "LetterLabelRitualFail".Translate();
             if (this.magicRecipeDef.failDamageApplied > 0)
             {
-                Find.LetterStack.ReceiveLetter(letterLabel, "LetterRitualFailDamage".Translate(this.magicRecipeDef.label, ((1f - this.magicRecipeDef.failChance) * 100), this.magicRecipeDef.failDamageApplied), LetterDefOf.NegativeEvent);
+                Find.LetterStack.ReceiveLetter(letterLabel, "LetterRitualFailDamage".Translate(this.magicRecipeDef.label, (1f - this.magicRecipeDef.failChance) * 100, this.magicRecipeDef.failDamageApplied), LetterDefOf.NegativeEvent);
             }
             else
             {
@@ -516,9 +484,9 @@ namespace TorannMagic
         {
             if (this.mageList != null && this.mageList.Count > 0 && this.magicRecipeDef != null)
             {
-                for (int i = 0; i < this.mageList.Count; i++)
-                {                    
-                    TM_Action.ConsumeManaXP(mageList[i], (this.magicRecipeDef.manaCost/this.mageList.Count)*(1f-ManaCostModifer), 1f + ManaCostModifer, true);
+                foreach (var mage in this.mageList)
+                {
+                    TM_Action.ConsumeManaXP(mage, this.magicRecipeDef.manaCost / this.mageList.Count * (1f - ManaCostModifer), 1f + ManaCostModifer, true);
                 }
 
                 if (this.magicRecipeDef.resultMapComponentConditions != null && this.magicRecipeDef.resultMapComponentConditions.Count > 0)
@@ -535,25 +503,25 @@ namespace TorannMagic
                 if (this.magicRecipeDef.resultConditions != null && this.magicRecipeDef.resultConditions.Count > 0)
                 {
                     for (int i = 0; i < this.magicRecipeDef.resultConditions.Count; i++)
-                    {                        
+                    {
                         TMDefs.TM_Condition con = this.magicRecipeDef.resultConditions[i];
                         if (con.resultCondition != null || con.conditionRandom)
                         {
                             int range = con.countRange.RandomInRange;
                             for (int j = 0; j < range; j++)
                             {
-                                TryGenerateMapCondition(con.resultCondition, this.Map, Mathf.RoundToInt(con.conditionDuration * (1+DurationModifier)), con.conditionPermanent, con.conditionRemove, con.conditionAdd, con.conditionReduceByDuration, con.conditionIncreaseByDuration, con.conditionRandom);
+                                TryGenerateMapCondition(con.resultCondition, this.Map, Mathf.RoundToInt(con.conditionDuration * (1 + DurationModifier)), con.conditionPermanent, con.conditionRemove, con.conditionAdd, con.conditionReduceByDuration, con.conditionIncreaseByDuration, con.conditionRandom);
                             }
                         }
-                        if(con.resultWeather != null)
+                        if (con.resultWeather != null)
                         {
                             TryGenerateWeatherEvent(con.resultWeather, this.Map);
                         }
                     }
                 }
-                if(this.magicRecipeDef.resultIncidents != null && this.magicRecipeDef.resultIncidents.Count > 0)
+                if (this.magicRecipeDef.resultIncidents != null && this.magicRecipeDef.resultIncidents.Count > 0)
                 {
-                    int incidentCount = 0;
+                    int incidentCount;
                     if (this.magicRecipeDef.selectRandomIncident)
                     {
                         incidentCount = this.magicRecipeDef.selectRandomIncidentCount;
@@ -568,13 +536,13 @@ namespace TorannMagic
                         if (this.magicRecipeDef.selectRandomIncident)
                         {
                             inc = this.magicRecipeDef.resultIncidents[Rand.RangeInclusive(0, this.magicRecipeDef.resultIncidents.Count - 1)];
-                        }                        
+                        }
                         if (inc.resultIncident != null)
                         {
                             int range = inc.countRange.RandomInRange;
                             for (int j = 0; j < range; j++)
                             {
-                                TryGenerateIncident(inc.resultIncident, this.Map, Mathf.RoundToInt(inc.incidentPoints * (1f+PointModifer)), inc.incidentHostile);
+                                TryGenerateIncident(inc.resultIncident, this.Map, Mathf.RoundToInt(inc.incidentPoints * (1f + PointModifer)), inc.incidentHostile);
                             }
                         }
                     }
@@ -589,7 +557,7 @@ namespace TorannMagic
                             int range = hd.countRange.RandomInRange;
                             for (int j = 0; j < range; j++)
                             {
-                                TryApplyHediff(hd.resultHediff, this.Faction, this.Map, this.MageList[0], (hd.hediffSeverity * (1f+ DurationModifier)), Mathf.RoundToInt(hd.maxHediffCount * (1f + PointModifer)), hd.checkResistance, hd.applyFriendly, hd.applyEnemy, hd.applyNeutral, hd.applyNullFaction, hd.moteDef);
+                                TryApplyHediff(hd.resultHediff, this.Faction, this.Map, this.MageList.First(), hd.hediffSeverity * (1f + DurationModifier), Mathf.RoundToInt(hd.maxHediffCount * (1f + PointModifer)), hd.checkResistance, hd.applyFriendly, hd.applyEnemy, hd.applyNeutral, hd.applyNullFaction, hd.moteDef);
                             }
                         }
                     }
@@ -605,22 +573,22 @@ namespace TorannMagic
                             for (int j = 0; j < range; j++)
                             {
                                 IntVec3 spawnPos = GetCircleCenter;
-                                spawnPos.x += Rand.Range(-(range - 1), (range - 1));
-                                spawnPos.z += Rand.Range(-(range - 1), (range - 1));
-                                TrySpawnThing(this.MageList.RandomElement(), st.resultSpawnThing, st.resultPawnKindDef, spawnPos, Mathf.RoundToInt(st.summonDuration * (1f+ DurationModifier)), st.summonTemporary, Mathf.RoundToInt(st.spawnThingCount * (1f + PointModifer)), Mathf.RoundToInt(st.spawnThingStackCount * (1f+ PointModifer)), st.spawnHostile);
+                                spawnPos.x += Rand.Range(-(range - 1), range - 1);
+                                spawnPos.z += Rand.Range(-(range - 1), range - 1);
+                                TrySpawnThing(this.MageList.RandomElement(), st.resultSpawnThing, st.resultPawnKindDef, spawnPos, Mathf.RoundToInt(st.summonDuration * (1f + DurationModifier)), st.summonTemporary, Mathf.RoundToInt(st.spawnThingCount * (1f + PointModifer)), Mathf.RoundToInt(st.spawnThingStackCount * (1f + PointModifer)), st.spawnHostile);
                             }
                         }
                     }
-                }                
-            }            
+                }
+            }
         }
 
         public virtual bool InteractionCellOccupied()
         {
             List<Thing> thingList = this.InteractionCell.GetThingList(this.Map);
-            for(int i = 0; i < thingList.Count; i++)
+            for (int i = 0; i < thingList.Count; i++)
             {
-                if(thingList[i] != this && thingList[i].def.EverHaulable)
+                if (thingList[i] != this && thingList[i].def.EverHaulable)
                 {
                     //Log.Message("ic occupied by " + thingList[i].LabelShort);
                     return true;
@@ -629,7 +597,7 @@ namespace TorannMagic
             return false;
         }
 
-        public virtual bool CanEverDoBill(Bill bill, out List<Pawn> pawnsAble, MagicRecipeDef mrDefIn = null)
+        public virtual bool CanEverDoBill(Bill bill, out HashSet<Pawn> pawnsAble, MagicRecipeDef mrDefIn = null)
         {
             MagicRecipeDef mrDef = null;
             if (bill != null)
@@ -639,9 +607,8 @@ namespace TorannMagic
             if (mrDefIn != null)
             {
                 mrDef = mrDefIn;
-            }            
-            pawnsAble = new List<Pawn>();
-            pawnsAble.Clear();
+            }
+            pawnsAble = new HashSet<Pawn>();
             if (mrDef != null && mrDef is MagicRecipeDef)
             {
                 float manaReq = mrDef.manaCost;
@@ -652,14 +619,14 @@ namespace TorannMagic
                 List<Pawn> magePawnsInRange = TM_Calc.FindNearbyMages(this.Position, this.Map, this.Faction, 50, true);
                 if (magePawnsInRange != null && magePawnsInRange.Count > 0)
                 {
-                    for (int i =0; i < magePawnsInRange.Count; i++)
+                    for (int i = 0; i < magePawnsInRange.Count; i++)
                     {
                         Pawn p = magePawnsInRange[i];
                         CompAbilityUserMagic comp = p.GetComp<CompAbilityUserMagic>();
                         if (p.Spawned && !p.Drafted && !p.InMentalState && p.GetPosture() == PawnPosture.Standing && p.workSettings.WorkIsActive(TorannMagicDefOf.TM_Magic) && comp != null && comp.Mana != null && comp.Mana.CurLevel >= manaReq)
                         {
                             pawnsAble.Add(p);
-                            if(pawnsAble.Count >= mrDef.mageCount)
+                            if (pawnsAble.Count >= mrDef.mageCount)
                             {
                                 return true;
                             }
@@ -734,19 +701,19 @@ namespace TorannMagic
         }
 
         public virtual void ClearAllJobs()
-        {            
-            for (int i = 0; i < MageList.Count; i++)
+        {
+            foreach (var mage in MageList)
             {
                 //MageList[i].jobs.curDriver.EndJobWith(JobCondition.InterruptForced);
-                if (MageList[i].jobs != null)
+                if (mage.jobs != null)
                 {
-                    MageList[i].jobs.EndCurrentJob(JobCondition.InterruptForced, false);
-                    MageList[i].jobs.StopAll(true);
+                    mage.jobs.EndCurrentJob(JobCondition.InterruptForced, false);
+                    mage.jobs.StopAll(true);
                 }
             }
             MageList.Clear();
             this.activeJob = null;
-            this.hasPendingJob = false;
+            this.IsPending = false;
             this.suspendReset = true;
             this.resetDelay = Find.TickManager.TicksGame + 301;
             this.TryGetComp<CompRefuelable>().ConsumeFuel(1);
@@ -771,55 +738,55 @@ namespace TorannMagic
         public virtual void ScanForRepeatJob()
         {
             List<Pawn> allPawns = this.Map.mapPawns.AllPawnsSpawned;
-            if(allPawns != null && allPawns.Count > 0)
+            if (allPawns != null && allPawns.Count > 0)
             {
-                for(int i = 0; i < allPawns.Count; i++)
+                for (int i = 0; i < allPawns.Count; i++)
                 {
-                    if(allPawns[i].jobs != null && allPawns[i].CurJobDef == TorannMagicDefOf.JobDriver_DoMagicBill)
+                    if (allPawns[i].jobs != null && allPawns[i].CurJobDef == TorannMagicDefOf.JobDriver_DoMagicBill)
                     {
                         //Log.Message("checking can do job");
                         this.MageList.Clear();
                         this.MageList.Add(allPawns[i]);
-                        this.hasPendingJob = true;
+                        this.IsPending = true;
                         this.magicRecipeDef = allPawns[i].CurJob.bill.recipe as MagicRecipeDef;
                         //Log.Message("checking mages available: " + mages.Count);
-                       
+
                         //CanDoJob(allPawns[i].GetComp<CompAbilityUserMagic>(), allPawns[i].CurJob.bill.recipe as MagicRecipeDef, this);
                     }
                 }
             }
         }
 
-        public virtual bool PendingMagesStillAvailable(List<Pawn> mages)
+        public virtual bool PendingMagesStillAvailable(HashSet<Pawn> mages)
         {
             //Log.Message("checking mages available " + mages.Count);
-            for (int i = 0; i < mages.Count; i++)
+            int i = 0;
+            foreach (var mage in mages)
             {
                 //Log.Message("pawn " + i + " " + mages[i].LabelShort + " with job " + mages[i].CurJob);
-                CompAbilityUserMagic comp = mages[i].GetComp<CompAbilityUserMagic>();
-                if (comp != null && comp.Mana != null )
+                CompAbilityUserMagic comp = mage.GetComp<CompAbilityUserMagic>();
+                if (comp != null && comp.Mana != null)
                 {
                     //Log.Message("" + comp.Pawn.LabelShort + " is ready");
                     if (i == 0 && !((comp.Pawn.CurJobDef == TorannMagicDefOf.JobDriver_DoMagicBill || comp.Pawn.CurJobDef == JobDefOf.HaulToCell) && comp.Mana.CurLevel >= this.manaReq && !comp.Pawn.Drafted && !comp.Pawn.Destroyed && comp.Pawn.Spawned && !comp.Pawn.Downed && !comp.Pawn.InMentalState))
                     {
                         //pawn working recipe is no longer doing the job
                         //Log.Message("job pawn no longer available: " + mageList[i].LabelShort + " doing job  " + comp.Pawn.CurJobDef.defName);
-                        return false;                        
+                        return false;
                     }
                     if (i > 0 && !((comp.Pawn.CurJobDef == TorannMagicDefOf.JobDriver_AssistMagicCircle) && comp.Mana.CurLevel >= this.manaReq && !comp.Pawn.Drafted && !comp.Pawn.Destroyed && comp.Pawn.Spawned && !comp.Pawn.Downed && !comp.Pawn.InMentalState))
                     {
                         //Log.Message("" + comp.Pawn.LabelShort + " had job " + comp.Pawn.CurJobDef.defName + ";; searching for new pawn");
-                        List<Pawn> replacementList = new List<Pawn>();
-                        replacementList.Clear();
-                        if(CanEverDoBill(null, out replacementList, this.ActiveJob.RecipeDef as MagicRecipeDef))
+                        HashSet<Pawn> replacementList = new HashSet<Pawn>();
+                        if (CanEverDoBill(null, out replacementList, this.ActiveJob.RecipeDef as MagicRecipeDef))
                         {
-                            for(int j = 0; j < replacementList.Count; j++)
+                            foreach (var replacement in replacementList)
                             {
-                                if(!mages.Contains(replacementList[j]))
+                                if (!mages.Contains(replacement))
                                 {
-                                    this.MageList.Remove(mages[i]);
-                                    this.MageList.Insert(i, replacementList[j]);
-                                    IssueAssistJob(replacementList[j]);
+                                    this.MageList.Remove(mage);
+                                    this.MageList.Add(replacement);
+                                    IssueAssistJob(replacement);
                                     //Log.Message("can still do bill");
                                     return true;
                                 }
@@ -840,22 +807,23 @@ namespace TorannMagic
                     //Log.Message("returning mages NOT available");
                     return false;
                 }
+
+                i++;
             }
             if (this.ActiveJob != null && this.ActiveJob.RecipeDef is MagicRecipeDef)
             {
                 if (mages.Count() < (this.ActiveJob.RecipeDef as MagicRecipeDef).mageCount)
                 {
-                    List<Pawn> replacementList = new List<Pawn>();
-                    replacementList.Clear();
+                    HashSet<Pawn> replacementList = new HashSet<Pawn>();
                     if (CanEverDoBill(null, out replacementList, this.ActiveJob.RecipeDef as MagicRecipeDef))
                     {
                         int itCount = (this.ActiveJob.RecipeDef as MagicRecipeDef).mageCount - mages.Count();
-                        for (int i = 0; i < replacementList.Count; i++)
+                        foreach (var replacement in replacementList)
                         {
-                            if (!this.MageList.Contains(replacementList[i]))
+                            if (!this.MageList.Contains(replacement))
                             {
-                                this.MageList.Add(replacementList[i]);
-                                IssueAssistJob(replacementList[i]);
+                                this.MageList.Add(replacement);
+                                IssueAssistJob(replacement);
                                 itCount--;
                                 if (itCount <= 0)
                                 {
@@ -871,27 +839,27 @@ namespace TorannMagic
 
         public virtual void TryAssignAssistJobs(Pawn leadPawn)
         {
-            List<Pawn> outPawns = new List<Pawn>();
             this.mageList.Clear();
             this.mageList.Add(leadPawn);
+            HashSet<Pawn> outPawns;
             if (CanEverDoBill(null, out outPawns, this.magicRecipeDef))
             {
-                for(int i = 0; i < outPawns.Count; i++)
+                foreach (var outPawn in outPawns)
                 {
-                    if (outPawns[i] != leadPawn)
+                    if (outPawn != leadPawn)
                     {
-                        this.mageList.Add(outPawns[i]);
-                        IssueAssistJob(outPawns[i]);
+                        this.mageList.Add(outPawn);
+                        IssueAssistJob(outPawn);
                     }
                 }
             }
         }
 
-        public bool MagesReadyToAssist(List<Pawn> mages)
+        public bool MagesReadyToAssist(HashSet<Pawn> mages)
         {
-            for(int i =0; i < mages.Count; i++)
+            foreach (var mage in mages)
             {
-                if(mages[i].Position != GetMageIndexPosition(mages, mages[i]))
+                if (mage.Position != GetMageIndexPosition(mages, mage))
                 {
                     //Log.Message("" + mages[i] + " out of position");
                     return false;
@@ -923,17 +891,17 @@ namespace TorannMagic
         //public override IEnumerable<FloatMenuOption> GetFloatMenuOptions(Pawn myPawn)
         //{
         //    List<FloatMenuOption> list = new List<FloatMenuOption>();
-           
+
         //    return list;
         //}       
 
         public virtual void LaunchJobPawns()
         {
-            if(this.MageList != null && this.MageList.Count > 0)
+            if (this.MageList != null && this.MageList.Count > 0)
             {
-                for (int i = 0; i < mageList.Count; i++)
+                foreach (var mage in mageList)
                 {
-                    Pawn pawn = mageList[i];
+                    Pawn pawn = mage;
                     if (pawn != null && pawn.Position.IsValid && pawn.Spawned && pawn.Map != null && !pawn.Downed && !pawn.Dead)
                     {
                         if (ModCheck.Validate.GiddyUp.Core_IsInitialized())
@@ -957,6 +925,7 @@ namespace TorannMagic
         {
             for (int i = 0; i < this.launchableThings.Count; i++)
             {
+                float stackCount = this.launchableThings[i].stackCount * (1f - MaterialCostModifier);
                 //Log.Message("ingredient to launch " + launchableThings[i] + " with stack count " + launchableThings[i].stackCount);
                 //ingredient.Clear();
                 //if (ActiveJob.RecipeDef.ingredients[i].IsFixedIngredient)
@@ -974,8 +943,6 @@ namespace TorannMagic
                 //        }
                 //    }
                 //}
-                int launchCount = 0;
-                float stackCount = this.launchableThings[i].stackCount * (1f - MaterialCostModifier);
                 //if(this.magicRecipeDef.ingredients[i].FixedIngredient.smallVolume)
                 //{
                 //    stackCount *= 10f;
@@ -986,7 +953,7 @@ namespace TorannMagic
                 //    {
                 //        int thisLaunchCount = Mathf.Clamp(ingredient[j].stackCount, 0, (int)stackCount - launchedCount);
                 //        launchedCount += thisLaunchCount;
-                launchCount = Mathf.RoundToInt(stackCount);
+                int launchCount = Mathf.RoundToInt(stackCount);
                 Thing thing = launchableThings[i].SplitOff(launchCount);
                 GenPlace.TryPlaceThing(thing, GetCircleCenter, this.Map, ThingPlaceMode.Direct);
                 FlyingObject_TimeDelay flyingObject = (FlyingObject_TimeDelay)GenSpawn.Spawn(TorannMagicDefOf.FlyingObject_TimeDelay, GetCircleCenter, this.Map);
@@ -1000,20 +967,13 @@ namespace TorannMagic
             }
         }
 
-        private static void ConsumeIngredients(List<Thing> ingredients, RecipeDef recipe, Map map)
-        {
-            for (int i = 0; i < ingredients.Count; i++)
-            {
-                recipe.Worker.ConsumeIngredient(ingredients[i], recipe, map);
-            }
-        }
-
-        public virtual IntVec3 GetMageIndexPosition(List<Pawn> allMages, Pawn mage)
+        public virtual IntVec3 GetMageIndexPosition(HashSet<Pawn> allMages, Pawn mage)
         {
             IntVec3 magePosition = default(IntVec3);
-            for (int i = 0; i < allMages.Count; i++)
+            int i = 0;
+            foreach (var currMage in allMages)
             {
-                if (allMages[i] == mage)
+                if (currMage == mage)
                 {
                     IntVec3 ic = this.InteractionCell;
                     if (i == 0)
@@ -1022,33 +982,34 @@ namespace TorannMagic
                     }
                     else
                     {
-                        ic = GetRandomStaticIndexPositionFor(mage);                        
+                        ic = GetRandomStaticIndexPositionFor(mage);
                     }
                     magePosition = ic;
                 }
+
+                i++;
             }
+
             return magePosition;
         }
 
         public IntVec3 GetRandomStaticIndexPositionFor(Pawn p)
         {
-            if(this.RandomPosIndexMages == null || this.RandomPosIndexPosition == null)
+            if (this.RandomPosIndexMages == null || this.RandomPosIndexPosition == null)
             {
                 this.RandomPosIndexPosition = new List<IntVec3>();
-                this.RandomPosIndexPosition.Clear();
                 this.RandomPosIndexMages = new List<Pawn>();
-                this.RandomPosIndexMages.Clear();
             }
-            for(int i = 0; i < this.RandomPosIndexMages.Count; i++)
+            for (int i = 0; i < this.RandomPosIndexMages.Count; i++)
             {
-                if(p == this.RandomPosIndexMages[i])
+                if (p == this.RandomPosIndexMages[i])
                 {
                     return this.RandomPosIndexPosition[i];
                 }
             }
             IntVec3 ic = GetCircleCenter;
-            ic.x += Rand.Range(Mathf.RoundToInt(-this.def.Size.x/2f), Mathf.RoundToInt(this.def.Size.x/2f));
-            ic.z += Rand.Range(Mathf.RoundToInt(-this.def.Size.z / 2f), Mathf.RoundToInt(this.def.Size.z/2f));
+            ic.x += Rand.Range(Mathf.RoundToInt(-this.def.Size.x / 2f), Mathf.RoundToInt(this.def.Size.x / 2f));
+            ic.z += Rand.Range(Mathf.RoundToInt(-this.def.Size.z / 2f), Mathf.RoundToInt(this.def.Size.z / 2f));
             this.RandomPosIndexMages.Add(p);
             this.RandomPosIndexPosition.Add(ic);
             return ic;
@@ -1063,19 +1024,19 @@ namespace TorannMagic
             {
                 gc = map.GameConditionManager.GetActiveCondition(gcList.RandomElement().def);
             }
-            else if(gameCondition != null && map.GameConditionManager.ConditionIsActive(gameCondition))
+            else if (gameCondition != null && map.GameConditionManager.ConditionIsActive(gameCondition))
             {
                 gc = map.GameConditionManager.GetActiveCondition(gameCondition);
             }
-            else if(gameCondition != null)
+            else if (gameCondition != null)
             {
-                gc = GameConditionMaker.MakeCondition(gameCondition, duration); 
+                gc = GameConditionMaker.MakeCondition(gameCondition, duration);
             }
-            else if(gameCondition == null && random && add)
+            else if (gameCondition == null && random && add)
             {
                 IEnumerable<GameConditionDef> enumerable = from def in DefDatabase<GameConditionDef>.AllDefs
-                                                   where (true)
-                                                   select def;
+                                                           where true
+                                                           select def;
                 gc = GameConditionMaker.MakeCondition(enumerable.RandomElement());
             }
 
@@ -1099,7 +1060,7 @@ namespace TorannMagic
                             gc.End();
                         }
                     }
-                    else if(increase)
+                    else if (increase)
                     {
                         gc.Duration += duration;
                     }
@@ -1128,7 +1089,7 @@ namespace TorannMagic
             {
                 parms.points = points;
             }
-            if(hostile)
+            if (hostile)
             {
                 parms.faction = Find.FactionManager.RandomEnemyFaction();
             }
@@ -1193,12 +1154,12 @@ namespace TorannMagic
                         HealthUtility.AdjustSeverity(p, hediff, sev);
                         maxCount--;
                     }
-                    
-                    if(mote != null)
+
+                    if (mote != null)
                     {
                         TM_MoteMaker.ThrowGenericMote(mote, p.DrawPos, p.Map, Rand.Range(.75f, 1.25f), .25f, .05f, .25f, Rand.Range(-100, 100), Rand.Range(0, 1), Rand.Range(0, 360), Rand.Range(0, 360));
                     }
-                    if(maxCount <= 0)
+                    if (maxCount <= 0)
                     {
                         break;
                     }
@@ -1216,7 +1177,7 @@ namespace TorannMagic
 
             for (int i = 0; i < count; i++)
             {
-                Thing thing = TM_Action.SingleSpawnLoop(caster, spawnables, position, caster.Map, duration, temporary, hostile, caster.Faction);                
+                _ = TM_Action.SingleSpawnLoop(caster, spawnables, position, caster.Map, duration, temporary, hostile, caster.Faction);
             }
         }
     }

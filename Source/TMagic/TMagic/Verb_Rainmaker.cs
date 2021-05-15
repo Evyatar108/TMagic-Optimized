@@ -14,7 +14,7 @@ namespace TorannMagic
 
         protected override bool TryCastShot()
         {
-            Map map = base.CasterPawn.Map; 
+            Map map = base.CasterPawn.Map;
             WeatherDef rainMakerDef = new WeatherDef();
             CompAbilityUserMagic comp = base.CasterPawn.GetComp<CompAbilityUserMagic>();
             if (map != null && comp != null && comp.MagicData != null)
@@ -105,7 +105,7 @@ namespace TorannMagic
             GameCondition cond = GameConditionMaker.MakeCondition(TorannMagicDefOf.DarkThunderstorm, duration);
             gameConditionManager.RegisterCondition(cond);
             GameCondition_DarkThunderstorm gcdt = cond as GameCondition_DarkThunderstorm;
-            if(gcdt != null)
+            if (gcdt != null)
             {
                 gcdt.faction = base.CasterPawn.Faction;
             }

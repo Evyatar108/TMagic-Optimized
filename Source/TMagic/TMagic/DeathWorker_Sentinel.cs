@@ -1,5 +1,4 @@
 ﻿using RimWorld;
-using System;
 using Verse;
 using AbilityUser;
 
@@ -17,7 +16,7 @@ namespace TorannMagic
             SingleSpawnLoop(corpse.Position, corpse.Map);
             Pawn innerPawn = corpse.InnerPawn;
             innerPawn.SetFaction(Faction.OfAncients, null);
-            corpse.Destroy();           
+            corpse.Destroy();
         }
 
         public void SingleSpawnLoop(IntVec3 position, Map map)
@@ -36,7 +35,7 @@ namespace TorannMagic
                     stuff = ThingDefOf.WoodLog;
                 }
                 Thing spawnedThing = ThingMaker.MakeThing(def, stuff);
-                GenSpawn.Spawn(spawnedThing, position, map, Rot4.North, WipeMode.Vanish, false);                
+                GenSpawn.Spawn(spawnedThing, position, map, Rot4.North, WipeMode.Vanish, false);
             }
         }
 

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using HarmonyLib;
 using UnityEngine;
 using Verse;
@@ -66,7 +65,7 @@ namespace TorannMagic.AutoCast
             //        }
             //    }
             //}
-            if(!jobTarget.Cell.Walkable(caster.Map))
+            if (!jobTarget.Cell.Walkable(caster.Map))
             {
                 jobTarget = TM_Calc.FindWalkableCellNextTo(jobTarget.Cell, caster.Map);
             }
@@ -99,7 +98,6 @@ namespace TorannMagic.AutoCast
                         //Log.Message("doing partial blink to cell " + blinkToCell);
                         //MoteMaker.ThrowHeatGlow(blinkToCell, caster.Map, 1f);
                         bool canReach = false;
-                        bool isCloser = false;
                         try
                         {
                             canReach = caster.Map.reachability.CanReach(phaseToCell, jobTarget.Cell, PathEndMode.ClosestTouch, TraverseParms.For(TraverseMode.PassDoors));
@@ -115,13 +113,12 @@ namespace TorannMagic.AutoCast
 
                             PawnPath ppc = caster.Map.pathFinder.FindPath(caster.Position, jobTarget.Cell, TraverseParms.For(TraverseMode.PassDoors, Danger.Deadly), PathEndMode.ClosestTouch);
                             float currentCost = ppc.TotalCost;
-                            float futureCost = currentCost;
                             ppc.ReleaseToPool();
 
                             PawnPath ppf = caster.Map.pathFinder.FindPath(phaseToCell, jobTarget.Cell, TraverseParms.For(TraverseMode.PassDoors, Danger.Deadly), PathEndMode.ClosestTouch);
-                            futureCost = ppf.TotalCost;
+                            float futureCost = ppf.TotalCost;
                             ppf.ReleaseToPool();
-                            isCloser = currentCost > futureCost;
+                            bool isCloser = currentCost > futureCost;
 
                             if (isCloser)
                             {
@@ -137,10 +134,6 @@ namespace TorannMagic.AutoCast
 
         private static void DoPhase2(Pawn caster, CompAbilityUserMight casterComp, TMAbilityDef abilitydef, IntVec3 targetCell, PawnAbility ability, Thing carriedThing, MightPower power)
         {
-            Pawn p = caster;
-            Map map = caster.Map;
-            IntVec3 casterCell = caster.Position;
-
             bool selectCaster = false;
             if (Find.Selector.FirstSelectedObject == caster)
             {
@@ -166,7 +159,7 @@ namespace TorannMagic.AutoCast
             //GenClamor.DoClamor(caster, 2f, ClamorDefOf.Ability);
 
             ModOptions.SettingsRef settingsRef = new ModOptions.SettingsRef();
-            casterComp.MightUserXP -= (int)((casterComp.ActualStaminaCost(abilitydef) * 180 * .9f * casterComp.xpGain * settingsRef.xpMultiplier));
+            casterComp.MightUserXP -= (int)(casterComp.ActualStaminaCost(abilitydef) * 180 * .9f * casterComp.xpGain * settingsRef.xpMultiplier);
             ability.PostAbilityAttempt();
             if (selectCaster)
             {
@@ -176,80 +169,6 @@ namespace TorannMagic.AutoCast
             {
                 TM_MoteMaker.ThrowGenericMote(ThingDefOf.Mote_Smoke, targetCell.ToVector3Shifted(), caster.Map, Rand.Range(.6f, 1f), .4f, .1f, Rand.Range(.8f, 1.2f), 0, Rand.Range(2, 3), Rand.Range(-30, 30), 0);
                 TM_MoteMaker.ThrowGenericMote(TorannMagicDefOf.Mote_Enchanting, targetCell.ToVector3Shifted(), caster.Map, Rand.Range(1.4f, 2f), .2f, .05f, Rand.Range(.4f, .6f), Rand.Range(-200, 200), 0, 0, 0);
-            }
-        }
-
-        private static void DoPhase(Pawn caster, CompAbilityUserMight casterComp, TMAbilityDef abilitydef, IntVec3 targetCell, PawnAbility ability, Thing carriedThing, MightPower power)
-        {
-            JobDef retainJobDef = caster.CurJobDef;
-            LocalTargetInfo retainTargetA = caster.CurJob.targetA;
-            int retainJobCount = 1;
-            if (caster.CurJob != null)
-            {
-                retainJobCount = caster.CurJob.count;
-            }
-            LocalTargetInfo retainTargetB = caster.CurJob.targetB;
-            LocalTargetInfo retainTargetC = caster.CurJob.targetC;
-            Pawn p = caster;
-            Thing cT = carriedThing;
-            if (cT != null && cT.stackCount != retainJobCount && retainJobCount == 0)
-            {
-                //Log.Message("stack count " + cT.stackCount + " rjob count " + retainJobCount + " job count " + caster.CurJob.count);
-                retainJobCount = cT.stackCount;
-            }
-            Map map = caster.Map;
-            IntVec3 casterCell = caster.Position;
-            bool selectCaster = false;
-            if (Find.Selector.FirstSelectedObject == caster)
-            {
-                selectCaster = true;
-            }
-            try
-            {
-                for (int i = 0; i < 3; i++)
-                {
-                    TM_MoteMaker.ThrowGenericMote(ThingDefOf.Mote_Smoke, caster.DrawPos, caster.Map, Rand.Range(.6f, 1f), .4f, .1f, Rand.Range(.8f, 1.2f), 0, Rand.Range(2, 3), Rand.Range(-30, 30), 0);
-                    TM_MoteMaker.ThrowGenericMote(TorannMagicDefOf.Mote_Enchanting, caster.DrawPos, caster.Map, Rand.Range(1.4f, 2f), .2f, .05f, Rand.Range(.4f, .6f), Rand.Range(-200, 200), 0, 0, 0);
-                }
-                caster.ClearReservationsForJob(caster.CurJob);
-                caster.DeSpawn();
-                GenSpawn.Spawn(p, targetCell, map);
-                if (!carriedThing.DestroyedOrNull() && carriedThing.Spawned)
-                {
-                    carriedThing.DeSpawn();
-                    GenPlace.TryPlaceThing(cT, targetCell, map, ThingPlaceMode.Near);
-                    //GenSpawn.Spawn(cT, targetCell, map);
-                }
-
-                ModOptions.SettingsRef settingsRef = new ModOptions.SettingsRef();
-                casterComp.MightUserXP -= (int)((casterComp.ActualStaminaCost(abilitydef) * 180 * .9f * casterComp.xpGain * settingsRef.xpMultiplier));
-                ability.PostAbilityAttempt();
-                if (selectCaster)
-                {
-                    Find.Selector.Select(caster, false, true);
-                }
-                for (int i = 0; i < 3; i++)
-                {
-                    TM_MoteMaker.ThrowGenericMote(ThingDefOf.Mote_Smoke, caster.DrawPos, caster.Map, Rand.Range(.6f, 1f), .4f, .1f, Rand.Range(.8f, 1.2f), 0, Rand.Range(2, 3), Rand.Range(-30, 30), 0);
-                    TM_MoteMaker.ThrowGenericMote(TorannMagicDefOf.Mote_Enchanting, caster.DrawPos, caster.Map, Rand.Range(1.4f, 2f), .2f, .05f, Rand.Range(.4f, .6f), Rand.Range(-200, 200), 0, 0, 0);
-                }
-
-                Job job = new Job(retainJobDef, retainTargetA, retainTargetB, retainTargetC)
-                {
-                    count = retainJobCount,                    
-                    //playerForced = false                    
-                };
-                //caster.jobs.TryTakeOrderedJob();
-                caster.jobs.ClearQueuedJobs();
-                caster.jobs.startingNewJob = true;
-                caster.jobs.StartJob(job);
-            }
-            catch
-            {
-                if (!caster.Spawned)
-                {
-                    GenSpawn.Spawn(p, casterCell, map);
-                }
             }
         }
     }
@@ -266,7 +185,7 @@ namespace TorannMagic.AutoCast
                 if (jobTarget != null)
                 {
                     float distanceToTarget = (jobTarget.Cell - caster.Position).LengthHorizontal;
-                    bool canReserve = false;
+                    bool canReserve;
                     if (jobTarget.Thing != null)
                     {
                         canReserve = caster.CanReserveAndReach(target, PathEndMode.Touch, Danger.Deadly);
@@ -298,7 +217,7 @@ namespace TorannMagic.AutoCast
                 Pawn caster = casterComp.Pawn;
                 LocalTargetInfo jobTarget = target;
                 float distanceToTarget = (jobTarget.Cell - caster.Position).LengthHorizontal;
-                if (distanceToTarget < (abilitydef.MainVerb.range) && jobTarget != null && jobTarget.Thing != null)
+                if (distanceToTarget < abilitydef.MainVerb.range && jobTarget != null && jobTarget.Thing != null)
                 {
                     if (jobTarget.Thing != caster)
                     {
@@ -310,7 +229,7 @@ namespace TorannMagic.AutoCast
             }
         }
     }
-    
+
     public static class CombatAbility_OnTarget
     {
         public static void TryExecute(CompAbilityUserMight casterComp, TMAbilityDef abilitydef, PawnAbility ability, MightPower power, LocalTargetInfo target, float minRange, out bool success)
@@ -432,10 +351,6 @@ namespace TorannMagic.AutoCast
                     {
                         jobTarget = caster;
                     }
-                    if (jobTarget != null && jobTarget.Thing != caster)
-                    {
-                        float distanceToTarget = (jobTarget.Cell - caster.Position).LengthHorizontal;
-                    }
                     if (jobTarget != null && jobTarget.Thing != null)
                     {
                         Job job = ability.GetJob(AbilityContext.AI, jobTarget);
@@ -451,7 +366,6 @@ namespace TorannMagic.AutoCast
     {
         public static void Evaluate(CompAbilityUserMight casterComp, TMAbilityDef abilitydef, PawnAbility ability, MightPower power, out bool success)
         {
-            success = false;
             EvaluateMinRange(casterComp, abilitydef, ability, power, 3f, out success);
         }
 
@@ -462,16 +376,16 @@ namespace TorannMagic.AutoCast
             {
                 Pawn caster = casterComp.Pawn;
                 LocalTargetInfo jobTarget = TM_Calc.FindNearbyEnemy(caster, (int)(abilitydef.MainVerb.range * .9f));
-                if(jobTarget != null && jobTarget.Thing != null && abilitydef == TorannMagicDefOf.TM_AntiArmor)
+                if (jobTarget != null && jobTarget.Thing != null && abilitydef == TorannMagicDefOf.TM_AntiArmor)
                 {
                     Pawn targetPawn = jobTarget.Thing as Pawn;
-                    if(targetPawn.RaceProps.IsFlesh)
+                    if (targetPawn.RaceProps.IsFlesh)
                     {
                         jobTarget = null;
                     }
                 }
                 float distanceToTarget = (jobTarget.Cell - caster.Position).LengthHorizontal;
-                if(jobTarget != null && jobTarget.Thing != null && (distanceToTarget > minRange && distanceToTarget < (abilitydef.MainVerb.range * .9f)) && TM_Calc.HasLoSFromTo(caster.Position, jobTarget, caster, 0, abilitydef.MainVerb.range))
+                if (jobTarget != null && jobTarget.Thing != null && distanceToTarget > minRange && distanceToTarget < (abilitydef.MainVerb.range * .9f) && TM_Calc.HasLoSFromTo(caster.Position, jobTarget, caster, 0, abilitydef.MainVerb.range))
                 {
                     Job job = ability.GetJob(AbilityContext.AI, jobTarget);
                     job.endIfCantShootTargetFromCurPos = true;
@@ -512,7 +426,7 @@ namespace TorannMagic.AutoCast
                                 BodyPartRecord rec = enumerator.Current;
                                 IEnumerable<Hediff_Injury> arg_BB_0 = caster.health.hediffSet.GetHediffs<Hediff_Injury>();
                                 Func<Hediff_Injury, bool> arg_BB_1;
-                                arg_BB_1 = ((Hediff_Injury injury) => injury.Part == rec);
+                                arg_BB_1 = (Hediff_Injury injury) => injury.Part == rec;
 
                                 foreach (Hediff_Injury current in arg_BB_0.Where(arg_BB_1))
                                 {
@@ -524,19 +438,19 @@ namespace TorannMagic.AutoCast
                                 }
                             }
                         }
-                        if(injurySeverity >= minSeverity)
+                        if (injurySeverity >= minSeverity)
                         {
                             Job job = ability.GetJob(AbilityContext.AI, jobTarget);
                             caster.jobs.TryTakeOrderedJob(job);
                             success = true;
-                        }                        
+                        }
                     }
                     else
                     {
                         Job job = ability.GetJob(AbilityContext.AI, jobTarget);
                         caster.jobs.TryTakeOrderedJob(job);
                         success = true;
-                    }                    
+                    }
                 }
             }
         }
@@ -546,7 +460,6 @@ namespace TorannMagic.AutoCast
     {
         public static void Evaluate(CompAbilityUserMight casterComp, TMAbilityDef abilitydef, PawnAbility ability, MightPower power, out bool success)
         {
-            success = false;
             EvaluateMinRange(casterComp, abilitydef, ability, power, null, 1.4f, out success);
         }
 
@@ -554,12 +467,12 @@ namespace TorannMagic.AutoCast
         {
             success = false;
             Hediff chi = casterComp.Pawn.health.hediffSet.GetFirstHediffOfDef(TorannMagicDefOf.TM_ChiHD);
-            if (chi != null && chi.Severity >= (abilitydef.chiCost*100) && ability.CooldownTicksLeft <= 0)
+            if (chi != null && chi.Severity >= (abilitydef.chiCost * 100) && ability.CooldownTicksLeft <= 0)
             {
                 Pawn caster = casterComp.Pawn;
                 if (jobTarget == null || (jobTarget.Thing != null && !(jobTarget.Thing is Pawn)))
                 {
-                   jobTarget = TM_Calc.FindNearbyEnemy(caster, (int)(abilitydef.MainVerb.range));
+                    jobTarget = TM_Calc.FindNearbyEnemy(caster, (int)abilitydef.MainVerb.range);
                 }
                 float distanceToTarget = (jobTarget.Cell - caster.Position).LengthHorizontal; //&& distanceToTarget < (abilitydef.MainVerb.range * .9f)             
                 if (jobTarget != null && jobTarget.Thing != null && (distanceToTarget < maxRange) && TM_Calc.HasLoSFromTo(caster.Position, jobTarget, caster, 0, abilitydef.MainVerb.range))
@@ -591,10 +504,10 @@ namespace TorannMagic.AutoCast
                 if (pwr.level >= 2)
                 {
                     jobTarget = TM_Calc.FindNearbyAfflictedPawnAny(caster, (int)(abilitydef.MainVerb.range * .9f));
-                    if(jobTarget != null && jobTarget.Thing != null && jobTarget.Thing is Pawn)
+                    if (jobTarget != null && jobTarget.Thing != null && jobTarget.Thing is Pawn)
                     {
                         Pawn jobPawn = jobTarget.Thing as Pawn;
-                        if(jobPawn.health != null && jobPawn.health.hediffSet != null && !(jobPawn.health.hediffSet.HasHediff(TorannMagicDefOf.TM_DiseaseImmunityHD) || jobPawn.health.hediffSet.HasHediff(TorannMagicDefOf.TM_DiseaseImmunity2HD)))
+                        if (jobPawn.health != null && jobPawn.health.hediffSet != null && !(jobPawn.health.hediffSet.HasHediff(TorannMagicDefOf.TM_DiseaseImmunityHD) || jobPawn.health.hediffSet.HasHediff(TorannMagicDefOf.TM_DiseaseImmunity2HD)))
                         {
 
                         }
@@ -629,7 +542,7 @@ namespace TorannMagic.AutoCast
 
     public static class CureAddictionSpell
     {
-        public static void Evaluate(CompAbilityUserMagic casterComp, TMAbilityDef abilitydef, PawnAbility ability, MagicPower power, List<string> validAddictionNames, out bool success)
+        public static void Evaluate(CompAbilityUserMagic casterComp, TMAbilityDef abilitydef, PawnAbility ability, MagicPower power, HashSet<string> validAddictionNames, out bool success)
         {
             success = false;
             if (casterComp.Mana.CurLevel >= casterComp.ActualManaCost(abilitydef) && ability.CooldownTicksLeft <= 0)
@@ -637,7 +550,7 @@ namespace TorannMagic.AutoCast
                 Pawn caster = casterComp.Pawn;
                 LocalTargetInfo jobTarget = null;
                 MagicPowerSkill ver = casterComp.MagicData.MagicPowerSkill_CureDisease.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_CureDisease_ver");
-                jobTarget = TM_Calc.FindNearbyAddictedPawn(caster, (int)(abilitydef.MainVerb.range * .9f), validAddictionNames);                
+                jobTarget = TM_Calc.FindNearbyAddictedPawn(caster, (int)(abilitydef.MainVerb.range * .9f), validAddictionNames);
                 if (jobTarget != null)
                 {
                     float distanceToTarget = (jobTarget.Cell - caster.Position).LengthHorizontal;
@@ -657,7 +570,6 @@ namespace TorannMagic.AutoCast
     {
         public static void Evaluate(CompAbilityUserMagic casterComp, TMAbilityDef abilitydef, PawnAbility ability, MagicPower power, out bool success)
         {
-            success = false;
             EvaluateMinSeverity(casterComp, abilitydef, ability, power, 0, out success);
         }
 
@@ -668,7 +580,7 @@ namespace TorannMagic.AutoCast
             {
                 Pawn caster = casterComp.Pawn;
                 LocalTargetInfo jobTarget = TM_Calc.FindNearbyInjuredPawn(caster, (int)(abilitydef.MainVerb.range * .9f), minSeverity);
-                float distanceToTarget = (jobTarget.Cell - caster.Position).LengthHorizontal;                
+                float distanceToTarget = (jobTarget.Cell - caster.Position).LengthHorizontal;
                 if (distanceToTarget < (abilitydef.MainVerb.range * .9f) && jobTarget != null && jobTarget.Thing != null)
                 {
                     if (abilitydef == TorannMagicDefOf.TM_CauterizeWound && jobTarget.Thing is Pawn)
@@ -687,7 +599,7 @@ namespace TorannMagic.AutoCast
                         Job job = ability.GetJob(AbilityContext.AI, jobTarget);
                         caster.jobs.TryTakeOrderedJob(job);
                         success = true;
-                    }                    
+                    }
                 }
             }
         }
@@ -697,7 +609,6 @@ namespace TorannMagic.AutoCast
     {
         public static void Evaluate(CompAbilityUserMagic casterComp, TMAbilityDef abilitydef, PawnAbility ability, MagicPower power, HediffDef hediffDef, out bool success)
         {
-            success = false;
             EvaluateMinSeverity(casterComp, abilitydef, ability, power, hediffDef, 0, out success);
         }
 
@@ -731,7 +642,6 @@ namespace TorannMagic.AutoCast
     {
         public static void Evaluate(CompAbilityUserMagic casterComp, TMAbilityDef abilitydef, PawnAbility ability, MagicPower power, out bool success)
         {
-            success = false;
             EvaluateMinSeverity(casterComp, abilitydef, ability, power, 0, out success);
         }
 
@@ -758,7 +668,6 @@ namespace TorannMagic.AutoCast
     {
         public static void Evaluate(CompAbilityUserMagic casterComp, TMAbilityDef abilitydef, PawnAbility ability, MagicPower power, HediffDef hediffDef, out bool success)
         {
-            success = false;
             EvaluateMinRange(casterComp, abilitydef, ability, power, hediffDef, 6f, out success);
         }
 
@@ -788,7 +697,6 @@ namespace TorannMagic.AutoCast
     {
         public static void Evaluate(CompAbilityUserMagic casterComp, TMAbilityDef abilitydef, PawnAbility ability, MagicPower power, out bool success)
         {
-            success = false;
             EvaluateMinRange(casterComp, abilitydef, ability, power, 6f, out success);
         }
 
@@ -825,15 +733,15 @@ namespace TorannMagic.AutoCast
                     Pawn transferPawn = jobTarget.Thing as Pawn;
                     CompAbilityUserMagic tComp = transferPawn.GetComp<CompAbilityUserMagic>();
                     if (reverse)
-                    {                        
-                        if(casterComp.Mana.CurLevel >= .3f || tComp.Mana.CurLevel <= .9f)
+                    {
+                        if (casterComp.Mana.CurLevel >= .3f || tComp.Mana.CurLevel <= .9f)
                         {
                             jobTarget = null;
                         }
                     }
                     else
                     {
-                        if(casterComp.Mana.CurLevel <= .9f || tComp.Mana.CurLevel >= .9f)
+                        if (casterComp.Mana.CurLevel <= .9f || tComp.Mana.CurLevel >= .9f)
                         {
                             jobTarget = null;
                         }
@@ -858,8 +766,6 @@ namespace TorannMagic.AutoCast
             Pawn caster = casterComp.Pawn;
             LocalTargetInfo jobTarget = caster.CurJob.targetA;
             float distanceToTarget = (jobTarget.Cell - caster.Position).LengthHorizontal;
-            Vector3 directionToTarget = TM_Calc.GetVector(caster.Position, jobTarget.Cell);
-
             if (casterComp.Mana.CurLevel >= casterComp.ActualManaCost(abilitydef) && ability.CooldownTicksLeft <= 0 && jobTarget.Thing != null && jobTarget.Thing.def.EverHaulable)
             {
                 //Log.Message("summon: " + caster.LabelShort + " job def is " + caster.CurJob.def.defName + " targetA " + caster.CurJob.targetA + " targetB " + caster.CurJob.targetB + " jobTarget " + jobTarget + " at distance " + distanceToTarget + " min distance " + minDistance + " at vector " + directionToTarget);
@@ -891,24 +797,24 @@ namespace TorannMagic.AutoCast
                         BodyPartRecord rec = enumerator.Current;
                         IEnumerable<Hediff_Injury> arg_BB_0 = caster.health.hediffSet.GetHediffs<Hediff_Injury>();
                         Func<Hediff_Injury, bool> arg_BB_1;
-                        arg_BB_1 = ((Hediff_Injury injury) => injury.Part == rec);
+                        arg_BB_1 = (Hediff_Injury injury) => injury.Part == rec;
 
                         foreach (Hediff_Injury current in arg_BB_0.Where(arg_BB_1))
                         {
                             bool flag5 = current.CanHealNaturally() && !current.IsPermanent();
                             if (flag5)
                             {
-                                injurySeverity += current.Severity;                                
+                                injurySeverity += current.Severity;
                             }
                         }
                     }
                 }
-                if (injurySeverity != 0 && !(caster.health.hediffSet.HasHediff(HediffDef.Named("TM_HediffShield"))))
+                if (injurySeverity != 0 && !caster.health.hediffSet.HasHediff(HediffDef.Named("TM_HediffShield")))
                 {
                     Job job = ability.GetJob(AbilityContext.AI, jobTarget);
                     caster.jobs.TryTakeOrderedJob(job);
                     success = true;
-                }            
+                }
             }
         }
     }
@@ -939,10 +845,10 @@ namespace TorannMagic.AutoCast
             LocalTargetInfo jobTarget = caster;
 
             if (casterComp.Mana.CurLevel >= casterComp.ActualManaCost(abilitydef) && ability.CooldownTicksLeft <= 0 && jobTarget != null)
-            {                
+            {
                 Job job = ability.GetJob(AbilityContext.AI, jobTarget);
                 caster.jobs.TryTakeOrderedJob(job);
-                success = true;                
+                success = true;
             }
         }
     }
@@ -973,7 +879,7 @@ namespace TorannMagic.AutoCast
             {
                 Pawn caster = casterComp.Pawn;
                 LocalTargetInfo jobTarget = TM_Calc.FindNearbyPawn(caster, (int)(abilitydef.MainVerb.range * .9f));
-                float distanceToTarget = (jobTarget.Cell - caster.Position).LengthHorizontal;                
+                float distanceToTarget = (jobTarget.Cell - caster.Position).LengthHorizontal;
                 if (distanceToTarget < (abilitydef.MainVerb.range * .9f) && jobTarget != null && jobTarget.Thing != null && jobTarget.Thing is Pawn)
                 {
                     Pawn targetPawn = jobTarget.Thing as Pawn;
@@ -986,7 +892,7 @@ namespace TorannMagic.AutoCast
                         //List<Thought_Memory> targetPawnThoughts = targetPawn.needs.mood.thoughts.memories.Memories;
                         //for (int i = 0; i < targetPawnThoughts.Count; i++)
                         //{
-                        
+
                         //    if (targetPawnThoughts[i].def == ThoughtDefOf.ApparelDamaged)
                         //    {
                         //        tatteredApparel = true;
@@ -996,14 +902,14 @@ namespace TorannMagic.AutoCast
                         for (int i = 0; i < apparel.Count; i++)
                         {
                             //Log.Message("evaluating equipment " + apparel[i].def.defName + " with hitpoint % of " + (float)(apparel[i].HitPoints/ apparel[i].MaxHitPoints) + " or " + (float)(apparel[i].HitPoints) / (float)(apparel[i].MaxHitPoints));
-                            if (((float)(apparel[i].HitPoints) / (float)(apparel[i].MaxHitPoints)) < .5f)
+                            if (((float)apparel[i].HitPoints / (float)apparel[i].MaxHitPoints) < .5f)
                             {
                                 tatteredApparel = true;
                             }
                         }
                         if (targetPawn.equipment.Primary != null)
                         {
-                           if((float)(targetPawn.equipment.Primary.HitPoints) / (float)(targetPawn.equipment.Primary.MaxHitPoints) < .5f)
+                            if ((float)targetPawn.equipment.Primary.HitPoints / (float)targetPawn.equipment.Primary.MaxHitPoints < .5f)
                             {
                                 tatteredApparel = true;
                             }
@@ -1144,7 +1050,6 @@ namespace TorannMagic.AutoCast
                         //Log.Message("doing partial blink to cell " + blinkToCell);
                         //MoteMaker.ThrowHeatGlow(blinkToCell, caster.Map, 1f);
                         bool canReach = false;
-                        bool isCloser = false;
                         if (blinkToCell.Walkable(caster.Map))
                         {
                             try
@@ -1160,13 +1065,12 @@ namespace TorannMagic.AutoCast
                             {
                                 PawnPath ppc = caster.Map.pathFinder.FindPath(caster.Position, jobTarget.Cell, TraverseParms.For(TraverseMode.PassDoors, Danger.Deadly), PathEndMode.ClosestTouch);
                                 float currentCost = ppc.TotalCost;
-                                float futureCost = currentCost;
                                 ppc.ReleaseToPool();
 
                                 PawnPath ppf = caster.Map.pathFinder.FindPath(blinkToCell, jobTarget.Cell, TraverseParms.For(TraverseMode.PassDoors, Danger.Deadly), PathEndMode.ClosestTouch);
-                                futureCost = ppf.TotalCost;
+                                float futureCost = ppf.TotalCost;
                                 ppf.ReleaseToPool();
-                                isCloser = currentCost > futureCost;
+                                bool isCloser = currentCost > futureCost;
 
                                 if (isCloser)
                                 {
@@ -1237,10 +1141,10 @@ namespace TorannMagic.AutoCast
                 if (casterComp != null && casterComp.IsMagicUser)
                 {
                     ModOptions.SettingsRef settingsRef = new ModOptions.SettingsRef();
-                    casterComp.MagicUserXP -= (int)((casterComp.ActualManaCost(abilitydef) * 300 * .7f * casterComp.xpGain * settingsRef.xpMultiplier));
+                    casterComp.MagicUserXP -= (int)(casterComp.ActualManaCost(abilitydef) * 300 * .7f * casterComp.xpGain * settingsRef.xpMultiplier);
                     ability.PostAbilityAttempt();
                 }
-                if(selectCaster)
+                if (selectCaster)
                 {
                     Find.Selector.Select(caster, false, true);
                 }
@@ -1393,7 +1297,7 @@ namespace TorannMagic.AutoCast
                 }
                 for (int i = 0; i < 3; i++)
                 {
-                    TM_MoteMaker.ThrowGenericMote(ThingDefOf.Mote_Smoke, caster.DrawPos, caster.Map, Rand.Range(.6f, 1f), .2f, .1f, .5f, 0, Rand.Range(2, 3), Rand.Range(-30, 30), 0);                    
+                    TM_MoteMaker.ThrowGenericMote(ThingDefOf.Mote_Smoke, caster.DrawPos, caster.Map, Rand.Range(.6f, 1f), .2f, .1f, .5f, 0, Rand.Range(2, 3), Rand.Range(-30, 30), 0);
                 }
                 TM_MoteMaker.ThrowGenericMote(moteThrown, caster.DrawPos, caster.Map, 1.4f, .1f, 0f, .4f, 0, 5f, (Quaternion.AngleAxis(90, Vector3.up) * moteVector).ToAngleFlat(), 0);
                 bool drafted = caster.drafter.Drafted;
@@ -1423,7 +1327,7 @@ namespace TorannMagic.AutoCast
                 if (caster.drafter == null)
                 {
                     caster.drafter = new Pawn_DraftController(caster);
-                }                
+                }
 
                 if (drafted)
                 {

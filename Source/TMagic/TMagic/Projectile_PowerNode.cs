@@ -15,9 +15,6 @@ namespace TorannMagic
         {
             Map map = base.Map;
             base.Impact(hitThing);
-            ThingDef def = this.def;
-            Pawn victim = hitThing as Pawn;
-            Thing item = hitThing as Thing;
             IntVec3 arg_pos_1;
 
             Pawn pawn = this.launcher as Pawn;
@@ -30,12 +27,12 @@ namespace TorannMagic
             if (!this.primed)
             {
                 arg_pos_1 = centerCell;
-                if ((arg_pos_1.IsValid && arg_pos_1.Standable(map)))
+                if (arg_pos_1.IsValid && arg_pos_1.Standable(map))
                 {
                     AbilityUser.SpawnThings tempPod = new SpawnThings();
                     IntVec3 shiftPos = centerCell;
                     centerCell.x++;
-                    tempPod.def = ThingDef.Named("TM_PowerNode");                    
+                    tempPod.def = ThingDef.Named("TM_PowerNode");
                     tempPod.spawnCount = 1;
                     try
                     {
@@ -100,7 +97,7 @@ namespace TorannMagic
                     if (pNode != null)
                     {
                         if (comp.MagicData.MagicPowerSkill_Cantrips.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_Cantrips_pwr").level >= 13)
-                        {                        
+                        {
                             pNode.defensive = true;
                         }
                         if (comp.MagicData.MagicPowerSkill_Cantrips.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_Cantrips_ver").level >= 6)

@@ -1,6 +1,5 @@
 ﻿using AbilityUser;
 using RimWorld;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,7 +10,7 @@ namespace TorannMagic
 {
     public class MagicAbility : PawnAbility
     {
-       
+
         public CompAbilityUserMagic MagicUser
         {
             get
@@ -33,10 +32,10 @@ namespace TorannMagic
             get
             {
                 float num = 1;
-                if(magicDef != null)
+                if (magicDef != null)
                 {
                     num *= 1f - (magicDef.efficiencyReductionPercent * this.MagicUser.MagicData.GetSkill_Efficiency(magicDef).level);
-                    num *= (1f - (TorannMagicDefOf.TM_BloodGift.efficiencyReductionPercent /2f) * this.MagicUser.MagicData.MagicPowerSkill_BloodGift.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_BloodGift_eff").level);
+                    num *= 1f - (TorannMagicDefOf.TM_BloodGift.efficiencyReductionPercent / 2f * this.MagicUser.MagicData.MagicPowerSkill_BloodGift.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_BloodGift_eff").level);
                 }
                 return magicDef.bloodCost * num;
             }
@@ -76,7 +75,7 @@ namespace TorannMagic
                 {
                     return this.MagicUser.ActualManaCost(magicDef);
                 }
-                return magicDef.manaCost;         
+                return magicDef.manaCost;
             }
         }
 
@@ -85,29 +84,29 @@ namespace TorannMagic
         }
 
         public MagicAbility(CompAbilityUser abilityUser) : base(abilityUser)
-		{
-            this.abilityUser = (abilityUser as CompAbilityUserMagic);
+        {
+            this.abilityUser = abilityUser as CompAbilityUserMagic;
         }
 
         public MagicAbility(Pawn user, AbilityUser.AbilityDef pdef) : base(user, pdef)
-		{
+        {
 
         }
 
         public override void PostAbilityAttempt()  //commented out in CompAbilityUserMagic
         {
             //base.PostAbilityAttempt();
-            
+
             ModOptions.SettingsRef settingsRef = new ModOptions.SettingsRef();
             if (!this.Pawn.IsColonist && settingsRef.AIAggressiveCasting)// for AI
             {
-                this.CooldownTicksLeft = Mathf.RoundToInt(this.MaxCastingTicks/2f);
+                this.CooldownTicksLeft = Mathf.RoundToInt(this.MaxCastingTicks / 2f);
             }
             else
             {
                 this.CooldownTicksLeft = Mathf.RoundToInt(this.MaxCastingTicks * this.MagicUser.coolDown);
             }
-            if(Rand.Chance(MagicUser.arcalleumCooldown))
+            if (Rand.Chance(MagicUser.arcalleumCooldown))
             {
                 this.CooldownTicksLeft = 4;
             }
@@ -117,25 +116,25 @@ namespace TorannMagic
                 bool flag3 = this.MagicUser.Mana != null;
                 if (flag3)
                 {
-                    if(!this.Pawn.IsColonist && settingsRef.AIAggressiveCasting)// for AI
+                    if (!this.Pawn.IsColonist && settingsRef.AIAggressiveCasting)// for AI
                     {
-                        this.MagicUser.Mana.UseMagicPower(this.MagicUser.ActualManaCost(magicDef)/2f);
+                        this.MagicUser.Mana.UseMagicPower(this.MagicUser.ActualManaCost(magicDef) / 2f);
                     }
                     else
-                    {                       
+                    {
                         this.MagicUser.Mana.UseMagicPower(this.MagicUser.ActualManaCost(magicDef));
                     }
-                                       
-                    if(this.magicDef != TorannMagicDefOf.TM_TransferMana && magicDef.abilityHediff == null)
-                    {                        
-                        this.MagicUser.MagicUserXP += (int)((magicDef.manaCost * 300) * this.MagicUser.xpGain * settingsRef.xpMultiplier);
-                    }                    
+
+                    if (this.magicDef != TorannMagicDefOf.TM_TransferMana && magicDef.abilityHediff == null)
+                    {
+                        this.MagicUser.MagicUserXP += (int)(magicDef.manaCost * 300 * this.MagicUser.xpGain * settingsRef.xpMultiplier);
+                    }
                 }
                 else if (this.MagicUser.Pawn.story.traits.HasTrait(TorannMagicDefOf.Faceless))
                 {
                     CompAbilityUserMight mightComp = this.MagicUser.Pawn.GetComp<CompAbilityUserMight>();
                     mightComp.Stamina.UseMightPower(magicDef.manaCost);
-                    mightComp.MightUserXP += (int)((magicDef.manaCost * 180) * mightComp.xpGain * settingsRef.xpMultiplier);
+                    mightComp.MightUserXP += (int)(magicDef.manaCost * 180 * mightComp.xpGain * settingsRef.xpMultiplier);
                 }
 
                 if (this.magicDef.bloodCost != 0)
@@ -148,7 +147,7 @@ namespace TorannMagic
                     {
                         Hediff hd = this.Pawn.health.hediffSet.GetFirstHediffOfDef(magicDef.requiredHediff);
                         hd.Severity -= this.ActualHediffCost;
-                        this.MagicUser.MagicUserXP += (int)((magicDef.hediffXPFactor * this.MagicUser.xpGain * settingsRef.xpMultiplier) * magicDef.hediffCost);
+                        this.MagicUser.MagicUserXP += (int)(magicDef.hediffXPFactor * this.MagicUser.xpGain * settingsRef.xpMultiplier * magicDef.hediffCost);
                     }
                     else
                     {
@@ -161,14 +160,14 @@ namespace TorannMagic
                     {
                         Need nd = this.Pawn.needs.TryGetNeed(this.magicDef.requiredNeed);
                         nd.CurLevel -= this.ActualNeedCost;
-                        this.MagicUser.MagicUserXP += (int)((magicDef.needXPFactor * this.MagicUser.xpGain * settingsRef.xpMultiplier) * magicDef.needCost);
+                        this.MagicUser.MagicUserXP += (int)(magicDef.needXPFactor * this.MagicUser.xpGain * settingsRef.xpMultiplier * magicDef.needCost);
                     }
                     else
                     {
                         Log.Warning("" + this.Pawn.LabelShort + " attempted to use an ability requiring the need " + magicDef.requiredNeed.label + " but does not have the need; should never happen since we required the need to use the ability.");
                     }
                 }
-            }                       
+            }
         }
 
         public override string PostAbilityVerbCompDesc(VerbProperties_Ability verbDef)
@@ -184,11 +183,11 @@ namespace TorannMagic
                 string text3 = "";
                 float num = 0;
                 float num2 = 0;
-                
-               
+
+
                 if (magicAbilityDef == TorannMagicDefOf.TM_Teleport)
                 {
-                    num = this.MagicUser.ActualManaCost(magicDef)*100;
+                    num = this.MagicUser.ActualManaCost(magicDef) * 100;
                     MagicPowerSkill mps2 = this.MagicUser.MagicData.MagicPowerSkill_Teleport.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_Teleport_ver");
                     MagicPowerSkill mps1 = this.MagicUser.MagicData.MagicPowerSkill_Teleport.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_Teleport_pwr");
                     num2 = 80 + (mps1.level * 20) + (mps2.level * 20);
@@ -198,7 +197,7 @@ namespace TorannMagic
                 }
                 else if (magicAbilityDef == TorannMagicDefOf.TM_SummonMinion)
                 {
-                    num = this.MagicUser.ActualManaCost(magicDef)*100;
+                    num = this.MagicUser.ActualManaCost(magicDef) * 100;
                     MagicPowerSkill mps1 = this.MagicUser.MagicData.MagicPowerSkill_SummonMinion.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_SummonMinion_ver");
                     num2 = 1200 + (600 * mps1.level);
                     text2 = "TM_AbilityDescSummonDuration".Translate(
@@ -207,7 +206,7 @@ namespace TorannMagic
                 }
                 else if (magicAbilityDef == TorannMagicDefOf.TM_SummonPylon)
                 {
-                    num = this.MagicUser.ActualManaCost(magicDef)*100;
+                    num = this.MagicUser.ActualManaCost(magicDef) * 100;
                     MagicPowerSkill mps1 = this.MagicUser.MagicData.MagicPowerSkill_SummonPylon.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_SummonPylon_ver");
                     num2 = 240 + (120 * mps1.level);
                     text2 = "TM_AbilityDescSummonDuration".Translate(
@@ -246,7 +245,7 @@ namespace TorannMagic
                 }
 
                 if (this.Pawn.story.traits.HasTrait(TorannMagicDefOf.Faceless))
-                {                    
+                {
                     text = "TM_AbilityDescBaseStaminaCost".Translate(
                         (magicAbilityDef.manaCost * 100).ToString("n1")
                     ) + "\n" + "TM_AbilityDescAdjustedStaminaCost".Translate(
@@ -262,7 +261,7 @@ namespace TorannMagic
                     );
                 }
 
-                if(magicAbilityDef == TorannMagicDefOf.TM_IgniteBlood || magicAbilityDef == TorannMagicDefOf.TM_BloodShield || magicAbilityDef == TorannMagicDefOf.TM_BloodForBlood || 
+                if (magicAbilityDef == TorannMagicDefOf.TM_IgniteBlood || magicAbilityDef == TorannMagicDefOf.TM_BloodShield || magicAbilityDef == TorannMagicDefOf.TM_BloodForBlood ||
                     magicAbilityDef == TorannMagicDefOf.TM_Rend || magicAbilityDef == TorannMagicDefOf.TM_Rend_I || magicAbilityDef == TorannMagicDefOf.TM_Rend_II || magicAbilityDef == TorannMagicDefOf.TM_Rend_III ||
                     magicAbilityDef == TorannMagicDefOf.TM_BloodMoon || magicAbilityDef == TorannMagicDefOf.TM_BloodMoon_I || magicAbilityDef == TorannMagicDefOf.TM_BloodMoon_II || magicAbilityDef == TorannMagicDefOf.TM_BloodMoon_III)
                 {
@@ -274,10 +273,10 @@ namespace TorannMagic
                     );
                 }
 
-                if(this.MagicUser.coolDown != 1f)
+                if (this.MagicUser.coolDown != 1f)
                 {
                     text3 = "TM_AdjustedCooldown".Translate(
-                        ((this.MaxCastingTicks * this.MagicUser.coolDown)/60).ToString("0.00")
+                        (this.MaxCastingTicks * this.MagicUser.coolDown / 60).ToString("0.00")
                     );
                 }
 
@@ -292,7 +291,7 @@ namespace TorannMagic
                     stringBuilder.AppendLine(text2);
                 }
                 bool flag4 = text3 != "";
-                if(flag4)
+                if (flag4)
                 {
                     stringBuilder.AppendLine(text3);
                 }
@@ -308,8 +307,7 @@ namespace TorannMagic
             if (flag)
             {
                 reason = "";
-                TMAbilityDef tmAbilityDef;
-                bool flag1 = base.Def != null && (tmAbilityDef = (base.Def as TMAbilityDef)) != null;
+                bool flag1 = base.Def != null && (base.Def as TMAbilityDef) != null;
                 if (flag1)
                 {
                     bool flag4 = this.MagicUser.Mana != null;
@@ -337,7 +335,7 @@ namespace TorannMagic
                             }
                         }
                         bool flagMute = this.MagicUser.Pawn.health.hediffSet.HasHediff(TorannMagicDefOf.TM_MuteHD);
-                        if(flagMute)
+                        if (flagMute)
                         {
                             reason = "TM_CasterMute".Translate(
                                 base.Pawn.LabelShort
@@ -346,7 +344,7 @@ namespace TorannMagic
                             return result;
                         }
                         bool flagNeed = magicDef.requiredNeed != null && this.MagicUser.Pawn.needs.TryGetNeed(magicDef.requiredNeed) != null && this.MagicUser.Pawn.needs.TryGetNeed(magicDef.requiredNeed).CurLevel > this.ActualNeedCost;
-                        if(flagNeed)
+                        if (flagNeed)
                         {
                             reason = "TM_NotEnoughEnergy".Translate(
                                 base.Pawn.LabelShort,
@@ -401,7 +399,7 @@ namespace TorannMagic
                         this.magicDef.defName == "TM_BloodForBlood" || this.magicDef.defName == "TM_IgniteBlood" ||
                         this.magicDef.defName == "TM_Poison" ||
                         this.magicDef == TorannMagicDefOf.TM_ChainLightning ||
-                        this.magicDef == TorannMagicDefOf.TM_ArcaneBolt) )
+                        this.magicDef == TorannMagicDefOf.TM_ArcaneBolt))
                     {
                         reason = "TM_ShieldBlockingPowers".Translate(
                             base.Pawn.Label,
@@ -411,7 +409,7 @@ namespace TorannMagic
                     }
                 }
                 result = true;
-                
+
             }
             else
             {

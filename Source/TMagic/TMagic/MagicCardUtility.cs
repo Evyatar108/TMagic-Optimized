@@ -1,6 +1,5 @@
 ﻿using HarmonyLib;
 using RimWorld;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -18,7 +17,7 @@ namespace TorannMagic
                 if (magicCardSize == default(Vector2))
                 {
                     magicCardSize = new Vector2(700f, 556f);
-                    if(Screen.currentResolution.height <= 800)
+                    if (Screen.currentResolution.height <= 800)
                     {
                         magicCardSize = new Vector2(700f, 476f);
                     }
@@ -68,7 +67,7 @@ namespace TorannMagic
             int sizeY = 0;
             if (comp.customClass != null)
             {
-                sizeY = (comp.MagicData.GetUniquePowersWithSkillsCount(comp.customClass) * 80);
+                sizeY = comp.MagicData.GetUniquePowersWithSkillsCount(comp.customClass) * 80;
                 if (sizeY > 500)
                 {
                     sizeY -= 500;
@@ -81,7 +80,7 @@ namespace TorannMagic
 
             Rect sRect = new Rect(rect.x, rect.y, rect.width - 36f, rect.height + 56f + sizeY);
             scrollPosition = GUI.BeginScrollView(rect, scrollPosition, sRect, false, true);
-            
+
             bool flag = comp != null && comp.MagicData != null;
             if (flag)
             {
@@ -89,7 +88,7 @@ namespace TorannMagic
                 if (flag2)
                 {
                     float x = Text.CalcSize("TM_Header".Translate()).x;
-                    Rect rect2 = new Rect(rect.width / 2f - (x / 2), rect.y, rect.width, MagicCardUtility.HeaderSize);
+                    Rect rect2 = new Rect((rect.width / 2f) - (x / 2), rect.y, rect.width, MagicCardUtility.HeaderSize);
                     Text.Font = GameFont.Small;
                     Widgets.Label(rect2, "TM_Header".Translate().CapitalizeFirst());
                     Text.Font = GameFont.Small;
@@ -99,7 +98,7 @@ namespace TorannMagic
                     Rect inRect2 = new Rect(rect9.x + MagicCardUtility.SkillsColumnDivider, rect9.y + MagicCardUtility.Padding, rect9.width - MagicCardUtility.SkillsColumnDivider, MagicCardUtility.SkillsColumnHeight);
                     MagicCardUtility.InfoPane(inRect, pawn.GetComp<CompAbilityUserMagic>(), pawn);
                     float x5 = Text.CalcSize("TM_Spells".Translate()).x;
-                    Rect rect10 = new Rect(rect.width / 2f - x5 / 2f, rect9.yMax - 60f, rect.width, MagicCardUtility.HeaderSize);
+                    Rect rect10 = new Rect((rect.width / 2f) - (x5 / 2f), rect9.yMax - 60f, rect.width, MagicCardUtility.HeaderSize);
                     Text.Font = GameFont.Small;
                     Widgets.Label(rect10, "TM_Spells".Translate().CapitalizeFirst());
                     Text.Font = GameFont.Small;
@@ -421,8 +420,8 @@ namespace TorannMagic
             Rect rect4 = new Rect(inRect.x, rect.yMax, inRect.width, MagicCardUtility.TextSize);
             Text.Font = GameFont.Tiny;
             Widgets.Label(rect4, "TM_PointsAvail".Translate() + ": " + compMagic.MagicData.MagicAbilityPoints);
-            Text.Font = GameFont.Tiny;            
-            if(!godMode)
+            Text.Font = GameFont.Tiny;
+            if (!godMode)
             {
                 Rect rect6 = new Rect(rect4.xMax + 10f, rect.yMax, inRect.width + 100f, MagicCardUtility.TextSize);
                 Widgets.Label(rect6, "TM_LastManaGainPct".Translate(
@@ -499,7 +498,7 @@ namespace TorannMagic
                 num2 *= Mathf.InverseLerp(0f, 50f, rect.height);
             }
             Text.Anchor = TextAnchor.UpperLeft;
-            Rect rect2 = new Rect(rect.x, rect.y + rect.height / 2f, rect.width, rect.height);
+            Rect rect2 = new Rect(rect.x, rect.y + (rect.height / 2f), rect.width, rect.height);
             rect2 = new Rect(rect2.x, rect2.y, rect2.width, rect2.height - num2);
             Widgets.FillableBar(rect2, compMagic.XPTillNextLevelPercent, (Texture2D)AccessTools.Field(typeof(Widgets), "BarFullTexHor").GetValue(null), BaseContent.GreyTex, false);
             Rect rect3 = new Rect(rect2.x + 272f + MagicCardUtility.MagicButtonPointSize, rectG.y, 136f, MagicCardUtility.TextSize);
@@ -516,7 +515,7 @@ namespace TorannMagic
             using (List<MagicPowerSkill>.Enumerator enumerator1 = skill1.GetEnumerator())
             {
                 while (enumerator1.MoveNext())
-                {                    
+                {
                     MagicPowerSkill skill = enumerator1.Current;
                     TooltipHandler.TipRegion(rect3, new TipSignal(() => skill.desc.Translate(), rect3.GetHashCode()));
                     bool flag11 = skill.level >= skill.levelMax || compMagic.MagicData.MagicAbilityPoints == 0;
@@ -619,36 +618,36 @@ namespace TorannMagic
             bool flag999;
             using (List<MagicPower>.Enumerator enumerator = MagicPowers.GetEnumerator())
             {
-                EnumerationStart:;
+            EnumerationStart:;
                 while (enumerator.MoveNext())
-                {                    
+                {
                     MagicPower power = enumerator.Current;
-                    if(power.abilityDef == TorannMagicDefOf.TM_LichForm && compMagic.Pawn.story.traits.HasTrait(TorannMagicDefOf.Lich))
+                    if (power.abilityDef == TorannMagicDefOf.TM_LichForm && compMagic.Pawn.story.traits.HasTrait(TorannMagicDefOf.Lich))
                     {
                         enumerator.MoveNext();
-                        power = enumerator.Current;                        
+                        power = enumerator.Current;
                     }
-                    if(power.abilityDef.defName.Contains("TM_DeathBolt") && !compMagic.Pawn.story.traits.HasTrait(TorannMagicDefOf.Lich))
+                    if (power.abilityDef.defName.Contains("TM_DeathBolt") && !compMagic.Pawn.story.traits.HasTrait(TorannMagicDefOf.Lich))
                     {
                         enumerator.MoveNext();
                         goto EnumerationStart;
                     }
-                    if(MagicPowerSkill4 == null)
+                    if (MagicPowerSkill4 == null)
                     {
-                        if(power.abilityDef == TorannMagicDefOf.TM_TechnoShield || power.abilityDef == TorannMagicDefOf.TM_Sabotage || power.abilityDef == TorannMagicDefOf.TM_Overdrive)
+                        if (power.abilityDef == TorannMagicDefOf.TM_TechnoShield || power.abilityDef == TorannMagicDefOf.TM_Sabotage || power.abilityDef == TorannMagicDefOf.TM_Overdrive)
                         {
                             goto EnumerationStart;
                         }
                     }
                     else
                     {
-                        if((power.abilityDef == TorannMagicDefOf.TM_TechnoBit || power.abilityDef == TorannMagicDefOf.TM_TechnoTurret || power.abilityDef == TorannMagicDefOf.TM_TechnoWeapon) && !power.learned)
+                        if ((power.abilityDef == TorannMagicDefOf.TM_TechnoBit || power.abilityDef == TorannMagicDefOf.TM_TechnoTurret || power.abilityDef == TorannMagicDefOf.TM_TechnoWeapon) && !power.learned)
                         {
                             goto EnumerationStart;
                         }
                     }
                     Text.Font = GameFont.Small;
-                    Rect rect = new Rect(MagicCardUtility.MagicCardSize.x / 2f - MagicCardUtility.MagicButtonSize, num, MagicCardUtility.MagicButtonSize, MagicCardUtility.MagicButtonSize);
+                    Rect rect = new Rect((MagicCardUtility.MagicCardSize.x / 2f) - MagicCardUtility.MagicButtonSize, num, MagicCardUtility.MagicButtonSize, MagicCardUtility.MagicButtonSize);
                     if (itnum > 1)
                     {
                         Widgets.DrawLineHorizontal(0f + 20f, rect.y - 2f, MagicCardUtility.MagicCardSize.x - 40f);
@@ -666,7 +665,7 @@ namespace TorannMagic
                         "\n\n",
                         "TM_CheckPointsForMoreInfo".Translate()
                         }), 398462);
-                        
+
                     }
                     else
                     {
@@ -684,12 +683,12 @@ namespace TorannMagic
                     float x3 = Text.CalcSize("TM_Versatility".Translate()).x;
                     Rect rect3 = new Rect(0f + MagicCardUtility.SpacingOffset, rect.y + 2f, MagicCardUtility.MagicCardSize.x, MagicCardUtility.ButtonSize * 1.15f);
 
-                    Rect rect5 = new Rect(rect3.x + rect3.width / 2f - x2, rect3.y, (rect3.width - 20f) / 3f, rect3.height);
-                    Rect rect6 = new Rect(rect3.width - x3 * 2f, rect3.y, rect3.width / 3f, rect3.height);
+                    Rect rect5 = new Rect(rect3.x + (rect3.width / 2f) - x2, rect3.y, (rect3.width - 20f) / 3f, rect3.height);
+                    Rect rect6 = new Rect(rect3.width - (x3 * 2f), rect3.y, rect3.width / 3f, rect3.height);
 
                     float x4 = Text.CalcSize(" # / # ").x;
                     //bool flag9 = power.abilityDef.label == "Ray of Hope" || power.abilityDef.label == "Soothing Breeze" || power.abilityDef.label == "Frost Ray" || power.abilityDef.label == "AMP" || power.abilityDef.label == "Shadow" || power.abilityDef.label == "Magic Missile" || power.abilityDef.label == "Blink" || power.abilityDef.label == "Summon" || power.abilityDef.label == "Shield"; //add all other buffs or xml based upgrades
-                    
+
                     if (TM_Calc.IsIconAbility_03(power.abilityDef))
                     {
                         flag999 = true;
@@ -704,11 +703,11 @@ namespace TorannMagic
                     //GUI.color = Color.white;
                     if (enumerator.Current.learned != true)
                     {
-                        Widgets.DrawTextureFitted(rect, power.Icon, 1f);                        
+                        Widgets.DrawTextureFitted(rect, power.Icon, 1f);
                         Rect rectLearn = new Rect(rect.xMin - 44f, rect.yMin, 40f, MagicCardUtility.MagicButtonPointSize);
                         if (compMagic.MagicData.MagicAbilityPoints >= enumerator.Current.learnCost)
                         {
-                            Text.Font = GameFont.Tiny;                            
+                            Text.Font = GameFont.Tiny;
                             bool flagLearn = Widgets.ButtonText(rectLearn, "TM_Learn".Translate(), true, false, true) && compMagic.AbilityUser.Faction == Faction.OfPlayer;
                             if (flagLearn)
                             {
@@ -717,7 +716,7 @@ namespace TorannMagic
                                 {
                                     compMagic.AddPawnAbility(enumerator.Current.abilityDef);
                                 }
-                                if ((enumerator.Current.abilityDef.defName == "TM_TechnoWeapon"))
+                                if (enumerator.Current.abilityDef.defName == "TM_TechnoWeapon")
                                 {
                                     compMagic.AddPawnAbility(TorannMagicDefOf.TM_NanoStimulant);
                                 }
@@ -726,7 +725,7 @@ namespace TorannMagic
                         }
                         else
                         {
-                            if ((power.abilityDef.defName == "TM_TechnoShield" || power.abilityDef.defName == "TM_Sabotage" || power.abilityDef.defName == "TM_Overdrive"))
+                            if (power.abilityDef.defName == "TM_TechnoShield" || power.abilityDef.defName == "TM_Sabotage" || power.abilityDef.defName == "TM_Overdrive")
                             {
                                 Rect rectToLearn = new Rect(rect.xMin - 268f, rect.yMin + 22f, 250f, MagicButtonPointSize);
                                 Text.Font = GameFont.Tiny;
@@ -806,23 +805,23 @@ namespace TorannMagic
                             (power.abilityDef == TorannMagicDefOf.TM_HolyWrath && MagicPowerSkill6 == null) ||
                             (power.abilityDef == TorannMagicDefOf.TM_Resurrection && MagicPowerSkill5 == null))
                         {
-                            Rect rectMasterLock = new Rect(rect.xMax - 23f - "TM_MasterSpellLocked".Translate().Length * 4, rect.yMin + MagicCardUtility.MagicButtonSize + 4f, "TM_MasterSpellLocked".Translate().Length * 8, MagicCardUtility.TextSize * 3);
+                            Rect rectMasterLock = new Rect(rect.xMax - 23f - ("TM_MasterSpellLocked".Translate().Length * 4), rect.yMin + MagicCardUtility.MagicButtonSize + 4f, "TM_MasterSpellLocked".Translate().Length * 8, MagicCardUtility.TextSize * 3);
                             Widgets.Label(rectMasterLock, "TM_MasterSpellLocked".Translate(
                                         power.abilityDef.LabelCap
                                 ));
                         }
                         if (MagicPowerSkill4 == null && compMagic.Pawn.story.traits.HasTrait(TorannMagicDefOf.Technomancer))
                         {
-                            Rect rectTechnoPath = new Rect(rect.xMax - "TM_TechnomancerPathWarning".Translate().Length * 3, rect.yMin + (2*(MagicCardUtility.MagicButtonSize + 4f)), "TM_TechnomancerPathWarning".Translate().Length * 6, MagicCardUtility.TextSize * 3);
+                            Rect rectTechnoPath = new Rect(rect.xMax - ("TM_TechnomancerPathWarning".Translate().Length * 3), rect.yMin + (2 * (MagicCardUtility.MagicButtonSize + 4f)), "TM_TechnomancerPathWarning".Translate().Length * 6, MagicCardUtility.TextSize * 3);
                             Widgets.Label(rectTechnoPath, "TM_TechnomancerPathWarning".Translate());
-                        }                       
+                        }
                     }
 
                     Text.Font = GameFont.Tiny;
                     float num2 = rect3.x;
                     if (itnum == 1 && MagicPowerSkill1 != null)
                     {
-                        DrawSkillHandler(num2, compMagic, power, enumerator, MagicPowerSkill1, rect3);                        
+                        DrawSkillHandler(num2, compMagic, power, enumerator, MagicPowerSkill1, rect3);
                         itnum++;
                     }
                     else if (itnum == 2 && MagicPowerSkill2 != null)
@@ -855,7 +854,7 @@ namespace TorannMagic
                         //Log.Message("No skill iteration found.");
                     }
                     num += MagicCardUtility.MagicButtonSize + MagicCardUtility.TextSize + 4f;//MagicCardUtility.SpacingOffset; //was 4f                    
-                }  
+                }
             }
         }
 
@@ -870,15 +869,15 @@ namespace TorannMagic
                     Rect rect42 = new Rect(rect41.x, rect4.y, rect4.width - MagicCardUtility.MagicButtonPointSize, rect4.height / 2);
                     MagicPowerSkill skill = enumeratorN.Current;
                     TooltipHandler.TipRegion(rect42, new TipSignal(() => skill.desc.Translate(), rect4.GetHashCode()));
-                    bool flag11 = (skill.level >= skill.levelMax || compMagic.MagicData.MagicAbilityPoints == 0 || !enumerator.Current.learned) || 
-                        ((enumerator.Current.abilityDef == TorannMagicDefOf.TM_Shapeshift) && compMagic.MagicData.MagicAbilityPoints < 2) || 
-                        (skill.label == "TM_Polymorph_ver" && compMagic.MagicData.MagicAbilityPoints < 2) || 
-                        ((enumerator.Current.abilityDef ==  TorannMagicDefOf.TM_BardTraining) && compMagic.MagicData.MagicAbilityPoints < 2 ) || 
-                        ((skill.label == "TM_HolyWrath_ver" || skill.label == "TM_HolyWrath_pwr") && compMagic.MagicData.MagicAbilityPoints < 2) || 
-                        ((skill.label == "TM_Sentinel_pwr") && compMagic.MagicData.MagicAbilityPoints < 2) || 
+                    bool flag11 = skill.level >= skill.levelMax || compMagic.MagicData.MagicAbilityPoints == 0 || !enumerator.Current.learned ||
+                        ((enumerator.Current.abilityDef == TorannMagicDefOf.TM_Shapeshift) && compMagic.MagicData.MagicAbilityPoints < 2) ||
+                        (skill.label == "TM_Polymorph_ver" && compMagic.MagicData.MagicAbilityPoints < 2) ||
+                        ((enumerator.Current.abilityDef == TorannMagicDefOf.TM_BardTraining) && compMagic.MagicData.MagicAbilityPoints < 2) ||
+                        ((skill.label == "TM_HolyWrath_ver" || skill.label == "TM_HolyWrath_pwr") && compMagic.MagicData.MagicAbilityPoints < 2) ||
+                        ((skill.label == "TM_Sentinel_pwr") && compMagic.MagicData.MagicAbilityPoints < 2) ||
                         ((skill.label == "TM_EnchanterStone_ver") && compMagic.MagicData.MagicAbilityPoints < 2) ||
                         ((skill.label == "TM_AlterFate_pwr") && compMagic.MagicData.MagicAbilityPoints < 2) ||
-                        ((enumerator.Current.abilityDef == TorannMagicDefOf.TM_ChaosTradition) && compMagic.MagicData.MagicAbilityPoints < 2 );
+                        ((enumerator.Current.abilityDef == TorannMagicDefOf.TM_ChaosTradition) && compMagic.MagicData.MagicAbilityPoints < 2);
                     if (flag11)
                     {
                         Widgets.Label(rect4, skill.label.Translate() + ": " + skill.level + " / " + skill.levelMax);
@@ -1043,7 +1042,7 @@ namespace TorannMagic
                             }
                             if (enumerator.Current.abilityDef.defName == "TM_HolyWrath")
                             {
-                                if(skill.label == "TM_HolyWrath_ver" || skill.label == "TM_HolyWrath_pwr")
+                                if (skill.label == "TM_HolyWrath_ver" || skill.label == "TM_HolyWrath_pwr")
                                 {
                                     compMagic.LevelUpSkill_Overwhelm(skill.label);
                                     skill.level++;
@@ -1290,7 +1289,7 @@ namespace TorannMagic
                                 compMagic.LevelUpSkill_EarthSprites(skill.label);
                                 skill.level++;
                                 compMagic.MagicData.MagicAbilityPoints -= 1;
-                            }                            
+                            }
                             if (enumerator.Current.abilityDef.defName == "TM_EarthernHammer")
                             {
                                 compMagic.LevelUpSkill_EarthernHammer(skill.label);
@@ -1311,7 +1310,7 @@ namespace TorannMagic
                                     skill.level++;
                                     compMagic.MagicData.MagicAbilityPoints -= 1;
                                 }
-                                
+
                             }
                             if (enumerator.Current.abilityDef.defName == "TM_Meteor" || enumerator.Current.abilityDef.defName == "TM_Meteor_I" || enumerator.Current.abilityDef.defName == "TM_Meteor_II" || enumerator.Current.abilityDef.defName == "TM_Meteor_III")
                             {
@@ -1424,7 +1423,7 @@ namespace TorannMagic
                                     compMagic.LevelUpSkill_EnchanterStone(skill.label);
                                     skill.level++;
                                     compMagic.MagicData.MagicAbilityPoints -= 1;
-                                }                                
+                                }
                             }
                             if (enumerator.Current.abilityDef.defName == "TM_EnchantWeapon")
                             {
@@ -1472,7 +1471,7 @@ namespace TorannMagic
                                     compMagic.LevelUpSkill_AlterFate(skill.label);
                                     skill.level++;
                                     compMagic.MagicData.MagicAbilityPoints -= 1;
-                                }                                
+                                }
                             }
                             if (enumerator.Current.abilityDef.defName == "TM_AccelerateTime")
                             {
@@ -1517,7 +1516,7 @@ namespace TorannMagic
                                 compMagic.MagicData.MagicAbilityPoints -= 2;
                             }
                             if (enumerator.Current.abilityDef.defName == "TM_LightLance")
-                            {                                
+                            {
                                 skill.level++;
                                 compMagic.MagicData.MagicAbilityPoints -= 1;
                             }
@@ -1529,7 +1528,7 @@ namespace TorannMagic
                         }
                     }
                     num2 += (MagicCardUtility.MagicCardSize.x / 3) - MagicCardUtility.SpacingOffset;
-                }                
+                }
             }
         }
 
@@ -1540,17 +1539,17 @@ namespace TorannMagic
             bool flag999;
             using (List<MagicPower>.Enumerator enumerator = MagicPowers.GetEnumerator())
             {
-                EnumerationStart:;
+            EnumerationStart:;
                 while (enumerator.MoveNext())
                 {
-                    MagicPower power = enumerator.Current;                    
+                    MagicPower power = enumerator.Current;
                     if (power == null || !power.learned)
                     {
                         goto EnumerationStart;
                     }
 
                     Text.Font = GameFont.Small;
-                    Rect rect = new Rect(MagicCardUtility.MagicCardSize.x / 2f - MagicCardUtility.MagicButtonSize, num, MagicCardUtility.MagicButtonSize, MagicCardUtility.MagicButtonSize);
+                    Rect rect = new Rect((MagicCardUtility.MagicCardSize.x / 2f) - MagicCardUtility.MagicButtonSize, num, MagicCardUtility.MagicButtonSize, MagicCardUtility.MagicButtonSize);
                     if (itnum > 1)
                     {
                         Widgets.DrawLineHorizontal(0f + 20f, rect.y - 2f, 700f - 40f);
@@ -1585,8 +1584,8 @@ namespace TorannMagic
                     float x3 = Text.CalcSize("TM_Versatility".Translate()).x;
                     Rect rect3 = new Rect(0f + MagicCardUtility.SpacingOffset, rect.y + 2f, MagicCardUtility.MagicCardSize.x, MagicCardUtility.ButtonSize * 1.15f);
 
-                    Rect rect5 = new Rect(rect3.x + rect3.width / 2f - x2, rect3.y, (rect3.width - 20f) / 3f, rect3.height);
-                    Rect rect6 = new Rect(rect3.width - x3 * 2f, rect3.y, rect3.width / 3f, rect3.height);
+                    Rect rect5 = new Rect(rect3.x + (rect3.width / 2f) - x2, rect3.y, (rect3.width - 20f) / 3f, rect3.height);
+                    Rect rect6 = new Rect(rect3.width - (x3 * 2f), rect3.y, rect3.width / 3f, rect3.height);
 
                     float x4 = Text.CalcSize(" # / # ").x;
 
@@ -1695,7 +1694,7 @@ namespace TorannMagic
                         CustomSkillHandler(num2, compMagic, power, enumerator, mpsList, rect3);
                         itnum++;
                     }
-      
+
                     num += MagicCardUtility.MagicButtonSize + MagicCardUtility.TextSize + 4f;//MagicCardUtility.SpacingOffset; //was 4f                    
                 }
             }
@@ -1708,24 +1707,24 @@ namespace TorannMagic
             bool flag999;
             using (List<MagicPower>.Enumerator enumerator = MagicPowers.GetEnumerator())
             {
-                EnumerationStart:;
+            EnumerationStart:;
                 while (enumerator.MoveNext())
                 {
                     MagicPower power = enumerator.Current;
                     TMAbilityDef ability = (TMAbilityDef)power.abilityDef;
-                    if(!customClass.classMageAbilities.Contains(ability))
+                    if (!customClass.classMageAbilities.Contains(ability))
                     {
                         goto EnumerationStart;
                     }
-                    if(power == compMagic.MagicData.MagicPowersWD.FirstOrDefault((MagicPower x) => x.abilityDef == TorannMagicDefOf.TM_SoulBond) ||
+                    if (power == compMagic.MagicData.MagicPowersWD.FirstOrDefault((MagicPower x) => x.abilityDef == TorannMagicDefOf.TM_SoulBond) ||
                          power == compMagic.MagicData.MagicPowersWD.FirstOrDefault((MagicPower x) => x.abilityDef == TorannMagicDefOf.TM_ShadowBolt) ||
                          power == compMagic.MagicData.MagicPowersWD.FirstOrDefault((MagicPower x) => x.abilityDef == TorannMagicDefOf.TM_Dominate))
                     {
                         goto EnumerationStart;
                     }
-                    
+
                     Text.Font = GameFont.Small;
-                    Rect rect = new Rect(MagicCardUtility.MagicCardSize.x / 2f - MagicCardUtility.MagicButtonSize, num, MagicCardUtility.MagicButtonSize, MagicCardUtility.MagicButtonSize);
+                    Rect rect = new Rect((MagicCardUtility.MagicCardSize.x / 2f) - MagicCardUtility.MagicButtonSize, num, MagicCardUtility.MagicButtonSize, MagicCardUtility.MagicButtonSize);
                     if (itnum > 1)
                     {
                         Widgets.DrawLineHorizontal(0f + 20f, rect.y - 2f, MagicCardUtility.MagicCardSize.x - 40f);
@@ -1759,8 +1758,8 @@ namespace TorannMagic
                     float x3 = Text.CalcSize("TM_Versatility".Translate()).x;
                     Rect rect3 = new Rect(0f + MagicCardUtility.SpacingOffset, rect.y + 2f, MagicCardUtility.MagicCardSize.x, MagicCardUtility.ButtonSize * 1.15f);
 
-                    Rect rect5 = new Rect(rect3.x + rect3.width / 2f - x2, rect3.y, (rect3.width - 20f) / 3f, rect3.height);
-                    Rect rect6 = new Rect(rect3.width - x3 * 2f, rect3.y, rect3.width / 3f, rect3.height);
+                    Rect rect5 = new Rect(rect3.x + (rect3.width / 2f) - x2, rect3.y, (rect3.width - 20f) / 3f, rect3.height);
+                    Rect rect6 = new Rect(rect3.width - (x3 * 2f), rect3.y, rect3.width / 3f, rect3.height);
 
                     float x4 = Text.CalcSize(" # / # ").x;
                     //bool flag9 = power.abilityDef.label == "Ray of Hope" || power.abilityDef.label == "Soothing Breeze" || power.abilityDef.label == "Frost Ray" || power.abilityDef.label == "AMP" || power.abilityDef.label == "Shadow" || power.abilityDef.label == "Magic Missile" || power.abilityDef.label == "Blink" || power.abilityDef.label == "Summon" || power.abilityDef.label == "Shield"; //add all other buffs or xml based upgrades
@@ -1793,12 +1792,12 @@ namespace TorannMagic
                                 {
                                     compMagic.AddPawnAbility(enumerator.Current.abilityDef);
                                 }
-                                if ((enumerator.Current.abilityDef.defName == "TM_TechnoWeapon"))
+                                if (enumerator.Current.abilityDef.defName == "TM_TechnoWeapon")
                                 {
                                     compMagic.AddPawnAbility(TorannMagicDefOf.TM_NanoStimulant);
                                     compMagic.MagicData.MagicPowersStandalone.FirstOrDefault((MagicPower x) => x.abilityDef == TorannMagicDefOf.TM_NanoStimulant).learned = true;
                                 }
-                                if(abilityLearned.childAbilities != null && abilityLearned.childAbilities.Count > 0)
+                                if (abilityLearned.childAbilities != null && abilityLearned.childAbilities.Count > 0)
                                 {
                                     for (int c = 0; c < abilityLearned.childAbilities.Count; c++)
                                     {
@@ -1811,11 +1810,11 @@ namespace TorannMagic
                                 compMagic.MagicData.MagicAbilityPoints -= enumerator.Current.learnCost;
                             }
                         }
-                        else if(power.requiresScroll)
+                        else if (power.requiresScroll)
                         {
                             Rect rectToLearn = new Rect(rect.xMin - 268f, rect.yMin + 22f, 250f, MagicButtonPointSize);
                             Text.Font = GameFont.Tiny;
-                            bool flagLearn = Widgets.ButtonText(rectToLearn, "TM_SpellLocked".Translate(power.abilityDef.LabelCap), false, false, false) && compMagic.AbilityUser.Faction == Faction.OfPlayer;                            
+                            bool flagLearn = Widgets.ButtonText(rectToLearn, "TM_SpellLocked".Translate(power.abilityDef.LabelCap), false, false, false) && compMagic.AbilityUser.Faction == Faction.OfPlayer;
                         }
                         else
                         {
@@ -1833,7 +1832,7 @@ namespace TorannMagic
                             {
                                 Widgets.DrawTextureFitted(rect, power.Icon, 1f);
                                 Rect rect19 = new Rect(rect.xMax, rect.yMin, x4, MagicCardUtility.TextSize);
-                                Widgets.Label(rect19, " " + enumerator.Current.level + " / " + enumerator.Current.maxLevel);                                
+                                Widgets.Label(rect19, " " + enumerator.Current.level + " / " + enumerator.Current.maxLevel);
                             }
                             else
                             {
@@ -1851,7 +1850,7 @@ namespace TorannMagic
                                 {
                                     compMagic.LevelUpPower(power);
                                     compMagic.MagicData.MagicAbilityPoints -= power.costToLevel;
-                                }                                
+                                }
                             }
                             else
                             {
@@ -1884,7 +1883,7 @@ namespace TorannMagic
                     if (mpsList.Count > 0)
                     {
                         CustomSkillHandler(num2, compMagic, power, enumerator, mpsList, rect3);
-                        
+
                     }
                     itnum++;
                     num += MagicCardUtility.MagicButtonSize + MagicCardUtility.TextSize + 4f;//MagicCardUtility.SpacingOffset; //was 4f                    
@@ -1903,8 +1902,8 @@ namespace TorannMagic
                     Rect rect42 = new Rect(rect41.x, rect4.y, rect4.width - MagicCardUtility.MagicButtonPointSize, rect4.height / 2);
                     MagicPowerSkill skill = enumeratorN.Current;
                     TooltipHandler.TipRegion(rect42, new TipSignal(() => skill.desc.Translate(), rect4.GetHashCode()));
-                    bool flag11 = (skill.level >= skill.levelMax || compMagic.MagicData.MagicAbilityPoints == 0 || !enumerator.Current.learned ||
-                        (skill.costToLevel > compMagic.MagicData.MagicAbilityPoints));
+                    bool flag11 = skill.level >= skill.levelMax || compMagic.MagicData.MagicAbilityPoints == 0 || !enumerator.Current.learned ||
+                        (skill.costToLevel > compMagic.MagicData.MagicAbilityPoints);
                     if (flag11)
                     {
                         Widgets.Label(rect4, skill.label.Translate() + ": " + skill.level + " / " + skill.levelMax);
@@ -1914,7 +1913,7 @@ namespace TorannMagic
                         bool flag12 = Widgets.ButtonText(rect41, "+", true, false, true) && compMagic.AbilityUser.Faction == Faction.OfPlayer;
                         Widgets.Label(rect4, skill.label.Translate() + ": " + skill.level + " / " + skill.levelMax);
                         if (flag12)
-                        {                            
+                        {
                             bool flag17 = compMagic.AbilityUser.story != null && compMagic.AbilityUser.story.DisabledWorkTagsBackstoryAndTraits == WorkTags.Violent && power.abilityDef.MainVerb.isViolent;
                             if (flag17)
                             {

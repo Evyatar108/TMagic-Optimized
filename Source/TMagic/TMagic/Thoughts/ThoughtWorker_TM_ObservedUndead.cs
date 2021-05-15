@@ -10,7 +10,7 @@ namespace TorannMagic.Thoughts
 
         protected override ThoughtState CurrentStateInternal(Pawn pawn)
         {
-            if(!pawn.Spawned || !pawn.RaceProps.Humanlike)
+            if (!pawn.Spawned || !pawn.RaceProps.Humanlike)
             {
                 return false;
             }
@@ -31,7 +31,7 @@ namespace TorannMagic.Thoughts
                         }
                     }
                 }
-            }            
+            }
             return false;
         }
     }

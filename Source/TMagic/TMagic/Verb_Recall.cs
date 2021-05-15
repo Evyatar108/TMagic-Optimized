@@ -1,16 +1,10 @@
-﻿using RimWorld;
-using System;
-using Verse;
+﻿using Verse;
 using AbilityUser;
-using UnityEngine;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace TorannMagic
 {
     class Verb_Recall : Verb_UseAbility
     {
-        private int pwrVal = 0;
         CompAbilityUserMagic comp;
         Map map;
 
@@ -33,6 +27,6 @@ namespace TorannMagic
             return result;
         }
 
-       
+
     }
 }

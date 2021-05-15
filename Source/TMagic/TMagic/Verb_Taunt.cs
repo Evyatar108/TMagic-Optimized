@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using RimWorld;
-using AbilityUser;
+﻿using AbilityUser;
 using Verse;
-using UnityEngine;
 using Verse.Sound;
-using Verse.AI;
 
 
 namespace TorannMagic
@@ -29,14 +23,14 @@ namespace TorannMagic
                 CompAbilityUserMight comp = caster.GetComp<CompAbilityUserMight>();
                 int verVal = TM_Calc.GetMightSkillLevel(caster, comp.MightData.MightPowerSkill_Custom, "TM_Taunt", "_ver", true);
                 int pwrVal = TM_Calc.GetMightSkillLevel(caster, comp.MightData.MightPowerSkill_Custom, "TM_Taunt", "_pwr", true);
-                radius += (2f * verVal);
-                tauntChance += (pwrVal * .05f);
+                radius += 2f * verVal;
+                tauntChance += pwrVal * .05f;
                 targetsMax += pwrVal;
 
                 SoundInfo info = SoundInfo.InMap(new TargetInfo(caster.Position, caster.Map, false), MaintenanceType.None);
-                if(this.CasterPawn.gender == Gender.Female)
+                if (this.CasterPawn.gender == Gender.Female)
                 {
-                    info.pitchFactor = Rand.Range(1.1f, 1.3f); 
+                    info.pitchFactor = Rand.Range(1.1f, 1.3f);
                 }
                 else
                 {
@@ -46,10 +40,10 @@ namespace TorannMagic
                 Effecter RageWave = TorannMagicDefOf.TM_RageWaveED.Spawn();
                 RageWave.Trigger(new TargetInfo(caster.Position, caster.Map, false), new TargetInfo(caster.Position, caster.Map, false));
                 RageWave.Cleanup();
-                TM_Action.SearchAndTaunt(caster, this.radius, targetsMax, tauntChance);                
+                TM_Action.SearchAndTaunt(caster, this.radius, targetsMax, tauntChance);
             }
 
             return true;
-        }        
+        }
     }
 }

@@ -1,13 +1,10 @@
-﻿using RimWorld;
-using System;
-using Verse;
+﻿using Verse;
 using AbilityUser;
-using UnityEngine;
 using System.Collections.Generic;
 
 namespace TorannMagic
 {
-    class Verb_ManaShield : Verb_UseAbility  
+    class Verb_ManaShield : Verb_UseAbility
     {
 
         bool validTarg;
@@ -22,8 +19,7 @@ namespace TorannMagic
             {
                 if ((root - targ.Cell).LengthHorizontal < this.verbProps.range)
                 {
-                    ShootLine shootLine;
-                    validTarg = this.TryFindShootLineFromTo(root, targ, out shootLine);
+                    validTarg = this.TryFindShootLineFromTo(root, targ, out _);
                 }
                 else
                 {
@@ -43,11 +39,10 @@ namespace TorannMagic
             bool arg_40_0;
 
             Pawn pawn = this.CasterPawn;
-            Map map = this.CasterPawn.Map;
 
             if (pawn != null && !pawn.Downed)
             {
-                if(pawn.health.hediffSet.HasHediff(TorannMagicDefOf.TM_ManaShieldHD, false))
+                if (pawn.health.hediffSet.HasHediff(TorannMagicDefOf.TM_ManaShieldHD, false))
                 {
                     using (IEnumerator<Hediff> enumerator = pawn.health.hediffSet.GetHediffs<Hediff>().GetEnumerator())
                     {
@@ -81,7 +76,7 @@ namespace TorannMagic
             bool flag = arg_40_0;
             if (flag)
             {
-                
+
             }
             else
             {

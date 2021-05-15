@@ -21,8 +21,8 @@ namespace TorannMagic
 
         public override void Destroy(DestroyMode mode = DestroyMode.Vanish)
         {
-            base.Destroy(mode);            
-        }        
+            base.Destroy(mode);
+        }
 
         protected override void Impact(Thing hitThing)
         {
@@ -68,7 +68,7 @@ namespace TorannMagic
                         spawnThing.def = TorannMagicDefOf.TM_Poppi;
                         spawnThing.kindDef = PawnKindDef.Named("TM_Poppi");
 
-                        MoteMaker.ThrowSmoke(centerCell.ToVector3(), map, 1+pwrVal);
+                        MoteMaker.ThrowSmoke(centerCell.ToVector3(), map, 1 + pwrVal);
                         SingleSpawnLoop(spawnThing, centerCell, map);
                     }
                     else
@@ -77,7 +77,7 @@ namespace TorannMagic
                     }
                 }
             }
-            
+
         }
 
         public void SingleSpawnLoop(SpawnThings spawnables, IntVec3 position, Map map)
@@ -106,7 +106,7 @@ namespace TorannMagic
                         {
                             GenSpawn.Spawn(newPawn, position, map);
                             CompLeaper comp = newPawn.GetComp<CompLeaper>();
-                            comp.explosionRadius += ((verVal * .2f) * this.arcaneDmg);
+                            comp.explosionRadius += verVal * .2f * this.arcaneDmg;
                         }
                         catch
                         {

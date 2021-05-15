@@ -1,10 +1,5 @@
 ﻿using RimWorld;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using UnityEngine;
 using Verse;
-using Verse.Sound;
 using AbilityUser;
 
 
@@ -14,7 +9,7 @@ namespace TorannMagic
     {
         protected override bool TryCastShot()
         {
-            if ( this.CasterPawn.equipment.Primary !=null && this.CasterPawn.equipment.Primary.def.IsRangedWeapon)
+            if (this.CasterPawn.equipment.Primary != null && this.CasterPawn.equipment.Primary.def.IsRangedWeapon)
             {
                 Thing wpn = this.CasterPawn.equipment.Primary;
                 if (TM_Calc.HasLoSFromTo(this.CasterPawn.Position, this.currentTarget.Cell, this.CasterPawn, 0, this.Ability.Def.MainVerb.range))
@@ -34,7 +29,7 @@ namespace TorannMagic
                             ), MessageTypeDefOf.NegativeEvent);
                         }
                         return false;
-                    }                    
+                    }
                 }
             }
             else

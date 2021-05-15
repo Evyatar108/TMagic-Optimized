@@ -1,5 +1,4 @@
 ﻿using RimWorld;
-using System;
 using Verse;
 using System.Collections.Generic;
 
@@ -22,7 +21,7 @@ namespace TorannMagic
                 if (corpse.InnerPawn.def == TorannMagicDefOf.TM_SkeletonR)
                 {
                     arcalleum.stackCount = Rand.Range(4, 8);
-                    rewards.Add(arcalleum);                   
+                    rewards.Add(arcalleum);
                 }
                 else if (corpse.InnerPawn.def == TorannMagicDefOf.TM_GiantSkeletonR)
                 {
@@ -34,7 +33,7 @@ namespace TorannMagic
                     arcalleum.stackCount = Rand.Range(40, 80);
                     rewards.Add(arcalleum);
 
-                    Thing tome = ThingMaker.MakeThing(TM_Data.MageBookList().RandomElement(), null);
+                    Thing tome = ThingMaker.MakeThing(TM_Data.MageBookList.RandomElement(), null);
                     tome.stackCount = 1;
                     rewards.Add(tome);
                     rewards.AddRange(ItemCollectionGenerator_Internal_Arcane.Generate(2000));
@@ -44,7 +43,7 @@ namespace TorannMagic
                     GenPlace.TryPlaceThing(rewards[i], corpse.Position, corpse.Map, ThingPlaceMode.Near);
                 }
             }
-            corpse.Destroy();            
+            corpse.Destroy();
         }
     }
 }

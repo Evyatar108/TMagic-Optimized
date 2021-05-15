@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using Verse;
 
 namespace TorannMagic.ModOptions
@@ -20,9 +19,6 @@ namespace TorannMagic.ModOptions
         private string deathExplosionDmgMin = "20.0";
         private string deathExplosionDmgMax = "50.0";
 
-        private int deathExplosionDmgMinInt = 20;
-        private int deathExplosionDmgMaxInt = 50;
-
         public override string SettingsCategory()
         {
             return "A RimWorld of Magic";
@@ -35,7 +31,7 @@ namespace TorannMagic.ModOptions
         }
 
         public override void DoSettingsWindowContents(Rect canvas)
-        {            
+        {
             int num = 0;
             float rowHeight = 28f;
             Rect sRect = new Rect(canvas.x, canvas.y, canvas.width - 36f, canvas.height + 360f);
@@ -57,17 +53,15 @@ namespace TorannMagic.ModOptions
             classOptions = Widgets.ButtonText(rowRectShiftRight, "Class Options", true, false, true);
             if (classOptions)
             {
-                Rect rect = new Rect(64f, 64f, 480, 640);
-                ClassOptionsWindow newWindow = new ClassOptionsWindow();                
+                ClassOptionsWindow newWindow = new ClassOptionsWindow();
                 Find.WindowStack.Add(newWindow);
             }
             Rect rowRectShiftRightPlus = UIHelper.GetRowRect(rowRect, rowHeight, num);
-            rowRectShiftRightPlus.x += (rowRect.width+rowRectShiftRight.width) + 56f;
+            rowRectShiftRightPlus.x += rowRect.width + rowRectShiftRight.width + 56f;
             rowRectShiftRightPlus.width /= 3;
             factionOptions = Widgets.ButtonText(rowRectShiftRightPlus, "Faction Options", true, false, true);
             if (factionOptions)
             {
-                Rect rect = new Rect(64f, 64f, 480, 640);
                 FactionOptionsWindow newWindow = new FactionOptionsWindow();
                 Find.WindowStack.Add(newWindow);
 
@@ -81,14 +75,13 @@ namespace TorannMagic.ModOptions
             eventOptions = Widgets.ButtonText(rowRect2ShiftRight, "Event Options", true, false, true);
             if (eventOptions)
             {
-                Rect rect = new Rect(64f, 64f, 400, 400);
                 EventOptionsWindow newWindow = new EventOptionsWindow();
                 Find.WindowStack.Add(newWindow);
             }
             num++;
             Rect rowRect21 = UIHelper.GetRowRect(rowRect2, rowHeight, num);
             Settings.Instance.magicyteChance = Widgets.HorizontalSlider(rowRect21, Settings.Instance.magicyteChance, 0, .05f, false, "MagicyteChance".Translate() + " " + Settings.Instance.magicyteChance, "0%", "5%", .001f);
-            num++;            
+            num++;
             Rect rowRect3 = UIHelper.GetRowRect(rowRect21, rowHeight, num);
             Widgets.CheckboxLabeled(rowRect3, "TM_DeathRetaliationIsLethal".Translate(), ref Settings.Instance.deathRetaliationIsLethal, false);
             //rowRect3.width = rowRect3.width * .7f;
@@ -120,7 +113,7 @@ namespace TorannMagic.ModOptions
             Settings.Instance.autocastCombatMinThreshold = Widgets.HorizontalSlider(rowRect66ShiftRight, Settings.Instance.autocastCombatMinThreshold, 0f, 1f, false, "TM_autocastDraftedThreshold".Translate() + " " + (Settings.Instance.autocastCombatMinThreshold * 100) + "%", "0", "1", .01f);
             num++;
             Rect rowRect67 = UIHelper.GetRowRect(rowRect66, rowHeight, num);
-            Settings.Instance.paracyteSoftCap = Widgets.HorizontalSlider(rowRect67, Settings.Instance.paracyteSoftCap, 0, 500, false, "TM_ParacyteSoftCap".Translate() + " " + (Settings.Instance.paracyteSoftCap), "0", "500", 1);
+            Settings.Instance.paracyteSoftCap = Widgets.HorizontalSlider(rowRect67, Settings.Instance.paracyteSoftCap, 0, 500, false, "TM_ParacyteSoftCap".Translate() + " " + Settings.Instance.paracyteSoftCap, "0", "500", 1);
             Rect rowRect67ShiftRight = UIHelper.GetRowRect(rowRect67, rowHeight, num);
             rowRect67ShiftRight.x += rowRect67.width + 56f;
             Settings.Instance.autocastEvaluationFrequency = Mathf.RoundToInt(Widgets.HorizontalSlider(rowRect67ShiftRight, Settings.Instance.autocastEvaluationFrequency, 60, 600, false, "TM_autocastEvaluationFrequency".Translate() + " " + (Settings.Instance.autocastEvaluationFrequency / 60) + "seconds", "1", "10", .1f));
@@ -135,7 +128,7 @@ namespace TorannMagic.ModOptions
             Widgets.CheckboxLabeled(rowRect7, "AICanCast".Translate(), ref Settings.Instance.AICasting, false);
             Rect rowRect7ShiftRight = UIHelper.GetRowRect(rowRect7, rowHeight, num);
             rowRect7ShiftRight.x += rowRect7.width + 56f;
-            Widgets.CheckboxLabeled(rowRect7ShiftRight, "AIHardMode".Translate(), ref Settings.Instance.AIHardMode, !settingsRef.AICasting);            
+            Widgets.CheckboxLabeled(rowRect7ShiftRight, "AIHardMode".Translate(), ref Settings.Instance.AIHardMode, !settingsRef.AICasting);
             num++;
             Rect rowRect9 = UIHelper.GetRowRect(rowRect7, rowHeight, num);
             Widgets.CheckboxLabeled(rowRect9, "AIMarking".Translate(), ref Settings.Instance.AIMarking, false);
@@ -182,7 +175,6 @@ namespace TorannMagic.ModOptions
             //rowRect13ShiftRight.x += rowRect13.width + 56f;
             //Settings.Instance.iconPosition.x = Widgets.HorizontalSlider(rowRect13ShiftRight, Settings.Instance.iconPosition.x, -UI.screenWidth/(5f), UI.screenWidth/(5f), false, "x offset " + Settings.Instance.iconPosition.x, "-", "+", 1f);
             num++;
-            Rect rowRect14 = UIHelper.GetRowRect(rowRect13, rowHeight, num);
             //Widgets.CheckboxLabeled(rowRect13, "TM_UnrestrictedWeaponCopy".Translate(), ref Settings.Instance.unrestrictedWeaponCopy, false);
             //Rect rowRect14ShiftRight = UIHelper.GetRowRect(rowRect14, rowHeight, num);
             //rowRect14ShiftRight.x += rowRect13.width + 56f;
@@ -342,59 +334,6 @@ namespace TorannMagic.ModOptions
                 Rect result = new Rect(inRect.x, y, inRect.width, rowHeight);
                 return result;
             }
-        }
-
-        private string Rarity(float val)
-        {
-            string rarity = "";
-            if (val == 0)
-            {
-                rarity = "None";
-            }
-            else if (val < .2f)
-            {
-                rarity = "Very Rare";
-            }
-            else if (val < .5f)
-            {
-                rarity = "Rare";
-            }
-            else if (val < 1f)
-            {
-                rarity = "Uncommon";
-            }
-            else if (val < 2f)
-            {
-                rarity = "Common";
-            }
-            else
-            {
-                rarity = "Frequent";
-            }
-            return rarity;
-        }
-
-        private string Challenge(float val)
-        {
-            string rarity = "";
-            if (val == 0)
-            {
-                rarity = "None (never happens)";
-            }
-            else if (val <= 1)
-            {
-                rarity = "Easy";
-            }
-            else if (val <= 2)
-            {
-                rarity = "Normal";
-            }
-            else
-            {
-                rarity = "Hard";
-            }
-
-            return rarity;
         }
     }
 }

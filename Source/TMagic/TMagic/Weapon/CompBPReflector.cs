@@ -89,8 +89,8 @@ namespace TorannMagic.Weapon
                     float deflectionChance = this.DeflectionChance;
                     float meleeSkill = GetPawn.skills.GetSkill(this.Props.deflectSkill).Level;
                     CompAbilityUserMagic holder = GetPawn.GetComp<CompAbilityUserMagic>();
-                    deflectionChance += (meleeSkill * this.Props.deflectRatePerSkillPoint);
-                    if(holder != null && !holder.IsMagicUser && (this.parent.def.defName == "TM_DefenderStaff" || this.parent.def.defName == "TM_BlazingPowerStaff"))
+                    deflectionChance += meleeSkill * this.Props.deflectRatePerSkillPoint;
+                    if (holder != null && !holder.IsMagicUser && (this.parent.def.defName == "TM_DefenderStaff" || this.parent.def.defName == "TM_BlazingPowerStaff"))
                     {
                         deflectionChance = 0;
                     }
@@ -110,10 +110,10 @@ namespace TorannMagic.Weapon
                     TM_MoteMaker.ThrowSparkFlashMote(drawPos, this.GetPawn.Map, 2f);
                     Thing thing = new Thing();
                     thing.def = dinfo.Weapon;
-                    if(instigator is Pawn)
+                    if (instigator is Pawn)
                     {
                         Pawn shooterPawn = instigator as Pawn;
-                        if(!dinfo.Weapon.IsMeleeWeapon && dinfo.WeaponBodyPartGroup == null)
+                        if (!dinfo.Weapon.IsMeleeWeapon && dinfo.WeaponBodyPartGroup == null)
                         {
                             TM_CopyAndLaunchProjectile.CopyAndLaunchThing(shooterPawn.equipment.PrimaryEq.PrimaryVerb.verbProps.defaultProjectile, this.GetPawn, instigator, shooterPawn, ProjectileHitFlags.IntendedTarget, null);
                         }

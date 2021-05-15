@@ -1,10 +1,8 @@
 ﻿using Verse;
 using AbilityUser;
-using System.Collections.Generic;
-using RimWorld;
 
 namespace TorannMagic
-{    
+{
     public class Effect_Flight : Verb_UseAbility
     {
         bool validTarg;
@@ -15,8 +13,7 @@ namespace TorannMagic
             {
                 if ((root - targ.Cell).LengthHorizontal < this.verbProps.range)
                 {
-                    ShootLine shootLine;
-                    validTarg = this.TryFindShootLineFromTo(root, targ, out shootLine);
+                    validTarg = this.TryFindShootLineFromTo(root, targ, out _);
                 }
                 else
                 {
@@ -56,9 +53,8 @@ namespace TorannMagic
             if (inResult)
             {
                 this.Effect();
-                outResult = true;
             }
             outResult = inResult;
         }
-    }    
+    }
 }

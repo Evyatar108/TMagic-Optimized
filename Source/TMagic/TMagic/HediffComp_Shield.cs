@@ -15,31 +15,9 @@ namespace TorannMagic
         private static readonly Material shieldE = MaterialPool.MatFrom("Other/angelwings_east", ShaderDatabase.Transparent, HediffComp_Shield.shieldColor);
         private static readonly Material shieldW = MaterialPool.MatFrom("Other/angelwings_west", ShaderDatabase.Transparent, HediffComp_Shield.shieldColor);
 
-        private int shieldFade;
-        public int ShieldFade
-        {
-            get
-            {
-                return this.shieldFade;
-            }
-            set
-            {
-                this.shieldFade = value;
-            }
-        }
+        public int ShieldFade { get; set; }
 
-        private float sevChange;
-        public float SevChange
-        {
-            get
-            {
-                return this.sevChange;
-            }
-            set
-            {
-                this.sevChange = value;
-            }
-        }
+        public float SevChange { get; set; }
 
         private float lastSev = 0;
 
@@ -65,7 +43,7 @@ namespace TorannMagic
             }
         }
 
-        private float EnergyLossPerTick  
+        private float EnergyLossPerTick
         {
             get
             {
@@ -92,7 +70,7 @@ namespace TorannMagic
             this.energy = 0.5f; //lasts for x * 600 ticks; 3000ticks = 50s
         }
 
-        public override void CompPostTick(ref float severityAdjustment) 
+        public override void CompPostTick(ref float severityAdjustment)
         {
             base.CompPostTick(ref severityAdjustment);
             bool flag = base.Pawn != null;
@@ -145,7 +123,7 @@ namespace TorannMagic
                 else
                 {
                     HediffSet expr_26 = expr_1A.hediffSet;
-                    arg_32_1 = ((expr_26 != null) ? expr_26.hediffs : null);
+                    arg_32_1 = (expr_26 != null) ? expr_26.hediffs : null;
                 }
             }
             arg_32_0.AddRange(arg_32_1);
@@ -165,7 +143,7 @@ namespace TorannMagic
                 else
                 {
                     HediffSet expr_66 = expr_52.hediffSet;
-                    arg_84_0 = ((expr_66 != null) ? new int?(expr_66.hediffs.Count<Hediff>()) : null);
+                    arg_84_0 = (expr_66 != null) ? new int?(expr_66.hediffs.Count<Hediff>()) : null;
                 }
             }
             bool flag = (arg_84_0 ?? 0) > 0;
@@ -181,7 +159,6 @@ namespace TorannMagic
                 }
             }
             list.Clear();
-            list = null;
         }
 
 
@@ -190,14 +167,12 @@ namespace TorannMagic
             bool flag = !shieldedPawn.Dead && !shieldedPawn.Downed;
             if (flag)
             {
-                float num = Mathf.Lerp(1.2f, 1.55f, magnitude);
                 Vector3 vector = shieldedPawn.Drawer.DrawPos;
                 vector.y = Altitudes.AltitudeFor(AltitudeLayer.MoteOverhead);
-                float angle = (float)Rand.Range(0, 360);
                 Vector3 s = new Vector3(3f, 3f, 3f);
                 Matrix4x4 matrix = default(Matrix4x4);
                 matrix.SetTRS(vector, Quaternion.AngleAxis(0f, Vector3.up), s);
-                if (shieldedPawn.Rotation == Rot4.South || shieldedPawn.Rotation == Rot4.North )
+                if (shieldedPawn.Rotation == Rot4.South || shieldedPawn.Rotation == Rot4.North)
                 {
                     Graphics.DrawMesh(MeshPool.plane10, matrix, HediffComp_Shield.shieldNS, 0);
                 }
@@ -220,7 +195,7 @@ namespace TorannMagic
                 MoteMaker.MakeStaticMote(base.Pawn.TrueCenter(), base.Pawn.Map, ThingDefOf.Mote_ExplosionFlash, 12f);
                 for (int i = 0; i < 6; i++)
                 {
-                    Vector3 loc = base.Pawn.TrueCenter() + Vector3Utility.HorizontalVectorFromAngle((float)Rand.Range(0, 360)) * Rand.Range(0.3f, 0.6f);
+                    Vector3 loc = base.Pawn.TrueCenter() + (Vector3Utility.HorizontalVectorFromAngle((float)Rand.Range(0, 360)) * Rand.Range(0.3f, 0.6f));
                     MoteMaker.ThrowDustPuff(loc, base.Pawn.Map, Rand.Range(0.8f, 1.2f));
                 }
                 this.energy = 0f;

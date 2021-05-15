@@ -1,18 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using RimWorld;
 using AbilityUser;
 using Verse;
-using Verse.AI;
-using UnityEngine;
 using HarmonyLib;
 
 
 namespace TorannMagic
 {
     public class Verb_AlterFate : Verb_UseAbility
-    {        
+    {
         private int pwrVal = 0;
         private float arcaneDmg = 1f;
 
@@ -30,15 +27,15 @@ namespace TorannMagic
             pwrVal = comp.MagicData.MagicPowerSkill_AlterFate.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_AlterFate_pwr").level;
             arcaneDmg = comp.arcaneDmg;
 
-            if(comp.predictionIncidentDef != null)
+            if (comp.predictionIncidentDef != null)
             {
-                if (Rand.Chance((.25f + (.05f * pwrVal))*this.arcaneDmg)) //success end
+                if (Rand.Chance((.25f + (.05f * pwrVal)) * this.arcaneDmg)) //success end
                 {
                     //Log.Message("remove event");
                     List<QueuedIncident> iQue = Traverse.Create(root: Find.Storyteller.incidentQueue).Field(name: "queuedIncidents").GetValue<List<QueuedIncident>>();
-                    if(iQue != null && iQue.Count > 0)
+                    if (iQue != null && iQue.Count > 0)
                     {
-                        for(int i = 0; i < iQue.Count; i++)
+                        for (int i = 0; i < iQue.Count; i++)
                         {
                             //Log.Message("checking ique " + iQue[i].FiringIncident.def.defName + " against " + comp.predictionIncidentDef.defName);
                             if (iQue[i].FiringIncident.def == comp.predictionIncidentDef)
@@ -80,15 +77,15 @@ namespace TorannMagic
                     }
 
                     IEnumerable<IncidentDef> enumerable = from def in DefDatabase<IncidentDef>.AllDefs
-                                                          where (def != comp.predictionIncidentDef && def.TargetAllowed(this.CasterPawn.Map))
+                                                          where def != comp.predictionIncidentDef && def.TargetAllowed(this.CasterPawn.Map)
                                                           orderby Rand.ValueSeeded(Find.TickManager.TicksGame)
                                                           select def;
-                    foreach(IncidentDef item in enumerable)
+                    foreach (IncidentDef item in enumerable)
                     {
                         //Log.Message("checking incident " + item.defName);
                         IncidentDef localDef = item;
                         IncidentParms parms = StorytellerUtility.DefaultParmsNow(localDef.category, this.CasterPawn.Map);
-                        if(localDef.Worker.CanFireNow(parms))
+                        if (localDef.Worker.CanFireNow(parms))
                         {
                             QueuedIncident iq = new QueuedIncident(new FiringIncident(localDef, null, parms), comp.predictionTick);
                             Find.Storyteller.incidentQueue.Add(iq);
@@ -114,7 +111,7 @@ namespace TorannMagic
                 {
                     //Log.Message("add event");
                     IEnumerable<IncidentDef> enumerable = from def in DefDatabase<IncidentDef>.AllDefs
-                                                          where (def != comp.predictionIncidentDef && def.TargetAllowed(this.CasterPawn.Map))
+                                                          where def != comp.predictionIncidentDef && def.TargetAllowed(this.CasterPawn.Map)
                                                           orderby Rand.ValueSeeded(Find.TickManager.TicksGame)
                                                           select def;
                     foreach (IncidentDef item in enumerable)
@@ -145,17 +142,17 @@ namespace TorannMagic
                         }
                     }
                 }
-                else if(Rand.Chance (.05f - (.005f * pwrVal))) //butterfly effect
+                else if (Rand.Chance(.05f - (.005f * pwrVal))) //butterfly effect
                 {
                     int eventCount = Rand.RangeInclusive(1, 5);
                     int butterflyCount = 0;
                     //Log.Message("butteryfly event");
                     IEnumerable<IncidentDef> enumerable = from def in DefDatabase<IncidentDef>.AllDefs
-                                                          where (def.TargetAllowed(this.CasterPawn.Map))
+                                                          where def.TargetAllowed(this.CasterPawn.Map)
                                                           orderby Rand.ValueSeeded(Find.TickManager.TicksGame)
                                                           select def;
                     foreach (IncidentDef item in enumerable)
-                    {                        
+                    {
                         //Log.Message("checking incident " + item.defName);
                         IncidentDef localDef = item;
                         IncidentParms parms = StorytellerUtility.DefaultParmsNow(localDef.category, this.CasterPawn.Map);
@@ -205,41 +202,41 @@ namespace TorannMagic
                 }
                 DisplayConfidence(comp.predictionIncidentDef.label);
             }
-            else if(pwrVal >= 3)
+            else if (pwrVal >= 3)
             {
-                if(this.CasterPawn.Map.GameConditionManager.ActiveConditions.Count > 0)
+                if (this.CasterPawn.Map.GameConditionManager.ActiveConditions.Count > 0)
                 {
                     GameCondition localGC = null;
-                    foreach(GameCondition activeCondition in this.CasterPawn.Map.GameConditionManager.ActiveConditions)
+                    foreach (GameCondition activeCondition in this.CasterPawn.Map.GameConditionManager.ActiveConditions)
                     {
                         localGC = activeCondition;
-                        if(activeCondition.TicksPassed < (2500 + (250 * pwrVal)))
+                        if (activeCondition.TicksPassed < (2500 + (250 * pwrVal)))
                         {
-                            if(Rand.Chance(.25f + (.05f * pwrVal))) //success
+                            if (Rand.Chance(.25f + (.05f * pwrVal))) //success
                             {
                                 Messages.Message("TM_EndingGameCondition".Translate(this.CasterPawn.LabelShort, localGC.Label), MessageTypeDefOf.PositiveEvent);
-                                localGC.End();                                
+                                localGC.End();
                             }
-                            else if(Rand.Chance(.2f - (.02f * pwrVal))) //shifting game condition
+                            else if (Rand.Chance(.2f - (.02f * pwrVal))) //shifting game condition
                             {
                                 IEnumerable<GameConditionDef> enumerable = from def in DefDatabase<GameConditionDef>.AllDefs
-                                                                   where (def != localGC.def)
-                                                                   select def;
+                                                                           where def != localGC.def
+                                                                           select def;
 
                                 GameConditionDef newGCdef = enumerable.RandomElement();
                                 GameConditionMaker.MakeCondition(newGCdef);
                                 Messages.Message("TM_GameConditionChanged".Translate(this.CasterPawn.LabelShort, localGC.Label, newGCdef.label), MessageTypeDefOf.NeutralEvent);
                                 localGC.End();
                             }
-                            else if(Rand.Chance(.02f)) //permanent
+                            else if (Rand.Chance(.02f)) //permanent
                             {
                                 Messages.Message("TM_GameConditionMadePermanent".Translate(localGC.Label), MessageTypeDefOf.NeutralEvent);
                                 localGC.Permanent = true;
                             }
-                            else if(Rand.Chance(.15f - (.015f * pwrVal))) //add another event
+                            else if (Rand.Chance(.15f - (.015f * pwrVal))) //add another event
                             {
                                 IEnumerable<GameConditionDef> enumerable = from def in DefDatabase<GameConditionDef>.AllDefs
-                                                                           where (def != localGC.def)
+                                                                           where def != localGC.def
                                                                            select def;
                                 GameConditionDef newGCdef = enumerable.RandomElement();
                                 GameConditionMaker.MakeCondition(newGCdef);
@@ -259,7 +256,7 @@ namespace TorannMagic
             TM_MoteMaker.ThrowGenericMote(TorannMagicDefOf.Mote_AlterFate, CasterPawn.DrawPos, this.CasterPawn.Map, 6f, 0f, .2f, .6f, Rand.Range(-500, 500), 0, 0, Rand.Range(0, 360));
             this.PostCastShot(flag, out flag);
             return flag;
-        } 
+        }
 
         private void DisplayConfidence(string incidentName)
         {

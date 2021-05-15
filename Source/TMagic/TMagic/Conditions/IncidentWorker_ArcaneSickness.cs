@@ -1,6 +1,5 @@
 ﻿using RimWorld;
 using RimWorld.Planet;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -27,7 +26,7 @@ namespace TorannMagic
                 if (comp.IsMagicUser)
                 {
                     HediffGiverUtility.TryApply(pawn, this.def.diseaseIncident, this.def.diseasePartsToAffect, false, 1, null);
-                }                
+                }
             }
             return true;
         }
@@ -39,8 +38,8 @@ namespace TorannMagic
                 return map.mapPawns.FreeColonistsAndPrisoners;
             }
             return from x in ((Caravan)target).PawnsListForReading
-                    where x.IsFreeColonist || x.IsPrisonerOfColony
-                    select x;
+                   where x.IsFreeColonist || x.IsPrisonerOfColony
+                   select x;
         }
 
         private IEnumerable<Pawn> PotentialVictims(IIncidentTarget target)
@@ -64,8 +63,9 @@ namespace TorannMagic
                         if (IncidentWorker_ArcaneSickness.CanAddHediffToAnyPartOfDef(p, this.def.diseaseIncident, this.def.diseasePartsToAffect[i]))
                         {
                             flag = true;
-                            break;                                                              
+                            break;
                         }
+                        // TODO - bug?
                         return false;
                     }
                     if (!flag)

@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using Verse;
 using AbilityUserAI;
-using System.Linq;
 
 namespace TorannMagic
 {
@@ -33,13 +32,12 @@ namespace TorannMagic
         public virtual Corpse PickClosestCorpse(AbilityAIDef abilityDef, Pawn pawn)
         {
             Corpse corpse = null;
-            Thing corpseThing = null;
-
             IntVec3 curCell;
             IEnumerable<IntVec3> targets = GenRadial.RadialCellsAround(pawn.Position, 6f, true);
-            for (int i = 0; i < targets.Count(); i++)
+            Thing corpseThing;
+            foreach (var cell in targets)
             {
-                curCell = targets.ToArray<IntVec3>()[i];
+                curCell = cell;
                 if (curCell.InBounds(pawn.Map) && curCell.IsValid)
                 {
                     List<Thing> thingList;
@@ -54,16 +52,15 @@ namespace TorannMagic
                             if (validator)
                             {
                                 corpse = corpseThing as Corpse;
-                            }                            
+                            }
                         }
                     }
                 }
             }
 
-            IEnumerable<IntVec3> targetsD = GenRadial.RadialCellsAround(pawn.TargetCurrentlyAimingAt.Cell, 6f, true);
-            for (int i = 0; i < targets.Count(); i++)
+            foreach (var cell in targets)
             {
-                curCell = targets.ToArray<IntVec3>()[i];
+                curCell = cell;
                 if (curCell.InBounds(pawn.Map) && curCell.IsValid)
                 {
                     List<Thing> thingList;

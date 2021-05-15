@@ -1,11 +1,9 @@
 ﻿using RimWorld;
-using System;
 using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using Verse;
 using Verse.AI;
-using AbilityUser;
 
 namespace TorannMagic
 {
@@ -66,8 +64,8 @@ namespace TorannMagic
         {
             get
             {
-                Vector3 b = (this.destination - this.origin) * (1f - (float)this.ticksToImpact / (float)this.StartingTicksToImpact);
-                return this.origin + b + Vector3.up * this.def.Altitude;
+                Vector3 b = (this.destination - this.origin) * (1f - ((float)this.ticksToImpact / (float)this.StartingTicksToImpact));
+                return this.origin + b + (Vector3.up * this.def.Altitude);
             }
         }
 
@@ -126,12 +124,12 @@ namespace TorannMagic
         }
 
         public void Launch(Thing launcher, Vector3 origin, LocalTargetInfo targ, Thing flyingThing, DamageInfo? newDamageInfo = null)
-        {            
+        {
             if (Find.Selector.FirstSelectedObject == launcher)
             {
                 this.isSelected = true;
             }
-                
+
             bool spawned = flyingThing.Spawned;
             pawn = launcher as Pawn;
             this.oldjobTarget = pawn.CurJob.targetA.Thing;
@@ -154,10 +152,10 @@ namespace TorannMagic
             {
                 this.assignedTarget = targ.Thing;
             }
-            this.trueDestination = targ.Cell.ToVector3Shifted();            
+            this.trueDestination = targ.Cell.ToVector3Shifted();
             this.direction = GetVector(this.trueOrigin.ToIntVec3(), targ.Cell);
             this.trueAngle = (Quaternion.AngleAxis(90, Vector3.up) * this.direction).ToAngleFlat();
-            this.destination = targ.Cell.ToVector3Shifted();         
+            this.destination = targ.Cell.ToVector3Shifted();
             this.ticksToImpact = this.StartingTicksToImpact;
             this.Initialize();
         }
@@ -192,7 +190,7 @@ namespace TorannMagic
                     }
                     this.ImpactSomething();
                 }
-                
+
             }
         }
 
@@ -224,7 +222,7 @@ namespace TorannMagic
             if (flag)
             {
                 Pawn pawn;
-                bool flag2 = (pawn = (base.Position.GetThingList(base.Map).FirstOrDefault((Thing x) => x == this.assignedTarget) as Pawn)) != null;
+                bool flag2 = (pawn = base.Position.GetThingList(base.Map).FirstOrDefault((Thing x) => x == this.assignedTarget) as Pawn) != null;
                 if (flag2)
                 {
                     hitThing = pawn;
@@ -238,7 +236,7 @@ namespace TorannMagic
                 {
                     hitThing.TakeDamage(this.impactDamage.Value);
                 }
-                
+
                 bool flag4 = this.explosion;
                 if (flag4)
                 {
@@ -269,13 +267,10 @@ namespace TorannMagic
 
         public void SearchForTargets(IntVec3 center, float radius, Map map)
         {
-            Pawn victim = null;
-            IntVec3 curCell;
             IEnumerable<IntVec3> targets = GenRadial.RadialCellsAround(center, radius, true);
-            for (int i = 0; i < targets.Count(); i++)
+            foreach (var curCell in targets)
             {
-                victim = null;
-                curCell = targets.ToArray<IntVec3>()[i];
+                Pawn victim = null;
                 if (curCell.InBounds(this.Map) && curCell.IsValid)
                 {
                     victim = curCell.GetFirstPawn(map);
@@ -283,10 +278,9 @@ namespace TorannMagic
 
                 if (victim != null && victim != this.pawn && victim.Faction != this.pawn.Faction)
                 {
-                    DamageInfo dinfo = new DamageInfo(TMDamageDefOf.DamageDefOf.TM_PsionicInjury, Rand.Range(8,12) + (2 * this.effVal), 0, (float)-1, this.pawn, null, null, DamageInfo.SourceCategory.ThingOrUnknown);
-                    victim.TakeDamage(dinfo);                    
+                    DamageInfo dinfo = new DamageInfo(TMDamageDefOf.DamageDefOf.TM_PsionicInjury, Rand.Range(8, 12) + (2 * this.effVal), 0, (float)-1, this.pawn, null, null, DamageInfo.SourceCategory.ThingOrUnknown);
+                    victim.TakeDamage(dinfo);
                 }
-                targets.GetEnumerator().MoveNext();
             }
         }
 
@@ -298,7 +292,6 @@ namespace TorannMagic
                 bool flag2 = this.flyingThing is Pawn;
                 if (flag2)
                 {
-                    Vector3 arg_2B_0 = this.DrawPos;
                     bool flag3 = false;
                     if (flag3)
                     {

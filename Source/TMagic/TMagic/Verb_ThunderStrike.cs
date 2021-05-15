@@ -1,17 +1,12 @@
 ﻿using Verse;
 using AbilityUser;
-using UnityEngine;
 using RimWorld;
-using System.Linq;
-using System.Collections.Generic;
 
 namespace TorannMagic
 {
     [StaticConstructorOnStartup]
     public class Verb_ThunderStrike : Verb_UseAbility
     {
-
-        bool flag10;
         bool validTarg;
         public override bool CanHitTargetFrom(IntVec3 root, LocalTargetInfo targ)
         {
@@ -23,8 +18,7 @@ namespace TorannMagic
             {
                 if ((root - targ.Cell).LengthHorizontal < this.verbProps.range)
                 {
-                    ShootLine shootLine;
-                    validTarg = this.TryFindShootLineFromTo(root, targ, out shootLine);
+                    validTarg = this.TryFindShootLineFromTo(root, targ, out _);
                 }
                 else
                 {
@@ -36,7 +30,7 @@ namespace TorannMagic
                 validTarg = false;
             }
             return validTarg;
-        }        
+        }
 
         protected override bool TryCastShot()
         {
@@ -54,10 +48,6 @@ namespace TorannMagic
                 ), MessageTypeDefOf.RejectInput);
                 return false;
             }
-
-            this.burstShotsLeft = 0;
-            this.PostCastShot(flag10, out flag10);
-            return flag10;
-        }        
+        }
     }
 }

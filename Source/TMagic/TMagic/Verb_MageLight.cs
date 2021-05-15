@@ -1,13 +1,11 @@
 ﻿using RimWorld;
 using Verse;
 using AbilityUser;
-using UnityEngine;
-using System.Linq;
 
 namespace TorannMagic
 {
     [StaticConstructorOnStartup]
-    class Verb_MageLight : Verb_UseAbility  
+    class Verb_MageLight : Verb_UseAbility
     {
 
         //bool validTarg;
@@ -36,14 +34,11 @@ namespace TorannMagic
         protected override bool TryCastShot()
         {
             bool result = false;
-            Pawn p = this.CasterPawn;
             CompAbilityUserMagic comp = this.CasterPawn.GetComp<CompAbilityUserMagic>();
 
             if (this.currentTarget != null && base.CasterPawn != null)
-            {                
-                Map map = this.CasterPawn.Map;
-                ModOptions.SettingsRef settingsRef = new ModOptions.SettingsRef();
-                if(this.currentTarget.Thing != null && this.currentTarget.Thing == base.CasterPawn)
+            {
+                if (this.currentTarget.Thing != null && this.currentTarget.Thing == base.CasterPawn)
                 {
                     if (comp.mageLightActive == true)
                     {
@@ -84,7 +79,7 @@ namespace TorannMagic
                                             TorannMagicDefOf.TM_MageLight.label
                                         ), MessageTypeDefOf.RejectInput);
                         }
-                    }                    
+                    }
                 }
                 else
                 {
@@ -97,6 +92,6 @@ namespace TorannMagic
             this.burstShotsLeft = 0;
             //this.ability.TicksUntilCasting = (int)base.UseAbilityProps.SecondsToRecharge * 60;
             return result;
-        }        
+        }
     }
 }

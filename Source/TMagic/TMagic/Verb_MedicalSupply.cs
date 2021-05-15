@@ -1,10 +1,7 @@
 ﻿using Verse;
 using AbilityUser;
-using UnityEngine;
-using System.Linq;
 using RimWorld;
 using System.Collections.Generic;
-using System;
 
 namespace TorannMagic
 {
@@ -35,14 +32,9 @@ namespace TorannMagic
         protected override bool TryCastShot()
         {
             bool result = false;
-
-            Pawn pawn = this.CasterPawn;
-            Map map = this.CasterPawn.Map;
-            ModOptions.SettingsRef settingsRef = new ModOptions.SettingsRef();
             //if (pawn != null && !pawn.Downed)
 
-            List<BodyPartRecord> validParts = new List<BodyPartRecord>();
-            Thing medicalThing = null;
+            Thing medicalThing;
             if (GetMedicalSupplyFromCell(this.currentTarget.Cell, this.CasterPawn, out medicalThing, true))
             {
                 float potency = medicalThing.GetStatValue(StatDefOf.MedicalPotency);

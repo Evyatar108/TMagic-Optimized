@@ -1,8 +1,6 @@
-﻿using RimWorld;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Verse;
 using AbilityUser;
-using UnityEngine;
 using Verse.AI;
 
 namespace TorannMagic
@@ -12,7 +10,6 @@ namespace TorannMagic
         protected override bool TryCastShot()
         {
             bool flag = false;
-            Map map = base.CasterPawn.Map;
 
             CompAbilityUserMagic comp = this.CasterPawn.GetComp<CompAbilityUserMagic>();
             Pawn sacrificialPawn = comp.soulBondPawn;
@@ -28,11 +25,11 @@ namespace TorannMagic
                 else
                 {
                     List<Pawn> allPawns = this.CasterPawn.Map.mapPawns.AllPawnsSpawned;
-                    for(int i = 0; i < allPawns.Count; i++)
+                    for (int i = 0; i < allPawns.Count; i++)
                     {
-                        if(allPawns[i].IsColonist && allPawns[i].RaceProps.Humanlike)
+                        if (allPawns[i].IsColonist && allPawns[i].RaceProps.Humanlike)
                         {
-                            if(allPawns[i].story.traits.HasTrait(TorannMagicDefOf.Succubus)) 
+                            if (allPawns[i].story.traits.HasTrait(TorannMagicDefOf.Succubus))
                             {
                                 if (allPawns[i].CurJobDef == TorannMagicDefOf.JobDriver_SummonDemon)
                                 {
@@ -46,7 +43,7 @@ namespace TorannMagic
                                     {
                                         Log.Message("summon demon failed - warlock and succubus bonded pawns are not the same");
                                     }
-                                }                                
+                                }
                             }
                         }
                     }
@@ -58,7 +55,7 @@ namespace TorannMagic
             }
 
             this.burstShotsLeft = 0;
-            this.PostCastShot(flag, out flag);
+            this.PostCastShot(flag, out _);
             return false;
         }
 

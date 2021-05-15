@@ -1,10 +1,4 @@
 ﻿using Verse;
-using UnityEngine;
-using RimWorld;
-using System.Collections.Generic;
-using System;
-using System.Linq;
-using System.Threading;
 
 namespace TorannMagic
 {
@@ -21,15 +15,15 @@ namespace TorannMagic
 
         public override void Tick()
         {
-            if(!initialized)
+            if (!initialized)
             {
                 this.nextSearch = Find.TickManager.TicksGame + Rand.Range(120, 180);
                 this.range = 40 + (4 * pwrVal);
                 initialized = true;
             }
-            else if(Find.TickManager.TicksGame >= this.nextSearch)
+            else if (Find.TickManager.TicksGame >= this.nextSearch)
             {
-                this.nextSearch = Find.TickManager.TicksGame + Rand.Range(120, 180);               
+                this.nextSearch = Find.TickManager.TicksGame + Rand.Range(120, 180);
 
                 ScanForTarget();
                 if (target != null)
@@ -41,13 +35,13 @@ namespace TorannMagic
                         bolt.verVal = verVal;
                         TM_CopyAndLaunchProjectile.CopyAndLaunchProjectile(bolt, this, target, target, ProjectileHitFlags.All, null);
                     }
-                }                               
+                }
             }
             base.Tick();
         }
 
         private void ScanForTarget()
-        {            
+        {
             //Log.Message("totem has faction " + this.Faction);
             target = TM_Calc.FindNearbyEnemy(this.Position, this.Map, this.Faction, this.range, 5);
         }

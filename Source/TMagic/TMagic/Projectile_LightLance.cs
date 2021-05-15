@@ -1,10 +1,6 @@
 ﻿using Verse;
 using Verse.Sound;
-using RimWorld;
 using AbilityUser;
-using System;
-using System.Linq;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace TorannMagic
@@ -73,10 +69,10 @@ namespace TorannMagic
                 HediffComp_LightCapacitance hd = caster.health.hediffSet.GetFirstHediffOfDef(TorannMagicDefOf.TM_LightCapacitanceHD).TryGetComp<HediffComp_LightCapacitance>();
                 this.lightPotency = hd.LightPotency;
             }
-            this.radius = Mathf.Clamp(1.8f + (.25f * verVal) * lightPotency, 1f, 3f);
+            this.radius = Mathf.Clamp(1.8f + (.25f * verVal * lightPotency), 1f, 3f);
             this.angle = (Quaternion.AngleAxis(90, Vector3.up) * TM_Calc.GetVector(caster.Position, base.Position)).ToAngleFlat();
             this.CheckSpawnSustainer();
-            this.burnTime += (pwrVal * 22);
+            this.burnTime += pwrVal * 22;
             lanceAngle = Vector3Utility.FromAngleFlat(this.angle - 90);                 //angle of beam
             lanceAngleInv = Vector3Utility.FromAngleFlat(this.angle + 90);              //opposite angle of beam
             drawPosStart = this.launchPosition.ToVector3Shifted() + lanceAngle;         //this.parent.DrawPos;
@@ -119,7 +115,7 @@ namespace TorannMagic
                 }
             }
         }
-        
+
 
         public override void Draw()
         {
@@ -127,13 +123,13 @@ namespace TorannMagic
         }
 
         public void DrawLance(IntVec3 launcherPos)
-        {           
+        {
             float lanceWidth = this.radius;                                                              //
-            if(this.age < (this.burnTime * .165f))
+            if (this.age < (this.burnTime * .165f))
             {
                 lanceWidth *= (float)this.age / 40f;
             }
-            if(this.age > (this.burnTime * .835f))
+            if (this.age > (this.burnTime * .835f))
             {
                 lanceWidth *= (float)(this.burnTime - this.age) / 40f;
             }
@@ -143,12 +139,12 @@ namespace TorannMagic
             Graphics.DrawMesh(MeshPool.plane10, matrix, Projectile_LightLance.BeamMat, 0, null, 0, Projectile_LightLance.MatPropertyBlock);
 
             Matrix4x4 matrix2 = default(Matrix4x4);
-            matrix2.SetTRS(drawPosStart - (.5f*lanceAngle*lanceWidth), Quaternion.Euler(0f, this.angle, 0f), new Vector3(lanceWidth, 1f, lanceWidth));                 //drawer for beam start
+            matrix2.SetTRS(drawPosStart - (.5f * lanceAngle * lanceWidth), Quaternion.Euler(0f, this.angle, 0f), new Vector3(lanceWidth, 1f, lanceWidth));                 //drawer for beam start
             Graphics.DrawMesh(MeshPool.plane10, matrix2, Projectile_LightLance.BeamEndMat, 0, null, 0, Projectile_LightLance.MatPropertyBlock);
             drawPosEnd.y = Altitudes.AltitudeFor(AltitudeLayer.MetaOverlays);
             Matrix4x4 matrix4 = default(Matrix4x4);
-            matrix4.SetTRS(drawPosEnd - (.5f*lanceAngleInv*lanceWidth), Quaternion.Euler(0f, this.angle - 180, 0f), new Vector3(lanceWidth, 1f, lanceWidth));                 //drawer for beam end
-            Graphics.DrawMesh(MeshPool.plane10, matrix4, Projectile_LightLance.BeamEndMat, 0, null, 0, Projectile_LightLance.MatPropertyBlock);            
+            matrix4.SetTRS(drawPosEnd - (.5f * lanceAngleInv * lanceWidth), Quaternion.Euler(0f, this.angle - 180, 0f), new Vector3(lanceWidth, 1f, lanceWidth));                 //drawer for beam end
+            Graphics.DrawMesh(MeshPool.plane10, matrix4, Projectile_LightLance.BeamEndMat, 0, null, 0, Projectile_LightLance.MatPropertyBlock);
         }
 
         public override void Tick()
@@ -171,7 +167,7 @@ namespace TorannMagic
             {
                 base.Destroy(mode);
             }
-        }        
+        }
     }
 }
 

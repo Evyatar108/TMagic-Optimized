@@ -59,14 +59,11 @@ namespace TorannMagic
         }
 
         protected override void Impact(Thing hitThing)
-        {            
+        {
             base.Impact(hitThing);
-           
-            ThingDef def = this.def;          
-
             if (!this.initialized)
             {
-                this.caster = this.launcher as Pawn;               
+                this.caster = this.launcher as Pawn;
                 CompAbilityUserMight comp = caster.GetComp<CompAbilityUserMight>();
                 //pwrVal = caster.GetComp<CompAbilityUserMight>().MightData.MightPowerSkill_GraveBlade.FirstOrDefault((MightPowerSkill x) => x.label == "TM_GraveBlade_pwr").level;
                 //verVal = caster.GetComp<CompAbilityUserMight>().MightData.MightPowerSkill_GraveBlade.FirstOrDefault((MightPowerSkill x) => x.label == "TM_GraveBlade_ver").level;
@@ -82,7 +79,7 @@ namespace TorannMagic
                 this.radius = this.def.projectile.explosionRadius;
                 this.duration = 10 + (int)(this.radius * 20);
                 this.innerCellList = GenRadial.RadialCellsAround(base.Position, this.radius, true).ToList();
-                this.ringCellList = GenRadial.RadialCellsAround(base.Position, this.radius+1, false).Except(innerCellList).ToList();
+                this.ringCellList = GenRadial.RadialCellsAround(base.Position, this.radius + 1, false).Except(innerCellList).ToList();
                 this.effectIndex2 = ringCellList.Count / 2;
                 this.initialized = true;
             }
@@ -97,7 +94,7 @@ namespace TorannMagic
                     Vector3 drawIndex2 = this.ringCellList[effectIndex2].ToVector3Shifted();
                     drawIndex2.x += Rand.Range(-.35f, .35f);
                     drawIndex2.z += Rand.Range(-.35f, .35f);
-                    TM_MoteMaker.ThrowGenericMote(ThingDef.Named("Mote_SpiritFlame"), drawIndex1 , this.Map, Rand.Range(.4f, .8f), .1f, 0, .6f, 0, Rand.Range(.4f, 1f), Rand.Range(-20, 20), Rand.Range(-20, 20));
+                    TM_MoteMaker.ThrowGenericMote(ThingDef.Named("Mote_SpiritFlame"), drawIndex1, this.Map, Rand.Range(.4f, .8f), .1f, 0, .6f, 0, Rand.Range(.4f, 1f), Rand.Range(-20, 20), Rand.Range(-20, 20));
                     TM_MoteMaker.ThrowGenericMote(ThingDef.Named("Mote_SpiritFlame"), drawIndex2, this.Map, Rand.Range(.4f, .8f), .1f, 0, .6f, 0, Rand.Range(.4f, 1f), Rand.Range(-20, 20), Rand.Range(-20, 20));
                     this.effectIndex1++;
                     this.effectIndex2++;
@@ -108,15 +105,15 @@ namespace TorannMagic
                     if (this.effectIndex2 >= ringCellList.Count)
                     {
                         this.effectIndex2 = 0;
-                    }                    
+                    }
                 }
                 if (Find.TickManager.TicksGame % this.strikeDelay == 0 && !this.caster.DestroyedOrNull())
                 {
                     IntVec3 centerCell = innerCellList.RandomElement();
-                    List<IntVec3> targetCells = GenRadial.RadialCellsAround(centerCell, 2f, true).ToList();
-                    for (int i = 0; i < targetCells.Count; i++)
+                    IEnumerable<IntVec3> targetCells = GenRadial.RadialCellsAround(centerCell, 2f, true);
+                    foreach (var target in targetCells)
                     {
-                        IntVec3 curCell = targetCells[i];
+                        IntVec3 curCell = target;
                         Pawn victim = curCell.GetFirstPawn(this.Map);
                         if (victim != null && !victim.Destroyed && !victim.Dead && victim != this.caster)
                         {
@@ -136,7 +133,7 @@ namespace TorannMagic
                                         Job job = new Job(JobDefOf.FleeAndCower);
                                         //victim.mindState.mentalStateHandler.TryStartMentalState(TorannMagicDefOf.TM_PanicFlee);
                                     }
-                                    catch (NullReferenceException ex)
+                                    catch (NullReferenceException)
                                     {
 
                                     }
@@ -148,6 +145,6 @@ namespace TorannMagic
 
                 }
             }
-        }        
-    }    
+        }
+    }
 }

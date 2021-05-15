@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using RimWorld;
-using UnityEngine;
-using Verse;
+﻿using Verse;
 
 namespace TorannMagic.TMDefs
 {
@@ -14,7 +7,7 @@ namespace TorannMagic.TMDefs
         public float maxMP = 0;
         public float mpRegenRate = 0;
         public float magicCooldown = 0;
-        public float mpCost = 0;        
+        public float mpCost = 0;
         public float arcaneDmg = 0;
 
         public float maxSP = 0;
@@ -25,6 +18,5 @@ namespace TorannMagic.TMDefs
 
         public float xpGain = 0;
         public float arcaneRes = 0;
-
     }
 }

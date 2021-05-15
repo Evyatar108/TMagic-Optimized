@@ -6,8 +6,8 @@ using UnityEngine;
 
 namespace TorannMagic
 {
-	class Projectile_Icebolt : Projectile_AbilityBase
-	{
+    class Projectile_Icebolt : Projectile_AbilityBase
+    {
         private int verVal;
         private int pwrVal;
         private float arcaneDmg = 1;
@@ -36,15 +36,15 @@ namespace TorannMagic
                 verVal = mver.level;
             }
             this.arcaneDmg = comp.arcaneDmg;
-            if(settingsRef.AIHardMode && !pawn.IsColonist)
+            if (settingsRef.AIHardMode && !pawn.IsColonist)
             {
                 pwrVal = 3;
                 verVal = 3;
             }
-            GenExplosion.DoExplosion(base.Position, map, 0.4f, TMDamageDefOf.DamageDefOf.Iceshard, this.launcher, Mathf.RoundToInt(this.def.projectile.GetDamageAmount(1,null) * this.arcaneDmg), 0, this.def.projectile.soundExplode, def, this.equipmentDef, null, null, 0f, 1, false, null, 0f, 1, 0f, false);
+            GenExplosion.DoExplosion(base.Position, map, 0.4f, TMDamageDefOf.DamageDefOf.Iceshard, this.launcher, Mathf.RoundToInt(this.def.projectile.GetDamageAmount(1, null) * this.arcaneDmg), 0, this.def.projectile.soundExplode, def, this.equipmentDef, null, null, 0f, 1, false, null, 0f, 1, 0f, false);
             CellRect cellRect = CellRect.CenteredOn(base.Position, 3);
             cellRect.ClipInsideMap(map);
-            for (int i = 0; i < Rand.Range((2 + verVal), (3 + 4*verVal)); i++)
+            for (int i = 0; i < Rand.Range(2 + verVal, 3 + (4 * verVal)); i++)
             {
                 IntVec3 randomCell = cellRect.RandomCell;
                 if (pwrVal > 0)
@@ -55,7 +55,7 @@ namespace TorannMagic
                 {
                     this.Shrapnel(1, randomCell, map, 0.4f);
                 }
-                
+
             }
         }
 
@@ -68,22 +68,21 @@ namespace TorannMagic
 
         public void Explosion(int pwr, IntVec3 center, Map map, float radius, DamageDef damType, Thing instigator, SoundDef explosionSound = null, ThingDef projectile = null, ThingDef source = null, ThingDef postExplosionSpawnThingDef = null, float postExplosionSpawnChance = 0f, int postExplosionSpawnThingCount = 1, bool applyDamageToExplosionCellsNeighbors = false, ThingDef preExplosionSpawnThingDef = null, float preExplosionSpawnChance = 0f, int preExplosionSpawnThingCount = 1)
         {
-            System.Random rnd = new System.Random();
-            int modDamAmountRand = GenMath.RoundRandom(Rand.Range(2 + pwr * 2, 5 + TMDamageDefOf.DamageDefOf.Iceshard.defaultDamage * pwr));  //4
+            int modDamAmountRand = GenMath.RoundRandom(Rand.Range(2 + (pwr * 2), 5 + (TMDamageDefOf.DamageDefOf.Iceshard.defaultDamage * pwr)));  //4
             modDamAmountRand = Mathf.RoundToInt(modDamAmountRand * this.arcaneDmg);
             if (map == null)
             {
                 Log.Warning("Tried to do explosion in a null map.");
                 return;
             }
-            Explosion explosion = (Explosion)GenSpawn.Spawn(ThingDefOf.Explosion, center, map); 
+            Explosion explosion = (Explosion)GenSpawn.Spawn(ThingDefOf.Explosion, center, map);
             explosion.damageFalloff = false;
             explosion.chanceToStartFire = 0.0f;
             explosion.Position = center;
             explosion.radius = radius;
             explosion.damType = damType;
             explosion.instigator = instigator;
-            explosion.damAmount = ((projectile == null) ? GenMath.RoundRandom((float)damType.defaultDamage) : modDamAmountRand);
+            explosion.damAmount = (projectile == null) ? GenMath.RoundRandom((float)damType.defaultDamage) : modDamAmountRand;
             explosion.weapon = source;
             explosion.preExplosionSpawnThingDef = preExplosionSpawnThingDef;
             explosion.preExplosionSpawnChance = preExplosionSpawnChance;

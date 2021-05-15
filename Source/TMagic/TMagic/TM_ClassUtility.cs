@@ -1,16 +1,7 @@
-﻿using UnityEngine;
-using Verse;
+﻿using Verse;
 using System.Collections.Generic;
 using System.Linq;
-using Verse.AI;
 using RimWorld;
-using System;
-using System.IO;
-using System.Runtime.Serialization;
-using System.Runtime.Serialization.Formatters.Binary;
-using AbilityUser;
-using TorannMagic.Enchantment;
-using System.Text;
 using TorannMagic.TMDefs;
 using TorannMagic.ModOptions;
 
@@ -24,57 +15,56 @@ namespace TorannMagic
             return TM_CustomClassDef.Named("TM_CustomClasses").customClasses;
         }
 
-        public static List<TraitDef> CustomClassTraitDefs
+        public static List<TraitDef> CustomClassTraitDefs = GetCustomClassTraitDefs();
+
+        private static List<TraitDef> GetCustomClassTraitDefs()
         {
-            get
+            var customClasses = CustomClasses();
+            List<TraitDef> customTraits = new List<TraitDef>(customClasses.Count);
+            for (int i = 0; i < customClasses.Count; i++)
             {
-                List<TraitDef> customTraits = new List<TraitDef>();
-                for(int i = 0; i < CustomClasses().Count; i++)
-                {
-                    customTraits.Add(CustomClasses()[i].classTrait);
-                }
-                return customTraits;
-            }            
+                customTraits.Add(customClasses[i].classTrait);
+            }
+            return customTraits;
         }
 
-        public static List<TM_CustomClass> CustomMageClasses
+        public static IEnumerable<TM_CustomClass> CustomMageClasses = GetCustomMageClasses();
+
+        private static IEnumerable<TM_CustomClass> GetCustomMageClasses()
         {
-            get
+            var customClasses = CustomClasses();
+            for (int i = 0; i < customClasses.Count; i++)
             {
-                List<TM_CustomClass> mageClasses = new List<TM_CustomClass>();
-                mageClasses.Clear();
-                for(int i = 0; i < CustomClasses().Count; i++)
+                var customClass = customClasses[i];
+                bool classEnabled = Settings.Instance.CustomClass[customClass.classTrait.ToString()];
+                if (customClass.isMage && classEnabled & ModOptions.Settings.Instance.CustomClass[customClass.classTrait.ToString()])
                 {
-                    bool classEnabled = Settings.Instance.CustomClass[CustomClasses()[i].classTrait.ToString()];
-                    if (CustomClasses()[i].isMage && ModOptions.Settings.Instance.CustomClass[CustomClasses()[i].classTrait.ToString()] && classEnabled)
-                    {
-                        mageClasses.Add(CustomClasses()[i]);
-                    }
+                    yield return customClass;
                 }
-                return mageClasses;
             }
         }
 
-        public static List<TM_CustomClass> CustomFighterClasses
+        public static List<TM_CustomClass> CustomFighterClasses = GetCustomFighterClasses();
+
+        private static List<TM_CustomClass> GetCustomFighterClasses()
         {
-            get
+            List<TM_CustomClass> fighterClasses = new List<TM_CustomClass>();
+            fighterClasses.Clear();
+            var customClasses = CustomClasses();
+            for (int i = 0; i < CustomClasses().Count; i++)
             {
-                List<TM_CustomClass> fighterClasses = new List<TM_CustomClass>();
-                fighterClasses.Clear();
-                for (int i = 0; i < CustomClasses().Count; i++)
+                if (CustomClasses()[i].isFighter && ModOptions.Settings.Instance.CustomClass[CustomClasses()[i].classTrait.ToString()])
                 {
-                    if (CustomClasses()[i].isFighter && ModOptions.Settings.Instance.CustomClass[CustomClasses()[i].classTrait.ToString()])
-                    {
-                        fighterClasses.Add(CustomClasses()[i]);
-                    }
+                    fighterClasses.Add(CustomClasses()[i]);
                 }
-                return fighterClasses;
             }
+            return fighterClasses;
         }
 
         public static int IsCustomClassIndex(List<Trait> allTraits)
         {
-            for(int i = 0; i < CustomClasses().Count; i++)
+                var customClasses = CustomClasses();
+            for (int i = 0; i < CustomClasses().Count; i++)
             {
                 for (int j = 0; j < allTraits.Count; j++)
                 {
@@ -89,6 +79,7 @@ namespace TorannMagic
 
         public static int CustomClassIndexOfTraitDef(TraitDef trait)
         {
+                var customClasses = CustomClasses();
             for (int i = 0; i < CustomClasses().Count; i++)
             {
                 if (CustomClasses()[i].classTrait.defName == trait.defName)
@@ -103,7 +94,6 @@ namespace TorannMagic
         {
             string str = power.TMabilityDefs.FirstOrDefault().defName.ToString() + "_";
             List<MagicPowerSkill> skills = new List<MagicPowerSkill>();
-            skills.Clear();
             for (int i = 0; i < comp.MagicData.AllMagicPowerSkills.Count; i++)
             {
                 MagicPowerSkill mps = comp.MagicData.AllMagicPowerSkills[i];
@@ -119,7 +109,6 @@ namespace TorannMagic
         {
             string str = abilityDef.defName.ToString() + "_" + var;
             List<MightPowerSkill> skills = new List<MightPowerSkill>();
-            skills.Clear();
             for (int i = 0; i < comp.MightData.AllMightPowerSkills.Count; i++)
             {
                 MightPowerSkill mps = comp.MightData.AllMightPowerSkills[i];
@@ -133,12 +122,12 @@ namespace TorannMagic
 
         public static MightPowerSkill GetMightPowerSkillFromLabel(CompAbilityUserMight comp, string label)
         {
-            if(comp != null && comp.MightData != null && comp.MightData.AllMightPowerSkills.Count > 0)
+            if (comp != null && comp.MightData != null && comp.MightData.AllMightPowerSkills.Count > 0)
             {
-                for(int i = 0; i < comp.MightData.AllMightPowerSkills.Count; i++)
+                for (int i = 0; i < comp.MightData.AllMightPowerSkills.Count; i++)
                 {
                     MightPowerSkill mps = comp.MightData.AllMightPowerSkills[i];
-                    if(mps.label == label)
+                    if (mps.label == label)
                     {
                         return mps;
                     }
@@ -166,7 +155,7 @@ namespace TorannMagic
         public static TMDefs.TM_CustomClass GetRandomCustomFighter()
         {
             List<TMDefs.TM_CustomClass> customFighters = CustomFighterClasses;
-            if(customFighters.Count > 0)
+            if (customFighters.Count > 0)
             {
                 return customFighters.RandomElement();
             }
@@ -175,7 +164,7 @@ namespace TorannMagic
 
         public static TMDefs.TM_CustomClass GetRandomCustomMage()
         {
-            List<TMDefs.TM_CustomClass> customMages = CustomMageClasses;
+            List<TMDefs.TM_CustomClass> customMages = CustomMageClasses.ToList();
             if (customMages.Count > 0)
             {
                 return customMages.RandomElement();
@@ -185,11 +174,11 @@ namespace TorannMagic
 
         public static bool ClassHasAbility(TMAbilityDef ability, CompAbilityUserMagic compMagic = null, CompAbilityUserMight compMight = null)
         {
-            if(compMagic != null && compMagic.customClass != null && compMagic.customClass.classAbilities.Contains(ability))
+            if (compMagic != null && compMagic.customClass != null && compMagic.customClass.HasAbility(ability))
             {
                 return true;
             }
-            else if(compMight != null && compMight.customClass != null && compMight.customClass.classAbilities.Contains(ability))
+            else if (compMight != null && compMight.customClass != null && compMight.customClass.HasAbility(ability))
             {
                 return true;
             }

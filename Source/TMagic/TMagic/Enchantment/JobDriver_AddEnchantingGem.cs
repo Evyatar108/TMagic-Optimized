@@ -1,7 +1,4 @@
-﻿using System;
-using Verse.AI;
-using Verse;
-using RimWorld;
+﻿using Verse.AI;
 using System.Collections.Generic;
 
 namespace TorannMagic.Enchantment

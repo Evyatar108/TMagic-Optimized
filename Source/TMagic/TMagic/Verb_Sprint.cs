@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using RimWorld;
 using AbilityUser;
 using Verse;
-using UnityEngine;
 
 
 namespace TorannMagic
@@ -21,14 +19,14 @@ namespace TorannMagic
 
             MightPowerSkill pwr = caster.GetComp<CompAbilityUserMight>().MightData.MightPowerSkill_Sprint.FirstOrDefault((MightPowerSkill x) => x.label == "TM_Sprint_pwr");
             pwrVal = pwr.level;
-            if(pwrVal == 0)
+            if (pwrVal == 0)
             {
                 pwrVal = caster.GetComp<CompAbilityUserMight>().MightData.MightPowerSkill_FieldTraining.FirstOrDefault((MightPowerSkill x) => x.label == "TM_FieldTraining_pwr").level;
             }
             bool flag = pawn != null && !pawn.Dead;
             if (flag)
             {
-                if(pawn.health.hediffSet.HasHediff(TorannMagicDefOf.TM_HediffSprint))
+                if (pawn.health.hediffSet.HasHediff(TorannMagicDefOf.TM_HediffSprint))
                 {
                     using (IEnumerator<Hediff> enumerator = pawn.health.hediffSet.GetHediffs<Hediff>().GetEnumerator())
                     {

@@ -1,7 +1,4 @@
-﻿using System;
-using RimWorld;
-using RimWorld.Planet;
-using System.Collections.Generic;
+﻿using RimWorld.Planet;
 using Verse;
 
 namespace TorannMagic.WorldTransport
@@ -17,10 +14,10 @@ namespace TorannMagic.WorldTransport
         {
             base.CompTick();
             age++;
-            if(age >= delayTicks && parent.Map != null)
+            if (age >= delayTicks && parent.Map != null)
             {
                 this.parent.AllComps.Remove(this);
-                Current.Game.DeinitAndRemoveMap(parent.Map);                
+                Current.Game.DeinitAndRemoveMap(parent.Map);
             }
         }
 

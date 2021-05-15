@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using RimWorld;
 using AbilityUser;
 using Verse;
-using UnityEngine;
 
 
 namespace TorannMagic
 {
-    public class Verb_FightersFocus: Verb_UseAbility
+    public class Verb_FightersFocus : Verb_UseAbility
     {
         protected override bool TryCastShot()
         {
@@ -19,7 +16,7 @@ namespace TorannMagic
             bool flag = pawn != null && !pawn.Dead;
             if (flag)
             {
-                if(pawn.health.hediffSet.HasHediff(TorannMagicDefOf.TM_HediffFightersFocus))
+                if (pawn.health.hediffSet.HasHediff(TorannMagicDefOf.TM_HediffFightersFocus))
                 {
                     Hediff rec = pawn.health.hediffSet.GetFirstHediffOfDef(TorannMagicDefOf.TM_HediffFightersFocus, false);
                     pawn.health.RemoveHediff(rec);
@@ -27,7 +24,7 @@ namespace TorannMagic
                 else
                 {
                     float val = .5f;
-                    if(caster.story != null)
+                    if (caster.story != null)
                     {
                         if (caster.GetComp<CompAbilityUserMight>().MightData.MightPowerSkill_FieldTraining.FirstOrDefault((MightPowerSkill x) => x.label == "TM_FieldTraining_ver").level >= 1)
                         {

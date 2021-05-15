@@ -1,13 +1,11 @@
-﻿using System;
-
-namespace TorannMagic
+﻿namespace TorannMagic
 {
     public enum ManaPoolCategory
     {
         Drained,
-		Weakened,
-		Steady,
-		Flowing,
-		Surging
+        Weakened,
+        Steady,
+        Flowing,
+        Surging
     }
 }

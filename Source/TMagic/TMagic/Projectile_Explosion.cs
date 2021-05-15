@@ -2,7 +2,6 @@
 using Verse.Sound;
 using RimWorld;
 using AbilityUser;
-using System;
 using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
@@ -70,7 +69,6 @@ namespace TorannMagic
         protected override void Impact(Thing hitThing)
         {
             Map map = base.Map;
-            ThingDef def = this.def;
             if (!this.initialized)
             {
                 caster = this.launcher as Pawn;
@@ -80,9 +78,9 @@ namespace TorannMagic
                 this.arcaneDmg = comp.arcaneDmg;
                 this.CheckSpawnSustainer();
                 this.strikePos = base.Position;
-                this.duration = 360 - (verVal*3);
+                this.duration = 360 - (verVal * 3);
                 this.damage = this.DamageAmount * this.arcaneDmg * (1f + (.02f * pwrVal));
-                this.radius = this.def.projectile.explosionRadius + (int)(verVal/10);
+                this.radius = this.def.projectile.explosionRadius + (int)(verVal / 10);
                 this.initialized = true;
                 this.outerRing = TM_Calc.GetOuterRing(this.strikePos, radius - 1, radius);
                 Color color = colorInt.ToColor;
@@ -91,7 +89,7 @@ namespace TorannMagic
 
             if (this.sustainer != null)
             {
-                this.sustainer.info.volumeFactor = (this.age) / (this.duration);
+                this.sustainer.info.volumeFactor = this.age / this.duration;
                 this.sustainer.Maintain();
                 if (this.TicksLeft <= 0)
                 {
@@ -111,9 +109,9 @@ namespace TorannMagic
             //phase 3a - emp
             //phase 4a - secondary explosions
             //phase 5a - radiation
-            
+
             //warmup 2 seconds
-            if (this.age <= (int)(this.duration *.4f) && this.outerRing.Count > 0)
+            if (this.age <= (int)(this.duration * .4f) && this.outerRing.Count > 0)
             {
                 for (int i = 0; i < 3; i++)
                 {
@@ -122,11 +120,11 @@ namespace TorannMagic
                     TM_MoteMaker.ThrowGenericMote(ThingDefOf.Mote_Smoke, startPos, this.Map, .8f, .3f, .05f, .6f, 0, 12f, (Quaternion.AngleAxis(90, Vector3.up) * direction).ToAngleFlat(), 0);
                 }
             }
-            else if(this.age <= (int)(this.duration * .6f))
+            else if (this.age <= (int)(this.duration * .6f))
             {
                 //pause                
             }
-            else if(this.age > (int)(this.duration * .6f) && !phase3Flag)
+            else if (this.age > (int)(this.duration * .6f) && !phase3Flag)
             {
                 if (!phase2Flag)
                 {
@@ -161,7 +159,6 @@ namespace TorannMagic
                         if (cell.InBounds(map))
                         {
                             Vector3 heading = (cell - centerCell).ToVector3();
-                            float distance = heading.magnitude;
                             Vector3 direction = TM_Calc.GetVector(centerCell, cell);
                             float angle = (Quaternion.AngleAxis(90, Vector3.up) * direction).ToAngleFlat();
                             if (this.expandingTick >= 6 && this.expandingTick < 8)
@@ -170,13 +167,12 @@ namespace TorannMagic
                                 TM_MoteMaker.ThrowGenericMote(TorannMagicDefOf.Mote_ExpandingFlame, cell.ToVector3Shifted(), map, 1.1f, .3f, .02f, .25f, 0, 15f, angle, angle);
                             }
                             List<Thing> hitList = cell.GetThingList(map);
-                            Thing burnThing = null;
                             for (int j = 0; j < hitList.Count; j++)
                             {
-                                burnThing = hitList[j];
-                                DamageInfo dinfo = new DamageInfo(DamageDefOf.Flame, Mathf.RoundToInt(Rand.Range(this.damage *.25f, this.damage *.35f)), 1, -1, this.launcher, null, null, DamageInfo.SourceCategory.ThingOrUnknown);
+                                Thing burnThing = hitList[j];
+                                DamageInfo dinfo = new DamageInfo(DamageDefOf.Flame, Mathf.RoundToInt(Rand.Range(this.damage * .25f, this.damage * .35f)), 1, -1, this.launcher, null, null, DamageInfo.SourceCategory.ThingOrUnknown);
                                 burnThing.TakeDamage(dinfo);
-                            }                            
+                            }
                         }
                     }
                 }
@@ -185,21 +181,21 @@ namespace TorannMagic
                     TargetInfo ti = new TargetInfo(this.strikePos, map, false);
                     TM_MoteMaker.MakeOverlay(ti, TorannMagicDefOf.TM_Mote_PsycastAreaEffect, map, Vector3.zero, 4, 0f, .1f, .4f, .5f, 2f);
                     this.expandingTick = 0;
-                    this.phase3Flag = true;                    
+                    this.phase3Flag = true;
                 }
             }
-            else if(phase3Flag)
+            else if (phase3Flag)
             {
                 this.expandingTick++;
-                if(expandingTick < 4)
+                if (expandingTick < 4)
                 {
                     float energy = 80000 * this.arcaneDmg;
                     GenTemperature.PushHeat(this.strikePos, this.Map, energy);
-                    GenExplosion.DoExplosion(this.strikePos, this.Map, this.radius/(4-this.expandingTick), DamageDefOf.Bomb, this.launcher, Mathf.RoundToInt(Rand.Range(this.damage *.7f, this.damage*.9f)), 1, DamageDefOf.Bomb.soundExplosion, null, null, null, null, 0, 0, false, null, 0, 0, .4f, true);
+                    GenExplosion.DoExplosion(this.strikePos, this.Map, this.radius / (4 - this.expandingTick), DamageDefOf.Bomb, this.launcher, Mathf.RoundToInt(Rand.Range(this.damage * .7f, this.damage * .9f)), 1, DamageDefOf.Bomb.soundExplosion, null, null, null, null, 0, 0, false, null, 0, 0, .4f, true);
                 }
             }
             this.Destroy(DestroyMode.Vanish);
-        }        
+        }
 
         public override void Draw()
         {
@@ -210,32 +206,32 @@ namespace TorannMagic
                 {
                     //DrawSmiteBeams(this.strikePos, this.beamAge);
                 }
-                else if(this.age > (int)(this.duration *.6f) && this.age <= (int)this.duration * .7f)
+                else if (this.age > (int)(this.duration * .6f) && this.age <= (int)this.duration * .7f)
                 {
                     this.beamAge = this.age - (int)(duration * .6f);
                     DrawSmiteBeams(this.strikePos, this.beamAge);
                 }
-                if(this.age <= (int)(this.duration * .6f))
+                if (this.age <= (int)(this.duration * .6f))
                 {
                     float sizer = 1f * (float)(this.radius / this.def.projectile.explosionRadius);
-                    if(this.age > (int)(this.duration * .4f))
+                    if (this.age > (int)(this.duration * .4f))
                     {
                         sizer = ((this.duration * .6f) - age) / ((this.duration * .6f) - (this.duration * .4f));
                     }
                     if (this.age > (int)(this.duration * .1f))
                     {
-                        outerRingAngle+=3;
-                        DrawFlameRing(this.strikePos, 26f*sizer, outerRingAngle);
+                        outerRingAngle += 3;
+                        DrawFlameRing(this.strikePos, 26f * sizer, outerRingAngle);
                     }
                     if (this.age > (int)(this.duration * .18f))
                     {
                         middleRingAngle += 7;
-                        DrawFlameRing(this.strikePos, 13f*sizer, middleRingAngle);
+                        DrawFlameRing(this.strikePos, 13f * sizer, middleRingAngle);
                     }
                     if (this.age > (int)(this.duration * .25f))
                     {
                         innerRingAngle += 13;
-                        DrawFlameRing(this.strikePos, 7f*sizer, innerRingAngle);
+                        DrawFlameRing(this.strikePos, 7f * sizer, innerRingAngle);
                     }
                 }
             }
@@ -251,9 +247,9 @@ namespace TorannMagic
         public void DrawSmiteBeams(IntVec3 pos, int wrathAge)
         {
             float lanceWidth = .1f + wrathAge;
-            float lanceLength = ((float)base.Map.Size.z * 1.4f);
+            float lanceLength = (float)base.Map.Size.z * 1.4f;
             Vector3 a = Vector3Utility.FromAngleFlat(this.angle - 90f);  //angle of beam
-            Vector3 lanceVector = this.strikePos.ToVector3Shifted() + a * lanceLength * 0.5f;
+            Vector3 lanceVector = this.strikePos.ToVector3Shifted() + (a * lanceLength * 0.5f);
             Matrix4x4 matrix = default(Matrix4x4);
             matrix.SetTRS(lanceVector, Quaternion.Euler(0f, this.angle, 0f), new Vector3(lanceWidth, 1f, lanceLength));   //drawer for beam
             Graphics.DrawMesh(MeshPool.plane10, matrix, Projectile_Explosion.BeamMat, 0, null, 0, Projectile_Explosion.MatPropertyBlock);

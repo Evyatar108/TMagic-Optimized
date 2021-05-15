@@ -1,18 +1,14 @@
 ﻿using RimWorld;
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using Verse;
 using Verse.Sound;
 using AbilityUser;
-using UnityEngine;
-using Verse.AI.Group;
 
 namespace TorannMagic
 {
-    public class Verb_TechnoShield : Verb_UseAbility  
+    public class Verb_TechnoShield : Verb_UseAbility
     {
-        
+
         int pwrVal;
         int verVal;
         CompAbilityUserMagic comp;
@@ -29,8 +25,7 @@ namespace TorannMagic
             {
                 if ((root - targ.Cell).LengthHorizontal < this.verbProps.range)
                 {
-                    ShootLine shootLine;
-                    validTarg = this.TryFindShootLineFromTo(root, targ, out shootLine);
+                    validTarg = this.TryFindShootLineFromTo(root, targ, out _);
                 }
                 else
                 {
@@ -66,8 +61,8 @@ namespace TorannMagic
 
             if (pawn != null)
             {
-                ApplyTechnoShield(pawn);                
-            }            
+                ApplyTechnoShield(pawn);
+            }
             return true;
         }
 
@@ -88,19 +83,19 @@ namespace TorannMagic
         {
             if (this.pwrVal == 3)
             {
-                HealthUtility.AdjustSeverity(target, TorannMagicDefOf.TM_TechnoShieldHD_III, (110 + (30 * verVal))*comp.arcaneDmg);
+                HealthUtility.AdjustSeverity(target, TorannMagicDefOf.TM_TechnoShieldHD_III, (110 + (30 * verVal)) * comp.arcaneDmg);
             }
-            else if(this.pwrVal == 2)
+            else if (this.pwrVal == 2)
             {
-                HealthUtility.AdjustSeverity(target, TorannMagicDefOf.TM_TechnoShieldHD_II, (110 + (30 * verVal))*comp.arcaneDmg);
+                HealthUtility.AdjustSeverity(target, TorannMagicDefOf.TM_TechnoShieldHD_II, (110 + (30 * verVal)) * comp.arcaneDmg);
             }
-            else if(this.pwrVal == 1)
+            else if (this.pwrVal == 1)
             {
-                HealthUtility.AdjustSeverity(target, TorannMagicDefOf.TM_TechnoShieldHD_I, (110 + (30 * verVal))*comp.arcaneDmg);
+                HealthUtility.AdjustSeverity(target, TorannMagicDefOf.TM_TechnoShieldHD_I, (110 + (30 * verVal)) * comp.arcaneDmg);
             }
             else
             {
-                HealthUtility.AdjustSeverity(target, TorannMagicDefOf.TM_TechnoShieldHD, (110 + (30 * verVal))*comp.arcaneDmg);
+                HealthUtility.AdjustSeverity(target, TorannMagicDefOf.TM_TechnoShieldHD, (110 + (30 * verVal)) * comp.arcaneDmg);
             }
         }
     }

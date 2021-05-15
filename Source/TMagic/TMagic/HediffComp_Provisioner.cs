@@ -2,7 +2,6 @@
 using Verse;
 using System;
 using System.Collections.Generic;
-using HarmonyLib;
 using System.Linq;
 
 namespace TorannMagic
@@ -66,9 +65,9 @@ namespace TorannMagic
                     this.Initialize();
                 }
             }
-            if(Find.TickManager.TicksGame >= this.nextTickAction)
+            if (Find.TickManager.TicksGame >= this.nextTickAction)
             {
-                this.duration--;                
+                this.duration--;
                 this.nextTickAction = Find.TickManager.TicksGame + Rand.Range(600, 700);
                 if (pwrVal >= 1 && Rand.Chance(.2f + (.04f * pwrVal)))
                 {
@@ -88,9 +87,9 @@ namespace TorannMagic
         public void TickActionGear()
         {
             List<Apparel> gear = this.Pawn.apparel.WornApparel;
-            for(int i = 0; i < gear.Count; i++)
+            for (int i = 0; i < gear.Count; i++)
             {
-                if(gear[i].HitPoints < gear[i].MaxHitPoints)
+                if (gear[i].HitPoints < gear[i].MaxHitPoints)
                 {
                     gear[i].HitPoints++;
                 }
@@ -98,7 +97,7 @@ namespace TorannMagic
             Thing weapon = this.Pawn.equipment.Primary;
             if (weapon != null && (weapon.def.IsRangedWeapon || weapon.def.IsMeleeWeapon))
             {
-                if(weapon.HitPoints < weapon.MaxHitPoints)
+                if (weapon.HitPoints < weapon.MaxHitPoints)
                 {
                     weapon.HitPoints++;
                 }
@@ -122,7 +121,7 @@ namespace TorannMagic
                         IEnumerable<Hediff_Injury> arg_BB_0 = pawn.health.hediffSet.GetHediffs<Hediff_Injury>();
                         Func<Hediff_Injury, bool> arg_BB_1;
 
-                        arg_BB_1 = ((Hediff_Injury injury) => injury.Part == rec);
+                        arg_BB_1 = (Hediff_Injury injury) => injury.Part == rec;
 
                         foreach (Hediff_Injury current in arg_BB_0.Where(arg_BB_1))
                         {

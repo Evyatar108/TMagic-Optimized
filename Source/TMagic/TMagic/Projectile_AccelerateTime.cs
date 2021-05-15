@@ -54,7 +54,7 @@ namespace TorannMagic
         }
 
         protected override void Impact(Thing hitThing)
-        {                              
+        {
 
             if (!this.initialized)
             {
@@ -77,7 +77,7 @@ namespace TorannMagic
                 {
                     pwrVal = 3;
                     verVal = 3;
-                }                
+                }
                 this.strikeDelay = this.strikeDelay - verVal;
                 this.radius = this.def.projectile.explosionRadius;
                 this.duration = Mathf.RoundToInt(this.radius * this.strikeDelay);
@@ -93,35 +93,35 @@ namespace TorannMagic
                 base.Position.GetFirstPawn(this.Map);
             }
 
-            if(targetPawn != null)
+            if (targetPawn != null)
             {
                 if (targetPawn.Faction != null && targetPawn.Faction == this.launcher.Faction)
                 {
-                    AgePawn(targetPawn, Mathf.RoundToInt((24 * 2500)* (1+(.1f * verVal))), false);
+                    AgePawn(targetPawn, Mathf.RoundToInt(24 * 2500 * (1 + (.1f * verVal))), false);
                 }
                 else
                 {
                     List<Pawn> pawnList = TM_Calc.FindAllPawnsAround(this.launcher.Map, base.Position, this.radius, this.launcher.Faction, false);
                     if (pawnList != null && pawnList.Count > 0)
                     {
-                        for (int i = 0; i < Mathf.Clamp(pawnList.Count, 0, 2+verVal); i++)
+                        for (int i = 0; i < Mathf.Clamp(pawnList.Count, 0, 2 + verVal); i++)
                         {
-                            if(pawnList[i].Faction != null && !pawnList[i].Faction.HostileTo(this.pawn.Faction))
+                            if (pawnList[i].Faction != null && !pawnList[i].Faction.HostileTo(this.pawn.Faction))
                             {
                                 pawnList[i].Faction.TryAffectGoodwillWith(this.pawn.Faction, -25);
                             }
 
                             if (pawnList[i].Faction != null && pawnList[i].Faction != this.pawn.Faction)
                             {
-                                AgePawn(pawnList[i], Mathf.RoundToInt((2500) * (1 + (.1f * verVal))), true);
+                                AgePawn(pawnList[i], Mathf.RoundToInt(2500 * (1 + (.1f * verVal))), true);
                                 if (pawnList[i].IsColonist && !this.pawn.IsColonist)
                                 {
                                     TM_Action.SpellAffectedPlayerWarning(pawnList[i]);
                                 }
                             }
-                            else if(pawnList[i].Faction == null)
+                            else if (pawnList[i].Faction == null)
                             {
-                                AgePawn(pawnList[i], Mathf.RoundToInt((2500) * (1 + (.1f * verVal))), true);
+                                AgePawn(pawnList[i], Mathf.RoundToInt(2500 * (1 + (.1f * verVal))), true);
                             }
                         }
                     }
@@ -131,7 +131,7 @@ namespace TorannMagic
             {
                 List<Pawn> pawnList = TM_Calc.FindAllPawnsAround(this.launcher.Map, base.Position, this.radius, this.launcher.Faction, false);
                 if (pawnList != null && pawnList.Count > 0)
-                {                    
+                {
                     for (int i = 0; i < Mathf.Clamp(pawnList.Count, 0, 2 + verVal); i++)
                     {
                         if (pawnList[i].Faction != null && !pawnList[i].Faction.HostileTo(this.pawn.Faction))
@@ -142,11 +142,11 @@ namespace TorannMagic
                         targetPawn = pawnList[i];
                         if (targetPawn.Faction != null && targetPawn.Faction != this.pawn.Faction)
                         {
-                            AgePawn(pawnList[i], Mathf.RoundToInt((2500) * (1 + (.1f * verVal))), true);
+                            AgePawn(pawnList[i], Mathf.RoundToInt(2500 * (1 + (.1f * verVal))), true);
                         }
-                        else if(targetPawn.Faction == null)
+                        else if (targetPawn.Faction == null)
                         {
-                            AgePawn(pawnList[i], Mathf.RoundToInt((2500) * (1 + (.1f * verVal))), true);
+                            AgePawn(pawnList[i], Mathf.RoundToInt(2500 * (1 + (.1f * verVal))), true);
                         }
                     }
                 }
@@ -176,44 +176,40 @@ namespace TorannMagic
                 }
             }
 
-            if(thing != null)
+            if (thing != null)
             {
                 AgeThing(thing);
             }
 
-            List<IntVec3> cellList = targets.ToList();
-            if(cellList != null && cellList.Count > 0)
+            foreach (var target in targets)
             {
-                for(int i =0; i < cellList.Count; i++)
+                thingList = target.GetThingList(this.Map);
+                if (thingList != null && thingList.Count > 0)
                 {
-                    thingList = cellList[i].GetThingList(this.Map);
-                    if(thingList != null && thingList.Count > 0)
+                    for (int j = 0; j < thingList.Count; j++)
                     {
-                        for(int j =0; j < thingList.Count; j++)
+                        Thing thingFromList = thingList[j];
+                        if (thingFromList is Plant plant)
                         {
-                            if (thingList[j] is Plant)
+                            try
                             {
-                                Plant plant = thingList[j] as Plant;
-                                try
-                                {
-                                    plant.Growth = plant.Growth + ((Rand.Range((2 + pwrVal), (4 + pwrVal)) / plant.def.plant.growDays) * this.arcaneDmg);
-                                }
-                                catch (NullReferenceException ex)
-                                {
-                                    plant.Growth *= (1.1f + (.1f * pwrVal));
-                                }
+                                plant.Growth = plant.Growth + (Rand.Range(2 + pwrVal, 4 + pwrVal) / plant.def.plant.growDays * this.arcaneDmg);
                             }
-                            CompHatcher compHatcher = thingList[j].TryGetComp<CompHatcher>();
-                            if(compHatcher != null)
+                            catch (NullReferenceException)
                             {
-                                float gestateProgress = Traverse.Create(root: compHatcher).Field(name: "gestateProgress").GetValue<float>();
-                                Traverse.Create(root: compHatcher).Field(name: "gestateProgress").SetValue((gestateProgress + Rand.Range(.3f + (.1f * pwrVal), .7f + (.1f * pwrVal))) * this.arcaneDmg);
+                                plant.Growth *= 1.1f + (.1f * pwrVal);
                             }
                         }
+                        CompHatcher compHatcher = thingFromList.TryGetComp<CompHatcher>();
+                        if (compHatcher != null)
+                        {
+                            float gestateProgress = Traverse.Create(root: compHatcher).Field(name: "gestateProgress").GetValue<float>();
+                            Traverse.Create(root: compHatcher).Field(name: "gestateProgress").SetValue((gestateProgress + Rand.Range(.3f + (.1f * pwrVal), .7f + (.1f * pwrVal))) * this.arcaneDmg);
+                        }
                     }
-                }                    
+                }
             }
-            
+
             Effecter AreaAccelEffect = TorannMagicDefOf.TM_TimeAccelerationAreaEffecter.Spawn();
             AreaAccelEffect.Trigger(new TargetInfo(base.Position, this.Map, false), new TargetInfo(base.Position, this.Map, false));
             AreaAccelEffect.Cleanup();
@@ -240,7 +236,7 @@ namespace TorannMagic
                         HediffComp_AccelerateTime hediffComp = pawn.health.hediffSet.GetFirstHediffOfDef(TorannMagicDefOf.TM_AccelerateTimeHD, false).TryGetComp<HediffComp_AccelerateTime>();
                         if (hediffComp != null)
                         {
-                            hediffComp.durationTicks = (duration);
+                            hediffComp.durationTicks = duration;
                             hediffComp.isBad = isBad;
                             AccelerateEffects(pawn, 1);
                         }
@@ -272,15 +268,15 @@ namespace TorannMagic
                         GenPlace.TryPlaceThing(componentThing, thing.Position, this.Map, ThingPlaceMode.Near);
                     }
                 }
-                if(thing.def.MadeFromStuff && thing.Stuff != null)
+                if (thing.def.MadeFromStuff && thing.Stuff != null)
                 {
                     Thing componentThing = ThingMaker.MakeThing(thing.Stuff, null);
                     componentThing.stackCount = Mathf.RoundToInt(thing.def.costStuffCount * (.5f + (.1f * pwrVal)));
                     GenPlace.TryPlaceThing(componentThing, thing.Position, this.Map, ThingPlaceMode.Near);
                 }
-                TransmutateEffects(thing.Position, 6 );
-                thing.Destroy(DestroyMode.Vanish);                
-            }            
+                TransmutateEffects(thing.Position, 6);
+                thing.Destroy(DestroyMode.Vanish);
+            }
         }
 
         public void TransmutateEffects(IntVec3 position, int intensity)
@@ -303,5 +299,5 @@ namespace TorannMagic
             AccelEffect.Trigger(new TargetInfo(pawn), new TargetInfo(pawn));
             AccelEffect.Cleanup();
         }
-    }    
+    }
 }

@@ -1,12 +1,11 @@
 ﻿using RimWorld;
-using System;
 using Verse;
 using AbilityUser;
 using System.Linq;
 
 namespace TorannMagic
 {
-    class Verb_SoulBond : Verb_UseAbility  
+    class Verb_SoulBond : Verb_UseAbility
     {
         bool flagSD = false;
         bool flagWD = false;
@@ -28,8 +27,7 @@ namespace TorannMagic
             {
                 if ((root - targ.Cell).LengthHorizontal < this.verbProps.range)
                 {
-                    ShootLine shootLine;
-                    validTarg = this.TryFindShootLineFromTo(root, targ, out shootLine);
+                    validTarg = this.TryFindShootLineFromTo(root, targ, out _);
                 }
                 else
                 {
@@ -69,7 +67,7 @@ namespace TorannMagic
                     else
                     {
                         flagSD = caster.gender == Gender.Female;
-                        flagWD = caster.gender == Gender.Male;                        
+                        flagWD = caster.gender == Gender.Male;
                         if (comp.soulBondPawn != null)
                         {
                             oldBondPawn = comp.soulBondPawn;
@@ -91,7 +89,7 @@ namespace TorannMagic
                                         pawn.LabelShort
                                     ), MessageTypeDefOf.RejectInput);
                                 }
-                                else if(pawn.health.hediffSet.HasHediff(HediffDef.Named("TM_SoulBondMentalHD")) && flagWD)
+                                else if (pawn.health.hediffSet.HasHediff(HediffDef.Named("TM_SoulBondMentalHD")) && flagWD)
                                 {
                                     Messages.Message("TM_CannotSoulBondAnother".Translate(
                                         caster.LabelShort,
@@ -103,7 +101,7 @@ namespace TorannMagic
                                     ApplyHediffs();
                                     comp.soulBondPawn = pawn;
                                 }
-                                
+
                             }
                         }
                         else
@@ -112,14 +110,14 @@ namespace TorannMagic
                             comp.spell_ShadowCall = true;
                             comp.spell_ShadowStep = true;
                             comp.AddPawnAbility(TorannMagicDefOf.TM_ShadowCall);
-                            comp.AddPawnAbility(TorannMagicDefOf.TM_ShadowStep);                            
+                            comp.AddPawnAbility(TorannMagicDefOf.TM_ShadowStep);
                             comp.soulBondPawn = pawn;
                         }
                     }
                 }
                 else
                 {
-                    
+
                     Messages.Message("TM_CannotSoulBondUndead".Translate(
                         caster.LabelShort
                     ), MessageTypeDefOf.RejectInput);
@@ -156,20 +154,18 @@ namespace TorannMagic
 
         private void RemoveHediffs()
         {
-            Hediff hediff = new Hediff();
+            Hediff hediff;
             if (flagSD)
             {
                 hediff = oldBondPawn.health.hediffSet.GetFirstHediffOfDef(HediffDef.Named("TM_SoulBondPhysicalHD"));
                 if (hediff != null)
                 {
                     oldBondPawn.health.RemoveHediff(hediff);
-                    hediff = null;
                 }
                 hediff = caster.health.hediffSet.GetFirstHediffOfDef(HediffDef.Named("TM_SDSoulBondPhysicalHD"));
                 if (hediff != null)
                 {
                     caster.health.RemoveHediff(hediff);
-                    hediff = null;
                 }
             }
             if (flagWD)
@@ -178,13 +174,11 @@ namespace TorannMagic
                 if (hediff != null)
                 {
                     oldBondPawn.health.RemoveHediff(hediff);
-                    hediff = null;
                 }
                 hediff = caster.health.hediffSet.GetFirstHediffOfDef(HediffDef.Named("TM_WDSoulBondMentalHD"));
                 if (hediff != null)
                 {
                     caster.health.RemoveHediff(hediff);
-                    hediff = null;
                 }
             }
         }

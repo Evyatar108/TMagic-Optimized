@@ -9,7 +9,7 @@ using Verse.Sound;
 namespace TorannMagic
 {
     [StaticConstructorOnStartup]
-    class Verb_SnapFreeze : Verb_UseAbility  
+    class Verb_SnapFreeze : Verb_UseAbility
     {
         private float arcaneDmg = 1f;
         List<Pawn> pawns = new List<Pawn>();
@@ -56,7 +56,7 @@ namespace TorannMagic
             TargetInfo ti = new TargetInfo(this.currentTarget.Cell, map, false);
             TM_MoteMaker.MakeOverlay(ti, TorannMagicDefOf.TM_Mote_PsycastAreaEffect, map, Vector3.zero, 3f, 0f, .1f, .4f, 1.2f, -3f);
             float classBonus = 1f;
-            if(p.story != null && p.story.traits != null && p.story.traits.HasTrait(TorannMagicDefOf.HeartOfFrost))
+            if (p.story != null && p.story.traits != null && p.story.traits.HasTrait(TorannMagicDefOf.HeartOfFrost))
             {
                 classBonus = 1.5f;
             }
@@ -113,20 +113,19 @@ namespace TorannMagic
                     }
                     plants[i].Notify_ColorChanged();
                 }
-                List<IntVec3> cellList = GenRadial.RadialCellsAround(this.currentTarget.Cell, this.UseAbilityProps.TargetAoEProperties.range, true).ToList();
-                bool raining = map.weatherManager.RainRate > 0f || map.weatherManager.SnowRate > 0f;
-                for (int i = 0; i < cellList.Count; i++)
+                IEnumerable<IntVec3> cellList = GenRadial.RadialCellsAround(this.currentTarget.Cell, this.UseAbilityProps.TargetAoEProperties.range, true);
+                foreach (var cell in cellList)
                 {
-                    cellList[i] = cellList[i].ClampInsideMap(map);
-                    SnowUtility.AddSnowRadial(cellList[i], map, 2.4f, Rand.Range(.08f, .13f));
-                    TM_MoteMaker.ThrowGenericMote(ThingDefOf.Mote_AirPuff, cellList[i].ToVector3Shifted(), map, 2.5f, .05f, .05f, Rand.Range(2f, 3f), Rand.Range(-60, 60), .5f, -70, Rand.Range(0, 360));
+                    cell.ClampInsideMap(map);
+                    SnowUtility.AddSnowRadial(cell, map, 2.4f, Rand.Range(.08f, .13f));
+                    TM_MoteMaker.ThrowGenericMote(ThingDefOf.Mote_AirPuff, cell.ToVector3Shifted(), map, 2.5f, .05f, .05f, Rand.Range(2f, 3f), Rand.Range(-60, 60), .5f, -70, Rand.Range(0, 360));
                 }
-                List<IntVec3> windList = GenRadial.RadialCellsAround(this.currentTarget.Cell, this.UseAbilityProps.TargetAoEProperties.range+1, true).Except(cellList).ToList();
-                for(int i = 0; i < windList.Count; i++)
+                IEnumerable<IntVec3> windList = GenRadial.RadialCellsAround(this.currentTarget.Cell, this.UseAbilityProps.TargetAoEProperties.range + 1, true).Except(cellList);
+                foreach (var windLoc in windList)
                 {
-                    windList[i] = windList[i].ClampInsideMap(map);
-                    Vector3 angle = TM_Calc.GetVector(windList[i], this.currentTarget.Cell);
-                    TM_MoteMaker.ThrowGenericMote(ThingDefOf.Mote_AirPuff, windList[i].ToVector3Shifted(), map, Rand.Range(1.2f, 2f), .45f, Rand.Range(0f, .25f), .5f, -200, Rand.Range(3, 5), (Quaternion.AngleAxis(90, Vector3.up) * angle).ToAngleFlat(), Rand.Range(0, 360));
+                    windLoc.ClampInsideMap(map);
+                    Vector3 angle = TM_Calc.GetVector(windLoc, this.currentTarget.Cell);
+                    TM_MoteMaker.ThrowGenericMote(ThingDefOf.Mote_AirPuff, windLoc.ToVector3Shifted(), map, Rand.Range(1.2f, 2f), .45f, Rand.Range(0f, .25f), .5f, -200, Rand.Range(3, 5), (Quaternion.AngleAxis(90, Vector3.up) * angle).ToAngleFlat(), Rand.Range(0, 360));
                 }
             }
 

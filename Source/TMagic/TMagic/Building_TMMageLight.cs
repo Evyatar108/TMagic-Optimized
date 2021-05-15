@@ -10,24 +10,21 @@ namespace TorannMagic
         private static readonly Material sunlightMat_1 = MaterialPool.MatFrom("Other/sunlight1", false);
         private static readonly Material sunlightMat_2 = MaterialPool.MatFrom("Other/sunlight2", false);
         private static readonly Material sunlightMat_3 = MaterialPool.MatFrom("Other/sunlight3", false);
-
-        private int matRng = 0;
-        private float matMagnitude = 1;
         private bool objectFloatingDown = false;
         private Vector3 objectPosition = default(Vector3);
         private float objectOffset = .5f;
 
         private bool initialized = false;
-                
+
         public override void Tick()
         {
-            if(!initialized)
+            if (!initialized)
             {
                 objectPosition = this.DrawPos;
                 initialized = true;
             }
             base.Tick();
-        }        
+        }
 
         public override void Draw()
         {

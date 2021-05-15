@@ -10,19 +10,15 @@ namespace TorannMagic
         {
             Map map = base.Map;
             base.Impact(hitThing);
-            ThingDef def = this.def;
             CellRect cellRect = CellRect.CenteredOn(base.Position, 1);
             cellRect.ClipInsideMap(map);
-            Building bldg = new Building();
             Pawn caster = this.launcher as Pawn;
             CompAbilityUserMagic comp = caster.GetComp<CompAbilityUserMagic>();
 
-            IntVec3 c = cellRect.CenterCell;
-
-            bldg = cellRect.CenterCell.GetFirstBuilding(map);
+            Building bldg = cellRect.CenterCell.GetFirstBuilding(map);
             if (bldg != null)
             {
-                
+
                 if (bldg.GetComp<CompPowerBattery>() != null)
                 {
                     float energyAdded = 400f * comp.arcaneDmg;
@@ -40,12 +36,12 @@ namespace TorannMagic
                 {
                     Messages.Message("InvalidBattery".Translate(), MessageTypeDefOf.NegativeEvent);
                 }
-                    
+
             }
             else
             {
                 Messages.Message("NotABuilding".Translate(), MessageTypeDefOf.NegativeEvent);
-            }            
+            }
 
         }
     }

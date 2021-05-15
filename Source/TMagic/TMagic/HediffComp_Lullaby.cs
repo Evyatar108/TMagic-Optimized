@@ -31,7 +31,7 @@ namespace TorannMagic
             bool spawned = base.Pawn.Spawned;
             if (spawned)
             {
-                
+
             }
         }
 

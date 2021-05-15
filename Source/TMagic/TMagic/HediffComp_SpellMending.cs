@@ -53,7 +53,7 @@ namespace TorannMagic
                     this.Initialize();
                 }
             }
-            if(mendTick > ticksTillNextMend)
+            if (mendTick > ticksTillNextMend)
             {
                 TickAction();
             }
@@ -91,7 +91,7 @@ namespace TorannMagic
                     for (int j = 0; j < Rand.Range(1, 3); j++)
                     {
                         TM_MoteMaker.ThrowTwinkle(this.Pawn.DrawPos, this.Pawn.Map, Rand.Range(.4f, .7f), Rand.Range(100, 500), Rand.Range(.4f, 1f), Rand.Range(.05f, .2f), .05f, Rand.Range(.4f, .85f));
-                    }                    
+                    }
                     tmpDmgItems++;
                 }
             }

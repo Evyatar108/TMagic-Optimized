@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Verse;
+﻿using Verse;
 using UnityEngine;
-using RimWorld;
 
 namespace TorannMagic
 {
@@ -19,7 +14,7 @@ namespace TorannMagic
 
         public override float GetWidth(float maxWidth)
         {
-            return 75f;            
+            return 75f;
         }
 
         public override GizmoResult GizmoOnGUI(Vector2 topLeft, float maxWidth)
@@ -27,39 +22,39 @@ namespace TorannMagic
             if (!pawn.DestroyedOrNull() && !pawn.Dead && itemComp != null)
             {
 
-                    Rect overRect = new Rect(topLeft.x + 2, topLeft.y, this.GetWidth(75), 75); //overall rect size (shell)
-                    Find.WindowStack.ImmediateWindow(984798, overRect, WindowLayer.GameUI, delegate
-                    {
-                        int barHeight = ((75 - 5));
-                        Rect rect = overRect.AtZero().ContractedBy(6f); //inner, smaller rect
+                Rect overRect = new Rect(topLeft.x + 2, topLeft.y, this.GetWidth(75), 75); //overall rect size (shell)
+                Find.WindowStack.ImmediateWindow(984798, overRect, WindowLayer.GameUI, delegate
+                {
+                    int barHeight = 75 - 5;
+                    Rect rect = overRect.AtZero().ContractedBy(6f); //inner, smaller rect
                         rect.height = barHeight;
-                        Rect rect2 = rect; //label rect, starts at top             
+                    Rect rect2 = rect; //label rect, starts at top             
                         Text.Font = GameFont.Tiny;
-                        float fillPercent = 0;
-                        float yShift = 0f;
-                        Text.Anchor = TextAnchor.MiddleCenter;
-                        if (itemComp.NecroticEnergy != 0)
+                    float fillPercent = 0;
+                    float yShift = 0f;
+                    Text.Anchor = TextAnchor.MiddleCenter;
+                    if (itemComp.NecroticEnergy != 0)
+                    {
+                        rect2.y += yShift;
+                        try
                         {
-                            rect2.y += yShift;
-                            try
-                            {
-                                fillPercent = itemComp.NecroticEnergy / 100f;
-                                Widgets.FillableBar(rect2, fillPercent, Gizmo_StatusBar.FullTex, Gizmo_StatusBar.EmptyShieldBarTex, false);
-                                Widgets.Label(rect2, "" + (itemComp.NecroticEnergy.ToString("F0")) + " / " + 100f.ToString("F0"));
-                            }
-                            catch
-                            {
-                                fillPercent = 0f;
-                                Widgets.FillableBar(rect2, fillPercent, Gizmo_StatusBar.FullTex, Gizmo_StatusBar.EmptyShieldBarTex, false);
-                                Widgets.Label(rect2, "");
-                            }
-                            yShift += (barHeight) + 5f;
+                            fillPercent = itemComp.NecroticEnergy / 100f;
+                            Widgets.FillableBar(rect2, fillPercent, Gizmo_StatusBar.FullTex, Gizmo_StatusBar.EmptyShieldBarTex, false);
+                            Widgets.Label(rect2, "" + itemComp.NecroticEnergy.ToString("F0") + " / " + 100f.ToString("F0"));
                         }
-                        
-                        Text.Font = GameFont.Small;
-                        Text.Anchor = TextAnchor.UpperLeft;
-                    }, true, false, 1f);
-                
+                        catch
+                        {
+                            fillPercent = 0f;
+                            Widgets.FillableBar(rect2, fillPercent, Gizmo_StatusBar.FullTex, Gizmo_StatusBar.EmptyShieldBarTex, false);
+                            Widgets.Label(rect2, "");
+                        }
+                        yShift += barHeight + 5f;
+                    }
+
+                    Text.Font = GameFont.Small;
+                    Text.Anchor = TextAnchor.UpperLeft;
+                }, true, false, 1f);
+
             }
             else
             {
@@ -68,7 +63,7 @@ namespace TorannMagic
                 float initialShift = 0;
                 Find.WindowStack.ImmediateWindow(984798, overRect, WindowLayer.GameUI, delegate
                 {
-                    barHeight = ((75 - 5) / 1);
+                    barHeight = (75 - 5) / 1;
                     Rect rect = overRect.AtZero().ContractedBy(6f); //inner, smaller rect
                     rect.height = barHeight;
                     Rect rect2 = rect; //label rect, starts at top             
@@ -79,8 +74,8 @@ namespace TorannMagic
                     rect2.y += yShift;
                     fillPercent = 0f;
                     Widgets.FillableBar(rect2, fillPercent, Gizmo_StatusBar.FullTex, Gizmo_StatusBar.EmptyShieldBarTex, false);
-                    Widgets.Label(rect2, "" );
-                    yShift += (barHeight) + 5f;
+                    Widgets.Label(rect2, "");
+                    yShift += barHeight + 5f;
                 }, true, false, 1f);
             }
             return new GizmoResult(GizmoState.Clear);

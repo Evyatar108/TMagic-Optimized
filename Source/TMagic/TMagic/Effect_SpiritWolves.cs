@@ -1,10 +1,8 @@
 ﻿using Verse;
 using AbilityUser;
-using System.Collections.Generic;
-using RimWorld;
 
 namespace TorannMagic
-{    
+{
     public class Effect_SpiritWolves : Verb_UseAbility
     {
         bool validTarg;
@@ -19,8 +17,7 @@ namespace TorannMagic
             {
                 if ((root - targ.Cell).LengthHorizontal < this.verbProps.range)
                 {
-                    ShootLine shootLine;
-                    validTarg = this.TryFindShootLineFromTo(root, targ, out shootLine);
+                    validTarg = this.TryFindShootLineFromTo(root, targ, out _);
                 }
                 else
                 {
@@ -44,7 +41,6 @@ namespace TorannMagic
                 {
                     def = TorannMagicDefOf.FlyingObject_SpiritWolves
                 };
-                Pawn casterPawn = base.CasterPawn;
                 FlyingObject_SpiritWolves flyingObject = (FlyingObject_SpiritWolves)GenSpawn.Spawn(ThingDef.Named("FlyingObject_SpiritWolves"), this.CasterPawn.Position, this.CasterPawn.Map);
                 flyingObject.Launch(this.CasterPawn, t.Cell, launchedThing);
             }
@@ -55,9 +51,8 @@ namespace TorannMagic
             if (inResult)
             {
                 this.Effect();
-                outResult = true;
             }
             outResult = inResult;
         }
-    }    
+    }
 }

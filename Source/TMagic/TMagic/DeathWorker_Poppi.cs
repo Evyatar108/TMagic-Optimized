@@ -1,5 +1,4 @@
 ﻿using RimWorld;
-using System;
 using Verse;
 
 namespace TorannMagic
@@ -24,7 +23,7 @@ namespace TorannMagic
                 bool flag2 = corpse.InnerPawn.ageTracker.CurLifeStageIndex == 1;
                 if (flag2)
                 {
-                    radius = radius * Rand.Range(1.2f, 1.8f); 
+                    radius = radius * Rand.Range(1.2f, 1.8f);
                 }
                 else
                 {

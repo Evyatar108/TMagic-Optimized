@@ -9,9 +9,6 @@ namespace TorannMagic
     [StaticConstructorOnStartup]
     class HediffComp_Medigel : HediffComp
     {
-
-        private bool initializing = true;
-
         public string labelCap
         {
             get
@@ -36,9 +33,9 @@ namespace TorannMagic
             {
                 if (Find.TickManager.TicksGame % 300 == 0)  //occurs 200x per day; hediff lasts 1/4 day - applies 50 times per medigel
                 {
-                    TickAction();                    
+                    TickAction();
                 }
-            }            
+            }
         }
 
         public void TickAction()
@@ -64,15 +61,15 @@ namespace TorannMagic
                     BodyPartRecord rec = enumerator.Current;
                     IEnumerable<Hediff_Injury> arg_BB_0 = pawn.health.hediffSet.GetHediffs<Hediff_Injury>();
                     Func<Hediff_Injury, bool> arg_BB_1;
-                    arg_BB_1 = ((Hediff_Injury injury) => injury.Part == rec);
+                    arg_BB_1 = (Hediff_Injury injury) => injury.Part == rec;
                     foreach (Hediff_Injury current in arg_BB_0.Where(arg_BB_1))
                     {
                         bool flag5 = current.CanHealNaturally() && !current.IsPermanent();
                         if (flag5)
                         {
                             current.Heal(Rand.Range(.1f, .25f));
-                        }                        
-                    }                    
+                        }
+                    }
                 }
             }
         }

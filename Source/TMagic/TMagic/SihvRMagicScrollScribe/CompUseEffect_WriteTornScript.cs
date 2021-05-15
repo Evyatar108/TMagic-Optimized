@@ -79,32 +79,32 @@ namespace TorannMagic.SihvRMagicScrollScribe
                 tempPod = ThingDef.Named("Torn_BookOfDemons");
                 this.parent.SplitOff(1).Destroy(DestroyMode.Vanish);
             }
-            else if (parent.def != null && (user.story.traits.HasTrait(TorannMagicDefOf.Geomancer)))
+            else if (parent.def != null && user.story.traits.HasTrait(TorannMagicDefOf.Geomancer))
             {
                 tempPod = ThingDef.Named("Torn_BookOfEarth");
                 this.parent.SplitOff(1).Destroy(DestroyMode.Vanish);
             }
-            else if (parent.def != null && (user.story.traits.HasTrait(TorannMagicDefOf.Technomancer)))
+            else if (parent.def != null && user.story.traits.HasTrait(TorannMagicDefOf.Technomancer))
             {
                 tempPod = TorannMagicDefOf.Torn_BookOfMagitech;
                 this.parent.SplitOff(1).Destroy(DestroyMode.Vanish);
             }
-            else if (parent.def != null && (user.story.traits.HasTrait(TorannMagicDefOf.BloodMage)))
+            else if (parent.def != null && user.story.traits.HasTrait(TorannMagicDefOf.BloodMage))
             {
                 tempPod = TorannMagicDefOf.Torn_BookOfHemomancy;
                 this.parent.SplitOff(1).Destroy(DestroyMode.Vanish);
             }
-            else if (parent.def != null && (user.story.traits.HasTrait(TorannMagicDefOf.Enchanter)))
+            else if (parent.def != null && user.story.traits.HasTrait(TorannMagicDefOf.Enchanter))
             {
                 tempPod = TorannMagicDefOf.Torn_BookOfEnchanter;
                 this.parent.SplitOff(1).Destroy(DestroyMode.Vanish);
             }
-            else if (parent.def != null && (user.story.traits.HasTrait(TorannMagicDefOf.Chronomancer)))
+            else if (parent.def != null && user.story.traits.HasTrait(TorannMagicDefOf.Chronomancer))
             {
                 tempPod = TorannMagicDefOf.Torn_BookOfChronomancer;
                 this.parent.SplitOff(1).Destroy(DestroyMode.Vanish);
             }
-            else if (parent.def != null && (user.story.traits.HasTrait(TorannMagicDefOf.ChaosMage)))
+            else if (parent.def != null && user.story.traits.HasTrait(TorannMagicDefOf.ChaosMage))
             {
                 tempPod = TorannMagicDefOf.Torn_BookOfChaos;
                 this.parent.SplitOff(1).Destroy(DestroyMode.Vanish);

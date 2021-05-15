@@ -7,8 +7,8 @@ using UnityEngine;
 
 namespace TorannMagic
 {
-	public class Projectile_Blizzard : Projectile_AbilityBase
-	{
+    public class Projectile_Blizzard : Projectile_AbilityBase
+    {
         private int age = 0;
         private int duration = 720;
         private int lastStrikeTiny = 0;
@@ -52,9 +52,9 @@ namespace TorannMagic
                 pwrVal = 1;
                 verVal = 1;
             }
-            cellRect = CellRect.CenteredOn(base.Position, (int)(base.def.projectile.explosionRadius + (.75 *(verVal + pwrVal))));
+            cellRect = CellRect.CenteredOn(base.Position, (int)(base.def.projectile.explosionRadius + (.75 * (verVal + pwrVal))));
             cellRect.ClipInsideMap(map);
-            duration = Mathf.RoundToInt(duration + (90 * verVal) * comp.arcaneDmg);
+            duration = Mathf.RoundToInt(duration + (90 * verVal * comp.arcaneDmg));
             initialized = true;
         }
 
@@ -62,49 +62,48 @@ namespace TorannMagic
         {
             Map map = base.Map;
             base.Impact(hitThing);
-            ThingDef def = this.def;
             IntVec3 impactPos;
             if (!initialized)
             {
                 Initialize(map);
             }
             impactPos = cellRect.RandomCell;
-            if (this.age > lastStrikeLarge + Rand.Range(200 - (pwrVal * 30), duration/(4 + pwrVal)) && impactPos.Standable(map) && impactPos.InBounds(map) && impactPos.DistanceToEdge(map) >= 2)
+            if (this.age > lastStrikeLarge + Rand.Range(200 - (pwrVal * 30), duration / (4 + pwrVal)) && impactPos.Standable(map) && impactPos.InBounds(map) && impactPos.DistanceToEdge(map) >= 2)
             {
                 this.lastStrikeLarge = this.age;
                 SkyfallerMaker.SpawnSkyfaller(TorannMagicDefOf.TM_Blizzard_Large, impactPos, map);
                 MoteMaker.ThrowSmoke(impactPos.ToVector3(), map, 5f);
-                ticksTillSnow[snowCount] = TorannMagicDefOf.TM_Blizzard_Large.skyfaller.ticksToImpactRange.RandomInRange+4;
+                ticksTillSnow[snowCount] = TorannMagicDefOf.TM_Blizzard_Large.skyfaller.ticksToImpactRange.RandomInRange + 4;
                 snowPos[snowCount] = impactPos;
                 snowCount++;
             }
             impactPos = cellRect.RandomCell;
-            if (this.age > lastStrikeTiny + Rand.Range(6-(pwrVal), 18-(2*pwrVal)) && impactPos.Standable(map) && impactPos.InBounds(map))
+            if (this.age > lastStrikeTiny + Rand.Range(6 - pwrVal, 18 - (2 * pwrVal)) && impactPos.Standable(map) && impactPos.InBounds(map))
             {
                 this.lastStrikeTiny = this.age;
                 SkyfallerMaker.SpawnSkyfaller(TorannMagicDefOf.TM_Blizzard_Tiny, impactPos, map);
                 MoteMaker.ThrowSmoke(impactPos.ToVector3(), map, 1f);
-                ticksTillSnow[snowCount] = TorannMagicDefOf.TM_Blizzard_Tiny.skyfaller.ticksToImpactRange.RandomInRange +2;
+                ticksTillSnow[snowCount] = TorannMagicDefOf.TM_Blizzard_Tiny.skyfaller.ticksToImpactRange.RandomInRange + 2;
                 snowPos[snowCount] = impactPos;
                 snowCount++;
             }
             impactPos = cellRect.RandomCell;
-            if ( this.age > lastStrikeSmall + Rand.Range(30-(2*pwrVal), 60-(4*pwrVal)) && impactPos.Standable(map) && impactPos.InBounds(map))
+            if (this.age > lastStrikeSmall + Rand.Range(30 - (2 * pwrVal), 60 - (4 * pwrVal)) && impactPos.Standable(map) && impactPos.InBounds(map))
             {
                 this.lastStrikeSmall = this.age;
                 SkyfallerMaker.SpawnSkyfaller(TorannMagicDefOf.TM_Blizzard_Small, impactPos, map);
                 MoteMaker.ThrowSmoke(impactPos.ToVector3(), map, 3f);
-                ticksTillSnow[snowCount] = TorannMagicDefOf.TM_Blizzard_Small.skyfaller.ticksToImpactRange.RandomInRange+2;
+                ticksTillSnow[snowCount] = TorannMagicDefOf.TM_Blizzard_Small.skyfaller.ticksToImpactRange.RandomInRange + 2;
                 snowPos[snowCount] = impactPos;
                 snowCount++;
             }
 
-            for(int i = 0; i <= snowCount; i++)
+            for (int i = 0; i <= snowCount; i++)
             {
                 if (ticksTillSnow[i] == 0)
                 {
                     AddSnowRadial(snowPos[i], map, 2f, 2f);
-                    MoteMaker.ThrowSmoke(snowPos[i].ToVector3(), map, 4f);                
+                    MoteMaker.ThrowSmoke(snowPos[i].ToVector3(), map, 4f);
                     ticksTillSnow[i]--;
                 }
                 else
@@ -139,7 +138,7 @@ namespace TorannMagic
                 if (intVec.InBounds(map))
                 {
                     float lengthHorizontal = (center - intVec).LengthHorizontal;
-                    float num2 = 1f - lengthHorizontal / radius;
+                    float num2 = 1f - (lengthHorizontal / radius);
                     map.snowGrid.AddDepth(intVec, num2 * depth);
 
                 }

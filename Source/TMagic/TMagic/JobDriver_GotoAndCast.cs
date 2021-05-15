@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using Verse;
-using Verse.Sound;
 using RimWorld;
 using Verse.AI;
 using UnityEngine;
@@ -12,11 +9,7 @@ namespace TorannMagic
 {
     internal class JobDriver_GotoAndCast : JobDriver
     {
-        private const TargetIndex caster = TargetIndex.B;
-
         int age = -1;
-        int lastEffect = 0;
-        int ticksTillEffects = 20;
         public int duration = 5;
         Vector3 positionBetween = Vector3.zero;
         public PawnAbility ability = null;
@@ -49,7 +42,7 @@ namespace TorannMagic
             Toil doSpell = new Toil();
             doSpell.initAction = delegate
             {
-                if(ability != null)
+                if (ability != null)
                 {
                     this.duration = (int)(ability.Def.MainVerb.warmupTime * 60 * this.pawn.GetStatValue(StatDefOf.AimingDelayFactor, false));
                 }
@@ -72,12 +65,12 @@ namespace TorannMagic
                 if (targetThing != null && (targetThing.DestroyedOrNull() || targetThing.Map == null))
                 {
                     this.EndJobWith(JobCondition.Incompletable);
-                }                
+                }
                 age++;
                 ticksLeftThisToil = duration - age;
                 if (Find.TickManager.TicksGame % 12 == 0)
                 {
-                    TM_MoteMaker.ThrowCastingMote(pawn.DrawPos, pawn.Map, Rand.Range(1.2f, 2f));                    
+                    TM_MoteMaker.ThrowCastingMote(pawn.DrawPos, pawn.Map, Rand.Range(1.2f, 2f));
                 }
 
                 if (age > duration)
@@ -91,7 +84,7 @@ namespace TorannMagic
             {
                 if (ability != null)
                 {
-                    if(ability.Def == TorannMagicDefOf.TM_Transmutate && targetThing != null)
+                    if (ability.Def == TorannMagicDefOf.TM_Transmutate && targetThing != null)
                     {
                         bool flagRawResource = false;
                         bool flagStuffItem = false;
@@ -100,9 +93,9 @@ namespace TorannMagic
                         bool flagCorpse = false;
 
                         TM_Calc.GetTransmutableThingFromCell(targetThing.Position, pawn, out flagRawResource, out flagStuffItem, out flagNoStuffItem, out flagNutrition, out flagCorpse);
-                        TM_Action.DoTransmutate(pawn, targetThing, flagNoStuffItem, flagRawResource, flagStuffItem, flagNutrition, flagCorpse);                      
+                        TM_Action.DoTransmutate(pawn, targetThing, flagNoStuffItem, flagRawResource, flagStuffItem, flagNutrition, flagCorpse);
                     }
-                    else if(ability.Def == TorannMagicDefOf.TM_RegrowLimb)
+                    else if (ability.Def == TorannMagicDefOf.TM_RegrowLimb)
                     {
                         AbilityUser.SpawnThings tempThing = new SpawnThings();
                         tempThing.def = ThingDef.Named("SeedofRegrowth");
@@ -114,34 +107,5 @@ namespace TorannMagic
             });
             yield return doSpell;
         }
-
-        private void AssignXP()
-        {
-            CompAbilityUserMight comp = this.pawn.GetComp<CompAbilityUserMight>();
-
-            if (comp != null)
-            {
-                try
-                {
-
-                    int xpBase = Rand.Range(50, 75);
-                    int xpGain = Mathf.RoundToInt(xpBase * comp.xpGain);
-                    MoteMaker.ThrowText(pawn.DrawPos, pawn.MapHeld, "XP +" + xpGain, -1f);
-                    comp.MightUserXP += xpGain;
-                    if (this.pawn.needs.joy != null)
-                    {
-                        this.pawn.needs.joy.GainJoy(.4f, TorannMagicDefOf.Social);
-                    }
-                    if (this.pawn.skills != null)
-                    {
-                        this.pawn.skills.Learn(SkillDefOf.Social, Rand.Range(200f, 500f));
-                    }
-                }
-                catch (NullReferenceException ex)
-                {
-                    //failed
-                }
-            }
-        }        
     }
 }

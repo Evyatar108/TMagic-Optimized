@@ -1,9 +1,6 @@
-﻿using RimWorld;
-using Verse;
+﻿using Verse;
 using UnityEngine;
-using System.Collections.Generic;
 using System.Linq;
-using HarmonyLib;
 
 namespace TorannMagic
 {
@@ -57,7 +54,7 @@ namespace TorannMagic
             {
                 this.removeNow = true;
             }
-        }        
+        }
 
         public override void CompPostTick(ref float severityAdjustment)
         {
@@ -73,14 +70,14 @@ namespace TorannMagic
 
                 if (Find.TickManager.TicksGame % this.eventFrequency == 0)
                 {
-                    if(this.Pawn.health.hediffSet.BleedRateTotal != 0)
+                    if (this.Pawn.health.hediffSet.BleedRateTotal != 0)
                     {
                         //.06 bleed rate per 1 dmg "cut"
                         //.1 bleed rate per 1 dmg sacrificial cut
                         //Log.Message("current bleed rate is " + this.Pawn.health.hediffSet.BleedRateTotal);
-                        severityAdjustment += (this.Pawn.health.hediffSet.BleedRateTotal * (1.25f + (.125f *this.bloodVer))) * this.arcaneDmg;
+                        severityAdjustment += this.Pawn.health.hediffSet.BleedRateTotal * (1.25f + (.125f * this.bloodVer)) * this.arcaneDmg;
                     }
-                    else if(!this.Pawn.IsColonist)
+                    else if (!this.Pawn.IsColonist)
                     {
                         severityAdjustment += 5;
                     }
@@ -91,15 +88,15 @@ namespace TorannMagic
 
                     Hediff hediff = this.Pawn.health.hediffSet.GetFirstHediffOfDef(TorannMagicDefOf.TM_Artifact_BloodBoostHD);
                     float maxSev = 100;
-                    if(hediff != null)
+                    if (hediff != null)
                     {
                         maxSev += hediff.Severity;
                     }
                     this.parent.Severity = Mathf.Clamp(this.parent.Severity, 0, maxSev);
                 }
 
-               
-                
+
+
             }
         }
 
@@ -109,6 +106,6 @@ namespace TorannMagic
             {
                 return this.removeNow || base.CompShouldRemove;
             }
-        }        
+        }
     }
 }

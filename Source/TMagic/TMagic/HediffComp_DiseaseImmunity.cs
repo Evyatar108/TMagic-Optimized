@@ -1,9 +1,5 @@
-﻿using RimWorld;
-using Verse;
-using System;
+﻿using Verse;
 using System.Collections.Generic;
-using System.Linq;
-using UnityEngine;
 
 namespace TorannMagic
 {
@@ -42,11 +38,11 @@ namespace TorannMagic
             if (flag)
             {
 
-                if(!base.Pawn.Dead && base.Pawn.Spawned)
+                if (!base.Pawn.Dead && base.Pawn.Spawned)
                 {
                     if (Find.TickManager.TicksGame % 2500 == 0)
                     {
-                        if(this.verVal >= 3)
+                        if (this.verVal >= 3)
                         {
                             IEnumerable<Hediff> hdEnum = this.Pawn.health.hediffSet.GetHediffs<Hediff>();
                             foreach (Hediff hd in hdEnum)
@@ -58,13 +54,13 @@ namespace TorannMagic
                                     {
                                         pwrDef = 3;
                                     }
-                                    hd.Severity -= (.005f * pwrDef);
+                                    hd.Severity -= .005f * pwrDef;
                                     break;
                                 }
                             }
                         }
                     }
-                }                
+                }
             }
         }
     }

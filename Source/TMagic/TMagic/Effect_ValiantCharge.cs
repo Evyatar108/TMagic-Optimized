@@ -2,7 +2,7 @@
 using AbilityUser;
 
 namespace TorannMagic
-{    
+{
     public class Effect_ValiantCharge : Verb_UseAbility
     {
         bool validTarg;
@@ -13,12 +13,11 @@ namespace TorannMagic
             {
                 return this.verbProps.targetParams.canTargetSelf;
             }
-            if ( targ.IsValid && targ.CenterVector3.InBounds(base.CasterPawn.Map) && !targ.Cell.Fogged(base.CasterPawn.Map) && targ.Cell.Walkable(base.CasterPawn.Map))
+            if (targ.IsValid && targ.CenterVector3.InBounds(base.CasterPawn.Map) && !targ.Cell.Fogged(base.CasterPawn.Map) && targ.Cell.Walkable(base.CasterPawn.Map))
             { //targ.Cell.DistanceToEdge(base.CasterPawn.Map) >= 4 &&
                 if ((root - targ.Cell).LengthHorizontal < this.verbProps.range)
                 {
-                    ShootLine shootLine;
-                    validTarg = this.TryFindShootLineFromTo(root, targ, out shootLine);
+                    validTarg = this.TryFindShootLineFromTo(root, targ, out _);
                 }
                 else
                 {
@@ -58,9 +57,8 @@ namespace TorannMagic
             if (inResult)
             {
                 this.Effect();
-                outResult = true;
             }
             outResult = inResult;
         }
-    }    
+    }
 }

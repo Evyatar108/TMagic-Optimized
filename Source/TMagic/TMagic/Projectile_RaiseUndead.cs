@@ -3,7 +3,6 @@ using RimWorld;
 using AbilityUser;
 using System.Linq;
 using System.Collections.Generic;
-using UnityEngine;
 using System;
 
 namespace TorannMagic
@@ -27,16 +26,16 @@ namespace TorannMagic
             ver = comp.MagicData.MagicPowerSkill_RaiseUndead.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_RaiseUndead_ver");
 
             Thing corpseThing = null;
-            
+
             IntVec3 curCell;
             IEnumerable<IntVec3> targets = GenRadial.RadialCellsAround(base.Position, this.def.projectile.explosionRadius, true);
-            for (int i = 0; i < targets.Count(); i++)
+            foreach (var cell in targets)
             {
-                curCell = targets.ToArray<IntVec3>()[i];
+                curCell = cell;
 
                 TM_MoteMaker.ThrowPoisonMote(curCell.ToVector3Shifted(), map, .3f);
                 if (curCell.InBounds(map))
-                { 
+                {
                     Corpse corpse = null;
                     List<Thing> thingList;
                     thingList = curCell.GetThingList(map);
@@ -78,7 +77,7 @@ namespace TorannMagic
                                     bool wasVampire = false;
 
                                     IEnumerable<ThingDef> enumerable = from hd in DefDatabase<HediffDef>.AllDefs
-                                                                       where (def.defName == "ROM_Vampirism")
+                                                                       where def.defName == "ROM_Vampirism"
                                                                        select def;
                                     if (enumerable.Count() > 0)
                                     {
@@ -216,7 +215,7 @@ namespace TorannMagic
                             else if (corpseThing is Pawn)
                             {
                                 Pawn undeadPawn = corpseThing as Pawn;
-                                if(undeadPawn != pawn && !TM_Calc.IsNecromancer(undeadPawn) && TM_Calc.IsUndead(corpseThing as Pawn))
+                                if (undeadPawn != pawn && !TM_Calc.IsNecromancer(undeadPawn) && TM_Calc.IsUndead(corpseThing as Pawn))
                                 {
                                     RemoveHediffsAddictionsAndPermanentInjuries(undeadPawn);
                                     TM_MoteMaker.ThrowPoisonMote(curCell.ToVector3Shifted(), map, .6f);
@@ -228,7 +227,7 @@ namespace TorannMagic
                 }
                 if (raisedPawns > pwr.level + 1)
                 {
-                    i = targets.Count();
+                    break;
                 }
             }
         }
@@ -238,7 +237,7 @@ namespace TorannMagic
             undeadPawn.story.childhood = null;
             undeadPawn.story.adulthood = null;
             float bonusSkill = 1f + (.1f * pwr.level);
-            if(lichBonus)
+            if (lichBonus)
             {
                 bonusSkill *= 1.2f;
             }
@@ -252,7 +251,7 @@ namespace TorannMagic
             undeadPawn.skills.Learn(SkillDefOf.Animals, -100000000, true);
             undeadPawn.skills.Learn(SkillDefOf.Artistic, -100000000, true);
             undeadPawn.skills.Learn(SkillDefOf.Cooking, -100000000, true);
-            undeadPawn.skills.Learn(SkillDefOf.Cooking, Rand.Range(10000, 30000)*bonusSkill, true);
+            undeadPawn.skills.Learn(SkillDefOf.Cooking, Rand.Range(10000, 30000) * bonusSkill, true);
             undeadPawn.skills.Learn(SkillDefOf.Crafting, -100000000, true);
             undeadPawn.skills.Learn(SkillDefOf.Crafting, Rand.Range(10000, 60000) * bonusSkill, true);
             undeadPawn.skills.Learn(SkillDefOf.Plants, -100000000, true);
@@ -272,7 +271,7 @@ namespace TorannMagic
             undeadPawn.workSettings.SetPriority(TorannMagicDefOf.Research, 0);
             undeadPawn.workSettings.SetPriority(TorannMagicDefOf.Art, 0);
             undeadPawn.workSettings.SetPriority(TorannMagicDefOf.PatientBedRest, 0);
-            
+
         }
 
         private void RemoveTraits(Pawn pawn, List<Trait> traits)
@@ -291,11 +290,11 @@ namespace TorannMagic
                 for (int i = 0; i < pawn.health.hediffSet.hediffs.Count; i++)
                 {
                     Hediff hediff = pawn.health.hediffSet.hediffs[i];
-                    if(hediff.def == TorannMagicDefOf.TM_MagicUserHD)
+                    if (hediff.def == TorannMagicDefOf.TM_MagicUserHD)
                     {
                         pawn.health.RemoveHediff(hediff);
                     }
-                    if(hediff.def == TorannMagicDefOf.TM_MightUserHD)
+                    if (hediff.def == TorannMagicDefOf.TM_MightUserHD)
                     {
                         pawn.health.RemoveHediff(hediff);
                     }
@@ -305,9 +304,9 @@ namespace TorannMagic
 
         public static void RemovePsylinkAbilities(Pawn p)
         {
-            if(p.abilities != null && p.abilities.abilities != null && p.abilities.abilities.Count > 0)
+            if (p.abilities != null && p.abilities.abilities != null && p.abilities.abilities.Count > 0)
             {
-                while(p.abilities.abilities.Count > 0)
+                while (p.abilities.abilities.Count > 0)
                 {
                     p.abilities.RemoveAbility(p.abilities.abilities[0].def);
                 }
@@ -327,7 +326,7 @@ namespace TorannMagic
                     IEnumerable<Hediff_Injury> arg_BB_0 = pawn.health.hediffSet.GetHediffs<Hediff_Injury>();
                     Func<Hediff_Injury, bool> arg_BB_1;
 
-                    arg_BB_1 = ((Hediff_Injury injury) => injury.Part == rec);
+                    arg_BB_1 = (Hediff_Injury injury) => injury.Part == rec;
 
                     foreach (Hediff_Injury current in arg_BB_0.Where(arg_BB_1))
                     {
@@ -335,13 +334,13 @@ namespace TorannMagic
                         if (flag5)
                         {
                             removeList.Add(current);
-                        }                        
-                    }                    
+                        }
+                    }
                 }
             }
-            if(removeList.Count > 0)
+            if (removeList.Count > 0)
             {
-                for(int i = 0; i < removeList.Count; i++)
+                for (int i = 0; i < removeList.Count; i++)
                 {
                     pawn.health.RemoveHediff(removeList[i]);
                 }
@@ -353,7 +352,7 @@ namespace TorannMagic
                 while (enumerator.MoveNext())
                 {
                     Hediff_Addiction rec = enumerator.Current;
-                    removeList.Add(rec);                  
+                    removeList.Add(rec);
                 }
             }
 
@@ -368,10 +367,10 @@ namespace TorannMagic
 
             using (IEnumerator<Hediff> enumerator = pawn.health.hediffSet.GetHediffs<Hediff>().GetEnumerator())
             {
-                while(enumerator.MoveNext())
+                while (enumerator.MoveNext())
                 {
                     Hediff hd = enumerator.Current;
-                    if(hd.IsPermanent() || (hd.IsTended() || hd.TendableNow()) || (hd.source == null && hd.sourceBodyPartGroup == null))
+                    if (hd.IsPermanent() || hd.IsTended() || hd.TendableNow() || (hd.source == null && hd.sourceBodyPartGroup == null))
                     {
                         if (hd.def != TorannMagicDefOf.TM_UndeadHD && hd.def != TorannMagicDefOf.TM_UndeadStageHD && hd.def != TorannMagicDefOf.TM_UndeadAnimalHD)
                         {

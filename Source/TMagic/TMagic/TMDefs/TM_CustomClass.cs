@@ -1,20 +1,22 @@
 ﻿using RimWorld;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Verse;
 using UnityEngine;
+using System.Linq;
 
 namespace TorannMagic.TMDefs
 {
     public class TM_CustomClass
     {
+
+        private HashSet<TMAbilityDef> classMageAbilitiesSet;
+        public HashSet<TMAbilityDef> classFighterAbilitiesSet;
+
         //Class Defining Trait
         public TraitDef classTrait = null;
         public int traitDegree = 4;
         public string classIconPath = "";
-        public Color classIconColor = new Color(1f,1f,1f);
+        public Color classIconColor = new Color(1f, 1f, 1f);
         public string classTexturePath = "";
 
         //Class Hediff
@@ -42,17 +44,14 @@ namespace TorannMagic.TMDefs
         public ThingDef tornScript = null;
         public ThingDef fullScript = null;
 
-        public List<TMAbilityDef> classAbilities
+        public bool HasAbility(TMAbilityDef abilityDef)
         {
-            get
-            {
-                List<TMAbilityDef> allAbilities = new List<TMAbilityDef>();
-                allAbilities.Clear();
-                allAbilities.AddRange(classFighterAbilities);
-                allAbilities.AddRange(classMageAbilities);
-                return allAbilities;
-            }
-        }
+            if (classMageAbilitiesSet == null)
+                classMageAbilitiesSet = classMageAbilities.ToHashSet();
+            if (classFighterAbilitiesSet == null)
+                classFighterAbilitiesSet = classFighterAbilities.ToHashSet();
 
+            return classFighterAbilities.Contains(abilityDef) || classMageAbilities.Contains(abilityDef);
+        }
     }
 }

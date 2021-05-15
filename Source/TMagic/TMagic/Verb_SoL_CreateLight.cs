@@ -1,13 +1,9 @@
-﻿using RimWorld;
-using System;
-using Verse;
+﻿using Verse;
 using AbilityUser;
-using UnityEngine;
-using System.Collections.Generic;
 
 namespace TorannMagic
 {
-    public class Verb_SoL_CreateLight : Verb_UseAbility  
+    public class Verb_SoL_CreateLight : Verb_UseAbility
     {
         bool validTarg;
         public override bool CanHitTargetFrom(IntVec3 root, LocalTargetInfo targ)
@@ -35,7 +31,6 @@ namespace TorannMagic
         {
 
             Pawn pawn = this.CasterPawn;
-            Map map = this.CasterPawn.Map;
 
             if (pawn != null && !pawn.Downed)
             {
@@ -46,10 +41,10 @@ namespace TorannMagic
                     {
                         comp.SoL.glowCenter = this.currentTarget.Cell;
                     }
-                    comp.SoL.shouldGlow = true;                    
+                    comp.SoL.shouldGlow = true;
                 }
             }
-                
+
             this.burstShotsLeft = 0;
             return false;
         }

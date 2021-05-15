@@ -1,14 +1,12 @@
 ﻿using RimWorld;
-using System;
 using Verse;
-using AbilityUser;
 
 namespace TorannMagic
 {
     public class Spirit_DeathWorker : DeathActionWorker
     {
         public override void PawnDied(Corpse corpse)
-        {            
+        {
             if (corpse.Map != null)
             {
                 for (int i = 0; i < 3; i++)
@@ -19,7 +17,7 @@ namespace TorannMagic
             }
             Pawn innerPawn = corpse.InnerPawn;
             innerPawn.SetFaction(Find.FactionManager.FirstFactionOfDef(TorannMagicDefOf.TM_SkeletalFaction), null);
-            corpse.Destroy();           
+            corpse.Destroy();
         }
     }
 }

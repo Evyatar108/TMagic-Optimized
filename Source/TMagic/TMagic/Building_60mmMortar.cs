@@ -1,18 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using RimWorld;
-using AbilityUser;
 using Verse;
 using Verse.AI;
 using UnityEngine;
 using Verse.Sound;
-using HarmonyLib;
 
 
 namespace TorannMagic
-{   
+{
     [StaticConstructorOnStartup]
     public class Building_60mmMortar : Building
     {
@@ -34,7 +30,7 @@ namespace TorannMagic
 
         private bool MannedByColonist => mannableComp != null && mannableComp.ManningPawn != null && mannableComp.ManningPawn.Faction == Faction.OfPlayer;
         private bool MannedByNonColonist => mannableComp != null && mannableComp.ManningPawn != null && mannableComp.ManningPawn.Faction != Faction.OfPlayer;
-        private bool PlayerControlled => (base.Faction == Faction.OfPlayer || MannedByColonist) && !MannedByNonColonist;
+
         private bool Manned => MannedByColonist || MannedByNonColonist;
         private bool initialized = false;
 
@@ -69,9 +65,9 @@ namespace TorannMagic
                     this.verVal = mannableComp.ManningPawn.GetComp<CompAbilityUserMight>().MightData.MightPowerSkill_60mmMortar.FirstOrDefault((MightPowerSkill x) => x.label == "TM_60mmMortar_ver").level;
                     this.pwrVal = mannableComp.ManningPawn.GetComp<CompAbilityUserMight>().MightData.MightPowerSkill_60mmMortar.FirstOrDefault((MightPowerSkill x) => x.label == "TM_60mmMortar_pwr").level;
                     this.effVal = mannableComp.ManningPawn.GetComp<CompAbilityUserMight>().MightData.MightPowerSkill_60mmMortar.FirstOrDefault((MightPowerSkill x) => x.label == "TM_60mmMortar_eff").level;
-                    this.mortarTicksToFire = Find.TickManager.TicksGame + (300);
-                    this.mortarMaxRange += (verVal * 10);
-                    if(verVal >= 3)
+                    this.mortarTicksToFire = Find.TickManager.TicksGame + 300;
+                    this.mortarMaxRange += verVal * 10;
+                    if (verVal >= 3)
                     {
                         this.mortarCount++;
                     }
@@ -110,14 +106,14 @@ namespace TorannMagic
                                     def = projectileDef
                                 };
                                 int arc = 1;
-                                if(target.Cell.x >= this.Position.x)
+                                if (target.Cell.x >= this.Position.x)
                                 {
                                     arc = -1;
                                 }
                                 FlyingObject_Advanced flyingObject = (FlyingObject_Advanced)GenSpawn.Spawn(this.projectileDef, this.Position, this.Map);
-                                flyingObject.AdvancedLaunch(this, null, 0, Mathf.Clamp(Rand.Range(50, 60),0,this.Position.DistanceToEdge(this.Map)), false, this.DrawPos, rndTarget, launchedThing, Rand.Range(35, 40), true, Rand.Range(14 + pwrVal, 20 + (2*pwrVal)), (3f + (.35f * pwrVal)), DamageDefOf.Bomb, null, arc, true);
+                                flyingObject.AdvancedLaunch(this, null, 0, Mathf.Clamp(Rand.Range(50, 60), 0, this.Position.DistanceToEdge(this.Map)), false, this.DrawPos, rndTarget, launchedThing, Rand.Range(35, 40), true, Rand.Range(14 + pwrVal, 20 + (2 * pwrVal)), 3f + (.35f * pwrVal), DamageDefOf.Bomb, null, arc, true);
                                 this.mortarCount--;
-                            }                            
+                            }
                             SoundInfo info = SoundInfo.InMap(new TargetInfo(this.Position, this.Map, false), MaintenanceType.None);
                             info.pitchFactor = 1.6f;
                             info.volumeFactor = .7f;
@@ -126,14 +122,14 @@ namespace TorannMagic
                     }
                 }
 
-                if(this.mortarCount <= 0)
+                if (this.mortarCount <= 0)
                 {
                     this.mannableComp.ManningPawn.jobs.EndCurrentJob(JobCondition.Succeeded);
                     this.Destroy(DestroyMode.Vanish);
                 }
             }
             else
-            {                
+            {
                 this.Destroy(DestroyMode.Vanish);
             }
         }
@@ -168,7 +164,7 @@ namespace TorannMagic
                     }
                     else if (distance > this.mortarMaxRange)
                     {
-                        Messages.Message("OutOfRange".Translate(), MessageTypeDefOf.RejectInput);                        
+                        Messages.Message("OutOfRange".Translate(), MessageTypeDefOf.RejectInput);
                     }
                     else
                     {
@@ -199,7 +195,6 @@ namespace TorannMagic
         public static List<IntVec3> PortableCellsAround(IntVec3 pos, Map map, float cellRadius)
         {
             List<IntVec3> cellRange = new List<IntVec3>();
-            cellRange.Clear();
             if (!pos.InBounds(map))
             {
                 return null;

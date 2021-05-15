@@ -52,7 +52,7 @@ namespace TorannMagic
             if (spawned)
             {
                 pawn_.DeSpawn();
-            }            
+            }
             this.map = map_;
             this.origin = origin_;
             this.target = target_;
@@ -60,14 +60,10 @@ namespace TorannMagic
 
 
             //Log.Message("Launching from " + origin + " to " + target);
-            ThingDef def = this.def;
 
             CellRect cellRect = CellRect.CenteredOn(origin, 1);
             cellRect.ClipInsideMap(map);
             IntVec3 centerCell = cellRect.CenterCell;
-            IntVec3 expCell1 = centerCell;
-            IntVec3 expCell2 = centerCell;
-
             Hediff invul = new Hediff();
             invul.def = TorannMagicDefOf.TM_HediffInvulnerable;
             invul.Severity = 5;
@@ -83,7 +79,7 @@ namespace TorannMagic
                 Initialize(target, pawn);
                 pawn.Rotation = pawn.Rotation.Opposite;
                 Log.Message("moving object initialized");
-            }   
+            }
         }
 
         public void Move()
@@ -157,7 +153,6 @@ namespace TorannMagic
         {
             if (caster != null & weaponDmg != 0)
             {
-                IntVec3 arg_29_0 = caster.Position;
                 arg_40_0 = caster.Position.IsValid;
                 DamageInfo dinfo = new DamageInfo(TMDamageDefOf.DamageDefOf.TM_Cleave, weaponDmg, 0, (float)-1, caster, null, null, DamageInfo.SourceCategory.ThingOrUnknown);
                 ApplyWhirlwindDamage(dinfo, caster, caster.Map);
@@ -221,7 +216,7 @@ namespace TorannMagic
             else
             {
                 Pawn_EquipmentTracker expr_eq = caster.equipment;
-                arg_3C_0 = ((expr_eq != null) ? expr_eq.Primary : null);
+                arg_3C_0 = (expr_eq != null) ? expr_eq.Primary : null;
             }
             ThingWithComps thing;
             bool flag31 = (thing = arg_3C_0) != null;
@@ -232,11 +227,11 @@ namespace TorannMagic
                 {
                     dmgNum = 4;
                 }
-                else if (value >= 400 && value < (1000 + 100 * pwr.level))
+                else if (value >= 400 && value < (1000 + (100 * pwr.level)))
                 {
                     dmgNum = Mathf.RoundToInt(thing.GetStatValue(StatDefOf.MarketValue) / 80);
                 }
-                else if (value >= (1000 + 100 * pwr.level) && value < (10000 + 1000 * pwr.level))
+                else if (value >= (1000 + (100 * pwr.level)) && value < (10000 + (1000 * pwr.level)))
                 {
                     dmgNum = 12 + Mathf.RoundToInt(thing.GetStatValue(StatDefOf.MarketValue) / 600);
                 }
@@ -284,7 +279,7 @@ namespace TorannMagic
 
         private void XProb(IntVec3 target, Pawn pawn)
         {
-            hyp = Mathf.Sqrt((Mathf.Pow(pawn.Position.x - target.x, 2)) + (Mathf.Pow(pawn.Position.z - target.z, 2)));
+            hyp = Mathf.Sqrt(Mathf.Pow(pawn.Position.x - target.x, 2) + Mathf.Pow(pawn.Position.z - target.z, 2));
             angleRad = Mathf.Asin(Mathf.Abs(pawn.Position.x - target.x) / hyp);
             angleDeg = Mathf.Rad2Deg * angleRad;
             xProb = angleDeg / 90;
@@ -298,8 +293,8 @@ namespace TorannMagic
 
             if (halfway)
             {
-                xvar = (-1 * xvar);
-                zvar = (-1 * zvar);
+                xvar = -1 * xvar;
+                zvar = -1 * zvar;
             }
 
             if (xdir && zdir)
@@ -401,7 +396,7 @@ namespace TorannMagic
                 else
                 {
                     HediffSet expr_26 = expr_1A.hediffSet;
-                    arg_32_1 = ((expr_26 != null) ? expr_26.hediffs : null);
+                    arg_32_1 = (expr_26 != null) ? expr_26.hediffs : null;
                 }
             }
             arg_32_0.AddRange(arg_32_1);
@@ -421,7 +416,7 @@ namespace TorannMagic
                 else
                 {
                     HediffSet expr_66 = expr_52.hediffSet;
-                    arg_84_0 = ((expr_66 != null) ? new int?(expr_66.hediffs.Count<Hediff>()) : null);
+                    arg_84_0 = (expr_66 != null) ? new int?(expr_66.hediffs.Count<Hediff>()) : null;
                 }
             }
             bool flag = (arg_84_0 ?? 0) > 0;
@@ -441,7 +436,6 @@ namespace TorannMagic
                 }
             }
             list.Clear();
-            list = null;
         }
 
         public override void Tick()

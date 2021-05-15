@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using RimWorld;
+﻿using RimWorld;
 using AbilityUser;
-using Verse.AI;
 using Verse;
 using UnityEngine;
 
@@ -24,8 +20,7 @@ namespace TorannMagic
             {
                 if ((root - targ.Cell).LengthHorizontal < this.verbProps.range)
                 {
-                    ShootLine shootLine;
-                    validTarg = this.TryFindShootLineFromTo(root, targ, out shootLine);
+                    validTarg = this.TryFindShootLineFromTo(root, targ, out _);
                 }
                 else
                 {
@@ -55,7 +50,7 @@ namespace TorannMagic
             effVal = TM_Calc.GetMagicSkillLevel(caster, comp.MagicData.MagicPowerSkill_Totems, "TM_Totems", "_eff", true);
 
             IntVec3 shiftPos = TM_Calc.GetEmptyCellForNewBuilding(cell, map, 2f, true, 0, true);
-            if (shiftPos != null && (shiftPos.IsValid && shiftPos.Standable(map)))
+            if (shiftPos != null && shiftPos.IsValid && shiftPos.Standable(map))
             {
                 AbilityUser.SpawnThings tempPod = new SpawnThings();
                 tempPod.def = TorannMagicDefOf.TM_LightningTotem;

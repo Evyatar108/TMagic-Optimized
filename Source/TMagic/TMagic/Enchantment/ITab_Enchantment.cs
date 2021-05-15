@@ -1,5 +1,4 @@
 ﻿using RimWorld;
-using System;
 using System.Text;
 using UnityEngine;
 using Verse;
@@ -28,7 +27,7 @@ namespace TorannMagic.Enchantment
         {
             get
             {
-                return ITab_Enchantment.SelectedCompEnchantment != null && ITab_Enchantment.SelectedCompEnchantment.HasEnchantment;  
+                return ITab_Enchantment.SelectedCompEnchantment != null && ITab_Enchantment.SelectedCompEnchantment.HasEnchantment;
             }
         }
 
@@ -41,23 +40,21 @@ namespace TorannMagic.Enchantment
         protected override void FillTab()
         {
             CompEnchantedItem enchantedItem = ThingCompUtility.TryGetComp<CompEnchantedItem>(Find.Selector.SingleSelectedThing);
-            float enchantmentMultiplier = 1f;
             if (Find.Selector.SingleSelectedThing.Stuff != null && Find.Selector.SingleSelectedThing.Stuff.defName == "TM_Manaweave")
             {
-                enchantmentMultiplier = 1.2f;
             }
             Rect rect = GenUI.ContractedBy(new Rect(0f, 0f, ITab_Enchantment.WinSize.x, ITab_Enchantment.WinSize.y), 10f);
             Rect rect2 = rect;
             Text.Font = GameFont.Small;
-            string rectLabel = "Enchantments:"; 
+            string rectLabel = "Enchantments:";
             Widgets.Label(rect2, rectLabel);
             int num = 2;
             Text.Font = GameFont.Tiny;
-            Rect rect3 = GetRowRect(rect2, num);            
-            if(enchantedItem.maxMP !=0)
+            Rect rect3 = GetRowRect(rect2, num);
+            if (enchantedItem.maxMP != 0)
             {
                 GUI.color = GenEnchantmentColor.EnchantmentColor(enchantedItem.maxMPTier);
-                rectLabel = enchantedItem.MaxMPLabel; 
+                rectLabel = enchantedItem.MaxMPLabel;
                 Widgets.Label(rect3, rectLabel);
                 num++;
             }
@@ -77,7 +74,7 @@ namespace TorannMagic.Enchantment
                 Widgets.Label(rect5, rectLabel);
                 num++;
             }
-            Rect rect6 = GetRowRect(rect5,  num);
+            Rect rect6 = GetRowRect(rect5, num);
             if (enchantedItem.coolDown != 0)
             {
                 GUI.color = GenEnchantmentColor.EnchantmentColor(enchantedItem.coolDownTier);
@@ -85,7 +82,7 @@ namespace TorannMagic.Enchantment
                 Widgets.Label(rect6, rectLabel);
                 num++;
             }
-            Rect rect7 = GetRowRect(rect6,  num);
+            Rect rect7 = GetRowRect(rect6, num);
             if (enchantedItem.xpGain != 0)
             {
                 GUI.color = GenEnchantmentColor.EnchantmentColor(enchantedItem.xpGainTier);
@@ -149,7 +146,7 @@ namespace TorannMagic.Enchantment
                     else
                     {
                         stringBuilder.Append(enchantedItem.MagicAbilities[i].LabelCap);
-                    }                    
+                    }
                 }
                 rectLabel = stringBuilder.ToString();
                 Widgets.Label(rect11, rectLabel);
@@ -162,17 +159,19 @@ namespace TorannMagic.Enchantment
                 GUI.color = GenEnchantmentColor.EnchantmentColor(enchantedItem.skillTier);
                 string abilityLabels = "Absorbed Traits: ";
                 stringBuilder.Append(abilityLabels);
-                for (int i = 0; i < enchantedItem.SoulOrbTraits.Count; i++)
+                int i = 0;
+                foreach (var soulOrbTrait in enchantedItem.SoulOrbTraits)
                 {
                     //abilityLabels = enchantedItem.SoulOrbTraits[i].LabelCap + "\n";
                     if (i + 1 < enchantedItem.SoulOrbTraits.Count)
                     {
-                        stringBuilder.Append(enchantedItem.SoulOrbTraits[i].LabelCap + ", ");
+                        stringBuilder.Append(soulOrbTrait.LabelCap + ", ");
                     }
                     else
                     {
-                        stringBuilder.Append(enchantedItem.SoulOrbTraits[i].LabelCap);
+                        stringBuilder.Append(soulOrbTrait.LabelCap);
                     }
+                    i++;
                 }
                 rectLabel = stringBuilder.ToString();
                 Widgets.Label(rect12, rectLabel);
@@ -184,7 +183,6 @@ namespace TorannMagic.Enchantment
                 GUI.color = GenEnchantmentColor.EnchantmentColor(enchantedItem.skillTier);
                 rectLabel = enchantedItem.EnchantmentActionLabel;
                 Widgets.Label(rect13, rectLabel);
-                num++;
             }
             //rect3.yMin += Text.CalcHeight(rectLabel, rect.width);
 

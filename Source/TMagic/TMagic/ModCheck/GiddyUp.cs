@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using Verse;
-using RimWorld;
+﻿using Verse;
 using GiddyUpCore;
 using GiddyUpCore.Storage;
 
@@ -32,7 +27,7 @@ namespace TorannMagic.ModCheck
         public static Pawn GetMount(Pawn rider)
         {
             Pawn mount = null;
-            ExtendedPawnData epd = Base.Instance.GetExtendedDataStorage().GetExtendedDataFor(rider);            
+            ExtendedPawnData epd = Base.Instance.GetExtendedDataStorage().GetExtendedDataFor(rider);
             if (epd != null && epd.mount != null && epd.mount.CurJobDef.defName == "Mounted")
             {
                 mount = epd.mount;

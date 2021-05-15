@@ -47,7 +47,7 @@ namespace TorannMagic
         public float LightEnergy
         {
             get
-            {                
+            {
                 return this.lightEnergy;
             }
             set
@@ -60,7 +60,7 @@ namespace TorannMagic
         {
             get
             {
-                return Mathf.Clamp((2f * (this.LightEnergy / 100f)), .5f, 2.5f);
+                return Mathf.Clamp(2f * (this.LightEnergy / 100f), .5f, 2.5f);
             }
         }
 
@@ -84,7 +84,7 @@ namespace TorannMagic
         {
             get
             {
-                if(SoL != null)
+                if (SoL != null)
                 {
                     return SoL.LightEnergy;
                 }
@@ -142,24 +142,24 @@ namespace TorannMagic
                     int mapTime = GenLocalDate.HourOfDay(this.Pawn.Map);
                     if (mapTime < 20 && mapTime > 5)
                     {
-                        float amt = 0;
+                        float amt;
                         if (mapTime >= 13)
                         {
-                            amt = ((float)Mathf.Abs(24f - mapTime) * val);
+                            amt = (float)Mathf.Abs(24f - mapTime) * val;
                         }
                         else if (mapTime <= 11)
                         {
-                            amt = ((float)Mathf.Abs(mapTime) * val);
+                            amt = (float)Mathf.Abs(mapTime) * val;
                         }
                         else
                         {
-                            amt = (val * 12f);
+                            amt = val * 12f;
                         }
-                        return (amt/1.5f);
+                        return amt / 1.5f;
                     }
-                    return ((val * 2f) - .05f);
+                    return (val * 2f) - .05f;
                 }
-                return (val * 2f);
+                return val * 2f;
             }
         }
 
@@ -187,22 +187,22 @@ namespace TorannMagic
             bool flag = base.Pawn != null;
             if (flag)
             {
-                if(!initialized)
+                if (!initialized)
                 {
                     this.initialized = true;
                     Initialize();
                 }
 
-                if(Find.TickManager.TicksGame % Get_ChargeFrequency == 0)
+                if (Find.TickManager.TicksGame % Get_ChargeFrequency == 0)
                 {
                     UpdateCharge();
                 }
 
-                if(Find.TickManager.TicksGame % 345 == 0)
+                if (Find.TickManager.TicksGame % 345 == 0)
                 {
                     Initialize();
                 }
-            }            
+            }
         }
 
         private void UpdateCharge()
@@ -213,7 +213,7 @@ namespace TorannMagic
 
         private void UpdateDisplay()
         {
-            if(Get_SoLEnergy != 0f)
+            if (Get_SoLEnergy != 0f)
             {
                 this.lightPowerString = LightEnergy.ToString("0.#") + " | " + Get_SoLEnergy.ToString("0.#");
             }

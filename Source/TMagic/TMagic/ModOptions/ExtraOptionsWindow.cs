@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using UnityEngine;
+﻿using UnityEngine;
 using Verse;
 
 namespace TorannMagic.ModOptions
@@ -28,16 +25,16 @@ namespace TorannMagic.ModOptions
             float rowHeight = 28f;
 
             GUI.BeginGroup(inRect);
-            
+
             Text.Font = GameFont.Medium;
             float x = Text.CalcSize("TM_ExtraOptions".Translate()).x;
-            Rect headerRect = new Rect(inRect.width / 2f - (x / 2), inRect.y, inRect.width, ClassOptionsWindow.HeaderSize);
+            Rect headerRect = new Rect((inRect.width / 2f) - (x / 2), inRect.y, inRect.width, ClassOptionsWindow.HeaderSize);
             Widgets.Label(headerRect, "TM_ExtraOptions".Translate());
             Text.Font = GameFont.Small;
             GUI.color = Color.white;
             Rect rect1 = new Rect(inRect);
             rect1.width /= 3f;
-            num+=3;
+            num += 3;
             //Labels
             Rect classRect = Controller.UIHelper.GetRowRect(rect1, rowHeight, num);
             Widgets.Label(classRect, "TM_EnabledMages".Translate());
@@ -54,10 +51,7 @@ namespace TorannMagic.ModOptions
             Rect rowRectShiftRight = Controller.UIHelper.GetRowRect(rowRect, rowHeight, num);
             rowRectShiftRight.x += rowRect.width + 140f;
             Widgets.CheckboxLabeled(rowRectShiftRight, "TM_Gladiator".Translate(), ref Settings.Instance.Gladiator, false);
-            num++;
-            
-
             GUI.EndGroup();
-        }        
-    }   
+        }
+    }
 }

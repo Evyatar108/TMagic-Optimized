@@ -2,7 +2,6 @@
 using Verse;
 using System.Collections.Generic;
 using System.Linq;
-using Verse.AI;
 
 namespace TorannMagic
 {
@@ -49,10 +48,10 @@ namespace TorannMagic
                     this.Initialize();
                 }
             }
-            
+
             if (Find.TickManager.TicksGame % 60 == 0)
-            {                
-                
+            {
+
                 Hediff hediff = this.Pawn.health.hediffSet.GetFirstHediffOfDef(TorannMagicDefOf.TM_DeathMarkHD, false);
                 if (this.Pawn.health.hediffSet.HasHediff(TorannMagicDefOf.TM_UndeadHD) || this.Pawn.health.hediffSet.HasHediff(TorannMagicDefOf.TM_UndeadAnimalHD))
                 {
@@ -90,7 +89,7 @@ namespace TorannMagic
                 IntVec3 screamPos = undeadPawn.Position;
                 screamPos.z += 2;
                 screamPos.x -= 1;
-                TM_MoteMaker.ThrowScreamMote(screamPos.ToVector3(), undeadPawn.Map, 2f, 216, 255, 0);                
+                TM_MoteMaker.ThrowScreamMote(screamPos.ToVector3(), undeadPawn.Map, 2f, 216, 255, 0);
 
                 if (!undeadPawn.kindDef.RaceProps.Animal && undeadPawn.kindDef.RaceProps.Humanlike)
                 {
@@ -110,7 +109,7 @@ namespace TorannMagic
                         skills[j].passion = Passion.None;
                     }
                     undeadPawn.playerSettings.hostilityResponse = HostilityResponseMode.Attack;
-                    if(!undeadPawn.IsColonist)
+                    if (!undeadPawn.IsColonist)
                     {
                         undeadPawn.ClearMind();
                         undeadPawn.mindState.enemyTarget = instigator.TargetCurrentlyAimingAt.Thing;
@@ -122,7 +121,7 @@ namespace TorannMagic
                 {
                     HealthUtility.AdjustSeverity(undeadPawn, TorannMagicDefOf.TM_UndeadAnimalHD, -4f);
                     HealthUtility.AdjustSeverity(undeadPawn, TorannMagicDefOf.TM_UndeadAnimalHD, .5f + ver.level);
-                    
+
                     //if (undeadPawn.RaceProps.TrainableIntelligence == TrainableIntelligenceDefOf.Intermediate)
                     //{
                     //    while (!undeadPawn.training.IsCompleted(TrainableDefOf.Obedience))
@@ -156,44 +155,5 @@ namespace TorannMagic
                 }
             }
         }
-
-        private void RedoSkills(Pawn undeadPawn)
-        {
-            undeadPawn.story.childhood = null;
-            undeadPawn.story.adulthood = null;
-            //undeadPawn.story.DisabledWorkTypes.Clear();
-            //undeadPawn.story.WorkTypeIsDisabled(WorkTypeDefOf.Warden);
-            //undeadPawn.story.WorkTypeIsDisabled(WorkTypeDefOf.Hunting);
-            //undeadPawn.story.WorkTypeIsDisabled(WorkTypeDefOf.Handling);
-            //undeadPawn.story.WorkTypeIsDisabled(WorkTypeDefOf.Doctor);
-            undeadPawn.skills.Learn(SkillDefOf.Shooting, -10000000, true);
-            undeadPawn.skills.Learn(SkillDefOf.Animals, -10000000, true);
-            undeadPawn.skills.Learn(SkillDefOf.Artistic, -10000000, true);
-            undeadPawn.skills.Learn(SkillDefOf.Cooking, -10000000, true);
-            undeadPawn.skills.Learn(SkillDefOf.Cooking, Rand.Range(10000, 20000), true);
-            undeadPawn.skills.Learn(SkillDefOf.Crafting, -10000000, true);
-            undeadPawn.skills.Learn(SkillDefOf.Crafting, Rand.Range(10000, 50000), true);
-            undeadPawn.skills.Learn(SkillDefOf.Plants, -10000000, true);
-            undeadPawn.skills.Learn(SkillDefOf.Plants, Rand.Range(40000, 60000), true);
-            undeadPawn.skills.Learn(SkillDefOf.Intellectual, -10000000, true);
-            undeadPawn.skills.Learn(SkillDefOf.Medicine, -10000000, true);
-            undeadPawn.skills.Learn(SkillDefOf.Melee, -10000000, true);
-            undeadPawn.skills.Learn(SkillDefOf.Melee, Rand.Range(60000, 100000), true);
-            undeadPawn.skills.Learn(SkillDefOf.Mining, -10000000, true);
-            undeadPawn.skills.Learn(SkillDefOf.Mining, Rand.Range(40000, 80000), true);
-            undeadPawn.skills.Learn(SkillDefOf.Social, -10000000, true);
-            undeadPawn.skills.Learn(SkillDefOf.Construction, -10000000, true);
-            undeadPawn.skills.Learn(SkillDefOf.Construction, Rand.Range(40000, 60000), true);
-        }
-
-        private void RemoveTraits(Pawn pawn, List<Trait> traits)
-        {
-            for (int i = 0; i < traits.Count; i++)
-            {
-                traits.Remove(traits[i]);
-                i--;
-            }
-        }
-
     }
 }

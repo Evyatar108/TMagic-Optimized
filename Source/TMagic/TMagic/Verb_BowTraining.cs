@@ -6,7 +6,7 @@ using System.Linq;
 namespace TorannMagic
 {
     public class Verb_BowTraining : Verb_UseAbility
-    {       
+    {
         protected override bool TryCastShot()
         {
             Map map = base.CasterPawn.Map;
@@ -19,7 +19,7 @@ namespace TorannMagic
                 if (comp.IsMightUser)
                 {
                     HealthUtility.AdjustSeverity(pawn, TorannMagicDefOf.TM_BowTrainingHD, -5f);
-                    HealthUtility.AdjustSeverity(pawn, TorannMagicDefOf.TM_BowTrainingHD, (.5f) + pwr.level);
+                    HealthUtility.AdjustSeverity(pawn, TorannMagicDefOf.TM_BowTrainingHD, .5f + pwr.level);
                     ModOptions.SettingsRef settingsRef = new ModOptions.SettingsRef();
                     if (!pawn.IsColonist && settingsRef.AIHardMode)
                     {

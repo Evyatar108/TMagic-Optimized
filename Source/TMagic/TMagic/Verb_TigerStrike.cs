@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using RimWorld;
 using Verse;
 using UnityEngine;
@@ -27,35 +26,35 @@ namespace TorannMagic
                     int dmgNum = this.GetAttackDmg(this.CasterPawn);
                     BodyPartRecord hitPart = null;
                     DamageDef dmgType = TMDamageDefOf.DamageDefOf.TM_TigerStrike;
-                    if(verVal > 0 && Rand.Chance(.1f))
+                    if (verVal > 0 && Rand.Chance(.1f))
                     {
                         TM_Action.DamageEntities(target, null, 4, DamageDefOf.Stun, this.CasterPawn);
                     }
-                    if(verVal > 1 && Rand.Chance(.4f) && target is Pawn)
+                    if (verVal > 1 && Rand.Chance(.4f) && target is Pawn)
                     {
-                        if(TM_Calc.IsMagicUser(target as Pawn))
+                        if (TM_Calc.IsMagicUser(target as Pawn))
                         {
                             CompAbilityUserMagic compMagic = target.TryGetComp<CompAbilityUserMagic>();
                             float manaDrain = Mathf.Clamp(compMagic.Mana.CurLevel, 0, .25f);
-                            this.CasterPawn.health.hediffSet.GetFirstHediffOfDef(TorannMagicDefOf.TM_ChiHD).Severity += (manaDrain * 100);
+                            this.CasterPawn.health.hediffSet.GetFirstHediffOfDef(TorannMagicDefOf.TM_ChiHD).Severity += manaDrain * 100;
                             compMagic.Mana.CurLevel -= manaDrain;
 
                         }
-                        else if(TM_Calc.IsMightUser(target as Pawn))
+                        else if (TM_Calc.IsMightUser(target as Pawn))
                         {
                             CompAbilityUserMight compMight = target.TryGetComp<CompAbilityUserMight>();
                             float staminaDrain = Mathf.Clamp(compMight.Stamina.CurLevel, 0, .25f);
-                            this.CasterPawn.health.hediffSet.GetFirstHediffOfDef(TorannMagicDefOf.TM_ChiHD).Severity += (staminaDrain * 100);
+                            this.CasterPawn.health.hediffSet.GetFirstHediffOfDef(TorannMagicDefOf.TM_ChiHD).Severity += staminaDrain * 100;
                             compMight.Stamina.CurLevel -= staminaDrain;
                         }
                     }
-                    if(verVal > 2 && Rand.Chance(.1f) && target is Pawn)
+                    if (verVal > 2 && Rand.Chance(.1f) && target is Pawn)
                     {
                         Pawn targetPawn = target as Pawn;
-                        IEnumerable<BodyPartRecord> rangeOfParts = (targetPawn.RaceProps.body.GetPartsWithTag(BodyPartTagDefOf.BloodPumpingSource).Concat(
+                        IEnumerable<BodyPartRecord> rangeOfParts = targetPawn.RaceProps.body.GetPartsWithTag(BodyPartTagDefOf.BloodPumpingSource).Concat(
                             targetPawn.RaceProps.body.GetPartsWithTag(BodyPartTagDefOf.BloodFiltrationSource).Concat(
                                 targetPawn.RaceProps.body.GetPartsWithTag(BodyPartTagDefOf.BreathingPathway).Concat(
-                                    targetPawn.RaceProps.body.GetPartsWithTag(BodyPartTagDefOf.SightSource)))));
+                                    targetPawn.RaceProps.body.GetPartsWithTag(BodyPartTagDefOf.SightSource))));
 
                         hitPart = rangeOfParts.RandomElement();
                         dmgNum = Mathf.RoundToInt(dmgNum * 1.4f);
@@ -70,15 +69,15 @@ namespace TorannMagic
                     strikeStartVec.x += Rand.Range(-.2f, .2f);
                     Vector3 angle = TM_Calc.GetVector(strikeStartVec, strikeEndVec);
                     TM_MoteMaker.ThrowGenericMote(TorannMagicDefOf.Mote_TigerStrike, strikeStartVec, this.CasterPawn.Map, .4f, .08f, .03f, .05f, 0, 8f, (Quaternion.AngleAxis(90, Vector3.up) * angle).ToAngleFlat(), (Quaternion.AngleAxis(90, Vector3.up) * angle).ToAngleFlat());
-                    if(!target.DestroyedOrNull() && target is Pawn)
+                    if (!target.DestroyedOrNull() && target is Pawn)
                     {
                         Pawn targetPawn = target as Pawn;
-                        if(targetPawn.Downed || targetPawn.Dead)
+                        if (targetPawn.Downed || targetPawn.Dead)
                         {
                             continueAttack = false;
                         }
                     }
-                    if(this.burstShotsLeft <= (10 - (4 + verVal)))
+                    if (this.burstShotsLeft <= (10 - (4 + verVal)))
                     {
                         this.burstShotsLeft = 0;
                         continueAttack = false;
@@ -117,8 +116,8 @@ namespace TorannMagic
             //}
             int dmgNum = 0;
             float pawnDPS = pawn.GetStatValue(StatDefOf.MeleeDPS, false);
-            float skillMultiplier = (.8f + (.08f * pwrVal));
-            return dmgNum = Mathf.RoundToInt(skillMultiplier * (pawnDPS) * comp.mightPwr * Rand.Range(.75f, 1.25f));
+            float skillMultiplier = .8f + (.08f * pwrVal);
+            return dmgNum = Mathf.RoundToInt(skillMultiplier * pawnDPS * comp.mightPwr * Rand.Range(.75f, 1.25f));
         }
     }
 }

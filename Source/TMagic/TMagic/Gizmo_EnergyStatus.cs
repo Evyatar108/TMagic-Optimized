@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Verse;
+﻿using Verse;
 using UnityEngine;
-using RimWorld;
 
 namespace TorannMagic
 {
@@ -31,7 +26,7 @@ namespace TorannMagic
 
         public override float GetWidth(float maxWidth)
         {
-            return 100f;            
+            return 100f;
         }
 
         public override GizmoResult GizmoOnGUI(Vector2 topLeft, float maxWidth)
@@ -98,15 +93,15 @@ namespace TorannMagic
                         boostBloodSev += hediffBoost.Severity;
                     }
                 }
-                if(isBrightmage)
+                if (isBrightmage)
                 {
                     barCount++;
                 }
-                if(isMonk)
+                if (isMonk)
                 {
                     barCount++;
                 }
-                if(isEnchantedItem)
+                if (isEnchantedItem)
                 {
                     barCount++;
                 }
@@ -129,7 +124,7 @@ namespace TorannMagic
                     Rect overRect = new Rect(topLeft.x + 2, topLeft.y, this.GetWidth(100), 75); //overall rect size (shell)
                     Find.WindowStack.ImmediateWindow(984698, overRect, WindowLayer.GameUI, delegate
                     {
-                        barHeight = (((75 - (2* contractionAmount)) - (2*initialShift) - (barSpacing * (barCount - 1))) / (barCount));
+                        barHeight = (75 - (2 * contractionAmount) - (2 * initialShift) - (barSpacing * (barCount - 1))) / barCount;
                         Rect rect = overRect.AtZero().ContractedBy(contractionAmount); //inner, smaller rect
                         rect.height = barHeight;
                         Rect rect2 = rect; //label rect, starts at top             
@@ -142,9 +137,9 @@ namespace TorannMagic
                             rect2.y = rect.y + yShift;
                             try
                             {
-                                fillPercent = pawn.health.hediffSet.GetFirstHediffOfDef(HediffDef.Named("TM_PsionicHD"), false).Severity / (boostPsiSev);
+                                fillPercent = pawn.health.hediffSet.GetFirstHediffOfDef(HediffDef.Named("TM_PsionicHD"), false).Severity / boostPsiSev;
                                 Widgets.FillableBar(rect2, fillPercent, Gizmo_EnergyStatus.FullPsionicTex, Gizmo_EnergyStatus.EmptyShieldBarTex, false);
-                                Widgets.Label(rect2, "" + (pawn.health.hediffSet.GetFirstHediffOfDef(HediffDef.Named("TM_PsionicHD"), false).Severity).ToString("F0") + " / " + boostPsiSev.ToString("F0"));
+                                Widgets.Label(rect2, "" + pawn.health.hediffSet.GetFirstHediffOfDef(HediffDef.Named("TM_PsionicHD"), false).Severity.ToString("F0") + " / " + boostPsiSev.ToString("F0"));
                             }
                             catch
                             {
@@ -152,7 +147,7 @@ namespace TorannMagic
                                 Widgets.FillableBar(rect2, fillPercent, Gizmo_EnergyStatus.FullPsionicTex, Gizmo_EnergyStatus.EmptyShieldBarTex, false);
                                 Widgets.Label(rect2, "");
                             }
-                            yShift += (barHeight) + barSpacing;
+                            yShift += barHeight + barSpacing;
                         }
                         if (isDeathKnight)
                         {
@@ -169,8 +164,8 @@ namespace TorannMagic
                                 Widgets.FillableBar(rect2, fillPercent, Gizmo_EnergyStatus.FullDeathKnightTex, Gizmo_EnergyStatus.EmptyShieldBarTex, false);
                                 Widgets.Label(rect2, "");
                             }
-                            yShift += (barHeight) + barSpacing;
-                        }                        
+                            yShift += barHeight + barSpacing;
+                        }
                         if (isMonk)
                         {
                             rect2.y = rect.y + yShift;
@@ -178,7 +173,7 @@ namespace TorannMagic
                             {
                                 fillPercent = pawn.health.hediffSet.GetFirstHediffOfDef(TorannMagicDefOf.TM_ChiHD, false).Severity / boostChiSev;
                                 Widgets.FillableBar(rect2, fillPercent, Gizmo_EnergyStatus.FullChiTex, Gizmo_EnergyStatus.EmptyShieldBarTex, false);
-                                Widgets.Label(rect2, "" + (pawn.health.hediffSet.GetFirstHediffOfDef(TorannMagicDefOf.TM_ChiHD, false).Severity).ToString("F0") + " / " + boostChiSev.ToString("F0"));
+                                Widgets.Label(rect2, "" + pawn.health.hediffSet.GetFirstHediffOfDef(TorannMagicDefOf.TM_ChiHD, false).Severity.ToString("F0") + " / " + boostChiSev.ToString("F0"));
                             }
                             catch
                             {
@@ -186,7 +181,7 @@ namespace TorannMagic
                                 Widgets.FillableBar(rect2, fillPercent, Gizmo_EnergyStatus.FullChiTex, Gizmo_EnergyStatus.EmptyShieldBarTex, false);
                                 Widgets.Label(rect2, "");
                             }
-                            yShift += (barHeight) + barSpacing;
+                            yShift += barHeight + barSpacing;
                         }
                         if (isFighter)
                         {
@@ -204,7 +199,7 @@ namespace TorannMagic
                                 Widgets.Label(rect2, "");
                             }
 
-                            yShift += (barHeight) + barSpacing;
+                            yShift += barHeight + barSpacing;
                         }
                         if (isBloodMage)
                         {
@@ -213,7 +208,7 @@ namespace TorannMagic
                             {
                                 fillPercent = pawn.health.hediffSet.GetFirstHediffOfDef(HediffDef.Named("TM_BloodHD"), false).Severity / boostBloodSev;
                                 Widgets.FillableBar(rect2, fillPercent, Gizmo_EnergyStatus.FullBloodMageTex, Gizmo_EnergyStatus.EmptyShieldBarTex, false);
-                                Widgets.Label(rect2, "" + (pawn.health.hediffSet.GetFirstHediffOfDef(HediffDef.Named("TM_BloodHD"), false).Severity).ToString("F0") + " / " + boostBloodSev.ToString("F0"));
+                                Widgets.Label(rect2, "" + pawn.health.hediffSet.GetFirstHediffOfDef(HediffDef.Named("TM_BloodHD"), false).Severity.ToString("F0") + " / " + boostBloodSev.ToString("F0"));
                             }
                             catch
                             {
@@ -221,7 +216,7 @@ namespace TorannMagic
                                 Widgets.FillableBar(rect2, fillPercent, Gizmo_EnergyStatus.FullBloodMageTex, Gizmo_EnergyStatus.EmptyShieldBarTex, false);
                                 Widgets.Label(rect2, "");
                             }
-                            yShift += (barHeight) + barSpacing;
+                            yShift += barHeight + barSpacing;
                         }
                         if (isBrightmage)
                         {
@@ -238,7 +233,7 @@ namespace TorannMagic
                                 HediffComp_LightCapacitance hdlc = hd.TryGetComp<HediffComp_LightCapacitance>();
                                 fillPercent = hdlc.LightEnergy / hdlc.LightEnergyMax;
                                 Widgets.FillableBar(rect2, fillPercent, Gizmo_EnergyStatus.FullBrightmageTex, Gizmo_EnergyStatus.EmptyShieldBarTex, false);
-                                Widgets.Label(rect2, "" + hdlc.LightEnergy.ToString("F0") + " / " + hdlc.LightEnergyMax.ToString("F0"));                                
+                                Widgets.Label(rect2, "" + hdlc.LightEnergy.ToString("F0") + " / " + hdlc.LightEnergyMax.ToString("F0"));
                             }
                             catch
                             {
@@ -246,7 +241,7 @@ namespace TorannMagic
                                 Widgets.FillableBar(rect2, fillPercent, Gizmo_EnergyStatus.FullBrightmageTex, Gizmo_EnergyStatus.EmptyShieldBarTex, false);
                                 Widgets.Label(rect2, "");
                             }
-                            yShift += (barHeight) + barSpacing;
+                            yShift += barHeight + barSpacing;
                         }
                         if (isMage)
                         {
@@ -263,7 +258,7 @@ namespace TorannMagic
                                 Widgets.FillableBar(rect2, fillPercent, Gizmo_EnergyStatus.FullManaTex, Gizmo_EnergyStatus.EmptyShieldBarTex, false);
                                 Widgets.Label(rect2, "");
                             }
-                            yShift += (barHeight) + barSpacing;
+                            yShift += barHeight + barSpacing;
                         }
                         if (isEnchantedItem)
                         {
@@ -272,7 +267,7 @@ namespace TorannMagic
                             {
                                 fillPercent = iComp.NecroticEnergy / 100f;
                                 Widgets.FillableBar(rect2, fillPercent, Gizmo_EnergyStatus.FullNecroticTex, Gizmo_EnergyStatus.EmptyShieldBarTex, false);
-                                Widgets.Label(rect2, "" + (iComp.NecroticEnergy).ToString("F0") + " / " + (100).ToString("F0"));
+                                Widgets.Label(rect2, "" + iComp.NecroticEnergy.ToString("F0") + " / " + 100.ToString("F0"));
                             }
                             catch
                             {
@@ -280,7 +275,7 @@ namespace TorannMagic
                                 Widgets.FillableBar(rect2, fillPercent, Gizmo_EnergyStatus.FullNecroticTex, Gizmo_EnergyStatus.EmptyShieldBarTex, false);
                                 Widgets.Label(rect2, "");
                             }
-                            yShift += (barHeight) + barSpacing;
+                            yShift += barHeight + barSpacing;
                         }
                         Text.Font = GameFont.Small;
                         Text.Anchor = TextAnchor.UpperLeft;
@@ -294,7 +289,7 @@ namespace TorannMagic
                 float initialShift = 0;
                 Find.WindowStack.ImmediateWindow(984698, overRect, WindowLayer.GameUI, delegate
                 {
-                    barHeight = ((75 - 5) / 1);
+                    barHeight = (75 - 5) / 1;
                     Rect rect = overRect.AtZero().ContractedBy(6f); //inner, smaller rect
                     rect.height = barHeight;
                     Rect rect2 = rect; //label rect, starts at top             
@@ -305,8 +300,8 @@ namespace TorannMagic
                     rect2.y += yShift;
                     fillPercent = 0f;
                     Widgets.FillableBar(rect2, fillPercent, Gizmo_EnergyStatus.FullPsionicTex, Gizmo_EnergyStatus.EmptyShieldBarTex, false);
-                    Widgets.Label(rect2, "" );
-                    yShift += (barHeight) + 5f;
+                    Widgets.Label(rect2, "");
+                    yShift += barHeight + 5f;
                 }, true, false, 1f);
             }
             return new GizmoResult(GizmoState.Clear);

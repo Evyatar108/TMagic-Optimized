@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Verse;
 using RimWorld;
 
 namespace TorannMagic.TMDefs
 {
-    public class TM_Autocast : IExposable 
+    public class TM_Autocast : IExposable
     {
         public AutocastType type = AutocastType.Null;
 
@@ -36,10 +34,9 @@ namespace TorannMagic.TMDefs
                 if (accList == null)
                 {
                     accList = new List<TM_AutocastCondition>();
-                    accList.Clear();
                     IEnumerable<TM_AutocastConditionDef> acdList = from def in DefDatabase<TM_AutocastConditionDef>.AllDefs
-                                                            where (true)
-                                                            select def;
+                                                                   where true
+                                                                   select def;
 
                     foreach (string str in advancedConditionDefs)
                     {
@@ -62,35 +59,35 @@ namespace TorannMagic.TMDefs
                         {
                             meetsConditions = DamageTaken(acc, target.Thing);
                         }
-                        else if(acc.conditionClass == AutocastConditionClass.HasNeed)
+                        else if (acc.conditionClass == AutocastConditionClass.HasNeed)
                         {
                             meetsConditions = HasNeed(acc, target.Pawn);
                         }
-                        else if(acc.conditionClass == AutocastConditionClass.HasHediff)
+                        else if (acc.conditionClass == AutocastConditionClass.HasHediff)
                         {
                             meetsConditions = HasHediff(acc, target.Pawn);
                         }
-                        else if(acc.conditionClass == AutocastConditionClass.EnemiesInRange)
+                        else if (acc.conditionClass == AutocastConditionClass.EnemiesInRange)
                         {
                             meetsConditions = EnemiesInRange(acc, caster, target.Cell);
                         }
-                        else if(acc.conditionClass == AutocastConditionClass.AlliesInRange)
+                        else if (acc.conditionClass == AutocastConditionClass.AlliesInRange)
                         {
                             meetsConditions = AlliesInRange(acc, caster, target.Cell);
                         }
-                        else if(acc.conditionClass == AutocastConditionClass.TargetDrafted)
+                        else if (acc.conditionClass == AutocastConditionClass.TargetDrafted)
                         {
                             meetsConditions = TargetDrafted(acc, target.Pawn);
                         }
 
-                        if(!meetsConditions)
+                        if (!meetsConditions)
                         {
                             return false;
                         }
                     }
                 }
             }
-            return true;           
+            return true;
         }
 
         private string targetType = "";
@@ -98,23 +95,23 @@ namespace TorannMagic.TMDefs
         {
             get
             {
-                if(targetType == "Pawn")
+                if (targetType == "Pawn")
                 {
                     return typeof(Pawn);
                 }
-                else if(targetType == "ThingWithComps")
+                else if (targetType == "ThingWithComps")
                 {
                     return typeof(ThingWithComps);
                 }
-                else if(targetType == "Building")
+                else if (targetType == "Building")
                 {
                     return typeof(Building);
                 }
-                else if(targetType == "Corpse")
+                else if (targetType == "Corpse")
                 {
                     return typeof(Corpse);
                 }
-                else if(targetType == "LocalTargetInfo")
+                else if (targetType == "LocalTargetInfo")
                 {
                     return typeof(LocalTargetInfo);
                 }
@@ -155,26 +152,26 @@ namespace TorannMagic.TMDefs
                 if (p != null && p.health != null && p.health.hediffSet != null)
                 {
                     //Log.Message("pawn injured? " + TM_Calc.IsPawnInjured(p, con.valueA) + " invert is " + con.invert);
-                    return (con.invert ? !TM_Calc.IsPawnInjured(p, con.valueA) : TM_Calc.IsPawnInjured(p, con.valueA));
+                    return con.invert ? !TM_Calc.IsPawnInjured(p, con.valueA) : TM_Calc.IsPawnInjured(p, con.valueA);
                 }
             }
             return false;
         }
 
         private bool HasHediff(TM_AutocastCondition con, Pawn p)
-        {            
+        {
             if (p != null && p.health != null && p.health.hediffSet != null)
             {
                 bool hasAnyHediff = false;
-                foreach(HediffDef hdd in con.hediffDefs)
+                foreach (HediffDef hdd in con.hediffDefs)
                 {
                     Hediff hd = p.health.hediffSet.GetFirstHediffOfDef(hdd);
-                    if(hd != null && hd.Severity > con.valueA)
+                    if (hd != null && hd.Severity > con.valueA)
                     {
                         hasAnyHediff = true;
                     }
                 }
-                return (con.invert ? !hasAnyHediff : hasAnyHediff);
+                return con.invert ? !hasAnyHediff : hasAnyHediff;
             }
             return false;
         }
@@ -184,14 +181,14 @@ namespace TorannMagic.TMDefs
             if (p != null && p.needs != null)
             {
                 bool hasAnyNeed = false;
-                foreach(Need n in p.needs.AllNeeds)
+                foreach (Need n in p.needs.AllNeeds)
                 {
-                    if(n != null && con.needDefs.Contains(n.def) && n.CurLevel > con.valueA)
+                    if (n != null && n.CurLevel > con.valueA && con.needDefs.Contains(n.def))
                     {
                         hasAnyNeed = true;
                     }
                 }
-                return (con.invert ? !hasAnyNeed : hasAnyNeed);
+                return con.invert ? !hasAnyNeed : hasAnyNeed;
             }
             return false;
         }
@@ -202,31 +199,31 @@ namespace TorannMagic.TMDefs
             if (enemies != null)
             {
                 //Log.Message(enemies.Count + " found in range of " + cell);
-                return (con.invert ? enemies.Count <= con.valueA : enemies.Count > con.valueA);
+                return con.invert ? enemies.Count <= con.valueA : enemies.Count > con.valueA;
             }
             return false;
         }
 
         private bool AlliesInRange(TM_AutocastCondition con, Pawn caster, IntVec3 cell)
         {
-            List<Pawn> allies = TM_Calc.FindPawnsNearTarget(caster, (int)con.valueB, cell, false);            
+            List<Pawn> allies = TM_Calc.FindPawnsNearTarget(caster, (int)con.valueB, cell, false);
             if (allies != null)
             {
                 allies.Add(caster);
-                return (con.invert ? allies.Count <= con.valueA : allies.Count > con.valueA);
+                return con.invert ? allies.Count <= con.valueA : allies.Count > con.valueA;
             }
             return false;
         }
 
         private bool TargetDrafted(TM_AutocastCondition con, Pawn p)
         {
-            if(p.drafter != null && p.Drafted)
+            if (p.drafter != null && p.Drafted)
             {
-                return (con.invert ? !p.Drafted : p.Drafted);
+                return con.invert ? !p.Drafted : p.Drafted;
             }
             return false;
         }
-    }    
+    }
 
     public enum AutocastType
     {

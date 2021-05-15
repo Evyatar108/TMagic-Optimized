@@ -1,5 +1,4 @@
-﻿using System;
-using Verse;
+﻿using Verse;
 using RimWorld;
 using System.Linq;
 
@@ -11,7 +10,7 @@ namespace TorannMagic.Thoughts
         {
             if (pawn != null && other != null)
             {
-                
+
                 if (!other.RaceProps.Humanlike || other.Dead)
                 {
                     return false;
@@ -30,7 +29,7 @@ namespace TorannMagic.Thoughts
 
                     if (comp != null)
                     {
-                        return ThoughtState.ActiveAtStage(comp.MagicData.MagicPowerSkill_EnchantedBody.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_EnchantedBody_pwr").level);                        
+                        return ThoughtState.ActiveAtStage(comp.MagicData.MagicPowerSkill_EnchantedBody.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_EnchantedBody_pwr").level);
                     }
                 }
             }

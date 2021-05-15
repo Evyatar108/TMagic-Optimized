@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using RimWorld;
 using AbilityUser;
 using Verse;
-using UnityEngine;
 
 
 namespace TorannMagic
@@ -26,7 +23,7 @@ namespace TorannMagic
             {
                 pwrVal = 4;
             }
-            else if(!this.CasterPawn.IsColonist && this.CasterPawn.Faction != null && this.CasterPawn.Faction.HostileTo(Faction.OfPlayerSilentFail))
+            else if (!this.CasterPawn.IsColonist && this.CasterPawn.Faction != null && this.CasterPawn.Faction.HostileTo(Faction.OfPlayerSilentFail))
             {
                 pwrVal = 5;
             }
@@ -36,7 +33,7 @@ namespace TorannMagic
                 if (pawn.health.hediffSet.HasHediff(TorannMagicDefOf.TM_PredictionHD))
                 {
                     Hediff hediff = pawn.health.hediffSet.GetFirstHediffOfDef(TorannMagicDefOf.TM_PredictionHD);
-                    pawn.health.RemoveHediff(hediff);                    
+                    pawn.health.RemoveHediff(hediff);
                     magicPower.AutoCast = false;
                 }
                 else

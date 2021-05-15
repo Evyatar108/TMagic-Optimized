@@ -1,10 +1,4 @@
-﻿using System;
-using Verse;
-using RimWorld;
-using AbilityUser;
-using System.Collections.Generic;
-using System.Linq;
-using UnityEngine;
+﻿using Verse;
 
 namespace TorannMagic.Enchantment
 {
@@ -29,7 +23,7 @@ namespace TorannMagic.Enchantment
         ///     
         /// }
         /// </summary>
-        public bool isEnchanted = true;             
+        public bool isEnchanted = true;
         public float enchantmentBonusMultiplier = 1f;
         public float arcalleumCooldownPerMass = 0f;
         public HediffDef appliedHediff = null;

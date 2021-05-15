@@ -1,14 +1,12 @@
 ﻿using Verse;
 using AbilityUser;
 using UnityEngine;
-using System.Linq;
 using RimWorld;
 
 namespace TorannMagic
 {
-    public class Verb_Buckshot : Verb_UseAbility  
+    public class Verb_Buckshot : Verb_UseAbility
     {
-        private int effVal;
         private int shotcount = 0;
 
         protected override bool TryCastShot()
@@ -30,8 +28,7 @@ namespace TorannMagic
 
         public static int GetShotCount(Pawn pawn)
         {
-            int shots = 0;
-            return shots = Mathf.RoundToInt((5 + TM_Calc.GetMightSkillLevel(pawn, pawn.GetComp<CompAbilityUserMight>().MightData.MightPowerSkill_ShotgunSpec, "TM_ShotgunSpec", "_eff", true)) * pawn.GetComp<CompAbilityUserMight>().mightPwr);
+            return Mathf.RoundToInt((5 + TM_Calc.GetMightSkillLevel(pawn, pawn.GetComp<CompAbilityUserMight>().MightData.MightPowerSkill_ShotgunSpec, "TM_ShotgunSpec", "_eff", true)) * pawn.GetComp<CompAbilityUserMight>().mightPwr);
         }
     }
 }

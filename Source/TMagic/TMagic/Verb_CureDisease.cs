@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using RimWorld;
 using AbilityUser;
 using Verse;
-using UnityEngine;
 
 
 namespace TorannMagic
@@ -14,7 +12,7 @@ namespace TorannMagic
         private int verVal;
         private int pwrVal;
         private float arcaneDmg = 1f;
-            
+
         protected override bool TryCastShot()
         {
             Pawn caster = base.CasterPawn;
@@ -50,7 +48,7 @@ namespace TorannMagic
                     {
                         HealthUtility.AdjustSeverity(pawn, TorannMagicDefOf.TM_DiseaseImmunityHD, 3);
                     }
-                    
+
                 }
 
                 if (pwrVal >= 1)
@@ -59,9 +57,9 @@ namespace TorannMagic
                 }
                 else
                 {
-                    sevAdjustment = (Rand.Range(0f, 1f) * this.arcaneDmg);
+                    sevAdjustment = Rand.Range(0f, 1f) * this.arcaneDmg;
                 }
-                if(sevAdjustment >= .25f) 
+                if (sevAdjustment >= .25f)
                 {
                     bool success = false;
                     using (IEnumerator<Hediff> enumerator = pawn.health.hediffSet.GetHediffs<Hediff>().GetEnumerator())
@@ -71,7 +69,7 @@ namespace TorannMagic
                             Hediff rec = enumerator.Current;
                             bool flag2 = num > 0;
 
-                            if (TM_Data.AddictionList().Contains(rec.def))
+                            if (TM_Data.AddictionList.Contains(rec.def))
                             {
                                 List<TMDefs.TM_CategoryHediff> diseaseList = HediffCategoryList.Named("TM_Category_Hediffs").diseases;
                                 foreach (TMDefs.TM_CategoryHediff chd in diseaseList)
@@ -105,7 +103,7 @@ namespace TorannMagic
                                             }
                                             else
                                             {
-                                                if (((rec.Severity - (chd.severityReduction + (chd.powerSkillAdjustment * pwrVal)) * arcaneDmg <= 0)))
+                                                if (rec.Severity - ((chd.severityReduction + (chd.powerSkillAdjustment * pwrVal)) * arcaneDmg) <= 0)
                                                 {
                                                     if (chd.replacementHediffDefname != "")
                                                     {
@@ -113,7 +111,7 @@ namespace TorannMagic
                                                     }
                                                     success = true;
                                                 }
-                                                rec.Severity -= ((chd.severityReduction + (chd.powerSkillAdjustment * pwrVal)) * arcaneDmg);                                                
+                                                rec.Severity -= (chd.severityReduction + (chd.powerSkillAdjustment * pwrVal)) * arcaneDmg;
                                                 num--;
                                                 break;
                                             }
@@ -135,13 +133,13 @@ namespace TorannMagic
                                     pawn.health.RemoveHediff(rec);
                                     success = true;
                                 }
-                                if (verVal >= 2 && (rec.def.defName == "SleepingSickness" || rec.def.defName == "MuscleParasites") || rec.def == HediffDefOf.Scaria)
+                                if ((verVal >= 2 && (rec.def.defName == "SleepingSickness" || rec.def.defName == "MuscleParasites")) || rec.def == HediffDefOf.Scaria)
                                 {
                                     //rec.Severity -= sevAdjustment;
                                     pawn.health.RemoveHediff(rec);
                                     success = true;
                                 }
-                                if (verVal == 3 && (rec.def.makesSickThought && rec.def.isBad))
+                                if (verVal == 3 && rec.def.makesSickThought && rec.def.isBad)
                                 {
                                     //rec.Severity -= sevAdjustment;
                                     if (rec.def.defName == "BloodRot")
@@ -163,14 +161,14 @@ namespace TorannMagic
                                     }
                                 }
                             }
-                            if(success)
+                            if (success)
                             {
                                 break;
                             }
                         }
                     }
                     if (success == true)
-                    {                        
+                    {
                         TM_MoteMaker.ThrowRegenMote(pawn.Position.ToVector3(), pawn.Map, 1.5f);
                         MoteMaker.ThrowText(pawn.DrawPos, pawn.Map, "Cure Disease" + ": " + StringsToTranslate.AU_CastSuccess, -1f);
                     }
@@ -184,7 +182,7 @@ namespace TorannMagic
                 {
                     MoteMaker.ThrowText(pawn.DrawPos, pawn.Map, "Cure Disease" + ": " + StringsToTranslate.AU_CastFailure, -1f);
                 }
-                
+
             }
             return false;
         }

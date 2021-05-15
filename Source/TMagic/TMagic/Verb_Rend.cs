@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using RimWorld;
 using AbilityUser;
 using Verse;
-using Verse.AI;
 
 
 namespace TorannMagic
@@ -27,8 +25,7 @@ namespace TorannMagic
             {
                 if ((root - targ.Cell).LengthHorizontal < this.verbProps.range)
                 {
-                    ShootLine shootLine;
-                    validTarg = this.TryFindShootLineFromTo(root, targ, out shootLine);
+                    validTarg = this.TryFindShootLineFromTo(root, targ, out _);
                 }
                 else
                 {
@@ -59,7 +56,7 @@ namespace TorannMagic
             for (int i = 0; i < this.TargetsAoE.Count; i++)
             {
                 Pawn newPawn = this.TargetsAoE[i].Thing as Pawn;
-                if(newPawn.RaceProps.IsFlesh)
+                if (newPawn.RaceProps.IsFlesh)
                 {
                     if (Rand.Chance(TM_Calc.GetSpellSuccessChance(this.CasterPawn, newPawn, true)))
                     {
@@ -84,7 +81,7 @@ namespace TorannMagic
                 }
                 else
                 {
-                    TM_Action.DamageEntities(newPawn, null, (4f), DamageDefOf.Cut, this.CasterPawn);
+                    TM_Action.DamageEntities(newPawn, null, 4f, DamageDefOf.Cut, this.CasterPawn);
                 }
             }
             this.PostCastShot(flag, out flag);

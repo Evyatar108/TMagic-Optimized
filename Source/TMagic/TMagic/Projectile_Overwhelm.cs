@@ -9,8 +9,6 @@ namespace TorannMagic
 {
     class Projectile_Overwhelm : Projectile_AbilityBase
     {
-
-        IntVec3 pos;
         MagicPowerSkill pwr;
         MagicPowerSkill ver;
         private int verVal;
@@ -48,10 +46,10 @@ namespace TorannMagic
         protected override void Impact(Thing hitThing)
         {
             //base.Impact(hitThing);
-            
+
             Pawn pawn = this.launcher as Pawn;
             Map map = pawn.Map;
-            if(!initialized)
+            if (!initialized)
             {
                 Initialize(pawn);
                 TM_Action.InvulnerableAoEFor(pawn.Position, map, 3 + verVal, Mathf.RoundToInt((90 + (10 * pwrVal)) * arcaneDmg), pawn.Faction);
@@ -64,7 +62,7 @@ namespace TorannMagic
                     DoBurstExplosion(pawn, map);
                     this.strikeNum++;
                 }
-                if(strikeNum > 3 + verVal)
+                if (strikeNum > 3 + verVal)
                 {
                     Destroy();
                 }
@@ -75,23 +73,24 @@ namespace TorannMagic
                 Destroy();
             }
 
-        }        
+        }
 
         private void DoBurstExplosion(Pawn pawn, Map map)
-        {            
-            List<IntVec3> targets;
+        {
+            IEnumerable<IntVec3> targets;
             if (strikeNum == 1)
             {
-                targets = GenRadial.RadialCellsAround(pawn.Position, this.strikeNum, false).ToList();
+                targets = GenRadial.RadialCellsAround(pawn.Position, this.strikeNum, false);
             }
             else
             {
                 IEnumerable<IntVec3> oldTargets = GenRadial.RadialCellsAround(base.Position, this.strikeNum - 1, false);
-                targets = GenRadial.RadialCellsAround(pawn.Position, this.strikeNum, false).Except(oldTargets).ToList();
+                targets = GenRadial.RadialCellsAround(pawn.Position, this.strikeNum, false).Except(oldTargets);
             }
-            for (int j = 0; j < targets.Count; j++)
+            
+            foreach (var cell in targets)
             {
-                IntVec3 curCell = targets[j];
+                IntVec3 curCell = cell;
                 if (map != null && curCell.IsValid && curCell.InBounds(map))
                 {
                     HolyExplosion(pwrVal, verVal, curCell, map, 0.4f);
@@ -100,15 +99,15 @@ namespace TorannMagic
                 {
                     Log.Message("failed map check");
                 }
-            }                
-            
-        }        
+            }
+
+        }
 
         protected void HolyExplosion(int pwr, int ver, IntVec3 pos, Map map, float radius)
         {
             ThingDef def = this.def;
             Explosion(pwr, pos, map, radius, TMDamageDefOf.DamageDefOf.TM_Overwhelm, this.launcher, null, def, this.equipmentDef, ThingDefOf.Mote_ExplosionFlash, 0.4f, 1, false, null, 0f, 1);
-            
+
             if (ver >= 2)
             {
                 int rnd = Rand.Range(3, 12);
@@ -124,7 +123,7 @@ namespace TorannMagic
         public void Explosion(int pwr, IntVec3 center, Map map, float radius, DamageDef damType, Thing instigator, SoundDef explosionSound = null, ThingDef projectile = null, ThingDef source = null, ThingDef postExplosionSpawnThingDef = null, float postExplosionSpawnChance = 0f, int postExplosionSpawnThingCount = 1, bool applyDamageToExplosionCellsNeighbors = false, ThingDef preExplosionSpawnThingDef = null, float preExplosionSpawnChance = 0f, int preExplosionSpawnThingCount = 1)
         {
             System.Random rnd = new System.Random();
-            int modDamAmountRand = (pwr * 3) + GenMath.RoundRandom(rnd.Next(5, projectile.projectile.GetDamageAmount(1,null)));
+            int modDamAmountRand = (pwr * 3) + GenMath.RoundRandom(rnd.Next(5, projectile.projectile.GetDamageAmount(1, null)));
             modDamAmountRand = Mathf.RoundToInt(modDamAmountRand * this.arcaneDmg);
             if (map == null)
             {
@@ -138,7 +137,7 @@ namespace TorannMagic
             explosion.radius = radius;
             explosion.damType = damType;
             explosion.instigator = instigator;
-            explosion.damAmount =  ((projectile == null) ? GenMath.RoundRandom((float)damType.defaultDamage) : modDamAmountRand);
+            explosion.damAmount = (projectile == null) ? GenMath.RoundRandom((float)damType.defaultDamage) : modDamAmountRand;
             explosion.weapon = source;
             explosion.preExplosionSpawnThingDef = preExplosionSpawnThingDef;
             explosion.preExplosionSpawnChance = preExplosionSpawnChance;
@@ -147,210 +146,7 @@ namespace TorannMagic
             explosion.postExplosionSpawnChance = postExplosionSpawnChance;
             explosion.postExplosionSpawnThingCount = postExplosionSpawnThingCount;
             explosion.applyDamageToExplosionCellsNeighbors = applyDamageToExplosionCellsNeighbors;
-            explosion.StartExplosion(explosionSound, null);            
-        }
-
-        private void DoPatternExplosion(Pawn pawn, Map map)
-        {
-            pos = pawn.Position;
-
-            pos.x++;
-            HolyExplosion(pwrVal, verVal, pos, map, 0.4f);
-            pos.z--;
-            HolyExplosion(pwrVal, verVal, pos, map, 0.4f);
-            pos.x--;
-            HolyExplosion(pwrVal, verVal, pos, map, 0.4f);
-            pos.x--;
-            HolyExplosion(pwrVal, verVal, pos, map, 0.4f);
-            pos.z++;
-            HolyExplosion(pwrVal, verVal, pos, map, 0.4f);
-            pos.z++;
-            HolyExplosion(pwrVal, verVal, pos, map, 0.4f);
-            pos.x++;
-            HolyExplosion(pwrVal, verVal, pos, map, 0.4f);
-            pos.x++;
-            HolyExplosion(pwrVal, verVal, pos, map, 0.4f);
-
-
-            pos.x++;
-            HolyExplosion(pwrVal, verVal, pos, map, 0.4f);
-
-            pos.x++;
-            pos.z--;
-            HolyExplosion(pwrVal, verVal, pos, map, 0.4f);
-
-            pos.x++;
-            pos.z--;
-            HolyExplosion(pwrVal, verVal, pos, map, 0.4f);
-
-            pos.z--;
-            HolyExplosion(pwrVal, verVal, pos, map, 0.4f);
-
-            pos.x -= 3;
-            HolyExplosion(pwrVal, verVal, pos, map, 0.4f);
-
-            pos.x--;
-            pos.z--;
-            HolyExplosion(pwrVal, verVal, pos, map, 0.4f);
-
-            pos.x--;
-            pos.z--;
-            HolyExplosion(pwrVal, verVal, pos, map, 0.4f);
-
-            pos.x--;
-            HolyExplosion(pwrVal, verVal, pos, map, 0.4f);
-
-            pos.z += 3;
-            HolyExplosion(pwrVal, verVal, pos, map, 0.4f);
-
-            pos.x--;
-            pos.z++;
-            HolyExplosion(pwrVal, verVal, pos, map, 0.4f);
-
-            pos.x--;
-            pos.z++;
-            HolyExplosion(pwrVal, verVal, pos, map, 0.4f);
-
-            pos.z++;
-            HolyExplosion(pwrVal, verVal, pos, map, 0.4f);
-
-            pos.x += 3;
-            HolyExplosion(pwrVal, verVal, pos, map, 0.4f);
-
-            pos.x++;
-            pos.z++;
-            HolyExplosion(pwrVal, verVal, pos, map, 0.4f);
-
-            pos.x++;
-            pos.z++;
-            HolyExplosion(pwrVal, verVal, pos, map, 0.4f);
-
-            pos.x++;
-            HolyExplosion(pwrVal, verVal, pos, map, 0.4f);
-
-            if (verVal >= 1)
-            {
-                pos.x++;
-                HolyExplosion(pwrVal, verVal, pos, map, 0.4f);
-
-                pos.z--;
-                HolyExplosion(pwrVal, verVal, pos, map, 0.4f);
-
-                pos.x -= 3;
-                pos.z--;
-                HolyExplosion(pwrVal, verVal, pos, map, 0.4f);
-
-                pos.x -= 3;
-                pos.z++;
-                HolyExplosion(pwrVal, verVal, pos, map, 0.4f);
-
-                pos.x--;
-                HolyExplosion(pwrVal, verVal, pos, map, 0.4f);
-
-                pos.z -= 3;
-                pos.x += 2;
-                HolyExplosion(pwrVal, verVal, pos, map, 0.4f);
-
-                pos.z -= 3;
-                pos.x--;
-                HolyExplosion(pwrVal, verVal, pos, map, 0.4f);
-
-                pos.z--;
-                HolyExplosion(pwrVal, verVal, pos, map, 0.4f);
-
-                pos.x += 3;
-                pos.z += 2;
-                HolyExplosion(pwrVal, verVal, pos, map, 0.4f);
-
-                pos.x += 3;
-                pos.z--;
-                HolyExplosion(pwrVal, verVal, pos, map, 0.4f);
-
-                pos.x++;
-                HolyExplosion(pwrVal, verVal, pos, map, 0.4f);
-
-                pos.z += 3;
-                pos.x -= 2;
-                HolyExplosion(pwrVal, verVal, pos, map, 0.4f);
-
-                pos.x += 3;
-                pos.z++;
-                HolyExplosion(pwrVal, verVal, pos, map, 0.4f);
-
-                pos.x -= 6;
-                pos.z += 4;
-                HolyExplosion(pwrVal, verVal, pos, map, 0.4f);
-
-                pos.x -= 4;
-                pos.z -= 6;
-                HolyExplosion(pwrVal, verVal, pos, map, 0.4f);
-
-                pos.x += 6;
-                pos.z -= 4;
-                HolyExplosion(pwrVal, verVal, pos, map, 0.4f);
-
-            }
-
-            if (verVal >= 3)
-            {
-                pos.x++;
-                pos.z++;
-                HolyExplosion(pwrVal, verVal, pos, map, 0.4f);
-
-                pos.x += 2;
-                HolyExplosion(pwrVal, verVal, pos, map, 0.4f);
-
-                pos.x--;
-                pos.z += 3;
-                HolyExplosion(pwrVal, verVal, pos, map, 0.4f);
-
-                pos.x++;
-                pos.z += 3;
-                HolyExplosion(pwrVal, verVal, pos, map, 0.4f);
-
-                pos.z += 2;
-                HolyExplosion(pwrVal, verVal, pos, map, 0.4f);
-
-                pos.x -= 3;
-                pos.z--;
-                HolyExplosion(pwrVal, verVal, pos, map, 0.4f);
-
-                pos.x -= 3;
-                pos.z++;
-                HolyExplosion(pwrVal, verVal, pos, map, 0.4f);
-
-                pos.x -= 2;
-                HolyExplosion(pwrVal, verVal, pos, map, 0.4f);
-
-                pos.x++;
-                pos.z -= 3;
-                HolyExplosion(pwrVal, verVal, pos, map, 0.4f);
-
-                pos.x--;
-                pos.z -= 3;
-                HolyExplosion(pwrVal, verVal, pos, map, 0.4f);
-
-                pos.z -= 2;
-                HolyExplosion(pwrVal, verVal, pos, map, 0.4f);
-
-                pos.x += 3;
-                pos.z++;
-                HolyExplosion(pwrVal, verVal, pos, map, 0.4f);
-
-                pos.x += 6;
-                pos.z -= 2;
-                HolyExplosion(pwrVal, verVal, pos, map, 0.4f);
-
-                pos.z += 10;
-                HolyExplosion(pwrVal, verVal, pos, map, 0.4f);
-
-                pos.x -= 10;
-                HolyExplosion(pwrVal, verVal, pos, map, 0.4f);
-
-                pos.z -= 10;
-                HolyExplosion(pwrVal, verVal, pos, map, 0.4f);
-
-            }
+            explosion.StartExplosion(explosionSound, null);
         }
     }
 }

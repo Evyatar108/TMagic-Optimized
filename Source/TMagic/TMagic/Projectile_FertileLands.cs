@@ -1,10 +1,6 @@
 ﻿using Verse;
-using RimWorld;
 using AbilityUser;
-using System.Linq;
 using System.Collections.Generic;
-using System;
-using UnityEngine;
 
 namespace TorannMagic
 {
@@ -17,10 +13,9 @@ namespace TorannMagic
         {
             Map map = base.Map;
             base.Impact(hitThing);
-            ThingDef def = this.def;
             this.caster = this.launcher as Pawn;
 
-            if(!this.initialized)
+            if (!this.initialized)
             {
                 this.initialized = true;
             }
@@ -31,28 +26,28 @@ namespace TorannMagic
             List<IntVec3> affectedCells = new List<IntVec3>();
             affectedCells.Clear();
             affectedCells = ModOptions.Constants.GetGrowthCells();
-            List<IntVec3> targetCells = GenRadial.RadialCellsAround(base.Position, 6, true).ToList();            
-            for (int i = 0; i < targetCells.Count(); i++)
+            IEnumerable<IntVec3> targetCells = GenRadial.RadialCellsAround(base.Position, 6, true);
+            foreach (IntVec3 targetCell in targetCells)
             {
                 bool uniqueCell = true;
-                for(int j =0; j < affectedCells.Count; j++)
+                for (int j = 0; j < affectedCells.Count; j++)
                 {
-                    if(affectedCells[j] == targetCells[i])
+                    if (affectedCells[j] == targetCell)
                     {
                         uniqueCell = false;
                     }
                 }
-                if(uniqueCell)
+                if (uniqueCell)
                 {
-                    comp.fertileLands.Add(targetCells.ToArray<IntVec3>()[i]);
-                }                
+                    comp.fertileLands.Add(targetCell);
+                }
             }
             TM_MoteMaker.ThrowTwinkle(base.Position.ToVector3Shifted(), map, 1f);
-            
+
             ModOptions.Constants.SetGrowthCells(comp.fertileLands);
             comp.RemovePawnAbility(TorannMagicDefOf.TM_FertileLands);
             comp.AddPawnAbility(TorannMagicDefOf.TM_DismissFertileLands);
-        }       
+        }
     }
 }
 

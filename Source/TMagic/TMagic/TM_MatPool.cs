@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using UnityEngine;
+﻿using UnityEngine;
 using Verse;
-using RimWorld;
 
 namespace TorannMagic
 {
@@ -14,7 +9,7 @@ namespace TorannMagic
         public static readonly Material BeamMat = MaterialPool.MatFrom("Other/OrbitalBeam", ShaderDatabase.MoteGlow, MapMaterialRenderQueues.OrbitalBeam);
         public static readonly Material BeamEndMat = MaterialPool.MatFrom("Other/OrbitalBeamEnd", ShaderDatabase.MoteGlow, MapMaterialRenderQueues.OrbitalBeam);
         public static readonly Material LightBarrier = MaterialPool.MatFrom("Other/LightBarrier", ShaderDatabase.MoteGlow);
-        
+
 
         public static readonly Material blackLightning = MaterialPool.MatFrom("Other/ArcaneBolt", true);
         public static readonly Material redLightning = MaterialPool.MatFrom("Other/DemonBolt", true);
@@ -31,10 +26,10 @@ namespace TorannMagic
         public static readonly Material standardLightning = MatLoader.LoadMat("Weather/LightningBolt", -1);
         public static readonly Material thinLightning = MaterialPool.MatFrom("Other/ThinLightningBolt", ShaderDatabase.MoteGlow);
 
-        public static readonly Material opencloak_Female_north = MaterialPool.MatFrom("Equipment/opencloak_Female_north"); 
+        public static readonly Material opencloak_Female_north = MaterialPool.MatFrom("Equipment/opencloak_Female_north");
         public static readonly Material opencloak_Female_south = MaterialPool.MatFrom("Equipment/opencloak_Female_south");
         public static readonly Material opencloak_Female_east = MaterialPool.MatFrom("Equipment/opencloak_Female_east");
-       
+
         //public static readonly Material maesterCloak_east = MatLoader.LoadMat("Equipment/opencloak_Female_north", -1);
 
         public static readonly Material barrier_Mote_Mat = MaterialPool.MatFrom("Motes/BarrierMote", ShaderDatabase.MoteGlow);

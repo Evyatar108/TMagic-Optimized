@@ -1,13 +1,11 @@
-﻿using RimWorld;
-using System;
-using Verse;
+﻿using Verse;
 using Verse.Sound;
 using AbilityUser;
 using System.Linq;
 
 namespace TorannMagic
 {
-    class Verb_NanoStimulant : Verb_UseAbility  
+    class Verb_NanoStimulant : Verb_UseAbility
     {
         protected override bool TryCastShot()
         {
@@ -19,7 +17,7 @@ namespace TorannMagic
             bool flag = caster != null && !caster.Dead;
             if (flag)
             {
-                HealthUtility.AdjustSeverity(caster, HediffDef.Named("TM_NanoStimulantHD"), (eff.level + .01f)*comp.arcaneDmg);
+                HealthUtility.AdjustSeverity(caster, HediffDef.Named("TM_NanoStimulantHD"), (eff.level + .01f) * comp.arcaneDmg);
                 SoundInfo info = SoundInfo.InMap(new TargetInfo(caster.Position, caster.Map, false), MaintenanceType.None);
                 info.pitchFactor = 1.0f;
                 info.volumeFactor = 1.0f;

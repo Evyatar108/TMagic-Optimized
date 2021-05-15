@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace TorannMagic
 {
-    internal class JobDriver_PlacePoisonTrap: JobDriver
+    internal class JobDriver_PlacePoisonTrap : JobDriver
     {
 
         public override bool TryMakePreToilReservations(bool errorOnFailed)
@@ -49,13 +49,13 @@ namespace TorannMagic
                         //}
                         for (int i = 0; i < comp.combatItems.Count; i++)
                         {
-                            if(comp.combatItems[i].Destroyed)
+                            if (comp.combatItems[i].Destroyed)
                             {
                                 comp.combatItems.Remove(comp.combatItems[i]);
                                 i--;
-                            }                            
+                            }
                         }
-                        if (comp.combatItems.Count > verVal+1)
+                        if (comp.combatItems.Count > verVal + 1)
                         {
                             Messages.Message("TM_TooManyTraps".Translate(
                                 pawn.LabelShort,
@@ -68,7 +68,7 @@ namespace TorannMagic
                                 tempThing.Destroy();
                             }
                         }
-                        this.SingleSpawnLoop(tempPod, pawn, TargetLocA, pawn.Map);                                              
+                        this.SingleSpawnLoop(tempPod, pawn, TargetLocA, pawn.Map);
                     }
                     catch
                     {
@@ -80,7 +80,7 @@ namespace TorannMagic
                 },
                 defaultCompleteMode = ToilCompleteMode.Instant
             };
-            yield return placeTrap;         
+            yield return placeTrap;
         }
 
         public void SingleSpawnLoop(SpawnThings spawnables, Pawn pawn, IntVec3 position, Map map)

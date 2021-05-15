@@ -1,9 +1,7 @@
 ﻿using Verse;
-using System;
 using System.Linq;
 using System.Collections.Generic;
 using RimWorld;
-using UnityEngine;
 
 namespace TorannMagic
 {
@@ -22,8 +20,8 @@ namespace TorannMagic
         public override void CompTick()
         {
             base.CompTick();
-            
-            if(Find.TickManager.TicksGame % growthTick == 0)
+
+            if (Find.TickManager.TicksGame % growthTick == 0)
             {
                 Plant plant = this.parent as Plant;
                 if (plant != null && plant.Growth < 1f)
@@ -33,19 +31,19 @@ namespace TorannMagic
                     parent.Map.mapDrawer.MapMeshDirty(parent.Position, MapMeshFlag.Things);
                 }
             }
-            
+
             if (Find.TickManager.TicksGame % searchTick == 0)
             {
                 Pawn touchingPawn = this.parent.Position.GetFirstPawn(this.parent.Map);
-                
+
                 this.searchTick = Rand.Range(200, 300);
                 if (touchingPawn != null)
                 {
                     if (touchingPawn.jobs != null && touchingPawn.CurJob.targetA != null && touchingPawn.CurJob.targetA.Cell != this.parent.Position)
                     {
                         List<BodyPartRecord> bpr = touchingPawn.RaceProps.body.GetPartsWithTag(BodyPartTagDefOf.MovingLimbCore).ToList();
-                        bpr.AddRange(touchingPawn.RaceProps.body.GetPartsWithTag(BodyPartTagDefOf.MovingLimbDigit).ToList());
-                        bpr.AddRange(touchingPawn.RaceProps.body.GetPartsWithTag(BodyPartTagDefOf.MovingLimbSegment).ToList());
+                        bpr.AddRange(touchingPawn.RaceProps.body.GetPartsWithTag(BodyPartTagDefOf.MovingLimbDigit));
+                        bpr.AddRange(touchingPawn.RaceProps.body.GetPartsWithTag(BodyPartTagDefOf.MovingLimbSegment));
                         if (bpr != null && bpr.Count > 0)
                         {
                             TM_Action.DamageEntities(touchingPawn, bpr.RandomElement(), Rand.Range(2, 3), DamageDefOf.Scratch, this.parent);
@@ -58,7 +56,7 @@ namespace TorannMagic
                 }
                 lifeSpan--;
             }
-            if(lifeSpan <= 0)
+            if (lifeSpan <= 0)
             {
                 this.parent.Destroy(DestroyMode.Vanish);
             }

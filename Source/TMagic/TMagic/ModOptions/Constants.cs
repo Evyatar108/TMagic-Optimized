@@ -1,15 +1,11 @@
-﻿using System;
-using HarmonyLib;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Verse;
 using System.Linq;
-using System.Text;
 using UnityEngine;
-using RimWorld;
 using AbilityUser;
 
 namespace TorannMagic.ModOptions
-{ 
+{
     public abstract class Constants
     {
         private static bool pawnInFlight = false;
@@ -80,27 +76,13 @@ namespace TorannMagic.ModOptions
             return bypassPrediction;
         }
 
-        static List<Pawn> overdrivePawns = new List<Pawn>();
+        static HashSet<Pawn> overdrivePawns = new HashSet<Pawn>();
 
-        public static List<Pawn> SetOverdrivePawnList(List<Pawn> value)
-        {            
-            if(overdrivePawns == null)
-            {
-                overdrivePawns = new List<Pawn>();
-            }
-            for(int i = 0; i < value.Count; i++)
-            {
-                overdrivePawns.AddDistinct<Pawn>(value[i]);
-            }
-            return overdrivePawns;
-        }
-
-        public static List<Pawn> GetOverdrivePawnList()
+        public static HashSet<Pawn> GetOverdrivePawnList()
         {
-            if(overdrivePawns == null)
+            if (overdrivePawns == null)
             {
-                overdrivePawns = new List<Pawn>();
-                overdrivePawns.Clear();
+                overdrivePawns = new HashSet<Pawn>();
             }
             return overdrivePawns;
         }
@@ -142,7 +124,7 @@ namespace TorannMagic.ModOptions
         public static void SetShotgunSpecCount(int value)
         {
             shotgunSpecCount = value;
-            if(shotgunSpecCount >= 20)
+            if (shotgunSpecCount >= 20)
             {
                 shotgunSpecCount = 0;
             }
@@ -153,30 +135,28 @@ namespace TorannMagic.ModOptions
             return shotgunSpecCount;
         }
 
-        private static List<Texture> cloaks;
-        public static List<Texture> GetCloaks()
+        private static HashSet<Texture> cloaks;
+        public static HashSet<Texture> GetCloaks()
         {
-            return cloaks;            
+            return cloaks;
         }
 
-        public static List<Texture> cloaksNorth;
-        public static List<Texture> GetCloaksNorth()
+        public static HashSet<Texture> cloaksNorth;
+        public static HashSet<Texture> GetCloaksNorth()
         {
             return cloaksNorth;
         }
 
         public static void InitializeCloaks()
         {
-            Constants.cloaks = new List<Texture>();
-            Constants.cloaks.Clear();
-            Constants.cloaksNorth = new List<Texture>();
-            Constants.cloaksNorth.Clear();
+            Constants.cloaks = new HashSet<Texture>();
+            Constants.cloaksNorth = new HashSet<Texture>();
             Constants.cloaksNorth.Add(MaterialPool.MatFrom("Equipment/opencloak_Female_north").mainTexture);
             Constants.cloaksNorth.Add(MaterialPool.MatFrom("Equipment/opencloak_Hulk_north").mainTexture);
             Constants.cloaksNorth.Add(MaterialPool.MatFrom("Equipment/opencloak_Male_north").mainTexture);
             Constants.cloaksNorth.Add(MaterialPool.MatFrom("Equipment/opencloak_Thin_north").mainTexture);
             Constants.cloaksNorth.Add(MaterialPool.MatFrom("Equipment/opencloak_Fat_north").mainTexture);
-            Constants.cloaks.Add(MaterialPool.MatFrom("Equipment/opencloak_Female_east").mainTexture);            
+            Constants.cloaks.Add(MaterialPool.MatFrom("Equipment/opencloak_Female_east").mainTexture);
             Constants.cloaks.Add(MaterialPool.MatFrom("Equipment/opencloak_Female_south").mainTexture);
             Constants.cloaks.Add(MaterialPool.MatFrom("Equipment/opencloak_Fat_east").mainTexture);
             Constants.cloaks.Add(MaterialPool.MatFrom("Equipment/opencloak_Fat_south").mainTexture);
@@ -201,7 +181,7 @@ namespace TorannMagic.ModOptions
             Constants.cloaks.Add(MaterialPool.MatFrom("Equipment/demonlordcloakc_Thin_south").mainTexture);
             Constants.cloaks.Add(MaterialPool.MatFrom("Equipment/demonlordcloakc_Male_east").mainTexture);
             Constants.cloaks.Add(MaterialPool.MatFrom("Equipment/demonlordcloakc_Male_south").mainTexture);
-            if(ModsConfig.IsActive("ssulunge.BBBodySupport"))
+            if (ModsConfig.IsActive("ssulunge.BBBodySupport"))
             {
                 Constants.cloaks.Add(MaterialPool.MatFrom("Equipment/demonlordcloakc_FemaleBB_east").mainTexture);
                 Constants.cloaks.Add(MaterialPool.MatFrom("Equipment/demonlordcloakc_FemaleBB_south").mainTexture);
@@ -213,10 +193,10 @@ namespace TorannMagic.ModOptions
             Constants.cloaks.AddRange(cloaksNorth);
         }
 
-        public static Dictionary<string,IEnumerable<Gizmo>> reducedGizmoList;
+        public static Dictionary<string, IEnumerable<Gizmo>> reducedGizmoList;
         public static IEnumerable<Gizmo> GetReducedDraftGizmos(string hash, IEnumerable<Gizmo> list)
-        {            
-            if(reducedGizmoList == null)
+        {
+            if (reducedGizmoList == null)
             {
                 reducedGizmoList = new Dictionary<string, IEnumerable<Gizmo>>();
             }
@@ -225,34 +205,31 @@ namespace TorannMagic.ModOptions
                 reducedGizmoList.Clear();
                 return null;
             }
-            if (!reducedGizmoList.ContainsKey(hash))
+            if (!reducedGizmoList.TryGetValue(hash, out var value))
             {
                 List<Gizmo> glist = list.ToList();
-                for (int i = 0; i < glist.Count; i++)
+                var toRemoveGizmos = new HashSet<Gizmo>();
+                foreach (var gizmo in glist)
                 {
-                    if (glist[i].GetType() == typeof(Command_PawnAbility))
+                    if (gizmo is Command_PawnAbility)
                     {
-                        glist.Remove(glist[i]);
-                        i--;
+                        toRemoveGizmos.Add(gizmo);
                     }
                 }
+
+                glist.RemoveAll(x => toRemoveGizmos.Contains(x));
                 reducedGizmoList.Add(hash, glist);
+                return glist;
             }
-            if(reducedGizmoList != null)
-            {
-                return reducedGizmoList[hash];
-            }
-            else
-            {
-                return null;
-            }
+
+            return value;
         }
 
         private static Pawn iconPawn = null;
         private static Dictionary<PawnAbility, int> iconOffset = new Dictionary<PawnAbility, int>();
         public static int GetGizmoCount(Pawn p, PawnAbility pa)
         {
-            if(iconPawn != p)
+            if (iconPawn != p)
             {
                 iconPawn = p;
                 iconOffset.Clear();
@@ -269,26 +246,26 @@ namespace TorannMagic.ModOptions
                 int count = iconOffset.Count;
                 iconOffset.Add(pa, count);
                 return count;
-            }            
+            }
         }
 
         private static float iconAnchorX = 0f;
         private static float iconAnchorY = 0f;
         public static void IconAnchor(Rect r)
         {
-            if(iconAnchorX == 0)
+            if (iconAnchorX == 0)
             {
                 iconAnchorX = r.x;
             }
             else if (iconAnchorX > r.x)
             {
-                iconAnchorX = r.x;                
+                iconAnchorX = r.x;
             }
-            if(iconAnchorY == 0)
+            if (iconAnchorY == 0)
             {
                 iconAnchorY = r.y;
             }
-            else if(iconAnchorY > r.y)
+            else if (iconAnchorY > r.y)
             {
                 iconAnchorY = r.y;
             }

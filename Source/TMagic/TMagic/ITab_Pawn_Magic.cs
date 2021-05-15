@@ -1,5 +1,4 @@
 ﻿using RimWorld;
-using System;
 using UnityEngine;
 using Verse;
 
@@ -44,7 +43,7 @@ namespace TorannMagic
         public override bool IsVisible
         {
             get
-            {                
+            {
                 bool flag = base.SelPawn.story != null && base.SelPawn.IsColonist;
                 if (flag)
                 {
@@ -137,7 +136,7 @@ namespace TorannMagic
 
         public ITab_Pawn_Magic()
         {
-            this.size = MagicCardUtility.MagicCardSize + new Vector2(17f, 17f) * 2f;
+            this.size = MagicCardUtility.MagicCardSize + (new Vector2(17f, 17f) * 2f);
             this.labelKey = "TM_TabMagic";
         }
 
@@ -145,7 +144,7 @@ namespace TorannMagic
         {
             Rect rect = new Rect(17f, 17f, MagicCardUtility.MagicCardSize.x, MagicCardUtility.MagicCardSize.y);
             MagicCardUtility.DrawMagicCard(rect, this.PawnToShowInfoAbout);
-            
+
         }
 
     }

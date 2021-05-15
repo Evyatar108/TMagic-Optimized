@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Verse;
 using RimWorld;
@@ -85,7 +84,7 @@ namespace TorannMagic
                                 HealthUtility.AdjustSeverity(pawns[i], HediffDef.Named("TM_BattleHymnHD"), Rand.Range(.4f, .7f) + (.15f * pwrVal));
                                 TM_MoteMaker.ThrowNoteMote(pawns[i].DrawPos, pawns[i].Map, .3f);
                                 TM_MoteMaker.ThrowNoteMote(pawns[i].DrawPos, pawns[i].Map, .2f);
-                                if(Rand.Chance(.04f + (.01f * pwrVal)))
+                                if (Rand.Chance(.04f + (.01f * pwrVal)))
                                 {
                                     List<InspirationDef> id = new List<InspirationDef>();
                                     id.Add(TorannMagicDefOf.ID_Champion); id.Add(TorannMagicDefOf.ID_ManaRegen); id.Add(TorannMagicDefOf.Frenzy_Go); id.Add(TorannMagicDefOf.Frenzy_Shoot);
@@ -94,7 +93,7 @@ namespace TorannMagic
                             }
                         }
                     }
-                    comp.Mana.CurLevel -= (.09f - (.009f * effVal));
+                    comp.Mana.CurLevel -= .09f - (.009f * effVal);
                     TM_MoteMaker.ThrowSiphonMote(this.Pawn.DrawPos, this.Pawn.Map, .5f);
                 }
                 else

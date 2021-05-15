@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using RimWorld;
 using AbilityUser;
 using Verse;
-using Verse.AI;
 
 
 namespace TorannMagic
@@ -58,15 +56,16 @@ namespace TorannMagic
             bool shouldAddAbilities = comp.HexedPawns.Count <= 0;
             for (int i = 0; i < this.TargetsAoE.Count; i++)
             {
-                Pawn newPawn = this.TargetsAoE[i].Thing as Pawn;                
-                if(newPawn.RaceProps.IsFlesh && !TM_Calc.IsUndead(newPawn))
+                Pawn newPawn = this.TargetsAoE[i].Thing as Pawn;
+                if (newPawn.RaceProps.IsFlesh && !TM_Calc.IsUndead(newPawn))
                 {
-                    if (Rand.Chance(.4f + (.1f * pwrVal) * TM_Calc.GetSpellSuccessChance(this.CasterPawn, newPawn, true)))
+                    if (Rand.Chance(.4f + (.1f * pwrVal * TM_Calc.GetSpellSuccessChance(this.CasterPawn, newPawn, true))))
                     {
                         HealthUtility.AdjustSeverity(newPawn, TorannMagicDefOf.TM_HexHD, 1f);
-                        if(!comp.HexedPawns.Contains(newPawn))
+                        var hexedPawns = comp.HexedPawns;
+                        if (!hexedPawns.Contains(newPawn))
                         {
-                            comp.HexedPawns.Add(newPawn);                            
+                            hexedPawns.Add(newPawn);
                         }
                         addAbilities = true;
                         TM_MoteMaker.ThrowGenericMote(TorannMagicDefOf.Mote_Hex, newPawn.DrawPos, newPawn.Map, .6f, .1f, .2f, .2f, 0, 0, 0, 0);
@@ -74,10 +73,10 @@ namespace TorannMagic
                     else
                     {
                         MoteMaker.ThrowText(newPawn.DrawPos, newPawn.Map, "TM_ResistedSpell".Translate(), -1);
-                    }                    
+                    }
                 }
             }
-            if(shouldAddAbilities && addAbilities)
+            if (shouldAddAbilities && addAbilities)
             {
                 comp.AddPawnAbility(TorannMagicDefOf.TM_Hex_CriticalFail);
                 comp.AddPawnAbility(TorannMagicDefOf.TM_Hex_Pain);

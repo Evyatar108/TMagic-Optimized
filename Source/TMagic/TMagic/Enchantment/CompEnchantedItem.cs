@@ -1,9 +1,7 @@
-﻿using System;
-using Verse;
+﻿using Verse;
 using RimWorld;
 using AbilityUser;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 namespace TorannMagic.Enchantment
@@ -12,7 +10,7 @@ namespace TorannMagic.Enchantment
     {
         public List<AbilityUser.AbilityDef> MagicAbilities = new List<AbilityUser.AbilityDef>();
 
-        public List<Trait> SoulOrbTraits = new List<Trait>();
+        public HashSet<Trait> SoulOrbTraits = new HashSet<Trait>();
 
         public CompAbilityUserMagic CompAbilityUserMagicTarget = null;
 
@@ -37,7 +35,7 @@ namespace TorannMagic.Enchantment
             get
             {
                 if (this.parent != null && this.parent.def.MadeFromStuff && this.parent.Stuff != null && this.parent.Stuff.GetCompProperties<CompProperties_EnchantedStuff>() != null)
-                {                 
+                {
                     return EnchantedStuff.isEnchanted;
                 }
                 return false;
@@ -48,7 +46,7 @@ namespace TorannMagic.Enchantment
         {
             get
             {
-                if(MadeFromEnchantedStuff && EnchantedStuff != null)
+                if (MadeFromEnchantedStuff && EnchantedStuff != null)
                 {
                     return EnchantedStuff.appliedHediff;
                 }
@@ -61,18 +59,18 @@ namespace TorannMagic.Enchantment
             get
             {
                 Apparel ap = this.parent as Apparel;
-                if(ap != null)
+                if (ap != null)
                 {
-                    if(ap.Wearer != null)
+                    if (ap.Wearer != null)
                     {
                         return ap.Wearer;
                     }
                 }
                 ThingWithComps twc = this.parent as ThingWithComps;
-                if(twc != null)
+                if (twc != null)
                 {
                     Pawn_EquipmentTracker p_et = twc.ParentHolder as Pawn_EquipmentTracker;
-                    if(p_et != null && p_et.pawn != null)
+                    if (p_et != null && p_et.pawn != null)
                     {
                         return p_et.pawn;
                     }
@@ -88,11 +86,10 @@ namespace TorannMagic.Enchantment
         public override void Initialize(CompProperties props)
         {
             base.Initialize(props);
-            Pawn pawn = this.parent as Pawn;
             if (!initialized)
             {
                 this.hasEnchantment = this.Props.hasEnchantment;
-                if(!this.hasEnchantment)
+                if (!this.hasEnchantment)
                 {
                     this.hasEnchantment = this.MadeFromEnchantedStuff;
                 }
@@ -113,7 +110,7 @@ namespace TorannMagic.Enchantment
                 this.xpGain = this.Props.xpGain;
                 this.xpGainTier = this.Props.xpGainTier;
 
-                if(MadeFromEnchantedStuff && this.EnchantedStuff != null)
+                if (MadeFromEnchantedStuff && this.EnchantedStuff != null)
                 {
                     this.maxMP += this.EnchantedStuff.maxEnergyOffset;
                     this.mpRegenRate += this.EnchantedStuff.energyRegenOffset;
@@ -142,22 +139,22 @@ namespace TorannMagic.Enchantment
                     Find.TickManager.RegisterAllTickabilityFor(this.parent);
                 }
 
-                if(this.parent.def.tickerType == TickerType.Never)
+                if (this.parent.def.tickerType == TickerType.Never)
                 {
                     this.parent.def.tickerType = TickerType.Rare;
                     Find.TickManager.RegisterAllTickabilityFor(this.parent);
                 }
 
-                if(this.Props.hasAbility && !abilitiesInitialized)
+                if (this.Props.hasAbility && !abilitiesInitialized)
                 {
                     InitializeAbilities(this.parent as Apparel);
                 }
 
-                if(this.parent.def == TorannMagicDefOf.TM_MagicArtifact_MagicEssence && this.magicEssence == 0)
+                if (this.parent.def == TorannMagicDefOf.TM_MagicArtifact_MagicEssence && this.magicEssence == 0)
                 {
                     this.magicEssence = Rand.Range(200, 500);
                 }
-                if(this.parent.def == TorannMagicDefOf.TM_MagicArtifact_MightEssence && this.mightEssence == 0)
+                if (this.parent.def == TorannMagicDefOf.TM_MagicArtifact_MightEssence && this.mightEssence == 0)
                 {
                     this.mightEssence = Rand.Range(200, 500);
                 }
@@ -186,12 +183,12 @@ namespace TorannMagic.Enchantment
                     if (artifact.Wearer != null)
                     {
                         //Log.Message("" + artifact.LabelShort + " has holding owner " + artifact.Wearer.LabelShort);
-                        if(artifact.Wearer.health.hediffSet.GetFirstHediffOfDef(hediff, false) != null)
+                        if (artifact.Wearer.health.hediffSet.GetFirstHediffOfDef(hediff, false) != null)
                         {
 
                         }
                         else
-                        {                            
+                        {
                             HealthUtility.AdjustSeverity(artifact.Wearer, hediff, hediffSeverity);
                             HediffComp_EnchantedItem hdc = artifact.Wearer.health.hediffSet.GetFirstHediffOfDef(hediff, false).TryGetComp<HediffComp_EnchantedItem>();
                             if (hdc != null)
@@ -211,7 +208,7 @@ namespace TorannMagic.Enchantment
                     if (artifact.Wearer != null)
                     {
                         //Log.Message("" + artifact.LabelShort + " has holding owner " + artifact.Wearer.LabelShort);
-                        this.InitializeAbilities(artifact);                        
+                        this.InitializeAbilities(artifact);
                     }
 
                     this.MagicAbilities = artifact.GetComp<CompAbilityItem>().Props.Abilities;
@@ -229,15 +226,15 @@ namespace TorannMagic.Enchantment
                     for (int i = 0; i < wornApparel.Count; i++)
                     {
                         CompEnchantedItem itemComp = wornApparel[i].TryGetComp<CompEnchantedItem>();
-                        if(itemComp != null && itemComp.GetEnchantedStuff_HediffDef != null)
+                        if (itemComp != null && itemComp.GetEnchantedStuff_HediffDef != null)
                         {
                             int hdCount = GetStuffCount_Hediff(itemComp.EnchantedStuff.appliedHediff);
                             if (hdCount >= itemComp.EnchantedStuff.applyHediffAtCount)
                             {
-                                if(WearingPawn.health.hediffSet.HasHediff(itemComp.EnchantedStuff.appliedHediff))
+                                if (WearingPawn.health.hediffSet.HasHediff(itemComp.EnchantedStuff.appliedHediff))
                                 {
                                     Hediff hd = WearingPawn.health.hediffSet.GetFirstHediffOfDef(itemComp.EnchantedStuff.appliedHediff);
-                                    if(hd.Severity < (hdCount * itemComp.EnchantedStuff.severityPerCount))
+                                    if (hd.Severity < (hdCount * itemComp.EnchantedStuff.severityPerCount))
                                     {
                                         WearingPawn.health.RemoveHediff(hd);
                                         HealthUtility.AdjustSeverity(WearingPawn, itemComp.EnchantedStuff.appliedHediff, hdCount * itemComp.EnchantedStuff.severityPerCount);
@@ -290,7 +287,7 @@ namespace TorannMagic.Enchantment
                 //Find.TickManager.RegisterAllTickabilityFor(this.parent);
             }
             base.PostSpawnSetup(respawningAfterLoad);
-            
+
         }
 
         private Dictionary<HediffDef, int> hediffStuff = new Dictionary<HediffDef, int>();
@@ -302,9 +299,9 @@ namespace TorannMagic.Enchantment
             }
             else
             {
-                int count = 0;
+                int count;
                 hediffStuff.TryGetValue(hd, out count);
-                if(count != 0)
+                if (count != 0)
                 {
                     hediffStuff.SetOrAdd(hd, count + 1);
                 }
@@ -375,12 +372,12 @@ namespace TorannMagic.Enchantment
 
             }
             bool flag4 = this.necroticEnergy != 0;
-            if(flag4)
+            if (flag4)
             {
                 text += "Necrotic Energy: " + this.NecroticEnergy.ToString("N1");
             }
             bool flag5 = this.mightEssence != 0;
-            if(flag5)
+            if (flag5)
             {
                 text += "Might Essence: " + this.mightEssence;
             }
@@ -461,7 +458,7 @@ namespace TorannMagic.Enchantment
                 //{
                 //    return 120f;
                 //}
-                if(this.parent.Stuff != null && MadeFromEnchantedStuff && EnchantedStuff.enchantmentBonusMultiplier != 1f)
+                if (this.parent.Stuff != null && MadeFromEnchantedStuff && EnchantedStuff.enchantmentBonusMultiplier != 1f)
                 {
                     return 100f * EnchantedStuff.enchantmentBonusMultiplier;
                 }
@@ -578,7 +575,7 @@ namespace TorannMagic.Enchantment
                         this.enchantmentAction.hediffDef.label,
                         this.enchantmentAction.hediffChance * 100f);
                 }
-                if(enchantmentAction.type == EnchantmentActionType.ApplyDamage)
+                if (enchantmentAction.type == EnchantmentActionType.ApplyDamage)
                 {
                     return "TM_EA_Damage".Translate(
                         this.enchantmentAction.actionLabel,
@@ -645,6 +642,6 @@ namespace TorannMagic.Enchantment
             {
                 hasEnchantment = value;
             }
-        }        
+        }
     }
 }

@@ -1,5 +1,4 @@
-﻿using System;
-using Verse;
+﻿using Verse;
 using RimWorld;
 using System.Linq;
 
@@ -10,7 +9,7 @@ namespace TorannMagic.Thoughts
         protected override ThoughtState CurrentSocialStateInternal(Pawn pawn, Pawn other)
         {
             if (pawn != null && other != null)
-            {                
+            {
                 if (!other.RaceProps.Humanlike || other.Dead)
                 {
                     return false;
@@ -33,7 +32,7 @@ namespace TorannMagic.Thoughts
                         {
                             return ThoughtState.ActiveAtStage(6);
                         }
-                        else if(pawn.story.traits.HasTrait(TraitDefOf.Transhumanist))
+                        else if (pawn.story.traits.HasTrait(TraitDefOf.Transhumanist))
                         {
                             return ThoughtState.ActiveAtStage(5);
                         }

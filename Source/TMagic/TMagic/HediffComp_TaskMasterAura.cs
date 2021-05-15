@@ -1,9 +1,6 @@
-﻿using RimWorld;
-using Verse;
-using UnityEngine;
+﻿using Verse;
 using System.Collections.Generic;
 using System.Linq;
-using HarmonyLib;
 
 namespace TorannMagic
 {
@@ -52,7 +49,7 @@ namespace TorannMagic
             {
                 this.Pawn.health.RemoveHediff(this.parent);
             }
-        }        
+        }
 
         public override void CompPostTick(ref float severityAdjustment)
         {
@@ -84,7 +81,7 @@ namespace TorannMagic
                                     }
                                 }
                             }
-                        }                        
+                        }
                     }
                     else //map null
                     {
@@ -103,18 +100,18 @@ namespace TorannMagic
                         }
                     }
                     CompAbilityUserMight comp = this.Pawn.GetComp<CompAbilityUserMight>();
-                    comp.MightUserXP += Rand.Range(2, 5);                    
+                    comp.MightUserXP += Rand.Range(2, 5);
                 }
 
-                if(Find.TickManager.TicksGame % 1200 == 0)
+                if (Find.TickManager.TicksGame % 1200 == 0)
                 {
                     DetermineHediff();
                 }
             }
-        }     
+        }
 
         private void DetermineHediff()
-        {           
+        {
             CompAbilityUserMight comp = this.Pawn.GetComp<CompAbilityUserMight>();
             if (parent.def == TorannMagicDefOf.TM_TaskMasterAuraHD && comp != null)
             {
@@ -141,11 +138,11 @@ namespace TorannMagic
                     HealthUtility.AdjustSeverity(p, TorannMagicDefOf.TM_TaskMasterHD, .5f + pwrVal);
                 }
                 HediffComp_TaskMaster hdComp = p.health.hediffSet.GetFirstHediffOfDef(TorannMagicDefOf.TM_TaskMasterHD, false).TryGetComp<HediffComp_TaskMaster>();
-                if(hdComp != null)
+                if (hdComp != null)
                 {
                     hdComp.duration += 2;
                 }
-            }            
+            }
         }
     }
 }

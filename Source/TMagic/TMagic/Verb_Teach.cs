@@ -1,5 +1,4 @@
-﻿using System;
-using Verse;
+﻿using Verse;
 using Verse.AI;
 using AbilityUser;
 using RimWorld;
@@ -34,10 +33,9 @@ namespace TorannMagic
 
         protected override bool TryCastShot()
         {
-            Map map = base.CasterPawn.Map;
             Pawn mentor = base.CasterPawn;
 
-            if(this.currentTarget.Thing != null && this.currentTarget.Thing is Pawn && this.currentTarget.Thing != mentor)
+            if (this.currentTarget.Thing != null && this.currentTarget.Thing is Pawn && this.currentTarget.Thing != mentor)
             {
                 Pawn student = this.currentTarget.Thing as Pawn;
                 if (this.Ability.Def == TorannMagicDefOf.TM_TeachMagic)
@@ -105,7 +103,7 @@ namespace TorannMagic
                     {
                         Log.Message("undetected might or magic user attempting to teach skill");
                     }
-                }                               
+                }
             }
             else
             {

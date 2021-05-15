@@ -1,8 +1,6 @@
 ﻿using RimWorld;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 using Verse;
 using Verse.Sound;
 using AbilityUser;
@@ -46,7 +44,7 @@ namespace TorannMagic
                 }
                 newProjectile.thingClass = oldThingclass;
                 this.burstShotsLeft = 0;
-                return flag;  
+                return flag;
             }
             else
             {

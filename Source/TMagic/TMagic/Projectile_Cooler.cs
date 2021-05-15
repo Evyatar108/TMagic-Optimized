@@ -15,9 +15,6 @@ namespace TorannMagic
         {
             Map map = base.Map;
             base.Impact(hitThing);
-            ThingDef def = this.def;
-            Pawn victim = hitThing as Pawn;
-            Thing item = hitThing as Thing;
             IntVec3 arg_pos_1;
 
             Pawn pawn = this.launcher as Pawn;
@@ -30,12 +27,12 @@ namespace TorannMagic
             if (!this.primed)
             {
                 arg_pos_1 = centerCell;
-                if ((arg_pos_1.IsValid && arg_pos_1.Standable(map)))
+                if (arg_pos_1.IsValid && arg_pos_1.Standable(map))
                 {
                     AbilityUser.SpawnThings tempPod = new SpawnThings();
                     IntVec3 shiftPos = centerCell;
                     centerCell.x++;
-                    tempPod.def = ThingDef.Named("TM_Cooler");                    
+                    tempPod.def = ThingDef.Named("TM_Cooler");
                     tempPod.spawnCount = 1;
                     try
                     {
@@ -73,7 +70,7 @@ namespace TorannMagic
                     }
                     else
                     {
-                        TM_Action.SpawnPawn(this.launcher as Pawn, spawnables, faction, position, 0, map);                       
+                        TM_Action.SpawnPawn(this.launcher as Pawn, spawnables, faction, position, 0, map);
                     }
                 }
                 else

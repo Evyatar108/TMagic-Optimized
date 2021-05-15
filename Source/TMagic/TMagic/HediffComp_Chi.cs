@@ -1,9 +1,6 @@
-﻿using RimWorld;
-using Verse;
+﻿using Verse;
 using UnityEngine;
-using System.Collections.Generic;
 using System.Linq;
-using HarmonyLib;
 
 namespace TorannMagic
 {
@@ -15,10 +12,6 @@ namespace TorannMagic
         private bool removeNow = false;
 
         private int eventFrequency = 120;
-        private int chiFrequency = 4;
-        private int lastChiTick = 0;
-        private float lastChi = 0;
-
         public float maxSev = 100f;
 
         private int pwrVal = 0;
@@ -61,7 +54,7 @@ namespace TorannMagic
             {
                 this.removeNow = true;
             }
-        } 
+        }
 
         public override void CompPostTick(ref float severityAdjustment)
         {
@@ -73,17 +66,17 @@ namespace TorannMagic
                 {
                     initialized = true;
                     this.Initialize();
-                }                
+                }
             }
-            if(initialized && Find.TickManager.TicksGame % this.eventFrequency == 0)
+            if (initialized && Find.TickManager.TicksGame % this.eventFrequency == 0)
             {
                 if (this.Pawn.IsColonist)
                 {
-                    severityAdjustment -= (Rand.Range(.03f, .05f) - (.008f * verVal));
+                    severityAdjustment -= Rand.Range(.03f, .05f) - (.008f * verVal);
                 }
-                else if(this.Pawn.IsPrisoner)
+                else if (this.Pawn.IsPrisoner)
                 {
-                    severityAdjustment -= (Rand.Range(.25f, .5f) - (.00375f * verVal));
+                    severityAdjustment -= Rand.Range(.25f, .5f) - (.00375f * verVal);
                 }
                 else
                 {
@@ -99,6 +92,6 @@ namespace TorannMagic
             {
                 return base.CompShouldRemove || this.removeNow;
             }
-        }        
+        }
     }
 }

@@ -2,16 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using RimWorld;
-using RimWorld.Planet;
-using RimWorld.BaseGen;
-using RimWorld.SketchGen;
-using UnityEngine;
 using Verse;
-using Verse.AI;
-using System.Reflection;
 using HarmonyLib;
 
 namespace TorannMagic.ModOptions
@@ -27,7 +18,7 @@ namespace TorannMagic.ModOptions
                 bool addMagicComp = false;
                 bool addMightComp = false;
                 CompAbilityUserMagic compMagic = pawn.TryGetComp<CompAbilityUserMagic>();
-                if(compMagic != null && compMagic.IsMagicUser)
+                if (compMagic != null && compMagic.IsMagicUser)
                 {
                     RemoveMagicComp(compMagic);
                     try
@@ -35,13 +26,13 @@ namespace TorannMagic.ModOptions
                         pawn.AllComps.Remove(compMagic);
                         addMagicComp = true;
                     }
-                    catch(NullReferenceException ex)
+                    catch (NullReferenceException)
                     {
                         Log.Warning("failed to remove magic comp");
                     }
                 }
                 CompAbilityUserMight compMight = pawn.TryGetComp<CompAbilityUserMight>();
-                if(compMight != null && compMight.IsMightUser)
+                if (compMight != null && compMight.IsMightUser)
                 {
                     RemoveMightComp(compMight);
                     try
@@ -49,7 +40,7 @@ namespace TorannMagic.ModOptions
                         pawn.AllComps.Remove(compMight);
                         addMightComp = true;
                     }
-                    catch(NullReferenceException ex)
+                    catch (NullReferenceException)
                     {
                         Log.Warning("failed to remove might comp");
                     }
@@ -60,7 +51,7 @@ namespace TorannMagic.ModOptions
                 }
                 if (pawn.health != null && pawn.health.hediffSet != null)
                 {
-                    RemoveClassHediffs(pawn);                                        
+                    RemoveClassHediffs(pawn);
                 }
 
                 if (addMagicComp)
@@ -97,8 +88,8 @@ namespace TorannMagic.ModOptions
                         hd.def == TorannMagicDefOf.TM_TaskMasterAuraHD || hd.def == TorannMagicDefOf.TM_SDSoulBondPhysicalHD || hd.def == TorannMagicDefOf.TM_WDSoulBondMentalHD || hd.def == TorannMagicDefOf.TM_EnchantedBodyHD ||
                         hd.def == TorannMagicDefOf.TM_TechnoBitHD || hd.def == TorannMagicDefOf.TM_MindOverBodyHD || hd.def == TorannMagicDefOf.TM_HediffFortitude || hd.def == TorannMagicDefOf.TM_MageLightHD ||
                         hd.def == TorannMagicDefOf.TM_PredictionHD || hd.def == TorannMagicDefOf.TM_Artifact_BloodBoostHD || hd.def == TorannMagicDefOf.TM_Artifact_HateBoostHD || hd.def == TorannMagicDefOf.TM_Artifact_PsionicBoostHD ||
-                        hd.def == TorannMagicDefOf.TM_LichHD || hd.def == TorannMagicDefOf.TM_ShapeshiftHD || hd.def == TorannMagicDefOf.TM_NightshadeHD ||  hd.def == TorannMagicDefOf.TM_HediffSprint || hd.def == TorannMagicDefOf.TM_SunderArmorHD ||
-                        hd.def == TorannMagicDefOf.TM_ShadowSlayerCloakHD || hd.def == TorannMagicDefOf.TM_ManaShieldHD || hd.def == TorannMagicDefOf.TM_BlurHD ||  hd.def == TorannMagicDefOf.TM_InvisibilityHD ||
+                        hd.def == TorannMagicDefOf.TM_LichHD || hd.def == TorannMagicDefOf.TM_ShapeshiftHD || hd.def == TorannMagicDefOf.TM_NightshadeHD || hd.def == TorannMagicDefOf.TM_HediffSprint || hd.def == TorannMagicDefOf.TM_SunderArmorHD ||
+                        hd.def == TorannMagicDefOf.TM_ShadowSlayerCloakHD || hd.def == TorannMagicDefOf.TM_ManaShieldHD || hd.def == TorannMagicDefOf.TM_BlurHD || hd.def == TorannMagicDefOf.TM_InvisibilityHD ||
                         hd.def == TorannMagicDefOf.TM_HediffFightersFocus || hd.def == TorannMagicDefOf.TM_HediffThickSkin || hd.def == TorannMagicDefOf.TM_HediffStrongBack || hd.def == TorannMagicDefOf.TM_HediffGearRepair ||
                         hd.def == TorannMagicDefOf.TM_HediffHeavyBlow || hd.def == TorannMagicDefOf.TM_BurningFuryHD)
                     {
@@ -114,11 +105,11 @@ namespace TorannMagic.ModOptions
 
         public static void RemoveClassTrait(Pawn pawn)
         {
-            for (int i = 0; i < TM_Data.AllClassTraits.Count; i++)
+            foreach (var classTrait in TM_Data.AllClassTraits)
             {
                 for (int j = 0; j < pawn.story.traits.allTraits.Count; j++)
                 {
-                    if (pawn.story.traits.allTraits[j].def == TM_Data.AllClassTraits[i])
+                    if (pawn.story.traits.allTraits[j].def == classTrait)
                     {
                         pawn.story.traits.allTraits.Remove(pawn.story.traits.allTraits[j]);
                         break;
@@ -136,8 +127,8 @@ namespace TorannMagic.ModOptions
             }
             foreach (Thing t in compMight.combatItems)
             {
-                if(t != null)
-                t.Destroy(DestroyMode.Vanish);
+                if (t != null)
+                    t.Destroy(DestroyMode.Vanish);
             }
             compMight.shouldDraw = false;
         }
@@ -154,19 +145,20 @@ namespace TorannMagic.ModOptions
             {
                 foreach (Thing t in compMagic.enchanterStones)
                 {
-                    if(t != null)
+                    if (t != null)
                         t.Destroy(DestroyMode.Vanish);
                 }
             }
-            if(compMagic.fertileLands != null)
+            if (compMagic.fertileLands != null)
                 compMagic.fertileLands.Clear();
             if (!compMagic.SoL.DestroyedOrNull())
             {
                 compMagic.SoL.Destroy(DestroyMode.Vanish);
             }
-            if (compMagic.StoneskinPawns != null)
+            var stoneskinPawns = compMagic.StoneskinPawns;
+            if (stoneskinPawns != null)
             {
-                foreach (Pawn p in compMagic.StoneskinPawns)
+                foreach (Pawn p in stoneskinPawns)
                 {
                     if (p != null && p.health != null && p.health.hediffSet != null)
                     {
@@ -224,15 +216,15 @@ namespace TorannMagic.ModOptions
                     }
                 }
             }
-            compMagic.shouldDraw = false;            
+            compMagic.shouldDraw = false;
         }
 
         public static void InitializeTMComps(Pawn p, bool initMagic = false, bool initMight = false)
         {
-            if(p.def.comps.Any())
+            if (p.def.comps.Any())
             {
                 List<ThingComp> comps = Traverse.Create(root: p).Field(name: "comps").GetValue<List<ThingComp>>();
-                for(int i = 0; i < comps.Count; i++)
+                for (int i = 0; i < comps.Count; i++)
                 {
                     ThingComp thingComp = null;
                     if (initMagic && comps[i].ToString().Contains("CompAbilityUserMagic"))

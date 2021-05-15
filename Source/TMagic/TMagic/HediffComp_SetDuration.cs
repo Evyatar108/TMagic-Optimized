@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using RimWorld;
-using Verse;
-using UnityEngine;
+﻿using Verse;
 
 namespace TorannMagic
 {
@@ -41,7 +34,7 @@ namespace TorannMagic
         {
             get
             {
-                return base.Def.label + (" seconds remaining " + this.duration.ToString("#"));
+                return base.Def.label + " seconds remaining " + this.duration.ToString("#");
             }
         }
 

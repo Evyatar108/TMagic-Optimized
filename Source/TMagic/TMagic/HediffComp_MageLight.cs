@@ -67,7 +67,7 @@ namespace TorannMagic
                 {
                     canCastLightning = true;
                     this.nextLightningTick = Find.TickManager.TicksGame + Rand.Range(400, 800);
-                    if(this.Pawn.Drafted && !this.Pawn.Downed && this.Pawn.Map != null && this.Pawn.Spawned)
+                    if (this.Pawn.Drafted && !this.Pawn.Downed && this.Pawn.Map != null && this.Pawn.Spawned)
                     {
                         Pawn e = TM_Calc.FindNearbyEnemy(this.Pawn.Position, this.Pawn.Map, this.Pawn.Faction, 24, 0);
                         if (e != null && TM_Calc.HasLoSFromTo(this.Pawn.Position, e, this.Pawn, 0, 25))
@@ -92,7 +92,7 @@ namespace TorannMagic
                     {
                         this.Pawn.Map.mapDrawer.MapMeshDirty(this.Pawn.Position, MapMeshFlag.Things);
                         oldPos = this.Pawn.Position;
-                        this.Pawn.Map.glowGrid.RegisterGlower(glower);                        
+                        this.Pawn.Map.glowGrid.RegisterGlower(glower);
                     }
                 }
             }

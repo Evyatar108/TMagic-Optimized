@@ -28,7 +28,7 @@ namespace TorannMagic
             Scribe_Values.Look<int>(ref this.age, "age", -1, false);
             Scribe_Values.Look<int>(ref this.duration, "duration", 3600, false);
             Scribe_Values.Look<bool>(ref this.destroyed, "destroyed", false, false);
-        }        
+        }
 
         public override void Tick()
         {
@@ -43,7 +43,7 @@ namespace TorannMagic
             {
                 base.Destroy(mode);
             }
-        }        
+        }
 
         protected override void Impact(Thing hitThing)
         {
@@ -77,8 +77,8 @@ namespace TorannMagic
                 IntVec3 centerCell = cellRect.CenterCell;
                 System.Random random = new System.Random();
                 random = new System.Random();
- 
-                duration += (verVal * 900);
+
+                duration += verVal * 900;
                 duration = Mathf.RoundToInt(duration * pawn.GetComp<CompAbilityUserMagic>().arcaneDmg);
 
                 int rnd = GenMath.RoundRandom(random.Next(0, 8));
@@ -297,14 +297,14 @@ namespace TorannMagic
                         spawnThing.def = TorannMagicDefOf.TM_LesserWind_ElementalR;
                         spawnThing.kindDef = PawnKindDef.Named("TM_LesserWind_Elemental");
                     }
-                    MoteMaker.ThrowSmoke(centerCell.ToVector3(), map, 1 + pwrVal * 2);
+                    MoteMaker.ThrowSmoke(centerCell.ToVector3(), map, 1 + (pwrVal * 2));
                     SoundDefOf.Ambient_AltitudeWind.sustainFadeoutTime.Equals(30.0f);
                     MoteMaker.ThrowTornadoDustPuff(centerCell.ToVector3(), map, pwrVal, Color.white);
                 }
 
                 SingleSpawnLoop(spawnThing, centerCell, map);
 
-                this.age = this.duration;                
+                this.age = this.duration;
                 this.initialized = true;
             }
             Destroy();

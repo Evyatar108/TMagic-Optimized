@@ -1,7 +1,5 @@
 ﻿using RimWorld;
-using System;
 using System.Linq;
-using System.Collections.Generic;
 using UnityEngine;
 using Verse;
 
@@ -32,7 +30,7 @@ namespace TorannMagic
         protected float speed = 30f;
         protected new int ticksToImpact;
         private bool impacted = false;
-        protected int ticksFollowingImpact =0;
+        protected int ticksFollowingImpact = 0;
 
         protected Thing assignedTarget;
         protected Thing flyingThing;
@@ -44,7 +42,7 @@ namespace TorannMagic
 
         public bool explosion = false;
 
-        private bool initialized = true;        
+        private bool initialized = true;
 
         protected new int StartingTicksToImpact
         {
@@ -72,8 +70,8 @@ namespace TorannMagic
         {
             get
             {
-                Vector3 b = (this.destination - this.origin) * (1f - (float)this.ticksToImpact / (float)this.StartingTicksToImpact);
-                return this.origin + b + Vector3.up * this.def.Altitude;
+                Vector3 b = (this.destination - this.origin) * (1f - ((float)this.ticksToImpact / (float)this.StartingTicksToImpact));
+                return this.origin + b + (Vector3.up * this.def.Altitude);
             }
         }
 
@@ -127,7 +125,7 @@ namespace TorannMagic
                     comp.PowerModifier--;
                     this.powered = true;
                 }
-            }            
+            }
             flyingThing.ThingID += Rand.Range(0, 214).ToString();
             this.initialized = false;
         }
@@ -151,7 +149,7 @@ namespace TorannMagic
             {
                 foreach (MagicPower current in comp.MagicData.MagicPowersN)
                 {
-                    if ((current.abilityDef == TorannMagicDefOf.TM_DeathBolt || current.abilityDef == TorannMagicDefOf.TM_DeathBolt_I || current.abilityDef == TorannMagicDefOf.TM_DeathBolt_II || current.abilityDef == TorannMagicDefOf.TM_DeathBolt_III))
+                    if (current.abilityDef == TorannMagicDefOf.TM_DeathBolt || current.abilityDef == TorannMagicDefOf.TM_DeathBolt_I || current.abilityDef == TorannMagicDefOf.TM_DeathBolt_II || current.abilityDef == TorannMagicDefOf.TM_DeathBolt_III)
                     {
                         if (current.level == 0)
                         {
@@ -181,8 +179,8 @@ namespace TorannMagic
                 {
                     pwrVal = 1;
                     verVal = 1;
-                }                
-            }      
+                }
+            }
             else if (this.pawn.def == TorannMagicDefOf.TM_SkeletonLichR)
             {
                 pwrVal = Rand.RangeInclusive(0, 3);
@@ -203,7 +201,7 @@ namespace TorannMagic
             {
                 this.assignedTarget = targ.Thing;
             }
-            float distanceAccuracyModifier = (targ.Cell.ToVector3Shifted() - this.pawn.Position.ToVector3Shifted()).MagnitudeHorizontal() *.1f;
+            float distanceAccuracyModifier = (targ.Cell.ToVector3Shifted() - this.pawn.Position.ToVector3Shifted()).MagnitudeHorizontal() * .1f;
             this.destination = targ.Cell.ToVector3Shifted() + new Vector3(Rand.Range(-distanceAccuracyModifier, distanceAccuracyModifier), 0f, Rand.Range(-distanceAccuracyModifier, distanceAccuracyModifier));
             this.ticksToImpact = this.StartingTicksToImpact;
             this.Initialize();
@@ -246,7 +244,7 @@ namespace TorannMagic
                 }
             }
             else
-            {                                           
+            {
                 bool flag2 = this.ticksToImpact <= 0 && !impacted;
                 if (flag2)
                 {
@@ -259,14 +257,14 @@ namespace TorannMagic
                 }
             }
 
-            if(this.impacted)
+            if (this.impacted)
             {
                 if (this.ticksFollowingImpact > 0 && Find.TickManager.TicksGame % 5 == 0)
                 {
                     CellRect cellRect = CellRect.CenteredOn(base.Position, 2);
                     cellRect.ClipInsideMap(base.Map);
                     IntVec3 spreadingDarknessCell;
-                    if(!(cellRect.CenterCell.GetTerrain(base.Map).passability == Traversability.Impassable) && !cellRect.CenterCell.IsValid || !cellRect.CenterCell.InBounds(base.Map))
+                    if ((!(cellRect.CenterCell.GetTerrain(base.Map).passability == Traversability.Impassable) && !cellRect.CenterCell.IsValid) || !cellRect.CenterCell.InBounds(base.Map))
                     {
                         this.ticksFollowingImpact = -1;
                     }
@@ -284,8 +282,8 @@ namespace TorannMagic
                         }
                     }
                 }
-                
-                if(this.ticksFollowingImpact < 0)
+
+                if (this.ticksFollowingImpact < 0)
                 {
                     this.Destroy(DestroyMode.Vanish);
                 }
@@ -337,17 +335,17 @@ namespace TorannMagic
             if (flag)
             {
                 Pawn pawn;
-                bool flag2 = (pawn = (base.Position.GetThingList(base.Map).FirstOrDefault((Thing x) => x == this.assignedTarget) as Pawn)) != null;
+                bool flag2 = (pawn = base.Position.GetThingList(base.Map).FirstOrDefault((Thing x) => x == this.assignedTarget) as Pawn) != null;
                 if (flag2)
                 {
                     hitThing = pawn;
                 }
-            }        
+            }
 
-            GenExplosion.DoExplosion(base.Position, base.Map, this.radius, TMDamageDefOf.DamageDefOf.TM_DeathBolt, this.pawn, Mathf.RoundToInt((Rand.Range(.6f*this.def.projectile.GetDamageAmount(1,null), 1.1f*this.def.projectile.GetDamageAmount(1,null)) + (5f * pwrVal)) * this.arcaneDmg), 4, this.def.projectile.soundExplode, def, null, null, null, 0f, 1, false, null, 0f, 0, 0.0f, true);
+            GenExplosion.DoExplosion(base.Position, base.Map, this.radius, TMDamageDefOf.DamageDefOf.TM_DeathBolt, this.pawn, Mathf.RoundToInt((Rand.Range(.6f * this.def.projectile.GetDamageAmount(1, null), 1.1f * this.def.projectile.GetDamageAmount(1, null)) + (5f * pwrVal)) * this.arcaneDmg), 4, this.def.projectile.soundExplode, def, null, null, null, 0f, 1, false, null, 0f, 0, 0.0f, true);
 
             this.ticksFollowingImpact = this.verVal * 15;
             this.impacted = true;
-        }        
+        }
     }
 }

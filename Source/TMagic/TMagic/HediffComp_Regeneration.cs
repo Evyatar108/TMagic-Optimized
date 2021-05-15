@@ -35,7 +35,7 @@ namespace TorannMagic
         private void Initialize()
         {
             bool spawned = base.Pawn.Spawned;
-            
+
             if (spawned)
             {
                 MoteMaker.ThrowLightningGlow(base.Pawn.DrawPos, base.Pawn.Map, 1f);
@@ -70,7 +70,7 @@ namespace TorannMagic
                 }
             }
             this.age++;
-            if(!this.Pawn.DestroyedOrNull() && !this.Pawn.Dead)
+            if (!this.Pawn.DestroyedOrNull() && !this.Pawn.Dead)
             {
                 if (age > lastRegen + regenRate)
                 {
@@ -107,7 +107,7 @@ namespace TorannMagic
                                     IEnumerable<Hediff_Injury> arg_BB_0 = pawn.health.hediffSet.GetHediffs<Hediff_Injury>();
                                     Func<Hediff_Injury, bool> arg_BB_1;
 
-                                    arg_BB_1 = ((Hediff_Injury injury) => injury.Part == rec);
+                                    arg_BB_1 = (Hediff_Injury injury) => injury.Part == rec;
 
                                     foreach (Hediff_Injury current in arg_BB_0.Where(arg_BB_1))
                                     {
@@ -137,7 +137,7 @@ namespace TorannMagic
                     }
                     else
                     {
-                        TM_Action.DamageUndead(pawn, (2f + 1f * hediffPwr), null);
+                        TM_Action.DamageUndead(pawn, 2f + (1f * hediffPwr), null);
                     }
                 }
             }

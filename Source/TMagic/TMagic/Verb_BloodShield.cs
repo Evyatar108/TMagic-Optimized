@@ -1,18 +1,14 @@
 ﻿using RimWorld;
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using Verse;
 using Verse.Sound;
 using AbilityUser;
-using UnityEngine;
-using Verse.AI.Group;
 
 namespace TorannMagic
 {
-    public class Verb_BloodShield : Verb_UseAbility  
+    public class Verb_BloodShield : Verb_UseAbility
     {
-        
+
         int pwrVal;
         CompAbilityUserMagic comp;
         float arcaneDmg = 1;
@@ -29,8 +25,7 @@ namespace TorannMagic
             {
                 if ((root - targ.Cell).LengthHorizontal < this.verbProps.range)
                 {
-                    ShootLine shootLine;
-                    validTarg = this.TryFindShootLineFromTo(root, targ, out shootLine);
+                    validTarg = this.TryFindShootLineFromTo(root, targ, out _);
                 }
                 else
                 {
@@ -63,7 +58,7 @@ namespace TorannMagic
                 pwrVal = 3;
             }
             this.arcaneDmg = comp.arcaneDmg;
-            this.arcaneDmg *= (1f + .1f * bpwr.level);
+            this.arcaneDmg *= 1f + (.1f * bpwr.level);
 
             if (pawn != null && pawn != this.CasterPawn)
             {
@@ -73,13 +68,13 @@ namespace TorannMagic
             {
                 Messages.Message("TM_InvalidTarget".Translate(this.CasterPawn.LabelShort, TorannMagicDefOf.TM_BloodShield.label), MessageTypeDefOf.RejectInput);
             }
-            
+
             return true;
         }
 
         public void ApplyBloodShield(Pawn pawn)
         {
-            HealthUtility.AdjustSeverity(pawn, HediffDef.Named("TM_BloodShieldHD"), (100f + (10f * pwrVal))*arcaneDmg);
+            HealthUtility.AdjustSeverity(pawn, HediffDef.Named("TM_BloodShieldHD"), (100f + (10f * pwrVal)) * arcaneDmg);
             HediffComp_BloodShield comp = pawn.health.hediffSet.GetFirstHediffOfDef(HediffDef.Named("TM_BloodShieldHD"), false).TryGetComp<HediffComp_BloodShield>();
             comp.linkedPawn = this.CasterPawn;
             SoundInfo info = SoundInfo.InMap(new TargetInfo(pawn.Position, pawn.Map, false), MaintenanceType.None);
@@ -88,7 +83,7 @@ namespace TorannMagic
             Effecter bloodshieldEffecter = TorannMagicDefOf.TM_BloodShieldEffecter.Spawn();
             bloodshieldEffecter.Trigger(new TargetInfo(pawn.Position, pawn.Map, false), new TargetInfo(pawn.Position, pawn.Map, false));
             bloodshieldEffecter.Cleanup();
-            
-        }    
+
+        }
     }
 }

@@ -9,7 +9,7 @@ using Verse.Sound;
 namespace TorannMagic
 {
     [StaticConstructorOnStartup]
-    class Verb_Ignite : Verb_UseAbility  
+    class Verb_Ignite : Verb_UseAbility
     {
         private float arcaneDmg = 1f;
         bool validTarg;
@@ -51,11 +51,11 @@ namespace TorannMagic
             Effecter igniteED = TorannMagicDefOf.TM_IgniteED.Spawn();
             igniteED.Trigger(new TargetInfo(this.currentTarget.Cell, map, false), new TargetInfo(this.currentTarget.Cell, map, false));
             igniteED.Cleanup();
-            SoundInfo info = SoundInfo.InMap(new TargetInfo(this.currentTarget.Cell, map, false), MaintenanceType.None);            
+            SoundInfo info = SoundInfo.InMap(new TargetInfo(this.currentTarget.Cell, map, false), MaintenanceType.None);
             info.pitchFactor = 1.1f;
             info.volumeFactor = 1.8f;
             TorannMagicDefOf.TM_FireWooshSD.PlayOneShot(info);
-            TargetInfo ti = new TargetInfo(this.currentTarget.Cell, map, false);            
+            TargetInfo ti = new TargetInfo(this.currentTarget.Cell, map, false);
             TM_MoteMaker.MakeOverlay(ti, TorannMagicDefOf.TM_Mote_PsycastAreaEffect, map, Vector3.zero, .2f, 0f, .1f, .4f, .4f, 4.3f);
             float classBonus = 1f;
             if (p.story != null && p.story.traits != null && p.story.traits.HasTrait(TorannMagicDefOf.InnerFire))
@@ -64,17 +64,16 @@ namespace TorannMagic
             }
             if (this.currentTarget != null && p != null && comp != null)
             {
-                this.arcaneDmg = comp.arcaneDmg;                
+                this.arcaneDmg = comp.arcaneDmg;
                 this.TargetsAoE.Clear();
                 this.FindTargets();
                 float energy = 200000 * this.arcaneDmg * classBonus;
                 GenTemperature.PushHeat(this.currentTarget.Cell, p.Map, energy);
-                ModOptions.SettingsRef settingsRef = new ModOptions.SettingsRef();
                 for (int i = 0; i < pawns.Count; i++)
                 {
                     if (!pawns[i].RaceProps.IsMechanoid)
                     {
-                        float distanceModifier = (classBonus) / (pawns[i].Position - currentTarget.Cell).LengthHorizontal;
+                        float distanceModifier = classBonus / (pawns[i].Position - currentTarget.Cell).LengthHorizontal;
                         if (distanceModifier > 1f)
                         {
                             distanceModifier = 1f;
@@ -91,7 +90,7 @@ namespace TorannMagic
                     //{
                     float distanceModifier = 1f / (corpses[i].Position - currentTarget.Cell).LengthHorizontal;
                     //    corpses[i].TryAttachFire(Rand.Range(distanceModifier / 2f, distanceModifier));
-                        FireUtility.TryStartFireIn(corpses[i].Position, map, Rand.Range(distanceModifier / 2f, distanceModifier));
+                    FireUtility.TryStartFireIn(corpses[i].Position, map, Rand.Range(distanceModifier / 2f, distanceModifier));
                     //}
                 }
                 for (int i = 0; i < plants.Count; i++)
@@ -103,39 +102,39 @@ namespace TorannMagic
                     }
                     if (plants[i].def.plant.IsTree)
                     {
-                        if (Rand.Chance(distanceModifier/2f))
+                        if (Rand.Chance(distanceModifier / 2f))
                         {
-                            plants[i].TryAttachFire(Rand.Range(distanceModifier / 3f, distanceModifier/2f));
+                            plants[i].TryAttachFire(Rand.Range(distanceModifier / 3f, distanceModifier / 2f));
                             FireUtility.TryStartFireIn(plants[i].Position, map, Rand.Range(distanceModifier / 3f, distanceModifier / 2f));
                         }
                     }
                     else
                     {
-                        if(Rand.Chance(distanceModifier))
+                        if (Rand.Chance(distanceModifier))
                         {
                             plants[i].TryAttachFire(Rand.Range(distanceModifier / 2f, distanceModifier));
                             FireUtility.TryStartFireIn(plants[i].Position, map, Rand.Range(distanceModifier / 2f, distanceModifier));
                         }
-                    }                    
+                    }
                 }
-                List<IntVec3> cellList = GenRadial.RadialCellsAround(this.currentTarget.Cell, this.UseAbilityProps.TargetAoEProperties.range, true).ToList();
+                IEnumerable<IntVec3> cellList = GenRadial.RadialCellsAround(this.currentTarget.Cell, this.UseAbilityProps.TargetAoEProperties.range, true);
                 bool raining = map.weatherManager.RainRate > 0f || map.weatherManager.SnowRate > 0f;
-                for(int i = 0; i< cellList.Count; i++)
+                foreach (var cell in cellList)
                 {
-                    cellList[i] = cellList[i].ClampInsideMap(map);
-                    if(cellList[i].GetSnowDepth(map) > 0f)
+                    cell.ClampInsideMap(map);
+                    if (cell.GetSnowDepth(map) > 0f)
                     {
-                        map.snowGrid.SetDepth(cellList[i], 0f);
-                        MoteMaker.ThrowSmoke(cellList[i].ToVector3Shifted(), map, Rand.Range(.8f, 1.6f));
+                        map.snowGrid.SetDepth(cell, 0f);
+                        MoteMaker.ThrowSmoke(cell.ToVector3Shifted(), map, Rand.Range(.8f, 1.6f));
                         Thing smoke = ThingMaker.MakeThing(ThingDefOf.Gas_Smoke, null);
-                        GenSpawn.Spawn(smoke, cellList[i], map, WipeMode.Vanish);
+                        GenSpawn.Spawn(smoke, cell, map, WipeMode.Vanish);
                     }
-                    else if(raining || cellList[i].GetTerrain(map).IsWater)
+                    else if (raining || cell.GetTerrain(map).IsWater)
                     {
                         Thing smoke = ThingMaker.MakeThing(ThingDefOf.Gas_Smoke, null);
-                        GenSpawn.Spawn(smoke, cellList[i], map, WipeMode.Vanish);
+                        GenSpawn.Spawn(smoke, cell, map, WipeMode.Vanish);
                     }
-                    TM_MoteMaker.ThrowGenericMote(ThingDefOf.Mote_AirPuff, cellList[i].ToVector3Shifted(), map, 2.5f, .05f, .05f, Rand.Range(2f,3f), Rand.Range(-60, 60), .5f, -70, Rand.Range(0, 360));
+                    TM_MoteMaker.ThrowGenericMote(ThingDefOf.Mote_AirPuff, cell.ToVector3Shifted(), map, 2.5f, .05f, .05f, Rand.Range(2f, 3f), Rand.Range(-60, 60), .5f, -70, Rand.Range(0, 360));
                 }
             }
 
@@ -150,31 +149,31 @@ namespace TorannMagic
             IntVec3 aoeStartPosition = this.currentTarget.Cell;
             int radius = this.UseAbilityProps.TargetAoEProperties.range;
 
-            List<Thing> list = new List<Thing>();            
-            
+            List<Thing> list = new List<Thing>();
+
             bool flag4 = !this.UseAbilityProps.TargetAoEProperties.friendlyFire;
 
             list = (from x in this.caster.Map.listerThings.AllThings
                     where x.Position.InHorDistOf(aoeStartPosition, (float)radius)
                     select x).ToList<Thing>();
 
-            for(int i = 0; i < list.Count; i++)
+            for (int i = 0; i < list.Count; i++)
             {
-                if(list[i] != null && list[i] is Pawn)
+                if (list[i] != null && list[i] is Pawn)
                 {
                     pawns.Add(list[i] as Pawn);
                 }
-                if(list[i] != null && list[i] is Plant)
+                if (list[i] != null && list[i] is Plant)
                 {
                     plants.Add(list[i] as Plant);
                 }
-                if(list[i] != null && list[i] is Corpse)
+                if (list[i] != null && list[i] is Corpse)
                 {
                     corpses.Add(list[i] as Corpse);
                 }
             }
 
-            list.Clear();                      
+            list.Clear();
         }
     }
 }

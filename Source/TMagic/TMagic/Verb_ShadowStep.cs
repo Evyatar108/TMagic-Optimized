@@ -1,14 +1,11 @@
 ﻿using RimWorld;
 using RimWorld.Planet;
-using System;
 using Verse;
 using AbilityUser;
-using UnityEngine;
-using System.Linq;
 
 namespace TorannMagic
 {
-    class Verb_ShadowStep : Verb_UseAbility  
+    class Verb_ShadowStep : Verb_UseAbility
     {
 
         protected override bool TryCastShot()
@@ -17,7 +14,7 @@ namespace TorannMagic
             CompAbilityUserMagic comp = this.CasterPawn.GetComp<CompAbilityUserMagic>();
             Pawn soulPawn = comp.soulBondPawn;
 
-            if(soulPawn != null && !soulPawn.Dead && !soulPawn.Destroyed)
+            if (soulPawn != null && !soulPawn.Dead && !soulPawn.Destroyed)
             {
                 Pawn p = this.CasterPawn;
                 bool drafted = this.CasterPawn.Drafted;
@@ -26,8 +23,7 @@ namespace TorannMagic
                 Map sMap = soulPawn.Map;
                 if (sMap == null)
                 {
-                    Hediff bondHediff = null;
-                    bondHediff = soulPawn.health.hediffSet.GetFirstHediffOfDef(HediffDef.Named("TM_SoulBondPhysicalHD"), false);
+                    Hediff bondHediff = soulPawn.health.hediffSet.GetFirstHediffOfDef(HediffDef.Named("TM_SoulBondPhysicalHD"), false);
                     if (bondHediff != null)
                     {
                         HediffComp_SoulBondHost compS = bondHediff.TryGetComp<HediffComp_SoulBondHost>();
@@ -37,7 +33,6 @@ namespace TorannMagic
                             soulPawnSpawned = true;
                         }
                     }
-                    bondHediff = null;
 
                     bondHediff = soulPawn.health.hediffSet.GetFirstHediffOfDef(HediffDef.Named("TM_SoulBondMentalHD"), false);
                     if (bondHediff != null)
@@ -49,7 +44,7 @@ namespace TorannMagic
                             soulPawnSpawned = true;
                         }
                     }
-                    if(soulPawn.ParentHolder != null && soulPawn.ParentHolder is Caravan)
+                    if (soulPawn.ParentHolder != null && soulPawn.ParentHolder is Caravan)
                     {
                         //Log.Message("caravan detected");
                         //p.DeSpawn();
@@ -87,16 +82,16 @@ namespace TorannMagic
                 {
                     Messages.Message("TM_BondedPawnNotSpawned".Translate(
                         soulPawn.LabelShort), MessageTypeDefOf.RejectInput);
-                }                
+                }
                 result = true;
             }
             else
             {
                 Log.Warning("No soul bond found to shadow call.");
             }
-            
-            //this.ability.TicksUntilCasting = (int)base.UseAbilityProps.SecondsToRecharge * 60;
-            fin:;
+
+        //this.ability.TicksUntilCasting = (int)base.UseAbilityProps.SecondsToRecharge * 60;
+        fin:;
             this.burstShotsLeft = 0;
             return result;
         }

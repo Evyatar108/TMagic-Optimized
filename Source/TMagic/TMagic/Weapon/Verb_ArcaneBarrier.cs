@@ -1,5 +1,4 @@
 ﻿using RimWorld;
-using System;
 using Verse;
 using AbilityUser;
 using UnityEngine;
@@ -26,8 +25,7 @@ namespace TorannMagic.Weapon
             {
                 if ((root - targ.Cell).LengthHorizontal < this.verbProps.range)
                 {
-                    ShootLine shootLine;
-                    validTarg = this.TryFindShootLineFromTo(root, targ, out shootLine);
+                    validTarg = this.TryFindShootLineFromTo(root, targ, out _);
                 }
                 else
                 {
@@ -67,12 +65,12 @@ namespace TorannMagic.Weapon
             for (int i = 0; i < 5; i++)
             {
                 currentPosR = GetNewPos(currentPosR, this.currentTarget.Cell.x <= destinationRPos.x, this.currentTarget.Cell.z <= destinationRPos.z, false, 0, 0, xProbR, 1 - xProbR);
-                if(currentPosR.IsValid && currentPosR.InBounds(this.CasterPawn.Map) && !currentPosR.Impassable(this.CasterPawn.Map) && this.currentPosR.Walkable(this.CasterPawn.Map))
+                if (currentPosR.IsValid && currentPosR.InBounds(this.CasterPawn.Map) && !currentPosR.Impassable(this.CasterPawn.Map) && this.currentPosR.Walkable(this.CasterPawn.Map))
                 {
                     bool flag = true;
                     foreach (Thing current in currentPosR.GetThingList(this.CasterPawn.Map))
                     {
-                        if(current.def.altitudeLayer == AltitudeLayer.Building || current.def.altitudeLayer == AltitudeLayer.Item || current.def.altitudeLayer == AltitudeLayer.ItemImportant)
+                        if (current.def.altitudeLayer == AltitudeLayer.Building || current.def.altitudeLayer == AltitudeLayer.Item || current.def.altitudeLayer == AltitudeLayer.ItemImportant)
                         {
                             flag = false;
                         }
@@ -95,7 +93,7 @@ namespace TorannMagic.Weapon
                         }
                     }
                     if (flag)
-                    { 
+                    {
                         SingleSpawnLoop(tempPod, currentPosL, this.CasterPawn.Map);
                         MoteMaker.ThrowHeatGlow(currentPosL, map, .6f);
                     }
@@ -107,7 +105,7 @@ namespace TorannMagic.Weapon
 
         private float CalculateAngles(IntVec3 originPos, IntVec3 destPos)
         {
-            float hyp = Mathf.Sqrt((Mathf.Pow(originPos.x - destPos.x, 2)) + (Mathf.Pow(originPos.z - destPos.z, 2)));
+            float hyp = Mathf.Sqrt(Mathf.Pow(originPos.x - destPos.x, 2) + Mathf.Pow(originPos.z - destPos.z, 2));
             float angleRad = Mathf.Asin(Mathf.Abs(originPos.x - destPos.x) / hyp);
             float angleDeg = Mathf.Rad2Deg * angleRad;
             return angleDeg / 90;
@@ -118,7 +116,6 @@ namespace TorannMagic.Weapon
             bool flag = spawnables.def != null;
             if (flag)
             {
-                Faction faction = this.CasterPawn.Faction;
                 ThingDef def = spawnables.def;
                 ThingDef stuff = null;
                 bool madeFromStuff = def.MadeFromStuff;
@@ -127,7 +124,7 @@ namespace TorannMagic.Weapon
                     stuff = ThingDefOf.BlocksGranite;
                 }
                 Thing thing = ThingMaker.MakeThing(def, stuff);
-                GenSpawn.Spawn(thing, position, map, Rot4.North, WipeMode.Vanish, false);                
+                GenSpawn.Spawn(thing, position, map, Rot4.North, WipeMode.Vanish, false);
             }
         }
 
@@ -139,8 +136,8 @@ namespace TorannMagic.Weapon
             bool flagy = rand <= ((zguide + Mathf.Abs(zvar)) * 100);
             if (halfway)
             {
-                xvar = (-1 * xvar);
-                zvar = (-1 * zvar);
+                xvar = -1 * xvar;
+                zvar = -1 * zvar;
             }
 
             if (xdir && zdir)

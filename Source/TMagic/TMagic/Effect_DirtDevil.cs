@@ -1,14 +1,10 @@
 ﻿using Verse;
 using AbilityUser;
-using System.Collections.Generic;
-using RimWorld;
 
 namespace TorannMagic
-{    
+{
     public class Effect_DirtDevil : Verb_UseAbility
     {
-        bool validTarg;
-
         public virtual void Effect()
         {
             LocalTargetInfo t = this.TargetsAoE[0];
@@ -31,9 +27,8 @@ namespace TorannMagic
             if (inResult)
             {
                 this.Effect();
-                outResult = true;
             }
             outResult = inResult;
         }
-    }    
+    }
 }

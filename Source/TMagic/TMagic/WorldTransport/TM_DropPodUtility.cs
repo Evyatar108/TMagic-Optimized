@@ -1,7 +1,6 @@
 ﻿using RimWorld;
 using RimWorld.Planet;
 using System.Collections.Generic;
-using System.Linq;
 using Verse;
 
 namespace TorannMagic.WorldTransport
@@ -19,7 +18,7 @@ namespace TorannMagic.WorldTransport
             foreach (Thing item in (IEnumerable<Thing>)activeDropPod.Contents.innerContainer)
             {
                 Pawn pawn;
-                if ((pawn = (item as Pawn)) != null && pawn.IsWorldPawn())
+                if ((pawn = item as Pawn) != null && pawn.IsWorldPawn())
                 {
                     Find.WorldPawns.RemovePawn(pawn);
                     pawn.psychicEntropy?.SetInitialPsyfocusLevel();

@@ -1,11 +1,9 @@
 ﻿using Verse;
-using Verse.AI;
 using Verse.Sound;
 using AbilityUser;
 using UnityEngine;
 using System.Linq;
 using System.Collections.Generic;
-using System;
 using RimWorld;
 using HarmonyLib;
 
@@ -36,7 +34,6 @@ namespace TorannMagic
         float arcaneDmg = 1;
         int strikeDelay = 120;
         int lastStrike = 0;
-        int targetThingCount = 0;
         bool initialized = false;
 
         List<IntVec3> targetCells;
@@ -91,8 +88,6 @@ namespace TorannMagic
                 Effecter SabotageEffect = TorannMagicDefOf.TM_SabotageExplosion.Spawn();
                 SabotageEffect.Trigger(new TargetInfo(base.Position, this.Map, false), new TargetInfo(base.Position, this.Map, false));
                 SabotageEffect.Cleanup();
-                targetCells = new List<IntVec3>();
-                targetCells.Clear();
                 targetCells = GenRadial.RadialCellsAround(base.Position, this.def.projectile.explosionRadius, true).ToList();
                 this.targetThings = new List<SabotageThing>();
                 this.targetThings.Clear();
@@ -103,10 +98,11 @@ namespace TorannMagic
 
                 for (int i = 0; i < this.targetCells.Count; i++)
                 {
+                    var targetCell = this.targetCells[i];
                     if (Rand.Chance((.5f + (.1f * verVal)) * this.arcaneDmg))
                     {
                         float rnd = Rand.Range(0, 1f);
-                        targetPawn = this.targetCells[i].GetFirstPawn(this.Map);
+                        targetPawn = targetCell.GetFirstPawn(this.Map);
                         if (targetPawn != null)
                         {
                             if (TM_Calc.IsRobotPawn(targetPawn))
@@ -121,7 +117,7 @@ namespace TorannMagic
                             }
                         }
 
-                        targetBuilding = this.targetCells[i].GetFirstBuilding(this.Map);
+                        targetBuilding = targetCell.GetFirstBuilding(this.Map);
                         if (targetPawn == null && targetBuilding != null)
                         {
                             CompPower compP = targetBuilding.GetComp<CompPower>();
@@ -135,15 +131,9 @@ namespace TorannMagic
                                     GenExplosion.DoExplosion(targetBuilding.Position, base.Map, 1 + pwrVal + Mathf.RoundToInt(cpt.powerOutputInt / 600), TMDamageDefOf.DamageDefOf.TM_ElectricalBurn, null);
 
                                 }
-                                else if (rnd <= .66f)
-                                {
-                                    //electrical burn short circuit
-                                }
                                 else
                                 {
-
                                 }
-
                             }
 
                             Building_Battery targetBattery = targetBuilding as Building_Battery;
@@ -152,7 +142,7 @@ namespace TorannMagic
                                 CompPowerBattery compB = targetBattery.GetComp<CompPowerBattery>();
                                 if (rnd <= .5f)
                                 {
-                                    Traverse.Create(root: targetBattery).Field(name: "ticksToExplode").SetValue(Rand.Range(40, 130) - (5*pwrVal));
+                                    Traverse.Create(root: targetBattery).Field(name: "ticksToExplode").SetValue(Rand.Range(40, 130) - (5 * pwrVal));
                                     compB.SetStoredEnergyPct(.81f);
                                 }
                                 else
@@ -185,7 +175,7 @@ namespace TorannMagic
                     }
                 }
             }
-            else if(this.targetThings.Count > 0)
+            else if (this.targetThings.Count > 0)
             {
                 this.age = this.duration;
             }
@@ -194,8 +184,8 @@ namespace TorannMagic
                 this.age = this.duration;
             }
 
-            
-        }            
+
+        }
 
         public override void ExposeData()
         {
@@ -208,7 +198,7 @@ namespace TorannMagic
             Scribe_Values.Look<int>(ref this.verVal, "verVal", 0, false);
             Scribe_Values.Look<int>(ref this.pwrVal, "pwrVal", 0, false);
         }
-    }    
+    }
 }
 
 

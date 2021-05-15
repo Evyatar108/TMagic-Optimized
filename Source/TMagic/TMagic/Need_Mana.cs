@@ -7,7 +7,7 @@ using RimWorld.Planet;
 
 namespace TorannMagic
 {
-    public class Need_Mana : Need  
+    public class Need_Mana : Need
     {
         public const float BaseGainPerTickRate = 150f;
 
@@ -53,9 +53,9 @@ namespace TorannMagic
         protected new float curLevelInt;
 
         public override float CurLevel
-        {            
+        {
             get => curLevelInt;
-            set => curLevelInt = Mathf.Clamp(value, 0f, 2f*this.pawn.GetComp<CompAbilityUserMagic>().maxMP);            
+            set => curLevelInt = Mathf.Clamp(value, 0f, 2f * this.pawn.GetComp<CompAbilityUserMagic>().maxMP);
         }
 
         public override float MaxLevel => this.pawn.GetComp<CompAbilityUserMagic>().maxMP;
@@ -137,61 +137,61 @@ namespace TorannMagic
         }
 
         public Need_Mana(Pawn pawn) : base(pawn)
-		{
+        {
             this.lastGainTick = -999;
             this.threshPercents = new List<float>();
-            this.threshPercents.Add((0.25f / this.MaxLevel));
-            this.threshPercents.Add((0.5f / this.MaxLevel));
-            this.threshPercents.Add((0.75f / this.MaxLevel));         
+            this.threshPercents.Add(0.25f / this.MaxLevel);
+            this.threshPercents.Add(0.5f / this.MaxLevel);
+            this.threshPercents.Add(0.75f / this.MaxLevel);
         }
 
         private void AdjustThresh()
         {
             this.threshPercents.Clear();
-            this.threshPercents.Add((0.25f / this.MaxLevel));
-            this.threshPercents.Add((0.5f / this.MaxLevel));
-            this.threshPercents.Add((0.75f / this.MaxLevel));
+            this.threshPercents.Add(0.25f / this.MaxLevel);
+            this.threshPercents.Add(0.5f / this.MaxLevel);
+            this.threshPercents.Add(0.75f / this.MaxLevel);
             if (this.MaxLevel > 1)
             {
-                this.threshPercents.Add((1f / this.MaxLevel));
+                this.threshPercents.Add(1f / this.MaxLevel);
             }
             if (this.MaxLevel > 1.25f)
             {
-                this.threshPercents.Add((1.25f / this.MaxLevel));
+                this.threshPercents.Add(1.25f / this.MaxLevel);
             }
             if (this.MaxLevel > 1.5f)
             {
-                this.threshPercents.Add((1.5f / this.MaxLevel));
+                this.threshPercents.Add(1.5f / this.MaxLevel);
             }
             if (this.MaxLevel > 1.75f)
             {
-                this.threshPercents.Add((1.75f / this.MaxLevel));
+                this.threshPercents.Add(1.75f / this.MaxLevel);
             }
             if (this.MaxLevel > 2f)
             {
-                this.threshPercents.Add((2f / this.MaxLevel));
+                this.threshPercents.Add(2f / this.MaxLevel);
             }
             if (this.MaxLevel > 2.5f)
             {
-                this.threshPercents.Add((2.5f / this.MaxLevel));
+                this.threshPercents.Add(2.5f / this.MaxLevel);
             }
             if (this.MaxLevel > 3f)
             {
-                this.threshPercents.Add((3f / this.MaxLevel));
+                this.threshPercents.Add(3f / this.MaxLevel);
             }
             if (this.MaxLevel > 4f)
             {
-                this.threshPercents.Add((4f / this.MaxLevel));
+                this.threshPercents.Add(4f / this.MaxLevel);
             }
             if (this.MaxLevel > 5f)
             {
-                this.threshPercents.Add((5f / this.MaxLevel));
+                this.threshPercents.Add(5f / this.MaxLevel);
             }
         }
 
         public override void SetInitialLevel()
         {
-            if(this.pawn.story.traits.HasTrait(TorannMagicDefOf.Faceless))
+            if (this.pawn.story.traits.HasTrait(TorannMagicDefOf.Faceless))
             {
                 this.def.showOnNeedList = false;
             }
@@ -199,25 +199,25 @@ namespace TorannMagic
         }
 
         public void GainNeed(float amount)
-        {            
+        {
             if (!base.pawn.Dead && base.pawn.story != null && base.pawn.story.traits != null && !base.pawn.story.traits.HasTrait(TorannMagicDefOf.Faceless))
-            {                
+            {
                 Pawn pawn = base.pawn;
                 CompAbilityUserMagic comp = pawn.GetComp<CompAbilityUserMagic>();
                 if (comp != null && comp.MagicData != null && comp.IsMagicUser && pawn.Faction != null)
-                {                    
+                {
                     if (!pawn.Faction.IsPlayer && pawn.Map != null)
                     {
-                        amount *= (0.025f);
+                        amount *= 0.025f;
                         amount = Mathf.Min(amount, this.MaxLevel - this.CurLevel);
                         this.curLevelInt += amount;
                     }
                     else
                     {
-                        ModOptions.SettingsRef settingsRef = new ModOptions.SettingsRef();                        
+                        ModOptions.SettingsRef settingsRef = new ModOptions.SettingsRef();
                         MagicPowerSkill manaRegen = pawn.GetComp<CompAbilityUserMagic>().MagicData.MagicPowerSkill_global_regen.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_global_regen_pwr");
-                        this.baseManaGain = (amount * (0.0012f) * settingsRef.needMultiplier);
-                        amount *= (((0.0012f * comp.mpRegenRate)) * settingsRef.needMultiplier);
+                        this.baseManaGain = amount * 0.0012f * settingsRef.needMultiplier;
+                        amount *= 0.0012f * comp.mpRegenRate * settingsRef.needMultiplier;
                         this.modifiedManaGain = amount - this.baseManaGain;
 
                         if (pawn.health != null && pawn.health.hediffSet != null)
@@ -232,14 +232,14 @@ namespace TorannMagic
                             {
                                 drainEnergyHD = 0;
                             }
-                        
+
                             //Syrrium modifier
                             if (this.pawn.health.hediffSet.HasHediff(HediffDef.Named("TM_SyrriumSenseHD"), false))
                             {
                                 this.drainSyrrium = this.baseManaGain * .5f;
-                                amount += this.drainSyrrium;                            
+                                amount += this.drainSyrrium;
                             }
-                            else if(this.pawn.health.hediffSet.HasHediff(HediffDef.Named("TM_PomanaSenseHD"), false))
+                            else if (this.pawn.health.hediffSet.HasHediff(HediffDef.Named("TM_PomanaSenseHD"), false))
                             {
                                 this.drainSyrrium = this.baseManaGain * .2f;
                                 amount += this.drainSyrrium;
@@ -252,7 +252,7 @@ namespace TorannMagic
                             //Mana drain modifier
                             if (pawn.Map != null && pawn.Map.GameConditionManager.ConditionIsActive(TorannMagicDefOf.ManaDrain))
                             {
-                                this.drainManaDrain = 2*amount;
+                                this.drainManaDrain = 2 * amount;
                                 //Arcane weakness modifier
                                 if (pawn.health.hediffSet.HasHediff(TorannMagicDefOf.TM_ArcaneWeakness))
                                 {
@@ -262,14 +262,14 @@ namespace TorannMagic
                                 {
                                     this.drainManaWeakness = 0;
                                 }
-                                amount = (-1 * amount) - this.drainManaWeakness;                            
+                                amount = (-1 * amount) - this.drainManaWeakness;
                                 this.drainManaSurge = 0f;
                             }
                             else if (pawn.Map != null && pawn.Map.GameConditionManager.ConditionIsActive(TorannMagicDefOf.ManaSurge))
                             {
                                 //Arcane weakness modifier
                                 this.drainManaSurge = (2.25f * amount) - amount;
-                                amount = (2.25f * amount);
+                                amount = 2.25f * amount;
                                 if (pawn.health.hediffSet.HasHediff(TorannMagicDefOf.TM_ArcaneWeakness))
                                 {
                                     this.drainManaWeakness = .75f * this.baseManaGain;
@@ -279,14 +279,14 @@ namespace TorannMagic
                                     this.drainManaWeakness = 0;
                                 }
                                 amount -= this.drainManaWeakness;
-                                this.drainManaDrain = 0;                            
+                                this.drainManaDrain = 0;
                             }
                             else
                             {
                                 //Arcane weakness modifier
                                 if (pawn.health.hediffSet.HasHediff(TorannMagicDefOf.TM_ArcaneWeakness))
                                 {
-                                    this.drainManaWeakness = .75f * this.baseManaGain;                                
+                                    this.drainManaWeakness = .75f * this.baseManaGain;
                                 }
                                 else
                                 {
@@ -345,7 +345,7 @@ namespace TorannMagic
                         if (comp.summonedMinions.Count > 0)
                         {
                             MagicPowerSkill summonerEff = pawn.GetComp<CompAbilityUserMagic>().MagicData.MagicPowerSkill_SummonMinion.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_SummonMinion_eff");
-                            this.drainMinion = (0.0012f * (comp.summonedMinions.Count * (.2f - (.01f * summonerEff.level))));
+                            this.drainMinion = 0.0012f * (comp.summonedMinions.Count * (.2f - (.01f * summonerEff.level)));
                             amount -= this.drainMinion;
                         }
                         else
@@ -354,10 +354,10 @@ namespace TorannMagic
                         }
 
                         //Earth sprite modifier
-                        if(comp.earthSpriteType != 0)
+                        if (comp.earthSpriteType != 0)
                         {
                             MagicPowerSkill manaDeviant = pawn.GetComp<CompAbilityUserMagic>().MagicData.MagicPowerSkill_EarthSprites.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_EarthSprites_ver");
-                            this.drainSprites = (0.0012f * (.6f - (.07f * manaDeviant.level)));
+                            this.drainSprites = 0.0012f * (.6f - (.07f * manaDeviant.level));
                             amount -= this.drainSprites;
                         }
                         else
@@ -367,7 +367,6 @@ namespace TorannMagic
 
                         //Undead modifier
                         float necroReduction = 0;
-                        int necroCount = 0;
                         float undeadCount = 0;
 
                         if (settingsRef.undeadUpkeepMultiplier > 0f && comp.supportedUndead != null && comp.supportedUndead.Count > 0)
@@ -378,11 +377,11 @@ namespace TorannMagic
                             if (orb != null)
                             {
                                 Enchantment.CompEnchantedItem orbComp = orb.GetComp<Enchantment.CompEnchantedItem>();
-                                if(orbComp != null && orbComp.NecroticEnergy > 0)
+                                if (orbComp != null && orbComp.NecroticEnergy > 0)
                                 {
                                     orbEnergy = orbComp.NecroticEnergy;
                                     orbCount++;
-                                }                                
+                                }
                             }
                             foreach (Pawn current in comp.supportedUndead)
                             {
@@ -391,7 +390,7 @@ namespace TorannMagic
                                     if (current.health.hediffSet.HasHediff(TorannMagicDefOf.TM_UndeadHD))
                                     {
                                         undeadCount += 2;
-                                        if(current.health.hediffSet.HasHediff(TorannMagicDefOf.TM_BrittleBonesHD) || current.health.hediffSet.HasHediff(TorannMagicDefOf.TM_SlaggedHD))
+                                        if (current.health.hediffSet.HasHediff(TorannMagicDefOf.TM_BrittleBonesHD) || current.health.hediffSet.HasHediff(TorannMagicDefOf.TM_SlaggedHD))
                                         {
                                             undeadCount++;
                                         }
@@ -403,7 +402,7 @@ namespace TorannMagic
                                     {
                                         if (current.kindDef != null && current.kindDef.combatPower != 0)
                                         {
-                                            undeadCount += (current.kindDef.combatPower / 100);
+                                            undeadCount += current.kindDef.combatPower / 100;
                                         }
                                         else
                                         {
@@ -411,7 +410,7 @@ namespace TorannMagic
                                         }
                                     }
                                 }
-                            }                            
+                            }
                             MagicPowerSkill eff = comp.MagicData.MagicPowerSkill_RaiseUndead.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_RaiseUndead_eff");
                             if (comp.Mana != null && comp.Mana.CurLevel < 0.01f)
                             {
@@ -420,9 +419,9 @@ namespace TorannMagic
                                     Enchantment.CompEnchantedItem itemComp = orb.GetComp<Enchantment.CompEnchantedItem>();
                                     if (itemComp != null)
                                     {
-                                        itemComp.NecroticEnergy -= (0.12f * .15f * undeadCount);
+                                        itemComp.NecroticEnergy -= 0.12f * .15f * undeadCount;
                                         undeadCount = 0;
-                                    }                                    
+                                    }
                                 }
                                 else
                                 {
@@ -447,13 +446,13 @@ namespace TorannMagic
                                         }
                                         else if (current.ParentHolder != null && current.ParentHolder is Caravan)
                                         {
-                                            Caravan van = current.ParentHolder as Caravan;                                            
+                                            Caravan van = current.ParentHolder as Caravan;
                                             van.RemovePawn(current);
                                         }
                                         current.Destroy();
                                         undeadCount--;
                                         this.curLevelInt = .12f + (.025f * manaRegen.level);
-                                    }                                    
+                                    }
                                 }
                             }
                             else
@@ -464,17 +463,17 @@ namespace TorannMagic
                                     Enchantment.CompEnchantedItem itemComp = orb.GetComp<Enchantment.CompEnchantedItem>();
                                     if (itemComp != null)
                                     {
-                                        itemComp.NecroticEnergy += (0.036f);
+                                        itemComp.NecroticEnergy += 0.036f;
                                     }
                                 }
                             }
                             float orbReduction = 1f;
-                            if(orb != null && orbEnergy > 0)
+                            if (orb != null && orbEnergy > 0)
                             {
                                 orbReduction = .75f;
                             }
-                            
-                            necroReduction = (((0.0012f * (.15f - (.15f * (.1f * eff.level))) * undeadCount) * orbReduction) * settingsRef.undeadUpkeepMultiplier);
+
+                            necroReduction = 0.0012f * (.15f - (.15f * (.1f * eff.level))) * undeadCount * orbReduction * settingsRef.undeadUpkeepMultiplier;
                             this.drainUndead = necroReduction;
                             amount -= necroReduction;
                             //Log.Message("" + pawn.LabelShort + " is 1 of " + necroCount + " contributing necros and had necro reduction of " + necroReduction);
@@ -489,7 +488,7 @@ namespace TorannMagic
                         {
                             float pain = pawn.health.hediffSet.PainTotal;
                             float con = pawn.health.capacities.GetLevel(PawnCapacityDefOf.Consciousness);
-                            float sev = (.015f * (1 + (3 * pain) + (1 - con)));
+                            float sev = .015f * (1 + (3 * pain) + (1 - con));
                             HealthUtility.AdjustSeverity(pawn, TorannMagicDefOf.TM_ManaSickness, sev);
                         }
 
@@ -521,7 +520,7 @@ namespace TorannMagic
                     {
                         CurLevel -= .005f;
                     }
-                    else if (CurLevel > (MaxLevel))
+                    else if (CurLevel > MaxLevel)
                     {
                         CurLevel = MaxLevel;
                     }
@@ -548,31 +547,31 @@ namespace TorannMagic
             //    }
             //}
             AdjustThresh();
-        }        
+        }
 
         public void UseMagicPower(float amount)
         {
-            this.curLevelInt = Mathf.Clamp(this.curLevelInt - amount, 0f, 2f*this.pawn.GetComp<CompAbilityUserMagic>().maxMP);
-            if ((amount) > .25f && (amount) < .45f)
+            this.curLevelInt = Mathf.Clamp(this.curLevelInt - amount, 0f, 2f * this.pawn.GetComp<CompAbilityUserMagic>().maxMP);
+            if (amount > .25f && amount < .45f)
             {
                 //0.0 to 0.2 max
-                float sev = ((amount - .25f) * 10);
+                float sev = (amount - .25f) * 10;
                 HealthUtility.AdjustSeverity(pawn, TorannMagicDefOf.TM_ArcaneWeakness, sev);
             }
-            else if ((amount) >= .45f && (amount) < .79f)
+            else if (amount >= .45f && amount < .79f)
             {
                 //0.0 to 0.34 max
                 float sev = 2f + ((amount - .45f) * 30);
                 HealthUtility.AdjustSeverity(pawn, TorannMagicDefOf.TM_ArcaneWeakness, sev);
             }
-            else if ((amount) >= .79f && (amount) < 5)
+            else if (amount >= .79f && amount < 5)
             {
                 //0.0 to x.x 
-                float sev = 12.5f + ((amount - .79f) * 75);              
+                float sev = 12.5f + ((amount - .79f) * 75);
                 if (lastCast != Find.TickManager.TicksGame)
                 {
                     this.lastCast = Find.TickManager.TicksGame;
-                    HealthUtility.AdjustSeverity(pawn, TorannMagicDefOf.TM_ArcaneWeakness, sev);                    
+                    HealthUtility.AdjustSeverity(pawn, TorannMagicDefOf.TM_ArcaneWeakness, sev);
                 }
             }
         }
@@ -617,14 +616,14 @@ namespace TorannMagic
             {
                 num2 *= Mathf.InverseLerp(0f, 50f, rect.height);
             }
-            Text.Font = ((rect.height <= 55f) ? GameFont.Tiny : GameFont.Small);
+            Text.Font = (rect.height <= 55f) ? GameFont.Tiny : GameFont.Small;
             Text.Anchor = TextAnchor.LowerLeft;
-            Rect rect2 = new Rect(rect.x + num3 + rect.width * 0.1f, rect.y, rect.width - num3 - rect.width * 0.1f, rect.height / 2f);
+            Rect rect2 = new Rect(rect.x + num3 + (rect.width * 0.1f), rect.y, rect.width - num3 - (rect.width * 0.1f), rect.height / 2f);
             Widgets.Label(rect2, base.LabelCap);
             GUI.color = Color.magenta;
             Text.Anchor = TextAnchor.UpperLeft;
-            Rect rect3 = new Rect(rect.x, rect.y + rect.height / 2f, rect.width, rect.height / 2f);
-            rect3 = new Rect(rect3.x + num3, rect3.y, rect3.width - num3 * 2f, rect3.height - num2);
+            Rect rect3 = new Rect(rect.x, rect.y + (rect.height / 2f), rect.width, rect.height / 2f);
+            rect3 = new Rect(rect3.x + num3, rect3.y, rect3.width - (num3 * 2f), rect3.height - num2);
             Widgets.FillableBar(rect3, base.CurLevelPercentage);
             bool flag4 = this.threshPercents != null;
             if (flag4)
@@ -645,13 +644,13 @@ namespace TorannMagic
             {
                 UIHighlighter.HighlightOpportunity(rect, this.def.tutorHighlightTag);
             }
-            Text.Font = GameFont.Small;            
+            Text.Font = GameFont.Small;
         }
 
         private void DrawBarThreshold(Rect barRect, float threshPct)
         {
             float num = (float)((barRect.width <= 60f) ? 1 : 2);
-            Rect position = new Rect(barRect.x + barRect.width * threshPct - (num - 1f), barRect.y + barRect.height / 2f, num, barRect.height / 2f);
+            Rect position = new Rect(barRect.x + (barRect.width * threshPct) - (num - 1f), barRect.y + (barRect.height / 2f), num, barRect.height / 2f);
             bool flag = threshPct < base.CurLevelPercentage;
             Texture2D image;
             if (flag)
@@ -665,7 +664,7 @@ namespace TorannMagic
                 GUI.color = new Color(1f, 1f, 1f, 0.5f);
             }
             GUI.DrawTexture(position, image);
-            GUI.color = Color.white;            
+            GUI.color = Color.white;
         }
     }
 }

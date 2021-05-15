@@ -1,10 +1,4 @@
-﻿using RimWorld;
-using Verse;
-using UnityEngine;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using HarmonyLib;
+﻿using Verse;
 
 namespace TorannMagic
 {
@@ -47,12 +41,11 @@ namespace TorannMagic
         private void Initialize()
         {
             bool spawned = base.Pawn.Spawned;
-            CompAbilityUserMagic comp = this.enchanterPawn.GetComp<CompAbilityUserMagic>();
             if (!spawned || this.enchanterPawn == null)
             {
                 this.removeNow = true;
             }
-        }        
+        }
 
         public override void CompPostTick(ref float severityAdjustment)
         {
@@ -68,20 +61,20 @@ namespace TorannMagic
 
                 if (Find.TickManager.TicksGame % this.eventFrequency == 0)
                 {
-                    if(!this.enchanterPawn.DestroyedOrNull() && !this.enchanterPawn.Dead)
+                    if (!this.enchanterPawn.DestroyedOrNull() && !this.enchanterPawn.Dead)
                     {
                         CompAbilityUserMagic comp = this.enchanterPawn.GetComp<CompAbilityUserMagic>();
-                        if(comp != null && comp.weaponEnchants != null && comp.weaponEnchants.Count >0)
+                        if (comp != null && comp.weaponEnchants != null && comp.weaponEnchants.Count > 0)
                         {
                             bool isRegistered = false;
-                            for(int i =0; i < comp.weaponEnchants.Count; i++)
+                            for (int i = 0; i < comp.weaponEnchants.Count; i++)
                             {
-                                if(comp.weaponEnchants[i] == this.Pawn)
+                                if (comp.weaponEnchants[i] == this.Pawn)
                                 {
                                     isRegistered = true;
                                 }
                             }
-                            if(!isRegistered)
+                            if (!isRegistered)
                             {
                                 this.removeNow = true;
                             }
@@ -91,8 +84,8 @@ namespace TorannMagic
                     {
                         this.removeNow = true;
                     }
-                    
-                    if(!this.enchantedWeapon.DestroyedOrNull() && this.Pawn.equipment.Primary != null && this.Pawn.equipment.Primary == this.enchantedWeapon)
+
+                    if (!this.enchantedWeapon.DestroyedOrNull() && this.Pawn.equipment.Primary != null && this.Pawn.equipment.Primary == this.enchantedWeapon)
                     {
 
                     }
@@ -106,12 +99,12 @@ namespace TorannMagic
 
         public override void CompPostPostRemoved()
         {
-            if(this.enchanterPawn != null)
+            if (this.enchanterPawn != null)
             {
                 CompAbilityUserMagic comp = enchanterPawn.GetComp<CompAbilityUserMagic>();
-                if(comp != null && comp.weaponEnchants != null && comp.weaponEnchants.Count > 0)
+                if (comp != null && comp.weaponEnchants != null && comp.weaponEnchants.Count > 0)
                 {
-                    if(comp.weaponEnchants.Contains(this.Pawn))
+                    if (comp.weaponEnchants.Contains(this.Pawn))
                     {
                         comp.weaponEnchants.Remove(this.Pawn);
                     }
@@ -126,6 +119,6 @@ namespace TorannMagic
             {
                 return base.CompShouldRemove || this.removeNow;
             }
-        }        
+        }
     }
 }

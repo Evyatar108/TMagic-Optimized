@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using RimWorld;
+﻿using RimWorld;
 using Verse;
 using UnityEngine;
 using AbilityUser;
@@ -18,17 +16,17 @@ namespace TorannMagic
         {
 
             BodyPartRecord hitPart = null;
-            DamageInfo dinfo = new DamageInfo(DamageDefOf.Stun, (int)(10), 0, (float)-1, this.CasterPawn, null, null, DamageInfo.SourceCategory.ThingOrUnknown);
+            DamageInfo dinfo = new DamageInfo(DamageDefOf.Stun, (int)10, 0, (float)-1, this.CasterPawn, null, null, DamageInfo.SourceCategory.ThingOrUnknown);
             if (this.currentTarget != null && this.currentTarget.Thing != null)
             {
                 Pawn targetPawn = this.currentTarget.Thing as Pawn;
-                if(targetPawn != null)
+                if (targetPawn != null)
                 {
                     float rnd = 2f;
                     CompAbilityUserMight comp = this.CasterPawn.TryGetComp<CompAbilityUserMight>();
-                    if(comp != null)
+                    if (comp != null)
                     {
-                        if(comp.MightData.MightPowerSkill_FieldTraining.FirstOrDefault((MightPowerSkill x) => x.label == "TM_FieldTraining_pwr").level >= 2)
+                        if (comp.MightData.MightPowerSkill_FieldTraining.FirstOrDefault((MightPowerSkill x) => x.label == "TM_FieldTraining_pwr").level >= 2)
                         {
                             rnd = 4f;
                         }

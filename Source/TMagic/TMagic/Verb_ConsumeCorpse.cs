@@ -4,7 +4,6 @@ using System.Linq;
 using RimWorld;
 using AbilityUser;
 using Verse;
-using UnityEngine;
 
 namespace TorannMagic
 {
@@ -54,7 +53,7 @@ namespace TorannMagic
                     {
                         if (undead.health.hediffSet.HasHediff(TorannMagicDefOf.TM_UndeadHD))
                         {
-                            comp.Mana.CurLevel += (.225f * (1 + (manaRegen.level * .02f) + (ver.level * .07f)) * comp.arcaneDmg);
+                            comp.Mana.CurLevel += .225f * (1 + (manaRegen.level * .02f) + (ver.level * .07f)) * comp.arcaneDmg;
                             ConsumeHumanoid(undead);
                             if (ver.level > 0)
                             {
@@ -64,7 +63,7 @@ namespace TorannMagic
                         }
                         else if (undead.health.hediffSet.HasHediff(TorannMagicDefOf.TM_UndeadAnimalHD))
                         {
-                            comp.Mana.CurLevel += (.18f * (1 + (manaRegen.level * .02f) + (ver.level * .07f)) * comp.arcaneDmg);
+                            comp.Mana.CurLevel += .18f * (1 + (manaRegen.level * .02f) + (ver.level * .07f)) * comp.arcaneDmg;
                             ConsumeAnimalKind(undead);
                             if (ver.level > 0)
                             {
@@ -72,12 +71,12 @@ namespace TorannMagic
                             }
                             undead.Destroy();
                         }
-                        else if(undead.def == TorannMagicDefOf.TM_SkeletonLichR)
+                        else if (undead.def == TorannMagicDefOf.TM_SkeletonLichR)
                         {
-                            comp.Mana.CurLevel += (.15f * (1 + (manaRegen.level * .02f) + (ver.level * .07f)) * comp.arcaneDmg);
+                            comp.Mana.CurLevel += .15f * (1 + (manaRegen.level * .02f) + (ver.level * .07f)) * comp.arcaneDmg;
                             TM_Action.DamageUndead(undead, Rand.Range(10, 20), caster);
                         }
-                        else if(undead.def == TorannMagicDefOf.TM_GiantSkeletonR || undead.def == TorannMagicDefOf.TM_SkeletonR)
+                        else if (undead.def == TorannMagicDefOf.TM_GiantSkeletonR || undead.def == TorannMagicDefOf.TM_SkeletonR)
                         {
                             TM_Action.DamageUndead(undead, Rand.Range(15, 30), caster);
                         }
@@ -93,14 +92,14 @@ namespace TorannMagic
                 }
             }
 
-            
+
             IntVec3 target = this.currentTarget.Cell;
             Thing corpseThing = null;
             Corpse corpse = null;
             List<Thing> thingList;
             thingList = target.GetThingList(caster.Map);
-            int i=0;
-            while(i < thingList.Count)
+            int i = 0;
+            while (i < thingList.Count)
             {
                 corpseThing = thingList[i];
                 if (corpseThing != null)
@@ -116,7 +115,7 @@ namespace TorannMagic
                             {
                                 if (!corpse.IsNotFresh())
                                 {
-                                    comp.Mana.CurLevel += (.13f * (1 + (manaRegen.level * .02f) + (ver.level * .07f)) * comp.arcaneDmg);
+                                    comp.Mana.CurLevel += .13f * (1 + (manaRegen.level * .02f) + (ver.level * .07f)) * comp.arcaneDmg;
                                     if (caster.needs != null && caster.needs.rest != null) { caster.needs.rest.CurLevel += .3f; }
                                     if (caster.needs != null && caster.needs.mood != null) { caster.needs.mood.CurLevel += .3f; }
                                     ConsumeHumanoid(corpse);
@@ -127,7 +126,7 @@ namespace TorannMagic
                                 }
                                 else
                                 {
-                                    comp.Mana.CurLevel += (.09f * (1 + (manaRegen.level * .02f) + (ver.level * .07f)) * comp.arcaneDmg);
+                                    comp.Mana.CurLevel += .09f * (1 + (manaRegen.level * .02f) + (ver.level * .07f)) * comp.arcaneDmg;
                                     ConsumeHumanoid(corpse);
                                 }
                                 corpse.Destroy();
@@ -136,7 +135,7 @@ namespace TorannMagic
                             {
                                 if (!corpse.IsNotFresh())
                                 {
-                                    comp.Mana.CurLevel += (.09f * (1 + (manaRegen.level * .02f) + (ver.level * .07f)) * comp.arcaneDmg);
+                                    comp.Mana.CurLevel += .09f * (1 + (manaRegen.level * .02f) + (ver.level * .07f)) * comp.arcaneDmg;
                                     if (caster.needs != null && caster.needs.food != null) { caster.needs.food.CurLevel += .4f; }
                                     ConsumeAnimalKind(corpse);
                                     if (ver.level > 0)
@@ -146,7 +145,7 @@ namespace TorannMagic
                                 }
                                 else
                                 {
-                                    comp.Mana.CurLevel += (.07f * (1 + (manaRegen.level * .02f) + (ver.level * .07f)) * comp.arcaneDmg);
+                                    comp.Mana.CurLevel += .07f * (1 + (manaRegen.level * .02f) + (ver.level * .07f)) * comp.arcaneDmg;
                                     ConsumeAnimalKind(corpse);
                                 }
                                 corpse.Destroy();
@@ -163,13 +162,13 @@ namespace TorannMagic
                     }
                 }
                 i++;
-            }        
-            
+            }
+
             return false;
         }
 
         public void ConsumeHumanoid(Pawn undead)
-        {            
+        {
             TM_MoteMaker.ThrowSiphonMote(undead.Position.ToVector3Shifted(), undead.Map, 1.2f);
             TM_MoteMaker.ThrowBloodSquirt(undead.Position.ToVector3Shifted(), undead.Map, 1f);
             TM_MoteMaker.ThrowBloodSquirt(undead.Position.ToVector3Shifted(), undead.Map, 1.2f);
@@ -239,7 +238,7 @@ namespace TorannMagic
                             IEnumerable<Hediff_Injury> arg_BB_0 = caster.health.hediffSet.GetHediffs<Hediff_Injury>();
                             Func<Hediff_Injury, bool> arg_BB_1;
 
-                            arg_BB_1 = ((Hediff_Injury injury) => injury.Part == rec);
+                            arg_BB_1 = (Hediff_Injury injury) => injury.Part == rec;
 
                             foreach (Hediff_Injury current in arg_BB_0.Where(arg_BB_1))
                             {

@@ -1,30 +1,26 @@
 ﻿using RimWorld;
-using System;
 using Verse;
 using AbilityUser;
-using UnityEngine;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace TorannMagic
 {
-    class Verb_Mimic : Verb_UseAbility  
+    class Verb_Mimic : Verb_UseAbility
     {
         private bool validTarg = false;
 
         public override bool CanHitTargetFrom(IntVec3 root, LocalTargetInfo targ)
-        {            
-            if ( targ.IsValid && targ.CenterVector3.InBounds(base.CasterPawn.Map) && !targ.Cell.Fogged(base.CasterPawn.Map))
+        {
+            if (targ.IsValid && targ.CenterVector3.InBounds(base.CasterPawn.Map) && !targ.Cell.Fogged(base.CasterPawn.Map))
             {
                 if ((root - targ.Cell).LengthHorizontal < this.verbProps.range)
                 {
                     Pawn targetPawn = targ.Thing as Pawn;
-                    if(targ.Thing is Pawn)
+                    if (targ.Thing is Pawn)
                     {
-                        if(targetPawn.RaceProps.Humanlike)
+                        if (targetPawn.RaceProps.Humanlike)
                         {
-                            ShootLine shootLine;
-                            validTarg = this.TryFindShootLineFromTo(root, targ, out shootLine);
+                            validTarg = this.TryFindShootLineFromTo(root, targ, out _);
                         }
                         else
                         {
@@ -38,7 +34,7 @@ namespace TorannMagic
                         validTarg = false;
                         //Log.Message("Target was not a valid pawn to mimic.");
                     }
-                    
+
                 }
                 else
                 {
@@ -65,16 +61,16 @@ namespace TorannMagic
                     CompAbilityUserMight mightPawn = targetPawn.GetComp<CompAbilityUserMight>();
                     bool copyMagic = false;
                     bool copyMight = false;
-                    if(magicPawn != null && magicPawn.IsMagicUser)
+                    if (magicPawn != null && magicPawn.IsMagicUser)
                     {
                         copyMagic = true;
                     }
-                    if(mightPawn != null && mightPawn.IsMightUser)
+                    if (mightPawn != null && mightPawn.IsMightUser)
                     {
                         copyMight = true;
                     }
 
-                    if(copyMight && copyMagic && Rand.Chance(.5f))
+                    if (copyMight && copyMagic && Rand.Chance(.5f))
                     {
                         copyMagic = false;
                     }
@@ -147,8 +143,8 @@ namespace TorannMagic
                                 }
                                 mightComp.RemovePawnAbility(mightComp.mimicAbility);
                             }
-                            if(magicComp.mimicAbility != null)
-                            {                                
+                            if (magicComp.mimicAbility != null)
+                            {
                                 magicComp.RemovePawnAbility(magicComp.mimicAbility);
                             }
                             TM_Action.ClearSustainedMagicHediffs(magicComp);

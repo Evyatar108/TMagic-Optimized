@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using RimWorld;
 using AbilityUser;
-using Verse.AI;
 using Verse;
-using UnityEngine;
 
 
 namespace TorannMagic
@@ -24,8 +20,7 @@ namespace TorannMagic
             {
                 if ((root - targ.Cell).LengthHorizontal < this.verbProps.range)
                 {
-                    ShootLine shootLine;
-                    validTarg = this.TryFindShootLineFromTo(root, targ, out shootLine);
+                    validTarg = this.TryFindShootLineFromTo(root, targ, out _);
                 }
                 else
                 {
@@ -49,47 +44,37 @@ namespace TorannMagic
             Pawn caster = base.CasterPawn;
             Map map = caster.Map;
             cellList.Clear();
-            List<IntVec3> tmpList = GenRadial.RadialCellsAround(currentTarget.Cell, this.Projectile.projectile.explosionRadius, true).ToList();
+            IEnumerable<IntVec3> tmpList = GenRadial.RadialCellsAround(currentTarget.Cell, this.Projectile.projectile.explosionRadius, true);
             CompAbilityUserMagic comp = caster.TryGetComp<CompAbilityUserMagic>();
             pwrVal = TM_Calc.GetMagicSkillLevel(caster, comp.MagicData.MagicPowerSkill_SpiritWolves, "TM_SpiritWolves", "_pwr", true);
             verVal = TM_Calc.GetMagicSkillLevel(caster, comp.MagicData.MagicPowerSkill_SpiritWolves, "TM_SpiritWolves", "_ver", true);
             effVal = TM_Calc.GetMagicSkillLevel(caster, comp.MagicData.MagicPowerSkill_SpiritWolves, "TM_SpiritWolves", "_eff", true);
-            if (tmpList != null && tmpList.Count > 0)
+            foreach (IntVec3 c in tmpList)
             {
-                foreach (IntVec3 c in tmpList)
+                if (c != null && c.IsValid && c.Standable(map) && c.InBounds(map))
                 {
-                    if (c != null && (c.IsValid && c.Standable(map) && c.InBounds(map)))
-                    {
-                        cellList.Add(c);
-                    }
-                }
-                int summonCount = 5 + verVal;
-                for (int i = 0; i < summonCount; i++)
-                {
-                    MoteMaker.ThrowSmoke(cellList.RandomElement().ToVector3Shifted(), map, Rand.Range(3f, 4f));
-                    IntVec3 cell = cellList.RandomElement();
-
-                    AbilityUser.SpawnThings tempPod = new SpawnThings();
-                    tempPod.def = TorannMagicDefOf.TM_SpiritWolfR;
-                    tempPod.kindDef = TorannMagicDefOf.TM_SpiritWolf;
-                    tempPod.spawnCount = 1;
-                    tempPod.temporary = true;
-                    
-                    Thing newPawn = null;
-                    newPawn = TM_Action.SingleSpawnLoop(caster, tempPod, cell, map, Rand.Range(1000,1200) + (120 * effVal), true, false, caster.Faction, false);
-                    Pawn animal = newPawn as Pawn;
-                    HealthUtility.AdjustSeverity(animal, TorannMagicDefOf.TM_EnrageHD, .2f + (.1f * pwrVal));
-                    for (int j = 0; j < 3; j++)
-                    {
-                        MoteMaker.ThrowSmoke(animal.DrawPos, map, Rand.Range(.5f, 1.1f));
-                    }
+                    cellList.Add(c);
                 }
             }
-            else
+            int summonCount = 5 + verVal;
+            for (int i = 0; i < summonCount; i++)
             {
-                Messages.Message("InvalidSummon".Translate(), MessageTypeDefOf.RejectInput);
-                comp.Mana.GainNeed(comp.ActualManaCost(TorannMagicDefOf.TM_SpiritWolves));
-            }      
+                MoteMaker.ThrowSmoke(cellList.RandomElement().ToVector3Shifted(), map, Rand.Range(3f, 4f));
+                IntVec3 cell = cellList.RandomElement();
+
+                AbilityUser.SpawnThings tempPod = new SpawnThings();
+                tempPod.def = TorannMagicDefOf.TM_SpiritWolfR;
+                tempPod.kindDef = TorannMagicDefOf.TM_SpiritWolf;
+                tempPod.spawnCount = 1;
+                tempPod.temporary = true;
+                Thing newPawn = TM_Action.SingleSpawnLoop(caster, tempPod, cell, map, Rand.Range(1000, 1200) + (120 * effVal), true, false, caster.Faction, false);
+                Pawn animal = newPawn as Pawn;
+                HealthUtility.AdjustSeverity(animal, TorannMagicDefOf.TM_EnrageHD, .2f + (.1f * pwrVal));
+                for (int j = 0; j < 3; j++)
+                {
+                    MoteMaker.ThrowSmoke(animal.DrawPos, map, Rand.Range(.5f, 1.1f));
+                }
+            }
             return false;
         }
     }

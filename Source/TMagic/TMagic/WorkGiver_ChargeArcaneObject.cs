@@ -1,5 +1,4 @@
-﻿using System;
-using Verse;
+﻿using Verse;
 using Verse.AI;
 using RimWorld;
 using System.Collections.Generic;
@@ -25,7 +24,7 @@ namespace TorannMagic
 
         public override IEnumerable<Thing> PotentialWorkThingsGlobal(Pawn pawn)
         {
-            
+
             return (from p in pawn.Map.listerBuildings.allBuildingsColonist
                     where p.def == TorannMagicDefOf.TM_Portal || p.def == TorannMagicDefOf.TM_ArcaneCapacitor || p.def == TorannMagicDefOf.TM_DimensionalManaPocket
                     select p).Cast<Thing>();
@@ -63,7 +62,7 @@ namespace TorannMagic
 
         public override Job JobOnThing(Pawn pawn, Thing t, bool forced = false)
         {
-            return new Job(TorannMagicDefOf.ChargePortal, t);        
+            return new Job(TorannMagicDefOf.ChargePortal, t);
         }
     }
 }

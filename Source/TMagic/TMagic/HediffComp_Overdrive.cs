@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Verse;
+﻿using Verse;
 using Verse.Sound;
 using RimWorld;
 using UnityEngine;
@@ -45,7 +42,7 @@ namespace TorannMagic
         private void Initialize()
         {
             bool spawned = base.Pawn.Spawned;
-            
+
             if (spawned)
             {
                 MoteMaker.ThrowLightningGlow(base.Pawn.TrueCenter(), base.Pawn.Map, 1f);
@@ -83,12 +80,12 @@ namespace TorannMagic
                 }
             }
 
-            if(Find.TickManager.TicksGame % 60 == 0)
+            if (Find.TickManager.TicksGame % 60 == 0)
             {
-                this.parent.Severity -= (.015f * (1+hediffPwr));
+                this.parent.Severity -= .015f * (1 + hediffPwr);
                 //HealthUtility.AdjustSeverity(base.Pawn, this.Def, -(0.025f* hediffPwr));
             }
-            
+
             if (this.nextFeedback < Find.TickManager.TicksGame)
             {
                 this.nextFeedback = Find.TickManager.TicksGame + this.feedbackRate;
@@ -110,13 +107,13 @@ namespace TorannMagic
                     info.volumeFactor = .4f;
                     SoundDefOf.TurretAcquireTarget.PlayOneShot(info);
                     if (Rand.Chance(.6f - (.06f * hediffPwr)))
-                    {                        
-                        TM_Action.DamageEntities(pawn, null, Rand.Range(1f, (4f - (.5f * hediffPwr))), DamageDefOf.Burn, pawn);
+                    {
+                        TM_Action.DamageEntities(pawn, null, Rand.Range(1f, 4f - (.5f * hediffPwr)), DamageDefOf.Burn, pawn);
                     }
                 }
             }
         }
 
-        
+
     }
 }

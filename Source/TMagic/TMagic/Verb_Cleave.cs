@@ -20,8 +20,6 @@ namespace TorannMagic
         float pawnDPS = 0;
         float skillMultiplier = 1;
         ThingWithComps weaponComp;
-        int dmgNum = 0;
-
         private static readonly Color cleaveColor = new Color(160f, 160f, 160f);
         private static readonly Material cleavingMat = MaterialPool.MatFrom("Spells/cleave_straight", ShaderDatabase.Transparent, Verb_Cleave.cleaveColor);
 
@@ -70,13 +68,13 @@ namespace TorannMagic
             if (this.CasterPawn.equipment.Primary != null && !this.CasterPawn.equipment.Primary.def.IsRangedWeapon)
             {
                 weaponComp = base.CasterPawn.equipment.Primary;
-                weaponDPS = weaponComp.GetStatValue(StatDefOf.MeleeWeapon_AverageDPS, false) *.7f;
+                weaponDPS = weaponComp.GetStatValue(StatDefOf.MeleeWeapon_AverageDPS, false) * .7f;
                 dmgMultiplier = weaponComp.GetStatValue(StatDefOf.MeleeWeapon_DamageMultiplier, false);
                 pawnDPS = base.CasterPawn.GetStatValue(StatDefOf.MeleeDPS, false);
-                skillMultiplier = (1.2f + (.025f * str.level));
+                skillMultiplier = 1.2f + (.025f * str.level);
                 dmgNum = Mathf.RoundToInt(skillMultiplier * dmgMultiplier * (pawnDPS + weaponDPS));
                 ModOptions.SettingsRef settingsRef = new ModOptions.SettingsRef();
-                if(!this.CasterPawn.IsColonist && settingsRef.AIHardMode)
+                if (!this.CasterPawn.IsColonist && settingsRef.AIHardMode)
                 {
                     dmgNum += 10;
                 }
@@ -86,20 +84,20 @@ namespace TorannMagic
                 dmgNum = 4;
             }
 
-            for (int i =0; i < 8; i ++)
+            for (int i = 0; i < 8; i++)
             {
                 IntVec3 searchCell = base.CasterPawn.Position + GenAdj.AdjacentCells8WayRandomized()[i];
                 Pawn victim = searchCell.GetFirstPawn(map);
                 if (victim != null && base.CasterPawn != null & dmgNum != 0 && victim.Faction != base.CasterPawn.Faction)
                 {
-                    
+
                     dinfo = new DamageInfo(TMDamageDefOf.DamageDefOf.TM_Cleave, dmgNum, 0, (float)-1, this.CasterPawn, null, null, DamageInfo.SourceCategory.ThingOrUnknown);
                     ApplyCleaveDamage(dinfo, this.CasterPawn, victim, map, ver.level);
                     DrawCleaving(victim, base.CasterPawn, 10);
                     i = 8;
-                }                
+                }
             }
-            
+
             this.burstShotsLeft = 0;
             this.PostCastShot(flag10, out flag10);
             return flag10;
@@ -129,8 +127,7 @@ namespace TorannMagic
                         for (int i = 0; i < 8; i++)
                         {
                             IntVec3 intVec = target.PositionHeld + GenAdj.AdjacentCells[i];
-                            Pawn cleaveVictim = new Pawn();
-                            cleaveVictim = intVec.GetFirstPawn(map);
+                            Pawn cleaveVictim = intVec.GetFirstPawn(map);
                             if (cleaveVictim != null && cleaveVictim.Faction != caster.Faction && cleaveVictim.HostileTo(caster.Faction))
                             {
                                 cleaveVictim.TakeDamage(dinfo);
@@ -156,7 +153,7 @@ namespace TorannMagic
             {
                 Vector3 vector = cleavedPawn.Position.ToVector3();
                 vector.y = Altitudes.AltitudeFor(AltitudeLayer.MoteOverhead);
-                float hyp = Mathf.Sqrt((Mathf.Pow(caster.Position.x - cleavedPawn.Position.x, 2)) + (Mathf.Pow(caster.Position.z - cleavedPawn.Position.z, 2)));
+                float hyp = Mathf.Sqrt(Mathf.Pow(caster.Position.x - cleavedPawn.Position.x, 2) + Mathf.Pow(caster.Position.z - cleavedPawn.Position.z, 2));
                 float angleRad = Mathf.Asin(Mathf.Abs(caster.Position.x - cleavedPawn.Position.x) / hyp);
                 float angle = Mathf.Rad2Deg * angleRad;
                 //float angle = (float)Rand.Range(0, 360);
@@ -165,6 +162,6 @@ namespace TorannMagic
                 matrix.SetTRS(vector, Quaternion.AngleAxis(angle, Vector3.up), s);
                 Graphics.DrawMesh(MeshPool.plane10, matrix, Verb_Cleave.cleavingMat, 0);
             }
-        }  
+        }
     }
 }

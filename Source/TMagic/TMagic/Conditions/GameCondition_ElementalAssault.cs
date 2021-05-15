@@ -18,9 +18,9 @@ namespace TorannMagic.Conditions
         public override void GameConditionTick()
         {
             base.GameConditionTick();
-            if(Find.TickManager.TicksGame % 60 == 0)
+            if (Find.TickManager.TicksGame % 60 == 0)
             {
-                if(this.thing.DestroyedOrNull())
+                if (this.thing.DestroyedOrNull())
                 {
                     this.End();
                 }
@@ -37,8 +37,8 @@ namespace TorannMagic.Conditions
         }
 
         public override void Init()
-        {           
-            ModOptions.SettingsRef settingsRef = new ModOptions.SettingsRef();            
+        {
+            ModOptions.SettingsRef settingsRef = new ModOptions.SettingsRef();
             if (settingsRef.riftChallenge > 0)
             {
                 base.Init();
@@ -78,7 +78,7 @@ namespace TorannMagic.Conditions
                     bool validator = destroyable is Building;
                     if (validator)
                     {
-                        if(destroyable.def == ThingDef.Named("TM_ElementalRift"))
+                        if (destroyable.def == ThingDef.Named("TM_ElementalRift"))
                         {
                             destroyable.Destroy(DestroyMode.Vanish);
                         }
@@ -89,8 +89,7 @@ namespace TorannMagic.Conditions
             ModOptions.SettingsRef settingsRef = new ModOptions.SettingsRef();
             if (!this.disabled)
             {
-                Thing thing = null;
-                thing = ThingMaker.MakeThing(ThingDef.Named("Jade"));
+                Thing thing = ThingMaker.MakeThing(ThingDef.Named("Jade"));
                 thing.stackCount = Rand.Range(35 * (int)settingsRef.riftChallenge, 60 * (int)settingsRef.riftChallenge);
                 if (thing != null)
                 {
@@ -147,8 +146,8 @@ namespace TorannMagic.Conditions
                     break;
                 }
             }
-            
-            return num >= num2 && (IsGoodLocationForSpawn(loc.ToIntVec3));
+
+            return num >= num2 && IsGoodLocationForSpawn(loc.ToIntVec3);
         }
 
         [DebuggerHidden]
@@ -158,7 +157,7 @@ namespace TorannMagic.Conditions
             {
                 for (int z = center.z - this.areaRadius; z <= center.z + this.areaRadius; z++)
                 {
-                    if ((center.x - x) * (center.x - x) + (center.z - z) * (center.z - z) <= this.areaRadius * this.areaRadius)
+                    if (((center.x - x) * (center.x - x)) + ((center.z - z) * (center.z - z)) <= this.areaRadius * this.areaRadius)
                     {
                         yield return new IntVec3(x, 0, z);
                     }

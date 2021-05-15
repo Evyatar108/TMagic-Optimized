@@ -1,9 +1,6 @@
 ﻿using Verse;
 using AbilityUser;
-using UnityEngine;
-using System.Linq;
 using System.Collections.Generic;
-using System;
 using RimWorld;
 using RimWorld.Planet;
 
@@ -20,7 +17,6 @@ namespace TorannMagic
         int strikeNum = 1;
         float radius = 5;
         bool initialized = false;
-        float angle = 0;
         bool allPawnsLaunched = false;
         Pawn pawn;
         IntVec3 launcherPosition = default(IntVec3);
@@ -73,10 +69,8 @@ namespace TorannMagic
         }
 
         protected override void Impact(Thing hitThing)
-        {            
+        {
             base.Impact(hitThing);
-            ThingDef def = this.def;
-
             if (!this.initialized)
             {
                 this.pawn = this.launcher as Pawn;
@@ -89,7 +83,7 @@ namespace TorannMagic
                 podTList.Clear();
                 pawnList.Clear();
                 pods.Clear();
-                this.initialized = true;                
+                this.initialized = true;
             }
 
             if (!launchedFlag)
@@ -123,7 +117,7 @@ namespace TorannMagic
                     launchedFlag = true;
                 }
             }
-            
+
             if (launchedFlag)
             {
                 if (allPawnsLaunched)
@@ -131,7 +125,7 @@ namespace TorannMagic
                     this.age++;
                     this.Destroy(DestroyMode.Vanish);
                 }
-                else if(Find.TickManager.TicksGame % 2 == 0)
+                else if (Find.TickManager.TicksGame % 2 == 0)
                 {
                     if (podTList != null && podTList.Count > 0)
                     {
@@ -140,7 +134,7 @@ namespace TorannMagic
                             IntVec3 newPosition = GetRelativePositionOffset(base.Position, launcherPosition, pods[gi].Position);
                             GlobalTargetInfo gti = new GlobalTargetInfo(newPosition, base.Map, false);
                             LaunchLightPod(pods[gi], podTList[gi], gti.Tile, gti.Cell);
-                            gi++;                           
+                            gi++;
                         }
                         else
                         {
@@ -226,7 +220,7 @@ namespace TorannMagic
             IEnumerable<IntVec3> allCells = GenRadial.RadialCellsAround(center, r, true);
             foreach (IntVec3 item in allCells)
             {
-                if(!item.Roofed(this.Map))
+                if (!item.Roofed(this.Map))
                 {
                     cellList.Add(item);
                 }
@@ -234,5 +228,5 @@ namespace TorannMagic
             return cellList;
         }
 
-    }    
+    }
 }

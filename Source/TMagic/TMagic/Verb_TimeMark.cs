@@ -1,5 +1,4 @@
 ﻿using RimWorld;
-using System;
 using Verse;
 using AbilityUser;
 using UnityEngine;
@@ -9,7 +8,7 @@ using HarmonyLib;
 
 namespace TorannMagic
 {
-    public class Verb_TimeMark : Verb_UseAbility  
+    public class Verb_TimeMark : Verb_UseAbility
     {
 
         private int pwrVal = 0;
@@ -55,13 +54,13 @@ namespace TorannMagic
             comp.recallInjuriesList.Clear();
             for (int i = 0; i < this.CasterPawn.health.hediffSet.hediffs.Count; i++)
             {
-                if (!this.CasterPawn.health.hediffSet.hediffs[i].IsPermanent() && this.CasterPawn.health.hediffSet.hediffs[i].def != TorannMagicDefOf.TM_MagicUserHD && 
+                if (!this.CasterPawn.health.hediffSet.hediffs[i].IsPermanent() && this.CasterPawn.health.hediffSet.hediffs[i].def != TorannMagicDefOf.TM_MagicUserHD &&
                     !this.CasterPawn.health.hediffSet.hediffs[i].def.defName.Contains("TM_HediffEnchantment") && !this.CasterPawn.health.hediffSet.hediffs[i].def.defName.Contains("TM_Artifact") &&
-                    this.CasterPawn.health.hediffSet.hediffs[i].def != TorannMagicDefOf.TM_MightUserHD && this.CasterPawn.health.hediffSet.hediffs[i].def != TorannMagicDefOf.TM_BloodHD && 
+                    this.CasterPawn.health.hediffSet.hediffs[i].def != TorannMagicDefOf.TM_MightUserHD && this.CasterPawn.health.hediffSet.hediffs[i].def != TorannMagicDefOf.TM_BloodHD &&
                     this.CasterPawn.health.hediffSet.hediffs[i].def != TorannMagicDefOf.TM_ChiHD && this.CasterPawn.health.hediffSet.hediffs[i].def != TorannMagicDefOf.TM_PsionicHD)
                 {
                     if (this.CasterPawn.health.hediffSet.hediffs[i] is Hediff_Injury)
-                    {                        
+                    {
                         Hediff_Injury rhd = this.CasterPawn.health.hediffSet.hediffs[i] as Hediff_Injury;
                         Hediff_Injury hediff = new Hediff_Injury();
                         //hediff = TM_Calc.Clone<Hediff>(this.CasterPawn.health.hediffSet.hediffs[i]);
@@ -73,15 +72,15 @@ namespace TorannMagic
                         hediff.ageTicks = rhd.ageTicks;
                         comp.recallInjuriesList.Add(hediff);
                     }
-                    else if(this.CasterPawn.health.hediffSet.hediffs[i] is Hediff_MissingPart || this.CasterPawn.health.hediffSet.hediffs[i] is Hediff_AddedPart || this.CasterPawn.health.hediffSet.hediffs[i].def.defName == "PsychicAmplifier")
+                    else if (this.CasterPawn.health.hediffSet.hediffs[i] is Hediff_MissingPart || this.CasterPawn.health.hediffSet.hediffs[i] is Hediff_AddedPart || this.CasterPawn.health.hediffSet.hediffs[i].def.defName == "PsychicAmplifier")
                     {
                         //do nothing
                     }
-                    else if(this.CasterPawn.health.hediffSet.hediffs[i] is Hediff_Addiction)
+                    else if (this.CasterPawn.health.hediffSet.hediffs[i] is Hediff_Addiction)
                     {
                         //Hediff_Addiction rhd = this.CasterPawn.health.hediffSet.hediffs[i] as Hediff_Addiction;                        
                     }
-                    else if(this.CasterPawn.health.hediffSet.hediffs[i].def.defName == "LuciferiumHigh")
+                    else if (this.CasterPawn.health.hediffSet.hediffs[i].def.defName == "LuciferiumHigh")
                     {
                         //do nothing
                     }
@@ -91,7 +90,7 @@ namespace TorannMagic
                         //Log.Message("sev def is " + rhd.def.defName);
                         if (rhd != null)
                         {
-                            Hediff hediff = new Hediff();                            
+                            Hediff hediff = new Hediff();
                             //hediff = TM_Calc.Clone<Hediff>(this.CasterPawn.health.hediffSet.hediffs[i]);
                             hediff.def = rhd.def;
                             hediff.loadID = rhd.loadID;
@@ -117,7 +116,7 @@ namespace TorannMagic
                             comp.recallHediffList.Add(hediff);
                             comp.recallHediffDefSeverityList.Add(rhd.Severity);
                             HediffComp_Disappears hdc_d = rhd.TryGetComp<HediffComp_Disappears>();
-                            if(hdc_d != null)
+                            if (hdc_d != null)
                             {
                                 //Log.Message("hediff has disappears at ticks " + hdc_d.ticksToDisappear);
                                 comp.recallHediffDefTicksRemainingList.Add(hdc_d.ticksToDisappear);
@@ -162,7 +161,7 @@ namespace TorannMagic
             {
                 //Log.Message("" + this.CasterPawn.needs.AllNeeds[i].def.defName);
                 if (this.CasterPawn.needs.AllNeeds[i].def.defName != "Chemical_Luciferium")
-                {                    
+                {
                     comp.recallNeedDefnames.Add(this.CasterPawn.needs.AllNeeds[i].def.defName);
                     comp.recallNeedValues.Add(this.CasterPawn.needs.AllNeeds[i].CurLevel);
                 }

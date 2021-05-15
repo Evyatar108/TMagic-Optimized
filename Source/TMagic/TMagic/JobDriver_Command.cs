@@ -1,19 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Verse;
-using Verse.Sound;
 using RimWorld;
 using Verse.AI;
 using UnityEngine;
-using AbilityUser;
 
 namespace TorannMagic
 {
     internal class JobDriver_Command : JobDriver
     {
-        private const TargetIndex caster = TargetIndex.B;
-
         int age = -1;
         int lastEffect = 0;
         int ticksTillEffects = 20;
@@ -44,7 +39,7 @@ namespace TorannMagic
             yield return gotoPawn;
             Toil doMotivate = new Toil();
             doMotivate.initAction = delegate
-            {                    
+            {
                 if (age > duration)
                 {
                     this.EndJobWith(JobCondition.Succeeded);
@@ -79,13 +74,13 @@ namespace TorannMagic
                         mentalPawn.jobs.TryTakeOrderedJob(job, JobTag.InMentalState);
                     }
                 }
-                if(mentalPawn.Drafted && mentalPawn.CurJobDef != JobDefOf.Wait_Combat)
+                if (mentalPawn.Drafted && mentalPawn.CurJobDef != JobDefOf.Wait_Combat)
                 {
                     this.EndJobWith(JobCondition.InterruptForced);
                 }
                 age++;
                 ticksLeftThisToil = duration - age;
-                if((mentalPawn.Position - this.pawn.Position).LengthHorizontal > 5)
+                if ((mentalPawn.Position - this.pawn.Position).LengthHorizontal > 5)
                 {
                     age = duration + 1;
                 }
@@ -102,13 +97,13 @@ namespace TorannMagic
                 {
                     return 1f;
                 }
-                return 1f - (float)doMotivate.actor.jobs.curDriver.ticksLeftThisToil / this.duration;
+                return 1f - ((float)doMotivate.actor.jobs.curDriver.ticksLeftThisToil / this.duration);
 
             }, false, 0f);
             doMotivate.AddFinishAction(delegate
             {
                 mentalPawn.MentalState.RecoverFromState();
-                AssignXP();                
+                AssignXP();
                 mentalPawn.jobs.EndCurrentJob(JobCondition.Succeeded, false);
             });
             yield return doMotivate;
@@ -116,9 +111,7 @@ namespace TorannMagic
 
         private void DoSpeechEffects(Pawn mentalPawn)
         {
-            int effectNum = Rand.RangeInclusive(0, 4);
-            Color randomColor = new Color(Rand.Range(0f, 1f), Rand.Range(0f, 1f), Rand.Range(0f, 1f), Rand.Range(.7f, 1f));
-            if(positionBetween == Vector3.zero)
+            if (positionBetween == Vector3.zero)
             {
                 positionBetween = TM_Calc.GetVectorBetween(pawn.DrawPos, mentalPawn.DrawPos);
             }
@@ -128,9 +121,9 @@ namespace TorannMagic
             rndPos.x += Rand.Range(-1f, 1f);
             rndPos.z += Rand.Range(-1f, 1f);
             ThingDef mote = ThingDef.Named("Mote_Twinkle");
-            TM_MoteMaker.ThrowGenericMote(mote, rndPos, this.pawn.Map, Rand.Range(.2f, .7f), Rand.Range(.2f, .6f), Rand.Range(0f, .8f), Rand.Range(.5f,.8f), Rand.Range(-50, 50), Rand.Range(.5f, 1f), direction, Rand.Range(0,360));
+            TM_MoteMaker.ThrowGenericMote(mote, rndPos, this.pawn.Map, Rand.Range(.2f, .7f), Rand.Range(.2f, .6f), Rand.Range(0f, .8f), Rand.Range(.5f, .8f), Rand.Range(-50, 50), Rand.Range(.5f, 1f), direction, Rand.Range(0, 360));
 
-        }        
+        }
 
         private void AssignXP()
         {
@@ -154,11 +147,11 @@ namespace TorannMagic
                         this.pawn.skills.Learn(SkillDefOf.Social, Rand.Range(200f, 500f));
                     }
                 }
-                catch (NullReferenceException ex)
+                catch (NullReferenceException)
                 {
                     //failed
                 }
             }
-        }        
+        }
     }
 }

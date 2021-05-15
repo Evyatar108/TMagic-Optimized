@@ -1,9 +1,6 @@
-﻿using RimWorld;
-using Verse;
+﻿using Verse;
 using UnityEngine;
-using System.Collections.Generic;
 using System.Linq;
-using HarmonyLib;
 
 namespace TorannMagic
 {
@@ -66,7 +63,7 @@ namespace TorannMagic
             {
                 this.removeNow = true;
             }
-        }        
+        }
 
         public override void CompPostTick(ref float severityAdjustment)
         {
@@ -83,11 +80,11 @@ namespace TorannMagic
                 if (Find.TickManager.TicksGame % this.eventFrequency == 0)
                 {
                     Initialize();
-                    severityAdjustment += Rand.Range(.2f, .3f);                    
+                    severityAdjustment += Rand.Range(.2f, .3f);
 
-                    float maxSev = 10 + (2*verVal);
+                    float maxSev = 10 + (2 * verVal);
                     this.parent.Severity = Mathf.Clamp(this.parent.Severity, 0, maxSev);
-                } 
+                }
             }
         }
 
@@ -97,6 +94,6 @@ namespace TorannMagic
             {
                 return this.removeNow || base.CompShouldRemove;
             }
-        }        
+        }
     }
 }

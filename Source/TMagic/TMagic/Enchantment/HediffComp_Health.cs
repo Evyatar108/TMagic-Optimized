@@ -1,7 +1,5 @@
 ﻿using Verse;
-using RimWorld;
 using System.Linq;
-using UnityEngine;
 using System;
 using System.Collections.Generic;
 
@@ -11,7 +9,7 @@ namespace TorannMagic.Enchantment
     {
 
         public override void CompExposeData()
-        {            
+        {
             base.CompExposeData();
         }
 
@@ -37,7 +35,7 @@ namespace TorannMagic.Enchantment
                         IEnumerable<Hediff_Injury> arg_BB_0 = pawn.health.hediffSet.GetHediffs<Hediff_Injury>();
                         Func<Hediff_Injury, bool> arg_BB_1;
 
-                        arg_BB_1 = ((Hediff_Injury injury) => injury.Part == rec);
+                        arg_BB_1 = (Hediff_Injury injury) => injury.Part == rec;
 
                         foreach (Hediff_Injury current in arg_BB_0.Where(arg_BB_1))
                         {

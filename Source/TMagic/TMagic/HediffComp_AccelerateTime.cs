@@ -1,11 +1,8 @@
 ﻿using RimWorld;
 using Verse;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using HarmonyLib;
-using System.Reflection;
 
 
 namespace TorannMagic
@@ -69,7 +66,7 @@ namespace TorannMagic
                     initialized = true;
                     this.Initialize();
                 }
-            }           
+            }
 
             if (Find.TickManager.TicksGame % 60 == 0)
             {
@@ -79,7 +76,7 @@ namespace TorannMagic
                 }
                 int roundedYearAging = Mathf.RoundToInt(this.Pawn.ageTracker.AgeBiologicalYears / 100);
                 if (isBad)
-                {                    
+                {
                     if (this.Pawn.ageTracker.AgeBiologicalYears >= 100)
                     {
                         this.Pawn.ageTracker.AgeBiologicalTicks += roundedYearAging * 3600000;
@@ -87,22 +84,22 @@ namespace TorannMagic
                     else
                     {
                         this.Pawn.ageTracker.AgeBiologicalTicks = Mathf.RoundToInt(this.Pawn.ageTracker.AgeBiologicalTicks * (1.02f + (.002f * this.parent.Severity)));
-                    }                    
+                    }
                 }
                 else
                 {
-                    if(this.Pawn.ageTracker.AgeBiologicalYears >= 200)
+                    if (this.Pawn.ageTracker.AgeBiologicalYears >= 200)
                     {
                         this.Pawn.ageTracker.AgeBiologicalTicks += roundedYearAging * 3600000;
                     }
                     else
                     {
                         this.Pawn.ageTracker.AgeBiologicalTicks = Mathf.RoundToInt(this.Pawn.ageTracker.AgeBiologicalTicks * 1.00001f) + 2500;
-                    }                    
+                    }
                 }
-                if(this.Pawn.ageTracker.AgeBiologicalYears > this.currentAge)
+                if (this.Pawn.ageTracker.AgeBiologicalYears > this.currentAge)
                 {
-                    this.currentAge = this.Pawn.ageTracker.AgeBiologicalYears;                    
+                    this.currentAge = this.Pawn.ageTracker.AgeBiologicalYears;
                     if (Rand.Chance(this.currentAge / this.maxAge))
                     {
                         BirthdayBiological(this.Pawn, this.currentAge);
@@ -116,7 +113,7 @@ namespace TorannMagic
                 AccelerateHediff(this.Pawn, 60);
                 this.durationTicks -= 60;
 
-                if(Find.TickManager.TicksGame % this.tickEffect ==0)
+                if (Find.TickManager.TicksGame % this.tickEffect == 0)
                 {
                     AccelerateEffects(this.Pawn, 1);
                 }
@@ -127,7 +124,7 @@ namespace TorannMagic
         {
             foreach (HediffGiver_Birthday item in AgeInjuryUtility.RandomHediffsToGainOnBirthday(pawn, Mathf.RoundToInt(age)))
             {
-                if ((age > 150 && Rand.Chance(.01f * age)))
+                if (age > 150 && Rand.Chance(.01f * age))
                 {
                     item.TryApply(pawn);
                 }
@@ -135,12 +132,12 @@ namespace TorannMagic
         }
 
         private void RaceAgainstTime(Pawn pawn, float age)
-        {            
-            if (Rand.Chance(age/maxAge))
+        {
+            if (Rand.Chance(age / maxAge))
             {
                 AgeInjuryUtility.GenerateRandomOldAgeInjuries(pawn, false);
             }
-            if (Rand.Chance((age/maxAge)*.5f))
+            if (Rand.Chance(age / maxAge * .5f))
             {
                 if (!pawn.health.hediffSet.HasHediff(HediffDef.Named("HeartArteryBlockage")))
                 {
@@ -162,14 +159,14 @@ namespace TorannMagic
                 {
                     Hediff rec = enumerator.Current;
                     HediffComp_Immunizable immuneComp = rec.TryGetComp<HediffComp_Immunizable>();
-                    if(immuneComp != null)
+                    if (immuneComp != null)
                     {
                         if (immuneComp.Def.CompProps<HediffCompProperties_Immunizable>() != null)
                         {
                             float immuneSevDay = immuneComp.Def.CompProps<HediffCompProperties_Immunizable>().severityPerDayNotImmune;
                             if (immuneSevDay != 0 && !rec.FullyImmune())
                             {
-                                rec.Severity += ((immuneSevDay * ticks * this.parent.Severity)/(24*2500));
+                                rec.Severity += immuneSevDay * ticks * this.parent.Severity / (24 * 2500);
                             }
                         }
                     }
@@ -181,7 +178,7 @@ namespace TorannMagic
                             float sevDay = sevDayComp.Def.CompProps<HediffCompProperties_SeverityPerDay>().severityPerDay;
                             if (sevDay != 0)
                             {
-                                rec.Severity += ((sevDay * ticks * this.parent.Severity)/(24*2500));
+                                rec.Severity += sevDay * ticks * this.parent.Severity / (24 * 2500);
                             }
                         }
                     }
@@ -191,13 +188,13 @@ namespace TorannMagic
                         int ticksToDisappear = Traverse.Create(root: tickComp).Field(name: "ticksToDisappear").GetValue<int>();
                         if (ticksToDisappear != 0)
                         {
-                            Traverse.Create(root: tickComp).Field(name: "ticksToDisappear").SetValue(ticksToDisappear - (Mathf.RoundToInt(60 * this.parent.Severity)));                            
+                            Traverse.Create(root: tickComp).Field(name: "ticksToDisappear").SetValue(ticksToDisappear - Mathf.RoundToInt(60 * this.parent.Severity));
                         }
                     }
                     Hediff_Pregnant hdp = this.Pawn.health.hediffSet.GetFirstHediffOfDef(HediffDef.Named("Pregnant")) as Hediff_Pregnant;
-                    if(hdp != null)
+                    if (hdp != null)
                     {
-                        hdp.Severity += (1f / (this.Pawn.RaceProps.gestationPeriodDays * (2500f /this.parent.Severity)));
+                        hdp.Severity += 1f / (this.Pawn.RaceProps.gestationPeriodDays * (2500f / this.parent.Severity));
                     }
                     CompEggLayer eggComp = this.Pawn.TryGetComp<CompEggLayer>();
                     if (eggComp != null)
@@ -206,7 +203,7 @@ namespace TorannMagic
                         bool isActive = Active(eggComp);
                         if (isActive)
                         {
-                            eggProgress += (1f / (eggComp.Props.eggLayIntervalDays * (2500f / this.parent.Severity)));
+                            eggProgress += 1f / (eggComp.Props.eggLayIntervalDays * (2500f / this.parent.Severity));
                             Traverse.Create(root: eggComp).Field(name: "eggProgress").SetValue(eggProgress);
                         }
                     }
@@ -214,7 +211,7 @@ namespace TorannMagic
                     //if (gatherComp != null)
                     //{
                     //    float gatherProgress = gatherComp.Fullness;          
-                        
+
                     //    int rate = Traverse.Create(root: gatherComp).Field(name: "GatherResourcesIntervalDays").GetValue<int>();
                     //    bool isActive = Active();
                     //    if (isActive)
@@ -231,7 +228,7 @@ namespace TorannMagic
                         bool isActive = Active(milkComp);
                         if (isActive)
                         {
-                            milkProgress += (1f / ((float)(rate * (2500f / this.parent.Severity))));
+                            milkProgress += 1f / ((float)(rate * (2500f / this.parent.Severity)));
                             Traverse.Create(root: milkComp).Field(name: "fullness").SetValue(milkProgress);
                         }
                     }
@@ -240,28 +237,28 @@ namespace TorannMagic
                         totalBleedRate += rec.BleedRate;
                     }
                 }
-                if(totalBleedRate != 0)
+                if (totalBleedRate != 0)
                 {
-                    HealthUtility.AdjustSeverity(pawn, HediffDefOf.BloodLoss, (totalBleedRate * 60 * this.parent.Severity) / (24 * 2500));
+                    HealthUtility.AdjustSeverity(pawn, HediffDefOf.BloodLoss, totalBleedRate * 60 * this.parent.Severity / (24 * 2500));
                 }
             }
         }
 
         public bool Active(CompMilkable comp)
         {
-            if(!Active())
+            if (!Active())
             {
                 return false;
             }
-            if(Pawn.gender != Gender.Female && comp.Props.milkFemaleOnly)
+            if (Pawn.gender != Gender.Female && comp.Props.milkFemaleOnly)
             {
                 return false;
             }
-            if(!Pawn.ageTracker.CurLifeStage.milkable)
+            if (!Pawn.ageTracker.CurLifeStage.milkable)
             {
                 return false;
             }
-            return true;            
+            return true;
         }
 
         public bool Active(CompEggLayer comp)

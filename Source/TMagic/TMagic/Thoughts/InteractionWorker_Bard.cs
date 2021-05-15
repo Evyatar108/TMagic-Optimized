@@ -1,6 +1,4 @@
 ﻿using RimWorld;
-using System;
-using System.Collections.Generic;
 using Verse;
 
 namespace TorannMagic.Thoughts
@@ -11,7 +9,7 @@ namespace TorannMagic.Thoughts
         {
             CompAbilityUserMagic compInit = initiator.GetComp<CompAbilityUserMagic>();
             bool flag = !initiator.IsColonist || !recipient.IsColonist;
-            float result;            
+            float result;
             if (flag)
             {
                 result = 0f;
@@ -25,7 +23,7 @@ namespace TorannMagic.Thoughts
                 }
                 else
                 {
-                    if(compInit.Pawn.story.traits.HasTrait(TorannMagicDefOf.TM_Bard))
+                    if (compInit.Pawn.story.traits.HasTrait(TorannMagicDefOf.TM_Bard))
                     {
                         if (initiator.jobs.curDriver.asleep)
                         {
@@ -54,7 +52,7 @@ namespace TorannMagic.Thoughts
                     else
                     {
                         result = 0f;
-                    }                    
+                    }
                 }
             }
             return result;

@@ -2,8 +2,6 @@
 using RimWorld;
 using Verse;
 using System.Collections.Generic;
-using System.Linq;
-using UnityEngine;
 
 namespace TorannMagic
 {
@@ -15,7 +13,6 @@ namespace TorannMagic
 
             Map map = base.Map;
             base.Impact(hitThing);
-            ThingDef def = this.def;
             CellRect cellRect = CellRect.CenteredOn(base.Position, 1);
             cellRect.ClipInsideMap(map);
 
@@ -25,9 +22,9 @@ namespace TorannMagic
 
             IntVec3 curCell;
             IEnumerable<IntVec3> cells = GenRadial.RadialCellsAround(c, radius, true);
-            for (int i = 0; i < cells.Count(); i++)
+            foreach (var cell in cells)
             {
-                curCell = cells.ToArray<IntVec3>()[i];                
+                curCell = cell;
                 if (curCell.InBounds(map) && curCell.IsValid)
                 {
                     terrain = curCell.GetTerrain(map);

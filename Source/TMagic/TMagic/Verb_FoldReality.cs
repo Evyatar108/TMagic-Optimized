@@ -2,7 +2,6 @@
 using RimWorld;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using UnityEngine;
 using Verse;
@@ -20,7 +19,6 @@ namespace TorannMagic
 
         protected override bool TryCastShot()
         {
-            Map map = base.CasterPawn.Map;
             comp = this.CasterPawn.GetComp<CompAbilityUserMagic>();
             StartChoosingDestination();
             return false;
@@ -79,7 +77,7 @@ namespace TorannMagic
                 portalTarget.canTargetFires = false;
                 portalTarget.canTargetBuildings = false;
                 portalTarget.canTargetItems = false;
-                portalTarget.validator = ((TargetInfo x) => x.IsValid && !x.Cell.Fogged(map) && x.Cell.InBounds(map) && x.Cell.Walkable(map));
+                portalTarget.validator = (TargetInfo x) => x.IsValid && !x.Cell.Fogged(map) && x.Cell.InBounds(map) && x.Cell.Walkable(map);
                 Find.Targeter.BeginTargeting(portalTarget, delegate (LocalTargetInfo x)
                 {
 
@@ -137,17 +135,17 @@ namespace TorannMagic
         public void InitiateMassSummon(Map map, LocalTargetInfo target)
         {
             IntVec3 curCell;
-            IEnumerable<IntVec3> targets = GenRadial.RadialCellsAround(target.Cell, Mathf.RoundToInt(7*comp.arcaneDmg), true);
+            IEnumerable<IntVec3> targets = GenRadial.RadialCellsAround(target.Cell, Mathf.RoundToInt(7 * comp.arcaneDmg), true);
             int transportedItemCount = 0;
-            for (int i = 0; i < targets.Count(); i++)
+            foreach (var cell in targets)
             {
-                curCell = targets.ToArray<IntVec3>()[i];                
+                curCell = cell;
                 if (curCell.InBounds(map) && curCell.IsValid)
                 {
                     List<Thing> thingList = curCell.GetThingList(map);
-                    for(int j = 0; j < thingList.Count(); j++)
+                    for (int j = 0; j < thingList.Count(); j++)
                     {
-                        if(thingList[j] != null && thingList[j].def.mote == null)
+                        if (thingList[j] != null && thingList[j].def.mote == null)
                         {
                             Thing targetThing = thingList[j];
                             if (targetThing != this.CasterPawn)
@@ -171,9 +169,9 @@ namespace TorannMagic
                                     j--;
                                 }
                             }
-                        }                        
+                        }
                     }
-                    MoteMaker.ThrowSmoke(curCell.ToVector3Shifted(), map, .6f);                   
+                    MoteMaker.ThrowSmoke(curCell.ToVector3Shifted(), map, .6f);
                 }
             }
         }

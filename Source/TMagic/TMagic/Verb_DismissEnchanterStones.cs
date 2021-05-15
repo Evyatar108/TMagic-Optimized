@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using RimWorld;
+﻿using RimWorld;
 using AbilityUser;
 using Verse;
-using UnityEngine;
-
+using System.Linq;
 
 namespace TorannMagic
 {
@@ -13,15 +9,14 @@ namespace TorannMagic
     {
         protected override bool TryCastShot()
         {
-            Pawn caster = base.CasterPawn;
             Pawn pawn = this.currentTarget.Thing as Pawn;
 
             CompAbilityUserMagic comp = pawn.GetComp<CompAbilityUserMagic>();
-            if(comp.IsMagicUser)
+            if (comp.IsMagicUser)
             {
-                if(comp.enchanterStones.Count > 0)
+                if (comp.enchanterStones.Count > 0)
                 {
-                    Thing stone = comp.enchanterStones[0];
+                    Thing stone = comp.enchanterStones.First();
                     stone.Destroy(DestroyMode.Vanish);
                 }
                 else

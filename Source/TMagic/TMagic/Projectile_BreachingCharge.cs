@@ -1,14 +1,11 @@
-﻿using System.Linq;
-using System;
-using RimWorld;
-using Verse;
+﻿using Verse;
 using AbilityUser;
 using UnityEngine;
 
 namespace TorannMagic
 {
-	public class Projectile_BreachingCharge : Projectile_AbilityBase
-	{
+    public class Projectile_BreachingCharge : Projectile_AbilityBase
+    {
 
         private bool initialized = false;
         private int verVal = 0;
@@ -25,9 +22,9 @@ namespace TorannMagic
             {
                 caster = this.launcher as Pawn;
                 CompAbilityUserMight comp = caster.GetComp<CompAbilityUserMight>();
-                verVal = TM_Calc.GetMightSkillLevel(caster, comp.MightData.MightPowerSkill_ShotgunSpec, "TM_ShotgunSpec", "_ver", true);                
+                verVal = TM_Calc.GetMightSkillLevel(caster, comp.MightData.MightPowerSkill_ShotgunSpec, "TM_ShotgunSpec", "_ver", true);
                 this.explosionCount = 5;
-                if(verVal >= 3)
+                if (verVal >= 3)
                 {
                     this.explosionCount++;
                 }
@@ -36,14 +33,14 @@ namespace TorannMagic
 
             landed = true;
             ticksToDetonation = def.projectile.explosionDelay;
-            GenExplosion.NotifyNearbyPawnsOfDangerousExplosive(this, def.projectile.damageDef, launcher.Faction);            
+            GenExplosion.NotifyNearbyPawnsOfDangerousExplosive(this, def.projectile.damageDef, launcher.Faction);
         }
 
         private void Explode()
         {
             if (explosionCount > 0)
             {
-                GenExplosion.DoExplosion(base.Position, base.Map, this.def.projectile.explosionRadius-explosionCount, this.def.projectile.damageDef, this.launcher as Pawn, Mathf.RoundToInt((this.def.projectile.GetDamageAmount(1f) * (1f + (.15f * verVal))) * mightPwr), this.def.projectile.damageDef.defaultArmorPenetration, this.def.projectile.damageDef.soundExplosion, def, this.equipmentDef, null, null, 0f, 1, false, null, 0f, 1, 0f, true);
+                GenExplosion.DoExplosion(base.Position, base.Map, this.def.projectile.explosionRadius - explosionCount, this.def.projectile.damageDef, this.launcher as Pawn, Mathf.RoundToInt(this.def.projectile.GetDamageAmount(1f) * (1f + (.15f * verVal)) * mightPwr), this.def.projectile.damageDef.defaultArmorPenetration, this.def.projectile.damageDef.soundExplosion, def, this.equipmentDef, null, null, 0f, 1, false, null, 0f, 1, 0f, true);
             }
             else
             {
@@ -62,7 +59,7 @@ namespace TorannMagic
             if (ticksToDetonation <= 0)
             {
                 Explode();
-            }               
+            }
         }
 
         public override void Destroy(DestroyMode mode = DestroyMode.Vanish)

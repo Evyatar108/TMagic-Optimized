@@ -1,5 +1,4 @@
 ﻿using RimWorld;
-using System;
 using Verse;
 using AbilityUser;
 using UnityEngine;
@@ -8,15 +7,15 @@ using System.Collections.Generic;
 
 namespace TorannMagic
 {
-    class Verb_Blink : Verb_UseAbility  
+    class Verb_Blink : Verb_UseAbility
     {
         bool arg_41_0;
         bool arg_42_0;
         private bool validTarg = false;
 
         public override bool CanHitTargetFrom(IntVec3 root, LocalTargetInfo targ)
-        {            
-            if ( targ.IsValid && targ.CenterVector3.InBounds(base.CasterPawn.Map) && !targ.Cell.Fogged(base.CasterPawn.Map) && targ.Cell.Walkable(base.CasterPawn.Map))
+        {
+            if (targ.IsValid && targ.CenterVector3.InBounds(base.CasterPawn.Map) && !targ.Cell.Fogged(base.CasterPawn.Map) && targ.Cell.Walkable(base.CasterPawn.Map))
             {
                 if ((root - targ.Cell).LengthHorizontal < this.verbProps.range)
                 {
@@ -39,7 +38,7 @@ namespace TorannMagic
         {
             bool result = false;
             bool arg_40_0;
-            
+
             if (this.currentTarget != null && base.CasterPawn != null)
             {
                 IntVec3 arg_29_0 = this.currentTarget.Cell;
@@ -76,16 +75,16 @@ namespace TorannMagic
                             if (base.CasterPawn.GetComp<CompAbilityUserMagic>().MagicData.MagicPowerSkill_Cantrips.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_Cantrips_ver").level >= 1)
                             {
                                 List<Pawn> eList = TM_Calc.FindPawnsNearTarget(p, 2, this.currentTarget.Cell, true);
-                                if(eList != null && eList.Count > 0)
+                                if (eList != null && eList.Count > 0)
                                 {
-                                    for(int i = 0; i < eList.Count; i++)
+                                    for (int i = 0; i < eList.Count; i++)
                                     {
                                         Pawn e = eList[i];
                                         TM_Action.DamageEntities(e, null, 5f, DamageDefOf.Stun, p);
                                     }
                                 }
                             }
-                            CameraJumper.TryJumpAndSelect(p);                            
+                            CameraJumper.TryJumpAndSelect(p);
                             ModOptions.Constants.SetPawnInFlight(false);
                         }
                         else
@@ -98,7 +97,7 @@ namespace TorannMagic
                     }
                     catch
                     {
-                        if(!this.CasterPawn.Spawned)
+                        if (!this.CasterPawn.Spawned)
                         {
                             GenSpawn.Spawn(p, cell, map);
                             Log.Message("Exception occured when trying to blink - recovered pawn at position ability was used from.");
@@ -112,7 +111,7 @@ namespace TorannMagic
                 }
                 else
                 {
-                    
+
                     Messages.Message("InvalidTargetLocation".Translate(), MessageTypeDefOf.RejectInput);
                 }
             }

@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Verse;
-using AbilityUser;
 
 namespace TorannMagic
 {
@@ -65,7 +64,7 @@ namespace TorannMagic
         public CompAbilityUserMagic CompSummoner
         {
             get
-            {                
+            {
                 return spawner.GetComp<CompAbilityUserMagic>();
             }
         }
@@ -104,11 +103,11 @@ namespace TorannMagic
             {
                 this.ticksLeft = value;
             }
-        }        
+        }
 
         public override void Initialize(CompProperties props)
         {
-            base.Initialize(props);            
+            base.Initialize(props);
         }
 
         private void SpawnSetup()
@@ -119,12 +118,12 @@ namespace TorannMagic
             {
                 bool drafter = this.original.Drafted;
                 this.original.DeSpawn();
-                if(drafter)
+                if (drafter)
                 {
                     this.ParentPawn.drafter.Drafted = true;
                 }
                 Find.Selector.Select(this.ParentPawn, false, true);
-                
+
             }
         }
 
@@ -132,15 +131,14 @@ namespace TorannMagic
         {
             if (Find.TickManager.TicksGame % Rand.Range(30, 60) == 0 && this.ParentPawn.kindDef == PawnKindDef.Named("TM_Dire_Wolf"))
             {
-                bool castSuccess = false;                
-                AutoCast.AnimalBlink.Evaluate(this.ParentPawn, 2, 6, out castSuccess);                
+                AutoCast.AnimalBlink.Evaluate(this.ParentPawn, 2, 6, out _);
             }
 
             if (this.ParentPawn.drafter == null)
             {
                 this.ParentPawn.drafter = new Pawn_DraftController(this.ParentPawn);
             }
-        }        
+        }
 
         public override void CompTick()
         {
@@ -163,7 +161,7 @@ namespace TorannMagic
                         if (flag3)
                         {
                             this.PreDestroy();
-                            ParentPawn.Destroy(DestroyMode.Vanish);                            
+                            ParentPawn.Destroy(DestroyMode.Vanish);
                         }
                         CheckPawnState();
                         bool spawned = this.parent.Spawned;
@@ -177,7 +175,6 @@ namespace TorannMagic
                             }
                             else
                             {
-                                LocalTargetInfo localTargetInfo = this.parent;
                                 bool spawned2 = base.parent.Spawned;
                                 if (spawned2)
                                 {
@@ -187,14 +184,14 @@ namespace TorannMagic
                                 bool flag5 = mote != null;
                                 if (flag5)
                                 {
-                                    float value = 1f - (float)(this.TicksToDestroy - this.ticksLeft) / (float)this.TicksToDestroy;
+                                    float value = 1f - ((float)(this.TicksToDestroy - this.ticksLeft) / (float)this.TicksToDestroy);
                                     mote.progress = Mathf.Clamp01(value);
                                     mote.offsetZ = -0.5f;
                                 }
                             }
                         }
                     }
-                    else if(this.initialized && !flag2 && this.parent.Spawned)
+                    else if (this.initialized && !flag2 && this.parent.Spawned)
                     {
                         CheckPawnState();
                     }
@@ -224,7 +221,7 @@ namespace TorannMagic
                     defaultDesc = desc,
                     order = 109,
                     icon = ContentFinder<Texture2D>.Get("UI/Polymorph_cancel", true),
-                    isActive = (() => true),
+                    isActive = () => true,
                     toggleAction = delegate
                     {
                         this.temporary = true;
@@ -233,12 +230,12 @@ namespace TorannMagic
                 };
                 yield return (Gizmo)item;
             }
-            yield break;          
+            yield break;
         }
 
         public void PreDestroy()
         {
-            if(this.original != null)
+            if (this.original != null)
             {
                 CopyDamage(ParentPawn);
                 SpawnOriginal(ParentPawn.Map);
@@ -255,7 +252,7 @@ namespace TorannMagic
                 this.effecter.Cleanup();
             }
             base.PostDeSpawn(map);
-            
+
         }
 
         public override void PostExposeData()
@@ -281,7 +278,7 @@ namespace TorannMagic
                     BodyPartRecord rec = enumerator.Current;
                     IEnumerable<Hediff_Injury> arg_BB_0 = pawn.health.hediffSet.GetHediffs<Hediff_Injury>();
                     Func<Hediff_Injury, bool> arg_BB_1;
-                    arg_BB_1 = ((Hediff_Injury injury) => injury.Part == rec);
+                    arg_BB_1 = (Hediff_Injury injury) => injury.Part == rec;
 
                     foreach (Hediff_Injury current in arg_BB_0.Where(arg_BB_1))
                     {
@@ -289,8 +286,8 @@ namespace TorannMagic
                         if (flag5)
                         {
                             this.injuries.Add(current);
-                        }                            
-                    }                    
+                        }
+                    }
                 }
             }
         }
@@ -303,7 +300,7 @@ namespace TorannMagic
                 SpawnOriginal(this.activeMap);
                 original.Kill(null, null);
                 this.Original = null;
-            }            
+            }
             base.PostDestroy(mode, previousMap);
         }
 
@@ -343,8 +340,8 @@ namespace TorannMagic
                 map = this.spawner.Map;
                 GenSpawn.Spawn(this.original, ParentPawn.Position, map, WipeMode.Vanish);
                 TransmutateEffects(ParentPawn.Position);
-            }  
-            if(drafter)
+            }
+            if (drafter)
             {
                 this.original.drafter.Drafted = true;
             }
@@ -357,24 +354,25 @@ namespace TorannMagic
         public void ApplyDamage(Pawn pawn)
         {
             List<BodyPartRecord> bodyparts = pawn.health.hediffSet.GetNotMissingParts().ToList();
-            for(int i =0; i < this.injuries.Count; i++)
+            for (int i = 0; i < this.injuries.Count; i++)
             {
                 try
                 {
-                    pawn.health.AddHediff(this.injuries[i], bodyparts.RandomElement());                    
+                    pawn.health.AddHediff(this.injuries[i], bodyparts.RandomElement());
                 }
                 catch
                 {
                     //unable to add injury
                 }
-            }   
+            }
+
             try
             {
                 if (pawn.story != null && pawn.story.traits != null && pawn.story.traits.HasTrait(TraitDefOf.Transhumanist))
                 {
                     pawn.needs.mood.thoughts.memories.TryGainMemory(TorannMagicDefOf.Polymorphed_Transhumanist, this.spawner);
                 }
-                else if(this.spawner == this.original)
+                else if (this.spawner == this.original)
                 {
                     //do not give bad thoughts
                 }
@@ -383,7 +381,7 @@ namespace TorannMagic
                     pawn.needs.mood.thoughts.memories.TryGainMemory(TorannMagicDefOf.Polymorphed, this.spawner);
                 }
             }
-            catch(NullReferenceException ex)
+            catch (NullReferenceException)
             {
 
             }

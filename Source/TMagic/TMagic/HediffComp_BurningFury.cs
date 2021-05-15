@@ -59,14 +59,14 @@ namespace TorannMagic
             }
             if (!this.Pawn.DestroyedOrNull() && this.Pawn.Spawned && !this.Pawn.Downed)
             {
-                if(comp == null)
+                if (comp == null)
                 {
                     comp = this.Pawn.GetComp<CompAbilityUserMight>();
                     int pwrVal = comp.MightData.MightPowerSkill_FieldTraining.FirstOrDefault((MightPowerSkill x) => x.label == "TM_FieldTraining_pwr").level;
                     if (pwrVal >= 4)
                     {
                         this.intensity = 1.5f;
-                        if(pwrVal >= 14)
+                        if (pwrVal >= 14)
                         {
                             this.intensity = 2f;
                         }
@@ -78,10 +78,10 @@ namespace TorannMagic
                     }
                 }
                 if (Find.TickManager.TicksGame % 30 == 0)
-                {                    
+                {
                     if (comp != null && comp.Stamina != null)
                     {
-                        comp.Stamina.CurLevel -= (.02f * this.drain);
+                        comp.Stamina.CurLevel -= .02f * this.drain;
                         if (comp.Stamina.CurLevel <= .001f)
                         {
                             this.removeNow = true;
@@ -94,7 +94,7 @@ namespace TorannMagic
                 }
                 if (!removeNow && Find.TickManager.TicksGame >= this.nextAction)
                 {
-                    this.nextAction = Find.TickManager.TicksGame + Mathf.RoundToInt(Rand.Range(50f/this.intensity, 80f/this.intensity));
+                    this.nextAction = Find.TickManager.TicksGame + Mathf.RoundToInt(Rand.Range(50f / this.intensity, 80f / this.intensity));
                     TickAction();
                 }
                 if (!removeNow && Find.TickManager.TicksGame % nextSlowAction == 0)
@@ -118,7 +118,7 @@ namespace TorannMagic
                 TM_MoteMaker.ThrowFlames(victim.DrawPos, victim.Map, Rand.Range(.1f, .4f));
             }
 
-            if(Rand.Chance(.2f))
+            if (Rand.Chance(.2f))
             {
                 TM_Action.DamageEntities(this.Pawn, null, Rand.Range(3, 5), 5f, DamageDefOf.Burn, this.Pawn);
                 TM_MoteMaker.ThrowFlames(this.Pawn.DrawPos, this.Pawn.Map, Rand.Range(.1f, .2f));
@@ -137,7 +137,7 @@ namespace TorannMagic
                     IEnumerable<Hediff_Injury> arg_BB_0 = this.Pawn.health.hediffSet.GetHediffs<Hediff_Injury>();
                     Func<Hediff_Injury, bool> arg_BB_1;
 
-                    arg_BB_1 = ((Hediff_Injury injury) => injury.Part == rec);
+                    arg_BB_1 = (Hediff_Injury injury) => injury.Part == rec;
 
                     foreach (Hediff_Injury current in arg_BB_0.Where(arg_BB_1))
                     {
@@ -164,7 +164,7 @@ namespace TorannMagic
                     }
                 }
             }
-            ExitEnum:;
+        ExitEnum:;
         }
 
         public override bool CompShouldRemove

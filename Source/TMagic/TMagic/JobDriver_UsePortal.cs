@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Verse.AI;
 
 
@@ -18,10 +17,10 @@ namespace TorannMagic
 
         protected override IEnumerable<Toil> MakeNewToils()
         {
-            this.FailOnDestroyedOrNull(building);            
+            this.FailOnDestroyedOrNull(building);
             portalBldg = TargetA.Thing as Building_TMPortal;
             yield return Toils_Reserve.Reserve(building);
-            
+
             Toil gotoPortal = new Toil()
             {
                 initAction = () =>
@@ -33,7 +32,7 @@ namespace TorannMagic
             yield return gotoPortal;
 
             yield return Toils_Goto.GotoThing(building, PathEndMode.InteractionCell);
-           
-        }        
+
+        }
     }
 }

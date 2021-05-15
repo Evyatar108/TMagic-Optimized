@@ -1,12 +1,10 @@
-﻿using RimWorld;
-using System;
-using Verse;
+﻿using Verse;
 using AbilityUser;
 using System.Linq;
 
 namespace TorannMagic
 {
-    class Verb_Reversal : Verb_UseAbility  
+    class Verb_Reversal : Verb_UseAbility
     {
         protected override bool TryCastShot()
         {
@@ -19,7 +17,7 @@ namespace TorannMagic
             bool flag = caster != null && !caster.Dead;
             if (flag)
             {
-                HealthUtility.AdjustSeverity(caster, HediffDef.Named("TM_ReversalHD"), (8 + (2 * pwr.level))*comp.mightPwr);
+                HealthUtility.AdjustSeverity(caster, HediffDef.Named("TM_ReversalHD"), (8 + (2 * pwr.level)) * comp.mightPwr);
             }
             return true;
         }

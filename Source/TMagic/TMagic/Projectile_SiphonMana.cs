@@ -16,7 +16,7 @@ namespace TorannMagic
 
             Pawn hitPawn = hitThing as Pawn;
             Pawn caster = this.launcher as Pawn;
-            CompAbilityUserMagic compHitPawn = hitPawn.GetComp<CompAbilityUserMagic>();            
+            CompAbilityUserMagic compHitPawn = hitPawn.GetComp<CompAbilityUserMagic>();
             CompAbilityUserMagic compCaster = caster.GetComp<CompAbilityUserMagic>();
 
             if (hitPawn != null && !hitPawn.Dead && !caster.Dead && !caster.Downed && caster != null)
@@ -31,10 +31,10 @@ namespace TorannMagic
                             float manaDrained = compHitPawn.Mana.CurLevel;
                             if (manaDrained > (.5f * compCaster.arcaneDmg))
                             {
-                                manaDrained = (.5f * compCaster.arcaneDmg);
+                                manaDrained = .5f * compCaster.arcaneDmg;
                             }
                             compHitPawn.Mana.CurLevel -= manaDrained;
-                            compCaster.Mana.CurLevel += (manaDrained * .6f) * (1 + regen.level * .05f);
+                            compCaster.Mana.CurLevel += manaDrained * .6f * (1 + (regen.level * .05f));
                             //TM_MoteMaker.ThrowSiphonMote(hitPawn.Position.ToVector3Shifted(), hitPawn.Map, 1f);
                             TM_MoteMaker.ThrowGenericMote(TorannMagicDefOf.Mote_Siphon, hitPawn.DrawPos, hitPawn.Map, 1.2f, .05f, .15f, .65f, -300, .2f, Rand.Range(0, 360), Rand.Range(0, 360));
                             TM_MoteMaker.ThrowManaPuff(caster.DrawPos, caster.Map, 1f);
@@ -52,7 +52,7 @@ namespace TorannMagic
                                 TM_MoteMaker.ThrowSiphonMote(hitPawn.Position.ToVector3(), hitPawn.Map, 1f);
                             }
                         }
-                        else if(hitPawn.health != null && hitPawn.health.hediffSet != null && hitPawn.Map != null)
+                        else if (hitPawn.health != null && hitPawn.health.hediffSet != null && hitPawn.Map != null)
                         {
                             float sev = Rand.Range(0, 10) * compCaster.arcaneDmg;
                             HealthUtility.AdjustSeverity(hitPawn, TorannMagicDefOf.TM_AntiManipulation, sev);
@@ -81,7 +81,7 @@ namespace TorannMagic
                             manaDrained = .5f;
                         }
                         compHitPawn.Mana.CurLevel -= manaDrained / compCaster.arcaneDmg;
-                        compCaster.Mana.CurLevel += (manaDrained * .6f) * (1 + regen.level * .05f) * compCaster.arcaneDmg;
+                        compCaster.Mana.CurLevel += manaDrained * .6f * (1 + (regen.level * .05f)) * compCaster.arcaneDmg;
                         TM_MoteMaker.ThrowGenericMote(TorannMagicDefOf.Mote_Siphon, hitPawn.DrawPos, hitPawn.Map, 1.2f, .05f, .15f, .65f, -300, .2f, Rand.Range(0, 360), Rand.Range(0, 360));
                         TM_MoteMaker.ThrowManaPuff(caster.Position.ToVector3(), caster.Map, 1f);
                         if (compCaster.MagicData.MagicPowerSkill_Cantrips.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_Cantrips_pwr").level >= 6)
@@ -98,7 +98,7 @@ namespace TorannMagic
                             TM_MoteMaker.ThrowManaPuff(caster.Position.ToVector3(), caster.Map, 1f);
                         }
                     }
-                    else if(hitPawn.health != null && hitPawn.health.hediffSet != null)
+                    else if (hitPawn.health != null && hitPawn.health.hediffSet != null)
                     {
                         float sev = Rand.Range(0, 10) * compCaster.arcaneDmg;
                         HealthUtility.AdjustSeverity(hitPawn, TorannMagicDefOf.TM_AntiManipulation, sev);

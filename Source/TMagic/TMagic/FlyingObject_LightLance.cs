@@ -1,5 +1,4 @@
 ﻿using RimWorld;
-using System;
 using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
@@ -45,7 +44,7 @@ namespace TorannMagic
 
         public bool explosion = false;
 
-        private bool initialized = true;        
+        private bool initialized = true;
 
         protected new int StartingTicksToImpact
         {
@@ -73,8 +72,8 @@ namespace TorannMagic
         {
             get
             {
-                Vector3 b = (this.destination - this.origin) * (1f - (float)this.ticksToImpact / (float)this.StartingTicksToImpact);
-                return this.origin + b + Vector3.up * this.def.Altitude;
+                Vector3 b = (this.destination - this.origin) * (1f - ((float)this.ticksToImpact / (float)this.StartingTicksToImpact));
+                return this.origin + b + (Vector3.up * this.def.Altitude);
             }
         }
 
@@ -120,11 +119,11 @@ namespace TorannMagic
             {
                 GetFilteredList();
                 CompAbilityUserMagic comp = pawn.GetComp<CompAbilityUserMagic>();
-                if(comp != null)
+                if (comp != null)
                 {
                     pwrVal = comp.MagicData.MagicPowerSkill_LightLance.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_LightLance_pwr").level;
                     verVal = comp.MagicData.MagicPowerSkill_LightLance.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_LightLance_ver").level;
-                    this.radius += (verVal * .2f);
+                    this.radius += verVal * .2f;
                     if (pawn.health.hediffSet.HasHediff(TorannMagicDefOf.TM_LightCapacitanceHD))
                     {
                         HediffComp_LightCapacitance hd = pawn.health.hediffSet.GetFirstHediffOfDef(TorannMagicDefOf.TM_LightCapacitanceHD).TryGetComp<HediffComp_LightCapacitance>();
@@ -139,16 +138,15 @@ namespace TorannMagic
                     rndPos.z += Rand.Range(-.75f, .75f);
                     MoteMaker.MakeStaticMote(rndPos, pawn.Map, ThingDefOf.Mote_FireGlow, 1f);
                 }
-            }            
-            flyingThing.ThingID += Rand.Range(0, 214).ToString();            
+            }
+            flyingThing.ThingID += Rand.Range(0, 214).ToString();
         }
 
         private void GetFilteredList()
         {
             filteredTargets = new List<Pawn>();
-            filteredTargets.Clear();
             IEnumerable<Pawn> pList = from p in this.Map.mapPawns.AllPawnsSpawned
-                                      where (!p.DestroyedOrNull() && p != pawn && (p.Position - pawn.Position).LengthHorizontal < ((this.destination - this.origin).magnitude * 1.5f))
+                                      where !p.DestroyedOrNull() && p != pawn && (p.Position - pawn.Position).LengthHorizontal < ((this.destination - this.origin).magnitude * 1.5f)
                                       select p;
             filteredTargets = pList.ToList();
         }
@@ -193,11 +191,11 @@ namespace TorannMagic
             {
                 DrawEffects(this.ExactPosition, base.Map);
             }
-            if(Find.TickManager.TicksGame % this.scanFrequency == 0)
+            if (Find.TickManager.TicksGame % this.scanFrequency == 0)
             {
                 DamageScan();
             }
-            this.ticksToImpact--;            
+            this.ticksToImpact--;
             base.Position = this.ExactPosition.ToIntVec3();
             bool flag = !this.ExactPosition.InBounds(base.Map);
             if (flag)
@@ -206,7 +204,7 @@ namespace TorannMagic
                 this.Destroy(DestroyMode.Vanish);
             }
             else
-            {                                           
+            {
                 bool flag2 = this.ticksToImpact <= 0 && !impacted;
                 if (flag2)
                 {
@@ -222,29 +220,29 @@ namespace TorannMagic
 
         public void DamageScan()
         {
-            if(filteredTargets == null || filteredTargets.Count <= 0)
+            if (filteredTargets == null || filteredTargets.Count <= 0)
             {
                 GetFilteredList();
             }
             int num = filteredTargets.Count;
             List<Pawn> targets = new List<Pawn>();
-            targets.Clear();
             for (int i = 0; i < num; i++)
             {
-                if ((filteredTargets[i].DrawPos - this.ExactPosition).magnitude < this.radius)
+                var filteredTarget = filteredTargets[i];
+                if ((filteredTarget.DrawPos - this.ExactPosition).magnitude < this.radius)
                 {
-                    if (!(filteredTargets[i].Faction == Faction.OfPlayer && (filteredTargets[i].DrawPos - origin).magnitude > 2f))
+                    if (!(filteredTarget.Faction == Faction.OfPlayer && (filteredTarget.DrawPos - origin).magnitude > 2f))
                     {
-                        targets.Add(filteredTargets[i]);
+                        targets.Add(filteredTarget);
                     }
                 }
             }
-            if(targets.Count > 0)
+            if (targets.Count > 0)
             {
-                for(int k =0; k < targets.Count; k++)
+                for (int k = 0; k < targets.Count; k++)
                 {
-                    TM_Action.DamageEntities(targets[k], null, (4 + (.6f*pwrVal)) * arcaneDmg * this.lightPotency, TMDamageDefOf.DamageDefOf.TM_BurningLight, pawn);
-                }           
+                    TM_Action.DamageEntities(targets[k], null, (4 + (.6f * pwrVal)) * arcaneDmg * this.lightPotency, TMDamageDefOf.DamageDefOf.TM_BurningLight, pawn);
+                }
             }
         }
 
@@ -290,6 +288,6 @@ namespace TorannMagic
         protected new void Impact(Thing hitThing)
         {
             this.Destroy(DestroyMode.Vanish);
-        }        
+        }
     }
 }

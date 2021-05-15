@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using Verse;
 using Verse.AI;
-using System.Diagnostics;
 using UnityEngine;
 using RimWorld;
 
@@ -86,7 +83,7 @@ namespace TorannMagic
                 list.Add(new FloatMenuOption("CannotUseNoPath".Translate(), null, MenuOptionPriority.Default, null, null, 0f, null, null));
             }
             else
-            {                
+            {
                 if (comp.IsMagicUser && this.IsOn)
                 {
                     list.Add(new FloatMenuOption("TM_ChargeManaStorage".Translate(
@@ -131,19 +128,19 @@ namespace TorannMagic
         public override void Tick()
         {
             base.Tick();
-            if(Find.TickManager.TicksGame % this.rotationRate == 0)
+            if (Find.TickManager.TicksGame % this.rotationRate == 0)
             {
                 this.matRot++;
-                if(this.matRot >= 8)
+                if (this.matRot >= 8)
                 {
                     this.matRot = 0;
                 }
                 this.matMagnitude += this.matMagnitudeValue;
-                if(this.matMagnitude >= .5f)
+                if (this.matMagnitude >= .5f)
                 {
                     this.matMagnitudeValue = -.005f;
                 }
-                if(this.matMagnitude <= .2f)
+                if (this.matMagnitude <= .2f)
                 {
                     this.matMagnitudeValue = .005f;
                 }
@@ -152,17 +149,16 @@ namespace TorannMagic
             if (Find.TickManager.TicksGame % 240 == 0 && this.IsOn)
             {
                 List<Pawn> mapPawns = this.Map.mapPawns.AllPawnsSpawned;
-                Pawn pawn = null;
-                for(int i = 0; i < mapPawns.Count; i++)
+                for (int i = 0; i < mapPawns.Count; i++)
                 {
-                    pawn = mapPawns[i];
-                    if(!pawn.DestroyedOrNull() && pawn.Spawned && !pawn.Dead && !pawn.Downed && pawn.RaceProps != null && !pawn.AnimalOrWildMan() && pawn.RaceProps.Humanlike && pawn.Faction != null && pawn.Faction == this.Faction)
+                    Pawn pawn = mapPawns[i];
+                    if (!pawn.DestroyedOrNull() && pawn.Spawned && !pawn.Dead && !pawn.Downed && pawn.RaceProps != null && !pawn.AnimalOrWildMan() && pawn.RaceProps.Humanlike && pawn.Faction != null && pawn.Faction == this.Faction)
                     {
                         CompAbilityUserMagic comp = pawn.GetComp<CompAbilityUserMagic>();
                         float rangeToTarget = (pawn.Position - this.Position).LengthHorizontal;
                         if (pawn.drafter != null && TM_Calc.IsMagicUser(pawn) && rangeToTarget <= effectRadius && comp != null && comp.Mana != null)
                         {
-                            if(pawn.Drafted && comp.Mana.CurLevelPercentage <= .9f && this.ArcaneEnergyCur >= .01f)
+                            if (pawn.Drafted && comp.Mana.CurLevelPercentage <= .9f && this.ArcaneEnergyCur >= .01f)
                             {
                                 TransferMana(comp);
                                 break;
@@ -185,7 +181,7 @@ namespace TorannMagic
             comp.Mana.CurLevel += .16f;
             for (int i = 0; i < 4; i++)
             {
-                TM_MoteMaker.ThrowGenericMote(ThingDef.Named("Mote_Casting"), this.DrawPos, this.Map,  .4f + .5f * i, 0.2f, .02f + (.15f * i), .4f - (.06f * i), Rand.Range(-300, 300), 0, 0, Rand.Range(0, 360));                           
+                TM_MoteMaker.ThrowGenericMote(ThingDef.Named("Mote_Casting"), this.DrawPos, this.Map, .4f + (.5f * i), 0.2f, .02f + (.15f * i), .4f - (.06f * i), Rand.Range(-300, 300), 0, 0, Rand.Range(0, 360));
             }
             for (int i = 0; i < 4; i++)
             {
@@ -235,7 +231,7 @@ namespace TorannMagic
             {
                 Graphics.DrawMesh(MeshPool.plane10, matrix, Building_TM_DMP.dmpMat_7, 0);
             }
-            
+
         }
     }
 }

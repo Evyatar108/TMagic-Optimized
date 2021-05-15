@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using RimWorld;
+﻿using RimWorld;
 using AbilityUser;
 using Verse.AI;
 using Verse;
@@ -27,7 +24,7 @@ namespace TorannMagic
             verVal = TM_Calc.GetMightSkillLevel(pawn, comp.MightData.MightPowerSkill_60mmMortar, "TM_60mmMortar", "_ver", true);
             effVal = TM_Calc.GetMightSkillLevel(pawn, comp.MightData.MightPowerSkill_60mmMortar, "TM_60mmMortar", "_eff", true);
 
-            if ((pawn.Position.IsValid && pawn.Position.Standable(map)))
+            if (pawn.Position.IsValid && pawn.Position.Standable(map))
             {
                 AbilityUser.SpawnThings tempPod = new SpawnThings();
                 IntVec3 shiftPos = TM_Calc.GetEmptyCellForNewBuilding(pawn.Position, map, 1.6f, false, 0);
@@ -50,7 +47,7 @@ namespace TorannMagic
                             MoteMaker.ThrowSmoke(rndPos, map, Rand.Range(.8f, 1.2f));
                         }
                     }
-                            catch
+                    catch
                     {
                         comp.Stamina.CurLevel += comp.ActualStaminaCost(TorannMagicDefOf.TM_60mmMortar);
                         Log.Message("TM_Exception".Translate(
@@ -72,10 +69,10 @@ namespace TorannMagic
             }
 
 
-            if ((mortar != null && mortar.Spawned && mortar.Position.IsValid))
+            if (mortar != null && mortar.Spawned && mortar.Position.IsValid)
             {
                 this.Ability.PostAbilityAttempt();
-                mortar.def.interactionCellOffset = (caster.Position - mortar.Position);
+                mortar.def.interactionCellOffset = caster.Position - mortar.Position;
                 Job job = new Job(JobDefOf.ManTurret, mortar);
                 pawn.jobs.TryTakeOrderedJob(job, JobTag.Misc);
                 //this.Ability.PostAbilityAttempt();

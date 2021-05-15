@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Reflection;
 using HarmonyLib;
 using System.Linq;
 using AbilityUser;
 using Verse;
-using RimWorld;
 
 namespace TorannMagic
 {
@@ -80,7 +78,7 @@ namespace TorannMagic
                             IEnumerable<Hediff_Injury> arg_BB_0 = pawn.health.hediffSet.GetHediffs<Hediff_Injury>();
                             Func<Hediff_Injury, bool> arg_BB_1;
 
-                            arg_BB_1 = ((Hediff_Injury injury) => injury.Part == rec);
+                            arg_BB_1 = (Hediff_Injury injury) => injury.Part == rec;
 
                             foreach (Hediff_Injury current in arg_BB_0.Where(arg_BB_1))
                             {
@@ -93,14 +91,14 @@ namespace TorannMagic
                                         //current.Heal((float)((int)current.Severity + 1));
                                         if (!this.CasterPawn.IsColonist)
                                         {
-                                            current.Heal(30.0f + (float)pwrVal * 3f); // power affects how much to heal
+                                            current.Heal(30.0f + ((float)pwrVal * 3f)); // power affects how much to heal
                                         }
                                         else
                                         {
-                                            current.Heal((14.0f + (float)pwrVal * 3f)*comp.arcaneDmg); // power affects how much to heal
+                                            current.Heal((14.0f + ((float)pwrVal * 3f)) * comp.arcaneDmg); // power affects how much to heal
                                         }
-                                        TM_MoteMaker.ThrowRegenMote(pawn.Position.ToVector3Shifted(), pawn.Map, 1f+.2f*pwrVal);
-                                        TM_MoteMaker.ThrowRegenMote(pawn.Position.ToVector3Shifted(), pawn.Map, .8f+.1f*pwrVal);
+                                        TM_MoteMaker.ThrowRegenMote(pawn.Position.ToVector3Shifted(), pawn.Map, 1f + (.2f * pwrVal));
+                                        TM_MoteMaker.ThrowRegenMote(pawn.Position.ToVector3Shifted(), pawn.Map, .8f + (.1f * pwrVal));
                                         num--;
                                         num2--;
                                     }
@@ -125,15 +123,15 @@ namespace TorannMagic
                     }
                 }
             }
-            if(undeadFlag)
+            if (undeadFlag)
             {
                 for (int i = 0; i < 2 + verVal; i++)
                 {
-                    TM_Action.DamageUndead(pawn, (8.0f + (float)pwrVal * 5f) * comp.arcaneDmg, this.CasterPawn);
+                    TM_Action.DamageUndead(pawn, (8.0f + ((float)pwrVal * 5f)) * comp.arcaneDmg, this.CasterPawn);
                 }
             }
             return true;
         }
-        
+
     }
 }

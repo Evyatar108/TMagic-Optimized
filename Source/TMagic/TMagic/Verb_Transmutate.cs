@@ -1,20 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using RimWorld;
+﻿using RimWorld;
 using AbilityUser;
 using Verse;
-using UnityEngine;
-using HarmonyLib;
 
 namespace TorannMagic
 {
     public class Verb_Transmutate : Verb_UseAbility
     {
-
-        private int verVal;
-        private int pwrVal;
-
         bool validTarg;
         public override bool CanHitTargetFrom(IntVec3 root, LocalTargetInfo targ)
         {
@@ -39,15 +30,11 @@ namespace TorannMagic
 
         protected override bool TryCastShot()
         {
-            
-
-            bool flagRawResource = false;
-            bool flagStuffItem = false;
-            bool flagNoStuffItem = false;
-            bool flagNutrition = false;
-            bool flagCorpse = false;
-
-            
+            bool flagRawResource;
+            bool flagStuffItem;
+            bool flagNoStuffItem;
+            bool flagNutrition;
+            bool flagCorpse;
             Thing transmutateThing = TM_Calc.GetTransmutableThingFromCell(this.currentTarget.Cell, this.CasterPawn, out flagRawResource, out flagStuffItem, out flagNoStuffItem, out flagNutrition, out flagCorpse, true);
 
             //List<Thing> thingList = this.currentTarget.Cell.GetThingList(caster.Map);
@@ -95,7 +82,7 @@ namespace TorannMagic
             //    }
             //}
 
-            if(transmutateThing != null)
+            if (transmutateThing != null)
             {
                 TM_Action.DoTransmutate(this.CasterPawn, transmutateThing, flagNoStuffItem, flagRawResource, flagStuffItem, flagNutrition, flagCorpse);
             }
@@ -110,6 +97,6 @@ namespace TorannMagic
             return false;
         }
 
-        
+
     }
 }

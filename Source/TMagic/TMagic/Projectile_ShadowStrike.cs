@@ -4,7 +4,6 @@ using AbilityUser;
 using UnityEngine;
 using System.Linq;
 using System.Collections.Generic;
-using System;
 using RimWorld;
 
 namespace TorannMagic
@@ -42,25 +41,25 @@ namespace TorannMagic
                 }
                 base.Destroy(mode);
             }
-            if(caster.DestroyedOrNull() || caster.Dead)
+            if (caster.DestroyedOrNull() || caster.Dead)
             {
                 base.Destroy(DestroyMode.Vanish);
             }
         }
 
         protected override void Impact(Thing hitThing)
-        {           
+        {
             if (!this.initialized && !hitThing.DestroyedOrNull())
             {
                 this.initialized = true;
-                this.caster = this.launcher as Pawn;               
+                this.caster = this.launcher as Pawn;
                 CompAbilityUserMight comp = caster.GetComp<CompAbilityUserMight>();
-                verVal = TM_Calc.GetMightSkillLevel(caster, comp.MightData.MightPowerSkill_ShadowStrike, "TM_ShadowStrike", "_ver", true);                
+                verVal = TM_Calc.GetMightSkillLevel(caster, comp.MightData.MightPowerSkill_ShadowStrike, "TM_ShadowStrike", "_ver", true);
                 this.startPos = caster.Position;
                 this.age = 0;
                 this.weaponDamage = GetWeaponDmg(caster);
                 this.critChance = comp.weaponCritChance;
-                
+
                 GenClamor.DoClamor(caster, 2f, ClamorDefOf.Ability);
                 if (DoMove(hitThing))
                 {
@@ -68,13 +67,13 @@ namespace TorannMagic
                 }
             }
 
-            if(age >=0)
+            if (age >= 0)
             {
                 age++;
             }
 
             Destroy(DestroyMode.Vanish);
-        }        
+        }
 
         public bool DoMove(Thing target)
         {
@@ -82,18 +81,18 @@ namespace TorannMagic
             this.startPos = caster.Position;
             IntVec3 targetPos = target.Position;
             IntVec3 tmpPos = targetPos;
-            if(!target.DestroyedOrNull() && target is Pawn)
+            if (!target.DestroyedOrNull() && target is Pawn)
             {
                 Pawn p = target as Pawn;
-                if(p.Rotation == Rot4.East)
+                if (p.Rotation == Rot4.East)
                 {
                     tmpPos.x--;
                 }
-                else if(p.Rotation == Rot4.West)
+                else if (p.Rotation == Rot4.West)
                 {
                     tmpPos.x++;
                 }
-                else if(p.Rotation == Rot4.North)
+                else if (p.Rotation == Rot4.North)
                 {
                     tmpPos.z--;
                 }
@@ -101,7 +100,7 @@ namespace TorannMagic
                 {
                     tmpPos.z++;
                 }
-                if(tmpPos.IsValid && tmpPos.InBounds(map) && tmpPos.Walkable(map))
+                if (tmpPos.IsValid && tmpPos.InBounds(map) && tmpPos.Walkable(map))
                 {
                     targetPos = tmpPos;
                 }
@@ -182,7 +181,7 @@ namespace TorannMagic
             if (verVal >= 1)
             {
                 int invisDuration = 120;
-                if(verVal >= 2)
+                if (verVal >= 2)
                 {
                     invisDuration = 180;
                 }
@@ -194,15 +193,15 @@ namespace TorannMagic
                     hdComp.ticksToDisappear = invisDuration;
                 }
             }
-            if(verVal >= 3)
+            if (verVal >= 3)
             {
                 int radius = 2;
-                if(verVal >= 5)
+                if (verVal >= 5)
                 {
                     radius = 3;
                 }
                 float sev = 1.5f;
-                if(verVal >= 4)
+                if (verVal >= 4)
                 {
                     sev = 2.2f;
                 }
@@ -229,7 +228,7 @@ namespace TorannMagic
                     rndPos.z += Rand.Range(-.5f, .5f);
                     TM_MoteMaker.ThrowGenericMote(TorannMagicDefOf.Mote_ShadowCloud, rndPos, caster.Map, Rand.Range(.6f, 1f), .4f, .05f, Rand.Range(.2f, .5f), Rand.Range(-40, 40), Rand.Range(1, 2f), Rand.Range(0, 360), Rand.Range(0, 360));
                 }
-            }            
+            }
             ApplyHaste(caster);
         }
 
@@ -248,7 +247,7 @@ namespace TorannMagic
                     GenSpawn.Spawn(caster, startPos, map);
                     caster.drafter.Drafted = draftFlag;
                     ModOptions.Constants.SetPawnInFlight(false);
-                    if(selectedFlag)
+                    if (selectedFlag)
                     {
                         CameraJumper.TryJumpAndSelect(caster);
                     }
@@ -270,7 +269,7 @@ namespace TorannMagic
         {
             HealthUtility.AdjustSeverity(p, TorannMagicDefOf.TM_HasteHD, .5f);
             HediffComp_Disappears hdComp = p.health.hediffSet.GetFirstHediffOfDef(TorannMagicDefOf.TM_HasteHD).TryGetComp<HediffComp_Disappears>();
-            if(hdComp != null)
+            if (hdComp != null)
             {
                 hdComp.ticksToDisappear = 300;
             }
@@ -290,5 +289,5 @@ namespace TorannMagic
             dmg = Mathf.RoundToInt(dmg * TorannMagicDefOf.TM_ShadowStrike.weaponDamageFactor * (1f + (.05f * pwrVal)));
             return (int)Mathf.Clamp(dmg, 0, 30);
         }
-    }    
+    }
 }

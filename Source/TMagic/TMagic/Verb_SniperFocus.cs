@@ -1,8 +1,6 @@
 ﻿using RimWorld;
-using System;
 using Verse;
 using AbilityUser;
-using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -22,7 +20,7 @@ namespace TorannMagic
             {
                 if (traits[i].def.defName == "TM_Sniper")
                 {
-                    if ( traits[i].Degree < pwr.level)
+                    if (traits[i].Degree < pwr.level)
                     {
                         traits.Remove(traits[i]);
                         this.CasterPawn.story.traits.GainTrait(new Trait(TorannMagicDefOf.TM_Sniper, pwr.level, false));
@@ -30,7 +28,7 @@ namespace TorannMagic
                     }
                 }
             }
-            
+
             this.burstShotsLeft = 0;
             return false;
         }

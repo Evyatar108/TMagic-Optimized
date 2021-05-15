@@ -1,8 +1,4 @@
 ﻿using RimWorld;
-using RimWorld.Planet;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using Verse;
 
@@ -10,8 +6,6 @@ namespace TorannMagic.Conditions
 {
     public class GameCondition_DarkClouds : GameCondition
     {
-        private const int LerpTicks = 500;
-
         private SkyColorSet EclipseSkyColors = new SkyColorSet(new Color(0.362f, 0.532f, 0.454f), Color.white, new Color(0.4f, 0.4f, 0.4f), 1f);
 
         public override float SkyTargetLerpFactor(Map map)
@@ -26,7 +20,7 @@ namespace TorannMagic.Conditions
 
         public override void GameConditionTick()
         {
-            if(Find.TickManager.TicksGame % 37 == 0)
+            if (Find.TickManager.TicksGame % 37 == 0)
             {
                 Pawn p = this.SingleMap.mapPawns.AllPawnsSpawned.RandomElement();
                 if (p.def != TorannMagicDefOf.TM_GiantSkeletonR && p.def != TorannMagicDefOf.TM_SkeletonLichR && p.def != TorannMagicDefOf.TM_SkeletonR && p.def != TorannMagicDefOf.TM_DemonR && p.def != TorannMagicDefOf.TM_LesserDemonR && p.health != null && !p.Downed && p.health.hediffSet != null && !TM_Calc.IsUndead(p))

@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Verse;
 using Verse.AI;
 using RimWorld;
 using UnityEngine;
-using HarmonyLib;
 
 namespace TorannMagic
 {
@@ -103,7 +101,7 @@ namespace TorannMagic
 
         private static List<Thing> newRelevantThings = new List<Thing>();
 
-        private static List<IngredientCount> ingredientsOrdered = new List<IngredientCount>();
+        private static HashSet<IngredientCount> ingredientsOrdered = new HashSet<IngredientCount>();
 
         private static List<Thing> tmpMedicine = new List<Thing>();
 
@@ -143,7 +141,7 @@ namespace TorannMagic
                 LocalTargetInfo target = thing;
                 bool ignoreOtherReservations = forced;
                 if (pawn.CanReserve(target, 1, -1, null, ignoreOtherReservations) && !thing.IsBurning() && !thing.IsForbidden(pawn))
-                {                   
+                {
 
                     CompRefuelable compRefuelable = thing.TryGetComp<CompRefuelable>();
                     if (compRefuelable != null && !compRefuelable.HasFuel)
@@ -160,7 +158,7 @@ namespace TorannMagic
                         if (thing is Building_TMMagicCircle)
                         {
                             Building_TMMagicCircle mc = thing as Building_TMMagicCircle;
-                            if(mc.InteractionCellOccupied())
+                            if (mc.InteractionCellOccupied())
                             {
                                 return null;
                             }
@@ -244,14 +242,12 @@ namespace TorannMagic
                     {
                         bool issueBill = true;
                         this.magicCircle = thing as Building_TMMagicCircleBase;
-                        
-                        List<Pawn> billPawns = new List<Pawn>();
-                        billPawns.Clear();
+
+                        HashSet<Pawn> billPawns = new HashSet<Pawn>();
                         if (bill.recipe is MagicRecipeDef)
                         {
                             MagicRecipeDef magicRecipe = bill.recipe as MagicRecipeDef;
-                            CompAbilityUserMagic compMagic = pawn.TryGetComp<CompAbilityUserMagic>(); 
-                            if(magicCircle.IsActive)
+                            if (magicCircle.IsActive)
                             {
                                 issueBill = false;
                             }
@@ -259,7 +255,7 @@ namespace TorannMagic
                             {
                                 issueBill = false;
                             }
-                            if(!billPawns.Contains(pawn) && !ModCheck.Validate.NoJobAuthors.IsInitialized())
+                            if (!billPawns.Contains(pawn) && !ModCheck.Validate.NoJobAuthors.IsInitialized())
                             {
                                 issueBill = false;
                             }
@@ -302,12 +298,12 @@ namespace TorannMagic
                                         //Log.Message("assigning magic bill to " + pawn.LabelShort);
                                         if (bill.recipe is MagicRecipeDef && billPawns.Count > 1)
                                         {
-                                            for (int j = 0; j < billPawns.Count; j++)
+                                            foreach (var billPawn in billPawns)
                                             {
-                                                if (billPawns[j] != pawn)
+                                                if (billPawn != pawn)
                                                 {
-                                                    magicCircle.MageList.Add(billPawns[j]);
-                                                    magicCircle.IssueAssistJob(billPawns[j]);
+                                                    magicCircle.MageList.Add(billPawn);
+                                                    magicCircle.IssueAssistJob(billPawn);
                                                     //Log.Message("assisting magic bill to " + billPawns[j].LabelShort);
                                                 }
                                             }
@@ -524,7 +520,7 @@ namespace TorannMagic
             return MedicalCareCategory.Best;
         }
 
-        private static void MakeIngredientsListInProcessingOrder(List<IngredientCount> ingredientsOrdered, Bill bill)
+        private static void MakeIngredientsListInProcessingOrder(HashSet<IngredientCount> ingredientsOrdered, Bill bill)
         {
             ingredientsOrdered.Clear();
             if (bill.recipe.productHasIngredientStuff)
@@ -545,10 +541,7 @@ namespace TorannMagic
             for (int j = 0; j < bill.recipe.ingredients.Count; j++)
             {
                 IngredientCount item = bill.recipe.ingredients[j];
-                if (!ingredientsOrdered.Contains(item))
-                {
-                    ingredientsOrdered.Add(item);
-                }
+                ingredientsOrdered.Add(item);
             }
         }
 
@@ -612,7 +605,7 @@ namespace TorannMagic
         }
 
         private static bool TryFindBestBillIngredientsInSet_AllowMix(List<Thing> availableThings, Bill bill, List<ThingCount> chosen)
-        {            
+        {
             chosen.Clear();
             for (int i = 0; i < bill.recipe.ingredients.Count; i++)
             {

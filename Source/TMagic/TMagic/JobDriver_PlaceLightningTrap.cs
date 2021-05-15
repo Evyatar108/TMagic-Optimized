@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace TorannMagic
 {
-    internal class JobDriver_PlaceLightningTrap: JobDriver
+    internal class JobDriver_PlaceLightningTrap : JobDriver
     {
 
         public override bool TryMakePreToilReservations(bool errorOnFailed)
@@ -71,7 +71,7 @@ namespace TorannMagic
                 },
                 defaultCompleteMode = ToilCompleteMode.Instant
             };
-            yield return placeTrap;         
+            yield return placeTrap;
         }
 
         public void SingleSpawnLoop(SpawnThings spawnables, Pawn pawn, IntVec3 position, Map map)
@@ -103,7 +103,7 @@ namespace TorannMagic
                     if (comp != null && comp.MagicData.MagicPowerSkill_Cantrips.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_Cantrips_pwr").level >= 9)
                     {
                         Building_LightningTrap trap = thing as Building_LightningTrap;
-                        if(trap != null && thing is Building_LightningTrap)
+                        if (trap != null && thing is Building_LightningTrap)
                         {
                             trap.iceTrap = true;
                             trap.extendedTrap = true;

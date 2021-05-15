@@ -3,7 +3,6 @@ using RimWorld;
 using AbilityUser;
 using System.Linq;
 using System.Collections.Generic;
-using System;
 using UnityEngine;
 using Verse.Sound;
 using Verse.AI;
@@ -53,14 +52,6 @@ namespace TorannMagic
             Scribe_Values.Look<int>(ref this.waveDelay, "waveDelay", 10, false);
         }
 
-        private int TicksLeft
-        {
-            get
-            {
-                return this.duration - this.age;
-            }
-        }
-
         protected override void Impact(Thing hitThing)
         {
             Map map = base.Map;
@@ -68,7 +59,7 @@ namespace TorannMagic
             ThingDef def = this.def;
             this.caster = this.launcher as Pawn;
 
-            if(!this.initialized)
+            if (!this.initialized)
             {
                 CompAbilityUserMight comp = caster.GetComp<CompAbilityUserMight>();
                 //pwrVal = caster.GetComp<CompAbilityUserMight>().MightData.MightPowerSkill_WaveOfFear.FirstOrDefault((MightPowerSkill x) => x.label == "TM_WaveOfFear_pwr").level;
@@ -100,7 +91,7 @@ namespace TorannMagic
                 if (hediff != null)
                 {
                     this.radius = 4 + (.8f * verVal) + (.07f * hediff.Severity);
-                    HealthUtility.AdjustSeverity(caster, hediff.def, -(25f * (1 - .1f * this.effVal)));
+                    HealthUtility.AdjustSeverity(caster, hediff.def, -(25f * (1 - (.1f * this.effVal))));
                 }
                 else
                 {
@@ -117,9 +108,9 @@ namespace TorannMagic
                 FearWave.Cleanup();
                 SearchAndFear();
                 this.initialized = true;
-            }  
+            }
 
-            if(Find.TickManager.TicksGame % this.waveDelay == 0)
+            if (Find.TickManager.TicksGame % this.waveDelay == 0)
             {
                 SearchAndFear();
                 this.waveRange++;

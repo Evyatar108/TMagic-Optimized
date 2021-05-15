@@ -2,9 +2,6 @@
 using Verse.AI;
 using RimWorld;
 using Verse;
-using AbilityUser;
-using System.Linq;
-using UnityEngine;
 using System;
 
 
@@ -12,7 +9,6 @@ namespace TorannMagic
 {
     public class JobDriver_DoMagicBill : JobDriver_DoBill
     {
-        private int age = -1;
         public int durationTicks = 60;
 
         public float workLeft;
@@ -85,60 +81,6 @@ namespace TorannMagic
             //}
             //Log.Message("toil is " + base.MakeNewToils().ToString());
             return base.MakeNewToils();
-        }
-
-        private static Toil JumpToCollectNextIntoHandsForBill(Toil gotoGetTargetToil, TargetIndex ind)
-        {
-            Toil toil = new Toil();
-            toil.initAction = delegate
-            {
-                Pawn actor = toil.actor;
-                if (actor.carryTracker.CarriedThing == null)
-                {
-                    Log.Error("JumpToAlsoCollectTargetInQueue run on " + actor + " who is not carrying something.");
-                }
-                else if (!actor.carryTracker.Full)
-                {
-                    Job curJob = actor.jobs.curJob;
-                    List<LocalTargetInfo> targetQueue = curJob.GetTargetQueue(ind);
-                    if (!targetQueue.NullOrEmpty())
-                    {
-                        int num = 0;
-                        int a;
-                        while (true)
-                        {
-                            if (num >= targetQueue.Count)
-                            {
-                                return;
-                            }
-                            if (GenAI.CanUseItemForWork(actor, targetQueue[num].Thing) && targetQueue[num].Thing.CanStackWith(actor.carryTracker.CarriedThing) && !((float)(actor.Position - targetQueue[num].Thing.Position).LengthHorizontalSquared > 64f))
-                            {
-                                int num2 = (actor.carryTracker.CarriedThing != null) ? actor.carryTracker.CarriedThing.stackCount : 0;
-                                a = curJob.countQueue[num];
-                                a = Mathf.Min(a, targetQueue[num].Thing.def.stackLimit - num2);
-                                a = Mathf.Min(a, actor.carryTracker.AvailableStackSpace(targetQueue[num].Thing.def));
-                                if (a > 0)
-                                {
-                                    break;
-                                }
-                            }
-                            num++;
-                        }
-                        curJob.count = a;
-                        curJob.SetTarget(ind, targetQueue[num].Thing);
-                        List<int> countQueue;
-                        int index;
-                        (countQueue = curJob.countQueue)[index = num] = countQueue[index] - a;
-                        if (curJob.countQueue[num] <= 0)
-                        {
-                            curJob.countQueue.RemoveAt(num);
-                            targetQueue.RemoveAt(num);
-                        }
-                        actor.jobs.curDriver.JumpToToil(gotoGetTargetToil);
-                    }
-                }
-            };
-            return toil;
         }
     }
 }

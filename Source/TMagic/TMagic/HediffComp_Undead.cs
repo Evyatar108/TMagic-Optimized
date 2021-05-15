@@ -2,10 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using RimWorld;
-using AbilityUser;
 using Verse;
-using UnityEngine;
-using System.Reflection;
 using HarmonyLib;
 
 namespace TorannMagic
@@ -57,12 +54,12 @@ namespace TorannMagic
             if (spawned)
             {
                 //MoteMaker.ThrowLightningGlow(base.Pawn.TrueCenter(), base.Pawn.Map, 3f);
-            }            
+            }
         }
 
         private void UpdateHediff()
         {
-            if(this.linkedPawn != null)
+            if (this.linkedPawn != null)
             {
                 CompAbilityUserMagic comp = linkedPawn.TryGetComp<CompAbilityUserMagic>();
                 try
@@ -97,12 +94,12 @@ namespace TorannMagic
                 }
             }
 
-            if(Find.TickManager.TicksGame % 16 == 0)
+            if (Find.TickManager.TicksGame % 16 == 0)
             {
                 IEnumerable<Hediff> hdEnum = this.Pawn.health.hediffSet.GetHediffs<Hediff>();
-                foreach(Hediff hd in hdEnum)
+                foreach (Hediff hd in hdEnum)
                 {
-                    if(hd.def.defName == "SpaceHypoxia")
+                    if (hd.def.defName == "SpaceHypoxia")
                     {
                         this.Pawn.health.RemoveHediff(hd);
                         break;
@@ -112,7 +109,7 @@ namespace TorannMagic
 
             if (Find.TickManager.TicksGame % 6000 == 0)
             {
-                TM_Action.UpdateAnimalTraining(base.Pawn);                
+                TM_Action.UpdateAnimalTraining(base.Pawn);
             }
             bool flag4 = Find.TickManager.TicksGame % 600 == 0 && this.Pawn.def != TorannMagicDefOf.TM_SkeletonR && this.Pawn.def != TorannMagicDefOf.TM_GiantSkeletonR;
             if (flag4)
@@ -122,7 +119,7 @@ namespace TorannMagic
                 if (base.Pawn != null && !linkedPawn.DestroyedOrNull())
                 {
                     necroValid = true;
-                    lichStrike = 0; 
+                    lichStrike = 0;
                 }
                 else
                 {
@@ -185,7 +182,7 @@ namespace TorannMagic
                                 IEnumerable<Hediff_Injury> arg_BB_0 = pawn.health.hediffSet.GetHediffs<Hediff_Injury>();
                                 Func<Hediff_Injury, bool> arg_BB_1;
 
-                                arg_BB_1 = ((Hediff_Injury injury) => injury.Part == rec);
+                                arg_BB_1 = (Hediff_Injury injury) => injury.Part == rec;
 
                                 foreach (Hediff_Injury current in arg_BB_0.Where(arg_BB_1))
                                 {
@@ -234,15 +231,15 @@ namespace TorannMagic
                                 {
                                     pawn.health.RemoveHediff(rec);
                                 }
-                                if ((rec.def.defName == "Blindness" || rec.def.defName.Contains("Asthma") || rec.def.defName == "Cirrhosis" || rec.def.defName == "ChemicalDamageModerate") || rec.def.defName =="Scaria")
+                                if (rec.def.defName == "Blindness" || rec.def.defName.Contains("Asthma") || rec.def.defName == "Cirrhosis" || rec.def.defName == "ChemicalDamageModerate" || rec.def.defName == "Scaria")
                                 {
                                     pawn.health.RemoveHediff(rec);
                                 }
-                                if ((rec.def.defName == "Frail" || rec.def.defName == "BadBack" || rec.def.defName.Contains("Carcinoma") || rec.def.defName == "ChemicalDamageSevere"))
+                                if (rec.def.defName == "Frail" || rec.def.defName == "BadBack" || rec.def.defName.Contains("Carcinoma") || rec.def.defName == "ChemicalDamageSevere")
                                 {
                                     pawn.health.RemoveHediff(rec);
                                 }
-                                if ((rec.def.defName.Contains("Alzheimers") || rec.def.defName == "Dementia" || rec.def.defName.Contains("HeartArteryBlockage") || rec.def.defName == "CatatonicBreakdown"))
+                                if (rec.def.defName.Contains("Alzheimers") || rec.def.defName == "Dementia" || rec.def.defName.Contains("HeartArteryBlockage") || rec.def.defName == "CatatonicBreakdown")
                                 {
                                     pawn.health.RemoveHediff(rec);
                                 }
@@ -251,25 +248,25 @@ namespace TorannMagic
                             {
                                 pawn.health.RemoveHediff(rec);
                             }
-                            if(rec.def.defName.Contains("Pregnant") || rec.def.defName == "DrugOverdose")
+                            if (rec.def.defName.Contains("Pregnant") || rec.def.defName == "DrugOverdose")
                             {
                                 pawn.health.RemoveHediff(rec);
                             }
                         }
                     }
                     CompHatcher cp_h = this.Pawn.TryGetComp<CompHatcher>();
-                    if(cp_h != null)
+                    if (cp_h != null)
                     {
                         Traverse.Create(root: cp_h).Field(name: "gestateProgress").SetValue(0);
                     }
                     CompMilkable cp_m = this.Pawn.TryGetComp<CompMilkable>();
-                    if(cp_m != null)
+                    if (cp_m != null)
                     {
                         Traverse.Create(root: cp_m).Field(name: "fullness").SetValue(0);
                     }
                 }
             }
-            
+
         }
     }
 }

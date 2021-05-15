@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using RimWorld;
 using AbilityUser;
@@ -11,8 +10,8 @@ namespace TorannMagic
     public class Verb_Regenerate : Verb_UseAbility
     {
         bool validTarg;
-        private int verVal =0;
-        private int pwrVal =0;
+        private int verVal = 0;
+        private int pwrVal = 0;
         private float arcaneDmg = 1;
         //Used specifically for non-unique verbs that ignore LOS (can be used with shield belt)
         public override bool CanHitTargetFrom(IntVec3 root, LocalTargetInfo targ)
@@ -60,7 +59,7 @@ namespace TorannMagic
                     verVal = mver.level;
                 }
             }
-            catch(NullReferenceException ex)
+            catch (NullReferenceException)
             {
                 //ex
             }
@@ -94,7 +93,7 @@ namespace TorannMagic
                     Messages.Message("TM_NothingToRegenerate".Translate(), MessageTypeDefOf.NeutralEvent);
                 }
             }
-            catch (NullReferenceException ex)
+            catch (NullReferenceException)
             {
                 //ex
             }

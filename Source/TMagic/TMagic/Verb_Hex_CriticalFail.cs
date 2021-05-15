@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using RimWorld;
-using AbilityUser;
+﻿using AbilityUser;
 using Verse;
-using UnityEngine;
 
 
 namespace TorannMagic
@@ -13,16 +8,15 @@ namespace TorannMagic
     {
         protected override bool TryCastShot()
         {
-            Pawn caster = base.CasterPawn;
             Pawn pawn = this.currentTarget.Thing as Pawn;
-            int verVal = 0;
             CompAbilityUserMagic comp = pawn.GetComp<CompAbilityUserMagic>();
-            verVal = TM_Calc.GetMagicSkillLevel(CasterPawn, comp.MagicData.MagicPowerSkill_Hex, "TM_Hex", "_ver", true);
-            if (comp != null && comp.HexedPawns.Count > 0)
+            int verVal = TM_Calc.GetMagicSkillLevel(CasterPawn, comp.MagicData.MagicPowerSkill_Hex, "TM_Hex", "_ver", true);
+            var hexedPawns = comp.HexedPawns;
+            if (comp != null && hexedPawns.Count > 0)
             {
-                foreach(Pawn p in comp.HexedPawns)
+                foreach (Pawn p in hexedPawns)
                 {
-                    HealthUtility.AdjustSeverity(p, TorannMagicDefOf.TM_Hex_CriticalFailHD, (.6f + (.1f * verVal)));
+                    HealthUtility.AdjustSeverity(p, TorannMagicDefOf.TM_Hex_CriticalFailHD, .6f + (.1f * verVal));
                     TM_MoteMaker.ThrowGenericMote(TorannMagicDefOf.Mote_BlackSmoke, p.DrawPos, p.Map, .7f, .1f, .1f, .2f, Rand.Range(-50, 50), Rand.Range(.5f, 1f), Rand.Range(-90, 90), Rand.Range(0, 360));
                 }
             }

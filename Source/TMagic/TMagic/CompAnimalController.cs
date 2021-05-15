@@ -1,29 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Verse;
 using RimWorld;
 using UnityEngine;
 using Verse.AI;
 using Verse.Sound;
-using AbilityUser;
 
 namespace TorannMagic
 {
     public class CompAnimalController : ThingComp
-	{
+    {
         private bool initialized = false;
 
         List<Pawn> threatList = new List<Pawn>();
         List<Pawn> closeThreats = new List<Pawn>();
         List<Pawn> farThreats = new List<Pawn>();
-
-        private int rangedBurstShots = 0;
-        private int rangedNextBurst = 0;
         private LocalTargetInfo rangedTarget = null;
-        private Thing launchableThing = null;
-
-        private int scanTick = 281;
         private int age = -1;
 
         public Pawn summonerPawn = null;
@@ -55,7 +47,7 @@ namespace TorannMagic
         public override void PostDraw()
         {
             base.PostDraw();
-           
+
         }
 
         private Pawn Pawn
@@ -72,12 +64,9 @@ namespace TorannMagic
             }
         }
 
-        private List<Pawn> PawnThreatList
+        private List<Pawn> CreatePawnThreatList()
         {
-            get
-            {
-                return closeThreats.Union(farThreats).ToList();
-            }
+            return closeThreats.Union(farThreats).ToList();
         }
 
         public CompProperties_AnimalController Props
@@ -109,17 +98,17 @@ namespace TorannMagic
                             tauntRange = 15 + pwrVal;
                             tauntTargetsMax = 4 + pwrVal;
                             tauntChance = .6f + (.03f * pwrVal);
-                            damageMitigation = 4 + Mathf.RoundToInt((float)pwrVal/1.5f);
+                            damageMitigation = 4 + Mathf.RoundToInt((float)pwrVal / 1.5f);
                             shadowStrikeDamage = 11 + pwrVal;
                             shadowStrikeCritChance = .4f + (.05f * pwrVal);
                             invisDuration = 90 + (10 * pwrVal);
                             hasteDuration = 120 + (10 * pwrVal);
                             hexChance = .5f + (.05f * pwrVal);
-                        }                        
-                     }
+                        }
+                    }
                     this.initialized = true;
                 }
-                
+
                 if (this.Pawn.Spawned && this.Props.abilities != null)
                 {
                     if (!this.Pawn.Downed && Find.TickManager.TicksGame >= this.nextEvalTick)
@@ -141,9 +130,9 @@ namespace TorannMagic
                                 this.Pawn.needs.food.CurLevel -= .3f;
                             }
                         }
-                        if(farThreats != null && farThreats.Count >= 1 && this.Pawn.needs?.food?.CurLevel > .05f)
+                        if (farThreats != null && farThreats.Count >= 1 && this.Pawn.needs?.food?.CurLevel > .05f)
                         {
-                            if(this.Props.abilities.Contains(TorannMagicDefOf.TM_ShadowStrike))
+                            if (this.Props.abilities.Contains(TorannMagicDefOf.TM_ShadowStrike))
                             {
                                 Thing target = farThreats.RandomElement();
                                 if (DoMove(target))
@@ -153,25 +142,28 @@ namespace TorannMagic
                                 }
                             }
                         }
-                        if(PawnThreatList != null && PawnThreatList.Count > 0 && this.Pawn.needs?.food?.CurLevel > .025f)
+
+                        var pawnThreatList = this.CreatePawnThreatList();
+                        if (pawnThreatList != null && pawnThreatList.Count > 0 && this.Pawn.needs?.food?.CurLevel > .025f)
                         {
-                            if(this.Props.abilities.Contains(TorannMagicDefOf.TM_Hex))
+                            if (this.Props.abilities.Contains(TorannMagicDefOf.TM_Hex))
                             {
-                                Pawn p = PawnThreatList.RandomElement();
-                                if(p.health != null && p.health.hediffSet != null && !p.health.hediffSet.HasHediff(TorannMagicDefOf.TM_HexHD))
+                                Pawn p = pawnThreatList.RandomElement();
+                                if (p.health != null && p.health.hediffSet != null && !p.health.hediffSet.HasHediff(TorannMagicDefOf.TM_HexHD))
                                 {
-                                    if(Rand.Chance(hexChance))
+                                    if (Rand.Chance(hexChance))
                                     {
                                         HealthUtility.AdjustSeverity(p, TorannMagicDefOf.TM_HexHD, 1f);
                                         CompAbilityUserMagic bondedMagicComp = this.summonerPawn.TryGetComp<CompAbilityUserMagic>();
 
-                                        if (bondedMagicComp != null && !bondedMagicComp.HexedPawns.Contains(p) && bondedMagicComp.MagicData != null && bondedMagicComp.MagicData.MagicPowersShaman.FirstOrDefault((MagicPower x) => x.abilityDef == TorannMagicDefOf.TM_Hex).learned)
+                                        var hexedPawns = bondedMagicComp.HexedPawns;
+                                        if (bondedMagicComp != null && !hexedPawns.Contains(p) && bondedMagicComp.MagicData != null && bondedMagicComp.MagicData.MagicPowersShaman.FirstOrDefault((MagicPower x) => x.abilityDef == TorannMagicDefOf.TM_Hex).learned)
                                         {
                                             bool addAbilities = false;
-                                            bool shouldAddAbilities = bondedMagicComp.HexedPawns.Count <= 0;
-                                            if (!bondedMagicComp.HexedPawns.Contains(p))
+                                            bool shouldAddAbilities = hexedPawns.Count <= 0;
+                                            if (!hexedPawns.Contains(p))
                                             {
-                                                bondedMagicComp.HexedPawns.Add(p);
+                                                hexedPawns.Add(p);
                                                 addAbilities = true;
                                             }
                                             if (shouldAddAbilities && addAbilities)
@@ -197,7 +189,6 @@ namespace TorannMagic
         {
             List<Pawn> mapPawns = this.Pawn.Map.mapPawns.AllPawnsSpawned;
             List<Pawn> tauntTargets = new List<Pawn>();
-            tauntTargets.Clear();
             if (mapPawns != null && mapPawns.Count > 0)
             {
                 for (int i = 0; i < mapPawns.Count; i++)
@@ -319,7 +310,7 @@ namespace TorannMagic
             if (hdComp != null)
             {
                 hdComp.ticksToDisappear = this.invisDuration;
-            }            
+            }
             ApplyHaste(this.Pawn);
         }
 
@@ -341,9 +332,8 @@ namespace TorannMagic
         public override void PostPreApplyDamage(DamageInfo dinfo, out bool absorbed)
         {
             base.PostPreApplyDamage(dinfo, out absorbed);
-            if(dinfo.Instigator != null)
+            if (dinfo.Instigator != null)
             {
-                Thing instigatorThing = dinfo.Instigator;
                 if (this.Props.abilities != null && this.Props.abilities.Contains(TorannMagicDefOf.TM_Fortitude))
                 {
                     if (damageMitigationDelay < this.age)
@@ -354,7 +344,6 @@ namespace TorannMagic
                         float dmgAmt = dinfo.Amount;
                         if (dmgAmt < damageMitigation)
                         {
-                            actualDmg = 0;
                             return;
                         }
                         else
@@ -365,7 +354,7 @@ namespace TorannMagic
                         dinfo.SetAmount(actualDmg);
                         this.Pawn.TakeDamage(dinfo);
                         return;
-                        
+
                     }
                 }
             }
@@ -382,7 +371,7 @@ namespace TorannMagic
                 {
                     if (!allPawns[i].Dead && !allPawns[i].Downed)
                     {
-                        if (allPawns[i].Faction != null && (allPawns[i].Faction.HostileTo(this.Pawn.Faction)) && !allPawns[i].IsPrisoner)
+                        if (allPawns[i].Faction != null && allPawns[i].Faction.HostileTo(this.Pawn.Faction) && !allPawns[i].IsPrisoner)
                         {
                             if ((allPawns[i].Position - this.Pawn.Position).LengthHorizontal <= this.Props.maxRangeForCloseThreat)
                             {
@@ -411,23 +400,23 @@ namespace TorannMagic
 
         public bool TargetIsValid(Thing target)
         {
-            if(target.DestroyedOrNull())
+            if (target.DestroyedOrNull())
             {
                 return false;
             }
-            if(!target.Spawned)
+            if (!target.Spawned)
             {
                 return false;
             }
-            if(target is Pawn)
+            if (target is Pawn)
             {
                 return !(target as Pawn).Downed;
             }
-            if(target.Position.DistanceToEdge(this.Pawn.Map) < 8)
+            if (target.Position.DistanceToEdge(this.Pawn.Map) < 8)
             {
                 return false;
             }
-            if(target.Faction != null)
+            if (target.Faction != null)
             {
                 return target.Faction != this.Pawn.Faction && target.Faction.HostileTo(this.Pawn.Faction);
             }

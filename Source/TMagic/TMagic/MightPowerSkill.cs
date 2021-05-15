@@ -20,7 +20,7 @@ namespace TorannMagic
             this.desc = newDesc;
             this.level = 0;
 
-            if (this.label.Contains("TM_BladeFocus") || this.label.Contains("TM_BladeArt") || this.label.Contains("TM_RangerTraining" ) || this.label.Contains("TM_BowTraining") || this.label.Contains("TM_PsionicAugmentation"))
+            if (this.label.Contains("TM_BladeFocus") || this.label.Contains("TM_BladeArt") || this.label.Contains("TM_RangerTraining") || this.label.Contains("TM_BowTraining") || this.label.Contains("TM_PsionicAugmentation"))
             {
                 costToLevel = 2;
             }
@@ -37,7 +37,7 @@ namespace TorannMagic
             {
                 this.levelMax = 30;
             }
-            else if (newLabel == "TM_global_refresh_pwr" || newLabel == "TM_global_seff_pwr" || newLabel == "TM_global_strength_pwr" || 
+            else if (newLabel == "TM_global_refresh_pwr" || newLabel == "TM_global_seff_pwr" || newLabel == "TM_global_strength_pwr" ||
                 newLabel == "TM_Shroud_pwr" || newLabel == "TM_Shroud_ver" || newLabel == "TM_Shroud_eff" ||
                 this.label.Contains("TM_ShadowStrike") || this.label.Contains("TM_Nightshade") || this.label.Contains("TM_VeilOfShadows") ||
                 this.label.Contains("TM_ShadowSlayer"))
@@ -46,7 +46,6 @@ namespace TorannMagic
             }
             else if (false)
             {
-                this.levelMax = 4;
             }
             else
             {

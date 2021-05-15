@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace TorannMagic.Enchantment
+﻿namespace TorannMagic.Enchantment
 {
     public enum EnchantmentTier
     {

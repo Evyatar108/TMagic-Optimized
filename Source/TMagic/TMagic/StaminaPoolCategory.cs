@@ -1,14 +1,11 @@
-﻿using System;
-
-
-namespace TorannMagic
+﻿namespace TorannMagic
 {
     public enum StaminaPoolCategory
     {
         Fatigued,
-		Weakened,
-		Steady,
-		Energetic,
-		Surging
+        Weakened,
+        Steady,
+        Energetic,
+        Surging
     }
 }

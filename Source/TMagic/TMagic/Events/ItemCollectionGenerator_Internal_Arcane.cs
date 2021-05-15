@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using UnityEngine;
+﻿using System.Collections.Generic;
 using Verse;
-using RimWorld;
 
 namespace TorannMagic
 {
@@ -14,7 +10,6 @@ namespace TorannMagic
         private const float ArcaneScriptChance = 0.06f;
         private const float DrugChance = 0.15f;
         private const float SpellChance = 0.2f;
-        private const float SkillChance = 0.2f;
         private const float MasterSpellChance = 0.1f;
 
         private static readonly IntRange GemstoneCountRange = new IntRange(1, 2);
@@ -30,13 +25,12 @@ namespace TorannMagic
         public static List<Thing> Generate(int totalMarketValue)
         {
             List<Thing> outThings = new List<Thing>();
-            outThings.Clear();
             for (int j = 0; j < 10; j++)
             {
                 //Torn Scripts
-                if (Rand.Chance(0.3f) && (totalMarketValue - collectiveMarketValue) > TorannMagicDefOf.Torn_BookOfArcanist.BaseMarketValue *.8f)
+                if (Rand.Chance(0.3f) && (totalMarketValue - collectiveMarketValue) > TorannMagicDefOf.Torn_BookOfArcanist.BaseMarketValue * .8f)
                 {
-                    Thing thing = ThingMaker.MakeThing(TM_Data.MageTornScriptList().RandomElement(), null);
+                    Thing thing = ThingMaker.MakeThing(TM_Data.MageTornScriptList.RandomElement(), null);
                     if (thing != null)
                     {
                         outThings.Add(thing);
@@ -44,9 +38,9 @@ namespace TorannMagic
                     }
                 }
                 //Arcane Scripts
-                if (Rand.Chance(ArcaneScriptChance) && (totalMarketValue - collectiveMarketValue) > TorannMagicDefOf.BookOfArcanist.BaseMarketValue *.8f)
+                if (Rand.Chance(ArcaneScriptChance) && (totalMarketValue - collectiveMarketValue) > TorannMagicDefOf.BookOfArcanist.BaseMarketValue * .8f)
                 {
-                    Thing thing = ThingMaker.MakeThing(TM_Data.AllBooksList().RandomElement(), null);
+                    Thing thing = ThingMaker.MakeThing(TM_Data.AllBooksList.RandomElement(), null);
                     if (thing != null)
                     {
                         outThings.Add(thing);
@@ -72,10 +66,9 @@ namespace TorannMagic
                     for (int i = 0; i < randomInRange; i++)
                     {
                         List<Thing> gemstoneZero = new List<Thing>();
-                        Thing item = null;
                         ItemCollectionGenerator_Gemstones icg_g = new ItemCollectionGenerator_Gemstones();
                         icg_g.Generate(1000, gemstoneZero);
-                        item = gemstoneZero[0];
+                        Thing item = gemstoneZero[0];
                         if (item != null)
                         {
                             outThings.Add(item);
@@ -104,7 +97,7 @@ namespace TorannMagic
                 //Master Spells
                 if (Rand.Chance(MasterSpellChance) && (totalMarketValue - collectiveMarketValue) > TorannMagicDefOf.SpellOf_Blizzard.BaseMarketValue)
                 {
-                    Thing thing = ThingMaker.MakeThing(TM_Data.MasterSpellList().RandomElement(), null);
+                    Thing thing = ThingMaker.MakeThing(TM_Data.MasterSpellList.RandomElement(), null);
                     if (thing != null)
                     {
                         outThings.Add(thing);
@@ -114,7 +107,7 @@ namespace TorannMagic
                 //Spells
                 if (Rand.Chance(SpellChance) && (totalMarketValue - collectiveMarketValue) > 1000f)
                 {
-                    Thing thing = ThingMaker.MakeThing(TM_Data.StandardSpellList().RandomElement(), null);
+                    Thing thing = ThingMaker.MakeThing(TM_Data.StandardSpellList.RandomElement(), null);
                     if (thing != null)
                     {
                         outThings.Add(thing);
@@ -124,8 +117,7 @@ namespace TorannMagic
                 //Skills
                 if (Rand.Chance(SpellChance) && (totalMarketValue - collectiveMarketValue) > 800f)
                 {
-                    int randomInRange = SkillCountRange.RandomInRange;
-                    Thing thing = ThingMaker.MakeThing(TM_Data.StandardSkillList().RandomElement(), null);
+                    Thing thing = ThingMaker.MakeThing(TM_Data.StandardSkillList.RandomElement(), null);
                     if (thing != null)
                     {
                         outThings.Add(thing);

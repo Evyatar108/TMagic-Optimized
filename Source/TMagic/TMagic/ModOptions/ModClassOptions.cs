@@ -3,10 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Verse;
-using UnityEngine;
-using System.Text;
-using System.Reflection;
-using HarmonyLib;
 
 namespace TorannMagic.ModOptions
 {
@@ -27,7 +23,7 @@ namespace TorannMagic.ModOptions
 
         private static void CheckForDisabledCustomClass()
         {
-            if(Settings.Instance.CustomClass == null)
+            if (Settings.Instance.CustomClass == null)
             {
                 Settings.Instance.CustomClass = new Dictionary<string, bool>();
                 Settings.Instance.CustomClass.Clear();
@@ -35,7 +31,7 @@ namespace TorannMagic.ModOptions
             for (int i = 0; i < TM_ClassUtility.CustomClasses().Count; i++)
             {
                 TMDefs.TM_CustomClass customClass = TM_ClassUtility.CustomClasses()[i];
-                if(!Settings.Instance.CustomClass.Keys.Contains(customClass.classTrait.ToString()))
+                if (!Settings.Instance.CustomClass.Keys.Contains(customClass.classTrait.ToString()))
                 {
                     Settings.Instance.CustomClass.Add(customClass.classTrait.ToString(), true);
                 }
@@ -45,17 +41,16 @@ namespace TorannMagic.ModOptions
         private static void InitializeCustomClassActions()
         {
             //Conflicting trait levelset
-            List<TraitDef> customTraits = new List<TraitDef>();
-            customTraits.Clear();
+            HashSet<TraitDef> customTraits = new HashSet<TraitDef>();
             for (int i = 0; i < TM_ClassUtility.CustomClasses().Count; i++)
             {
                 TMDefs.TM_CustomClass customClass = TM_ClassUtility.CustomClasses()[i];
-                customTraits.AddDistinct(customClass.classTrait);
+                customTraits.Add(customClass.classTrait);
                 customClass.classTrait.conflictingTraits.AddRange(TM_Data.AllClassTraits);
             }
 
             IEnumerable<TraitDef> enumerable = from def in DefDatabase<TraitDef>.AllDefs
-                                               where (TM_Data.AllClassTraits.Contains(def))
+                                               where TM_Data.AllClassTraits.Contains(def)
                                                select def;
 
             foreach (TraitDef current in enumerable)
@@ -63,26 +58,24 @@ namespace TorannMagic.ModOptions
                 current.conflictingTraits.AddRange(customTraits);
             }
 
-            for (int i = 0; i < customTraits.Count; i++)
-            {
-                for (int j = 0; j < customTraits.Count; j++)
+            foreach (var customTraitA in customTraits)
+                foreach (var customTraitB in customTraits)
                 {
-                    if (customTraits[i] != customTraits[j])
+                    if (customTraitA != customTraitB)
                     {
-                        customTraits[i].conflictingTraits.Add(customTraits[j]);
+                        customTraitA.conflictingTraits.Add(customTraitB);
                     }
                 }
-            }
         }
 
         private static void RestrictClasses()
         {
             ModOptions.SettingsRef settingsRef = new ModOptions.SettingsRef();
 
-            IEnumerable<ThingDef> enumerable = (from def in DefDatabase<ThingDef>.AllDefs
-                                                select def);
+            IEnumerable<ThingDef> enumerable = from def in DefDatabase<ThingDef>.AllDefs
+                                               select def;
             List<ThingDef> removedThings = new List<ThingDef>();
-            List<ThingDef> customThings = new List<ThingDef>();
+            HashSet<ThingDef> customThings = new HashSet<ThingDef>();
             List<ThingDef> removedCustomThings = new List<ThingDef>();
             List<ThingDef> classSpells = new List<ThingDef>();
             List<ThingDef> removedSpells = new List<ThingDef>();
@@ -94,90 +87,90 @@ namespace TorannMagic.ModOptions
                 {
                     if (cc.tornScript != null)
                     {
-                        customThings.AddDistinct(cc.tornScript);
+                        customThings.Add(cc.tornScript);
                     }
                     if (cc.fullScript != null)
                     {
-                        customThings.AddDistinct(cc.fullScript);
+                        customThings.Add(cc.fullScript);
                     }
                     if (cc.learnableSkills != null && cc.learnableSkills.Count > 0)
                     {
                         for (int j = 0; j < cc.learnableSkills.Count; j++)
                         {
-                            customThings.AddDistinct(cc.learnableSkills[j]);
+                            customThings.Add(cc.learnableSkills[j]);
                         }
                     }
                     if (cc.learnableSpells != null && cc.learnableSpells.Count > 0)
                     {
                         for (int j = 0; j < cc.learnableSpells.Count; j++)
                         {
-                            customThings.AddDistinct(cc.learnableSpells[j]);
+                            customThings.Add(cc.learnableSpells[j]);
                         }
                     }
                     if (cc.classFighterAbilities != null && cc.classFighterAbilities.Count > 0)
                     {
                         if (cc.classFighterAbilities.Contains(TorannMagicDefOf.TM_PoisonTrap))
                         {
-                            customThings.AddDistinct(ThingDef.Named("TM_PoisonTrap"));
+                            customThings.Add(ThingDef.Named("TM_PoisonTrap"));
                         }
                         if (cc.classFighterAbilities.Contains(TorannMagicDefOf.TM_60mmMortar))
                         {
-                            customThings.AddDistinct(TorannMagicDefOf.TM_60mmMortar_Base);
+                            customThings.Add(TorannMagicDefOf.TM_60mmMortar_Base);
                         }
                         if (cc.classFighterAbilities.Contains(TorannMagicDefOf.TM_PistolSpec))
                         {
-                            customThings.AddDistinct(ThingDef.Named("TM_PistolSpec_Base0"));
+                            customThings.Add(ThingDef.Named("TM_PistolSpec_Base0"));
                         }
                         if (cc.classFighterAbilities.Contains(TorannMagicDefOf.TM_RifleSpec))
                         {
-                            customThings.AddDistinct(ThingDef.Named("TM_RifleSpec_Base0"));
+                            customThings.Add(ThingDef.Named("TM_RifleSpec_Base0"));
                         }
                         if (cc.classFighterAbilities.Contains(TorannMagicDefOf.TM_ShotgunSpec))
                         {
-                            customThings.AddDistinct(ThingDef.Named("TM_ShotgunSpec_Base0"));
+                            customThings.Add(ThingDef.Named("TM_ShotgunSpec_Base0"));
                         }
                     }
                     if (cc.classMageAbilities != null && cc.classMageAbilities.Count > 0)
                     {
                         if (cc.classMageAbilities.Contains(TorannMagicDefOf.TM_RegrowLimb))
                         {
-                            customThings.AddDistinct(ThingDef.Named("SeedofRegrowth"));
+                            customThings.Add(ThingDef.Named("SeedofRegrowth"));
                         }
                         if (cc.classMageAbilities.Contains(TorannMagicDefOf.TM_SummonExplosive))
                         {
-                            customThings.AddDistinct(ThingDef.Named("TM_ManaMine"));
-                            customThings.AddDistinct(ThingDef.Named("TM_ManaMine_I"));
-                            customThings.AddDistinct(ThingDef.Named("TM_ManaMine_II"));
-                            customThings.AddDistinct(ThingDef.Named("TM_ManaMine_III"));
+                            customThings.Add(ThingDef.Named("TM_ManaMine"));
+                            customThings.Add(ThingDef.Named("TM_ManaMine_I"));
+                            customThings.Add(ThingDef.Named("TM_ManaMine_II"));
+                            customThings.Add(ThingDef.Named("TM_ManaMine_III"));
                         }
                         if (cc.classMageAbilities.Contains(TorannMagicDefOf.TM_SummonPylon))
                         {
-                            customThings.AddDistinct(ThingDef.Named("DefensePylon"));
-                            customThings.AddDistinct(ThingDef.Named("DefensePylon_I"));
-                            customThings.AddDistinct(ThingDef.Named("DefensePylon_II"));
-                            customThings.AddDistinct(ThingDef.Named("DefensePylon_III"));
-                            customThings.AddDistinct(ThingDef.Named("Bullet_DefensePylon"));
-                            customThings.AddDistinct(ThingDef.Named("Launcher_DefensePylon"));
-                            customThings.AddDistinct(ThingDef.Named("Launcher_DefensePylon_I"));
-                            customThings.AddDistinct(ThingDef.Named("Launcher_DefensePylon_II"));
-                            customThings.AddDistinct(ThingDef.Named("Launcher_DefensePylon_III"));
-                            customThings.AddDistinct(ThingDef.Named("TM_Poppi"));
+                            customThings.Add(ThingDef.Named("DefensePylon"));
+                            customThings.Add(ThingDef.Named("DefensePylon_I"));
+                            customThings.Add(ThingDef.Named("DefensePylon_II"));
+                            customThings.Add(ThingDef.Named("DefensePylon_III"));
+                            customThings.Add(ThingDef.Named("Bullet_DefensePylon"));
+                            customThings.Add(ThingDef.Named("Launcher_DefensePylon"));
+                            customThings.Add(ThingDef.Named("Launcher_DefensePylon_I"));
+                            customThings.Add(ThingDef.Named("Launcher_DefensePylon_II"));
+                            customThings.Add(ThingDef.Named("Launcher_DefensePylon_III"));
+                            customThings.Add(ThingDef.Named("TM_Poppi"));
                         }
                         if (cc.classMageAbilities.Contains(TorannMagicDefOf.TM_SummonPoppi))
                         {
-                            customThings.AddDistinct(ThingDef.Named("TM_Poppi"));
+                            customThings.Add(ThingDef.Named("TM_Poppi"));
                         }
                         if (cc.classMageAbilities.Contains(TorannMagicDefOf.TM_RaiseUndead))
                         {
-                            customThings.AddDistinct(TorannMagicDefOf.TM_Artifact_NecroticOrb);
+                            customThings.Add(TorannMagicDefOf.TM_Artifact_NecroticOrb);
                         }
                     }
                 }
                 else
                 {
-                    if(cc.tornScript != null)
+                    if (cc.tornScript != null)
                     {
-                        removedCustomThings.Add(cc.tornScript);                        
+                        removedCustomThings.Add(cc.tornScript);
                     }
                     for (int k = 0; k < cc.learnableSpells.Count; k++)
                     {
@@ -195,7 +188,7 @@ namespace TorannMagic.ModOptions
             {
                 if (!settingsRef.Sniper)
                 {
-                    if(current.defName == "BookOfSniper")
+                    if (current.defName == "BookOfSniper")
                     {
                         if (!customThings.Contains(current))
                         {
@@ -318,7 +311,7 @@ namespace TorannMagic.ModOptions
                 }
                 else
                 {
-                    if(current.defName == "SpellOf_FoldReality")
+                    if (current.defName == "SpellOf_FoldReality")
                     {
                         classSpells.Add(current);
                     }
@@ -386,7 +379,7 @@ namespace TorannMagic.ModOptions
                 }
                 else
                 {
-                    if (current.defName == "SpellOf_RegrowLimb" ||  current.defName == "SpellOf_FertileLands")
+                    if (current.defName == "SpellOf_RegrowLimb" || current.defName == "SpellOf_FertileLands")
                     {
                         classSpells.Add(current);
                     }
@@ -595,17 +588,17 @@ namespace TorannMagic.ModOptions
                 }
             }
 
-            for(int i =0; i < removedCustomThings.Count; i++)
+            for (int i = 0; i < removedCustomThings.Count; i++)
             {
-                if(!removedThings.Contains(removedCustomThings[i]))
+                if (!removedThings.Contains(removedCustomThings[i]))
                 {
                     removedThings.Add(removedCustomThings[i]);
                 }
             }
 
-            for(int i =0; i < removedSpells.Count; i++)
+            for (int i = 0; i < removedSpells.Count; i++)
             {
-                if(!customThings.Contains(removedSpells[i]) && !classSpells.Contains(removedSpells[i]))
+                if (!customThings.Contains(removedSpells[i]) && !classSpells.Contains(removedSpells[i]))
                 {
                     removedThings.Add(removedSpells[i]);
                     removedCustomThings.Add(removedSpells[i]);
@@ -618,8 +611,8 @@ namespace TorannMagic.ModOptions
                 DefDatabase<ThingDef>.AllDefsListForReading.Remove(removedThings[i]);
             }
 
-            IEnumerable<RecipeDef> RecipeEnumerable = (from def in DefDatabase<RecipeDef>.AllDefs
-                                                select def);
+            IEnumerable<RecipeDef> RecipeEnumerable = from def in DefDatabase<RecipeDef>.AllDefs
+                                                      select def;
             List<RecipeDef> removedRecipes = new List<RecipeDef>();
 
             foreach (RecipeDef current in RecipeEnumerable)
@@ -661,42 +654,42 @@ namespace TorannMagic.ModOptions
                 }
                 if (!settingsRef.Summoner)
                 {
-                    if ((current.defName == "Make_SpellOf_SummonPoppi" && !customThings.Contains(TorannMagicDefOf.SpellOf_SummonPoppi)))
+                    if (current.defName == "Make_SpellOf_SummonPoppi" && !customThings.Contains(TorannMagicDefOf.SpellOf_SummonPoppi))
                     {
                         removedRecipes.Add(current);
                     }
                 }
                 if (!settingsRef.Paladin)
                 {
-                    if ((current.defName == "Make_SpellOf_HolyWrath" && !customThings.Contains(TorannMagicDefOf.SpellOf_HolyWrath)))
+                    if (current.defName == "Make_SpellOf_HolyWrath" && !customThings.Contains(TorannMagicDefOf.SpellOf_HolyWrath))
                     {
                         removedRecipes.Add(current);
                     }
                 }
                 if (!settingsRef.Priest)
                 {
-                    if ((current.defName == "Make_SpellOf_Resurrection" && !customThings.Contains(TorannMagicDefOf.SpellOf_Resurrection)))
+                    if (current.defName == "Make_SpellOf_Resurrection" && !customThings.Contains(TorannMagicDefOf.SpellOf_Resurrection))
                     {
                         removedRecipes.Add(current);
                     }
                 }
                 if (!settingsRef.Bard)
                 {
-                    if ((current.defName == "Make_SpellOf_BattleHymn" && !customThings.Contains(TorannMagicDefOf.SpellOf_BattleHymn)))
+                    if (current.defName == "Make_SpellOf_BattleHymn" && !customThings.Contains(TorannMagicDefOf.SpellOf_BattleHymn))
                     {
                         removedRecipes.Add(current);
                     }
                 }
                 if (!settingsRef.Necromancer)
                 {
-                    if ((current.defName == "Make_SpellOf_FoldReality" && !customThings.Contains(TorannMagicDefOf.SpellOf_FoldReality)))
+                    if (current.defName == "Make_SpellOf_FoldReality" && !customThings.Contains(TorannMagicDefOf.SpellOf_FoldReality))
                     {
                         removedRecipes.Add(current);
                     }
                 }
                 if (!settingsRef.Geomancer)
                 {
-                    if ((current.defName == "Make_SpellOf_Meteor" && !customThings.Contains(TorannMagicDefOf.SpellOf_Meteor)))
+                    if (current.defName == "Make_SpellOf_Meteor" && !customThings.Contains(TorannMagicDefOf.SpellOf_Meteor))
                     {
                         removedRecipes.Add(current);
                     }
@@ -720,21 +713,21 @@ namespace TorannMagic.ModOptions
                 }
                 if (!settingsRef.BloodMage)
                 {
-                    if ((current.defName == "Make_SpellOf_BloodMoon" && !customThings.Contains(TorannMagicDefOf.SpellOf_BloodMoon)))
+                    if (current.defName == "Make_SpellOf_BloodMoon" && !customThings.Contains(TorannMagicDefOf.SpellOf_BloodMoon))
                     {
                         removedRecipes.Add(current);
                     }
                 }
                 if (!settingsRef.Enchanter)
                 {
-                    if ((current.defName == "Make_SpellOf_Shapeshift" && !customThings.Contains(TorannMagicDefOf.SpellOf_Shapeshift)))
+                    if (current.defName == "Make_SpellOf_Shapeshift" && !customThings.Contains(TorannMagicDefOf.SpellOf_Shapeshift))
                     {
                         removedRecipes.Add(current);
                     }
                 }
                 if (!settingsRef.Chronomancer)
                 {
-                    if ((current.defName == "Make_SpellOf_Recall" && !customThings.Contains(TorannMagicDefOf.SpellOf_Recall)))
+                    if (current.defName == "Make_SpellOf_Recall" && !customThings.Contains(TorannMagicDefOf.SpellOf_Recall))
                     {
                         removedRecipes.Add(current);
                     }
@@ -742,8 +735,8 @@ namespace TorannMagic.ModOptions
                 if (!settingsRef.SuperSoldier)
                 {
                     if (!settingsRef.SuperSoldier)
-                    { 
-                        if ((current.defName == "Make_BookOfSuperSoldier" && !customThings.Contains(TorannMagicDefOf.BookOfSuperSoldier)))
+                    {
+                        if (current.defName == "Make_BookOfSuperSoldier" && !customThings.Contains(TorannMagicDefOf.BookOfSuperSoldier))
                         {
                             removedRecipes.Add(current);
                         }
@@ -751,9 +744,9 @@ namespace TorannMagic.ModOptions
                 }
             }
 
-            for(int i = 0; i < removedCustomThings.Count; i++)
+            for (int i = 0; i < removedCustomThings.Count; i++)
             {
-                if(RecipeEnumerable.Any((RecipeDef x) => x.defName == "Make_" + removedCustomThings[i].defName))
+                if (RecipeEnumerable.Any((RecipeDef x) => x.defName == "Make_" + removedCustomThings[i].defName))
                 {
                     removedRecipes.Add(RecipeEnumerable.FirstOrDefault<RecipeDef>((RecipeDef x) => x.defName == ("Make_" + removedCustomThings[i].ToString())));
                 }
@@ -764,21 +757,7 @@ namespace TorannMagic.ModOptions
                 //Log.Message("removing " + removedRecipes[i].defName + " from def database");
                 DefDatabase<RecipeDef>.AllDefsListForReading.Remove(removedRecipes[i]);
             }
-            
-        }
 
-        private static void RemoveStuffFromDatabase(Type databaseType, IEnumerable<Def> defs)
-        {
-            IEnumerable<Def> enumerable = (defs as Def[]) ?? defs.ToArray();
-            if (enumerable.Any())
-            {
-                Traverse traverse = Traverse.Create(databaseType).Method("Remove", enumerable.First());
-                foreach (Def item in enumerable)
-                {
-                    //Log.Message("- " + item.label);
-                    traverse.GetValue(item);
-                }
-            }
         }
     }
 }

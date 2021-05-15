@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using RimWorld;
 using RimWorld.Planet;
 using UnityEngine;
@@ -59,7 +55,7 @@ namespace TorannMagic.WorldTransport
                 travelingTransportPods.destinationTile = destinationTile;
                 travelingTransportPods.arrivalAction = arrivalAction;
                 travelingTransportPods.destinationCell = arrivalCell;
-                if(this.def == TorannMagicDefOf.TM_LightPodLeaving)
+                if (this.def == TorannMagicDefOf.TM_LightPodLeaving)
                 {
                     travelingTransportPods.TravelSpeed = .025f;
                     travelingTransportPods.draftFlag = this.draftFlag;
@@ -83,13 +79,13 @@ namespace TorannMagic.WorldTransport
 
         public override void SpawnSetup(Map map, bool respawningAfterLoad)
         {
-            startingPos = this.DrawPos;            
+            startingPos = this.DrawPos;
             base.SpawnSetup(map, respawningAfterLoad);
         }
 
         public override void Tick()
         {
-            if(ticksToImpact == maxTicks)
+            if (ticksToImpact == maxTicks)
             {
                 LeaveMap();
             }
@@ -120,7 +116,7 @@ namespace TorannMagic.WorldTransport
             matrix.SetTRS(drawPos, Quaternion.Euler(0f, this.angle, 0f), new Vector3(lanceWidth, 1f, beamLength));   //drawer for beam
             Graphics.DrawMesh(MeshPool.plane10, matrix, TM_DropPodLeaving.BeamMat, 0, null, 0, TM_DropPodLeaving.MatPropertyBlock);
             Matrix4x4 matrix2 = default(Matrix4x4);
-            matrix2.SetTRS(this.startingPos + Vector3Utility.FromAngleFlat(this.angle + 90) * .5f * lanceWidth, Quaternion.Euler(0f, this.angle, 0f), new Vector3(lanceWidth, 1f, lanceWidth));                 //drawer for beam start
+            matrix2.SetTRS(this.startingPos + (Vector3Utility.FromAngleFlat(this.angle + 90) * .5f * lanceWidth), Quaternion.Euler(0f, this.angle, 0f), new Vector3(lanceWidth, 1f, lanceWidth));                 //drawer for beam start
             Graphics.DrawMesh(MeshPool.plane10, matrix2, TM_DropPodLeaving.BeamEndMat, 0, null, 0, TM_DropPodLeaving.MatPropertyBlock);
         }
     }

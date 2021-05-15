@@ -1,11 +1,9 @@
-﻿using System;
-using RimWorld;
+﻿using RimWorld;
 using Verse;
 using Verse.Sound;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using Verse.AI;
 using Verse.AI.Group;
 
 namespace TorannMagic
@@ -14,12 +12,6 @@ namespace TorannMagic
     public class Building_PoisonTrap : Building
     {
         private List<Pawn> touchingPawns = new List<Pawn>();
-
-        private const float KnowerSpringChance = 0.004f;
-        private const ushort KnowerPathFindCost = 800;
-        private const ushort KnowerPathWalkCost = 30;
-        private const float AnimalSpringChanceFactor = 0.1f;
-
         int age = -1;
         int duration = 480;
         int strikeDelay = 40;
@@ -54,7 +46,7 @@ namespace TorannMagic
             Scribe_Values.Look<int>(ref this.duration, "duration", 600, false);
             Scribe_Values.Look<int>(ref this.strikeDelay, "strikeDelay", 0, false);
             Scribe_Values.Look<int>(ref this.lastStrike, "lastStrike", 0, false);
-            Scribe_Defs.Look<ThingDef>(ref this.fog, "fog");        
+            Scribe_Defs.Look<ThingDef>(ref this.fog, "fog");
         }
 
         public override void Draw()
@@ -75,15 +67,15 @@ namespace TorannMagic
         {
             if (this.triggered)
             {
-                if(this.age >= this.lastStrike + this.strikeDelay)
+                if (this.age >= this.lastStrike + this.strikeDelay)
                 {
                     try
                     {
                         IntVec3 curCell;
                         IEnumerable<IntVec3> targets = GenRadial.RadialCellsAround(base.Position, this.radius, true);
-                        for (int i = 0; i < targets.Count(); i++)
+                        foreach (var cell in targets)
                         {
-                            curCell = targets.ToArray<IntVec3>()[i];
+                            curCell = cell;
 
                             if (curCell.InBounds(base.Map) && curCell.IsValid)
                             {
@@ -105,10 +97,10 @@ namespace TorannMagic
                     this.lastStrike = this.age;
                 }
                 this.age++;
-                if(this.age > this.duration)
+                if (this.age > this.duration)
                 {
                     CheckForAgent();
-                    if(destroyAfterUse)
+                    if (destroyAfterUse)
                     {
                         Destroy();
                     }
@@ -121,10 +113,10 @@ namespace TorannMagic
                     }
                 }
             }
-            else if(rearming)
+            else if (rearming)
             {
                 this.age++;
-                if(this.age > this.ticksTillReArm)
+                if (this.age > this.ticksTillReArm)
                 {
                     this.age = 0;
                     rearming = false;
@@ -134,14 +126,14 @@ namespace TorannMagic
             else
             {
                 try
-                { 
+                {
                     if (this.Armed)
                     {
                         IntVec3 curCell;
                         IEnumerable<IntVec3> targets = GenRadial.RadialCellsAround(base.Position, 2, true);
-                        for (int i = 0; i < targets.Count(); i++)
+                        foreach (var cell in targets)
                         {
-                            curCell = targets.ToArray<IntVec3>()[i];
+                            curCell = cell;
                             List<Thing> thingList = curCell.GetThingList(base.Map);
                             for (int j = 0; j < thingList.Count; j++)
                             {
@@ -157,14 +149,7 @@ namespace TorannMagic
                             }
                         }
                     }
-                    for (int j = 0; j < this.touchingPawns.Count; j++)
-                    {
-                        Pawn pawn2 = this.touchingPawns[j];
-                        if (!pawn2.Spawned || pawn2.Position != base.Position)
-                        {
-                            this.touchingPawns.Remove(pawn2);
-                        }
-                    }
+                    this.touchingPawns.RemoveAll(pawn2 => !pawn2.Spawned || pawn2.Position != base.Position);
                 }
                 catch
                 {
@@ -185,9 +170,9 @@ namespace TorannMagic
                 {
                     Pawn p = pList[i];
                     CompAbilityUserMight comp = p.TryGetComp<CompAbilityUserMight>();
-                    if(comp != null && comp.combatItems != null && comp.combatItems.Count > 0)
+                    if (comp != null && comp.combatItems != null && comp.combatItems.Count > 0)
                     {
-                        if(comp.combatItems.Contains(this))
+                        if (comp.combatItems.Contains(this))
                         {
                             this.destroyAfterUse = false;
                         }
@@ -306,7 +291,7 @@ namespace TorannMagic
                 text += "Trap Not Armed";
             }
             return text;
-        }        
+        }
 
         public override void Destroy(DestroyMode mode = DestroyMode.Vanish)
         {

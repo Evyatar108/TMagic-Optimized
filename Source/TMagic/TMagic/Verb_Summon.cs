@@ -1,5 +1,4 @@
 ﻿using RimWorld;
-using System;
 using Verse;
 using AbilityUser;
 using UnityEngine;
@@ -9,7 +8,7 @@ namespace TorannMagic
     class Verb_Summon : Verb_UseAbility
     {
         Vector3 pVect;
-        
+
         public override bool CanHitTargetFrom(IntVec3 casterPos, LocalTargetInfo targ)
         {
             bool flag = base.UseAbilityProps.AbilityTargetCategory != AbilityTargetCategory.TargetThing;
@@ -20,7 +19,7 @@ namespace TorannMagic
             }
             else
             {
-                if( targ.Cell.IsValid && !targ.Cell.Fogged(base.caster.Map))
+                if (targ.Cell.IsValid && !targ.Cell.Fogged(base.caster.Map))
                 {
                     if ((casterPos - targ.Cell).LengthHorizontal > this.verbProps.range)
                     {
@@ -28,15 +27,14 @@ namespace TorannMagic
                     }
                     else
                     {
-                        ShootLine shootLine;
-                        result = base.TryFindShootLineFromTo(casterPos, targ, out shootLine);
+                        result = base.TryFindShootLineFromTo(casterPos, targ, out _);
                     }
                 }
                 else
                 {
                     result = false;
                 }
-                             
+
             }
             return result;
         }
@@ -48,13 +46,12 @@ namespace TorannMagic
             cellRect.ClipInsideMap(map);
 
             IntVec3 centerCell = cellRect.CenterCell;
-            Thing summonableThing = new Thing();
             //FlyingObject flyingPawn = new FlyingObject();
             Pawn summonablePawn = new Pawn();
 
             bool pflag = true;
 
-            summonableThing = centerCell.GetFirstPawn(map);
+            Thing summonableThing = centerCell.GetFirstPawn(map);
             if (summonableThing == null)
             {
                 pflag = false;
@@ -76,14 +73,13 @@ namespace TorannMagic
                     //flyingPawn = null;
                     summonableThing = null;
                     Messages.Message("TM_CantSummonSelf".Translate(), MessageTypeDefOf.NegativeEvent);
-                }                
+                }
             }
 
             bool result = false;
             bool arg_40_0;
             if (this.currentTarget != null && base.CasterPawn != null)
             {
-                IntVec3 arg_29_0 = this.currentTarget.Cell;
                 arg_40_0 = this.currentTarget.Cell.IsValid;
             }
             else
@@ -98,7 +94,7 @@ namespace TorannMagic
                     if (pflag)// && flyingPawn != null)
                     {
                         //Thing p = summonablePawn;
-                        if(!summonablePawn.RaceProps.Humanlike || summonablePawn.Faction == this.CasterPawn.Faction)
+                        if (!summonablePawn.RaceProps.Humanlike || summonablePawn.Faction == this.CasterPawn.Faction)
                         {
                             summonablePawn.DeSpawn();
                             GenSpawn.Spawn(summonablePawn, base.CasterPawn.Position, map);
@@ -113,7 +109,7 @@ namespace TorannMagic
                             //p.SetPositionDirect(this.currentTarget.Cell);
                             GenSpawn.Spawn(summonablePawn, base.CasterPawn.Position, map);
                             //flyingPawn = null;
-                            if(summonablePawn.IsColonist && !base.CasterPawn.IsColonist)
+                            if (summonablePawn.IsColonist && !base.CasterPawn.IsColonist)
                             {
                                 TM_Action.SpellAffectedPlayerWarning(summonablePawn);
                             }

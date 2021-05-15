@@ -48,7 +48,7 @@ namespace TorannMagic
         public override void Tick()
         {
             base.Tick();
-            if(this.demonPawn != null)
+            if (this.demonPawn != null)
             {
                 if (this.demonPawn.Destroyed || this.demonPawn.Dead)
                 {
@@ -90,7 +90,6 @@ namespace TorannMagic
 
         protected override void Impact(Thing hitThing)
         {
-            Map map = base.Map;
             //base.Impact(hitThing);
 
             if (!initialized)
@@ -101,21 +100,21 @@ namespace TorannMagic
 
             if (summoning)
             {
-                if(Find.TickManager.TicksGame % 2 ==0)
+                if (Find.TickManager.TicksGame % 2 == 0)
                 {
                     IntVec3 randomCircleCell = this.summoningCircle.RandomElement();
                     TM_MoteMaker.ThrowGenericMote(ThingDef.Named("Mote_Demon_Flame"), randomCircleCell.ToVector3(), this.sacrificedPawn.Map, Rand.Range(.5f, .9f), Rand.Range(.2f, .3f), .05f, Rand.Range(.2f, .4f), Rand.Range(-400, 400), Rand.Range(.8f, 1.2f) * (randomCircleCell - this.sacrificedPawn.Position).LengthHorizontal, (Quaternion.AngleAxis(90, Vector3.up) * GetVector(randomCircleCell, this.sacrificedPawn.Position)).ToAngleFlat(), Rand.Range(0, 359));
                 }
 
-                if(this.nextBlackLightning < this.age)
+                if (this.nextBlackLightning < this.age)
                 {
                     DoLightningStrike();
-                    this.nextBlackLightning = this.age + Rand.Range(45,70);
+                    this.nextBlackLightning = this.age + Rand.Range(45, 70);
                     this.lightingCount++;
                 }
             }
 
-            if(!this.summoningComplete && this.age > this.summoningDuration)
+            if (!this.summoningComplete && this.age > this.summoningDuration)
             {
                 for (int i = 0; i < 3; i++)
                 {
@@ -128,8 +127,8 @@ namespace TorannMagic
                 spawnThing.temporary = false;
                 spawnThing.def = TorannMagicDefOf.TM_DemonR;
                 spawnThing.kindDef = PawnKindDef.Named("TM_Demon");
-                map = this.Map;
-                this.sacrificedPawn.DeSpawn();                
+                Map map = this.Map;
+                this.sacrificedPawn.DeSpawn();
                 SingleSpawnLoop(spawnThing, centerCell, map);
 
                 MoteMaker.ThrowSmoke(centerCell.ToVector3(), map, 2);

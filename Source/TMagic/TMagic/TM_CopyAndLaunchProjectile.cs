@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Verse;
-using RimWorld;
-using UnityEngine;
+﻿using Verse;
 
 namespace TorannMagic
 {
@@ -16,7 +10,7 @@ namespace TorannMagic
             if (newProjectile != null && newProjectile is Projectile)
             {
                 newProjectile.Launch(launcher, target, intendedTarget, hitFlags, equipment);
-            }            
+            }
         }
 
         public static void CopyAndLaunchThingFromPosition(ThingDef projectileToCopy, Thing launcher, IntVec3 fromPosition, Map map, LocalTargetInfo target, LocalTargetInfo intendedTarget, ProjectileHitFlags hitFlags, Thing equipment = null)
@@ -25,7 +19,7 @@ namespace TorannMagic
             if (newProjectile != null && newProjectile is Projectile)
             {
                 newProjectile.Launch(launcher, target, intendedTarget, hitFlags, equipment);
-            }            
+            }
         }
 
         public static void CopyAndLaunchProjectile(Projectile projectileToCopy, Thing launcher, LocalTargetInfo target, LocalTargetInfo intendedTarget, ProjectileHitFlags hitFlags, Thing equipment = null)

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using RimWorld;
+﻿using System.Collections.Generic;
 using AbilityUser;
 using Verse;
 
@@ -19,7 +16,7 @@ namespace TorannMagic
             {
                 if (comp.weaponEnchants.Count > 0)
                 {
-                    for(int i =0; i < comp.weaponEnchants.Count; i++)
+                    for (int i = 0; i < comp.weaponEnchants.Count; i++)
                     {
                         Pawn dispellingPawn = comp.weaponEnchants[i];
                         RemoveExistingEnchantment(dispellingPawn);
@@ -36,19 +33,12 @@ namespace TorannMagic
 
         public static void RemoveExistingEnchantment(Pawn pawn)
         {
-            Hediff hediff = null;
-            List<Hediff> allHediffs = new List<Hediff>();
-            allHediffs.Clear();
-            allHediffs = pawn.health.hediffSet.GetHediffs<Hediff>().ToList();
-            if (allHediffs != null && allHediffs.Count > 0)
+            IEnumerable<Hediff> allHediffs = pawn.health.hediffSet.GetHediffs<Hediff>();
+            foreach (var hediff in allHediffs)
             {
-                for (int i = 0; i < allHediffs.Count; i++)
+                if (hediff.def.defName.Contains("TM_WeaponEnchantment"))
                 {
-                    hediff = allHediffs[i];
-                    if (hediff.def.defName.Contains("TM_WeaponEnchantment"))
-                    {
-                        pawn.health.RemoveHediff(hediff);
-                    }
+                    pawn.health.RemoveHediff(hediff);
                 }
             }
         }

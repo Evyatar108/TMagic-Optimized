@@ -1,8 +1,6 @@
 ﻿using RimWorld;
-using System;
 using Verse;
 using AbilityUser;
-using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -42,7 +40,7 @@ namespace TorannMagic
                     //Log.Message("Necromancer trait not found.");
                 }
             }
-            
+
             this.burstShotsLeft = 0;
             return false;
         }
@@ -98,17 +96,17 @@ namespace TorannMagic
             lich.workSettings.SetPriority(TorannMagicDefOf.Art, 0);
 
             skill = lich.skills.GetSkill(SkillDefOf.Intellectual);
-            if(skill.passion == Passion.None)
+            if (skill.passion == Passion.None)
             {
                 skill.passion = Passion.Minor;
             }
-            else if( skill.passion == Passion.Minor)
+            else if (skill.passion == Passion.Minor)
             {
                 skill.passion = Passion.Major;
             }
 
             skill = lich.skills.GetSkill(SkillDefOf.Shooting);
-            if(skill.passion == Passion.None)
+            if (skill.passion == Passion.None)
             {
                 skill.passion = Passion.Minor;
             }

@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using Verse;
-using Verse.AI;
-using System.Diagnostics;
 using UnityEngine;
 using RimWorld;
-using AbilityUser;
 
 
 namespace TorannMagic
@@ -46,7 +41,7 @@ namespace TorannMagic
         {
             get
             {
-                if(Stuff != null)
+                if (Stuff != null)
                 {
                     if (this.Stuff == ThingDef.Named("Jade"))
                     {
@@ -55,8 +50,8 @@ namespace TorannMagic
                     else if (this.Stuff == ThingDef.Named("Uranium"))
                     {
                         return .1f;
-                    }      
-                    else if(this.Stuff == TorannMagicDefOf.TM_Arcalleum)
+                    }
+                    else if (this.Stuff == TorannMagicDefOf.TM_Arcalleum)
                     {
                         return .1f;
                     }
@@ -94,7 +89,7 @@ namespace TorannMagic
                     {
                         return .15f;
                     }
-                    else if(this.Stuff == ThingDef.Named("Uranium"))
+                    else if (this.Stuff == ThingDef.Named("Uranium"))
                     {
                         return .1f;
                     }
@@ -128,7 +123,7 @@ namespace TorannMagic
                     {
                         return .1f;
                     }
-                    else if(this.Stuff == ThingDefOf.Plasteel)
+                    else if (this.Stuff == ThingDefOf.Plasteel)
                     {
                         return .15f;
                     }
@@ -145,28 +140,29 @@ namespace TorannMagic
         }
 
         public override void Draw()
-        {            
+        {
             if (this.IsActive)
             {
                 Vector3 vector = base.DrawPos;
                 vector.y = Altitudes.AltitudeFor(AltitudeLayer.Blueprint);
-                Vector3 s = new Vector3(matMagnitude, 2*matMagnitude, matMagnitude);
-                Quaternion quaternion = Quaternion.AngleAxis(Rotation.AsAngle, Vector3.up);
+                Vector3 s = new Vector3(matMagnitude, 2 * matMagnitude, matMagnitude);
+                _ = Quaternion.AngleAxis(Rotation.AsAngle, Vector3.up);
                 Matrix4x4 matrix = default(Matrix4x4);
                 float angle = this.ExactRotation;
                 matrix.SetTRS(vector, Quaternion.AngleAxis(angle, Vector3.up), s);
-                Graphics.DrawMesh(MeshPool.plane10, matrix, TM_RenderQueue.smc, 0);                               
+                Graphics.DrawMesh(MeshPool.plane10, matrix, TM_RenderQueue.smc, 0);
             }
             base.Draw();
-            
+
         }
 
-        public override IntVec3 GetMageIndexPosition(List<Pawn> allMages, Pawn mage)
+        public override IntVec3 GetMageIndexPosition(HashSet<Pawn> allMages, Pawn mage)
         {
             IntVec3 magePosition = default(IntVec3);
-            for (int i = 0; i < allMages.Count; i++)
+            int i = 0;
+            foreach (var curMage in allMages)
             {
-                if (allMages[i] == mage)
+                if (curMage == mage)
                 {
                     IntVec3 ic = this.InteractionCell;
                     if (i == 0)
@@ -195,7 +191,7 @@ namespace TorannMagic
                             ic.x -= 3;
                             ic.z += 1;
                         }
-                    }                    
+                    }
                     else if (i == 2)
                     {
                         if (this.Rotation == Rot4.North)
@@ -225,6 +221,8 @@ namespace TorannMagic
                     }
                     magePosition = ic;
                 }
+
+                i++;
             }
             return magePosition;
         }

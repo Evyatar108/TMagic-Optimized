@@ -1,5 +1,4 @@
 ﻿using RimWorld;
-using System;
 using Verse;
 using AbilityUser;
 using UnityEngine;
@@ -9,9 +8,6 @@ namespace TorannMagic
     public class Verb_Grapple : Verb_UseAbility_TrueBurst
     {
         Vector3 pVect;
-
-        DamageInfo dinfo;
-
         bool validTarg;
 
         public override bool CanHitTargetFrom(IntVec3 root, LocalTargetInfo targ)
@@ -24,8 +20,7 @@ namespace TorannMagic
             {
                 if ((root - targ.Cell).LengthHorizontal < this.verbProps.range)
                 {
-                    ShootLine shootLine;
-                    validTarg = this.TryFindShootLineFromTo(root, targ, out shootLine);
+                    validTarg = this.TryFindShootLineFromTo(root, targ, out _);
                 }
                 else
                 {
@@ -45,7 +40,6 @@ namespace TorannMagic
             bool flag10 = false;
             this.TargetsAoE.Clear();
             this.UpdateTargets();
-            int shotsPerBurst = this.ShotsPerBurst;
             bool flag2 = this.UseAbilityProps.AbilityTargetCategory != AbilityTargetCategory.TargetAoE && this.TargetsAoE.Count > 1;
             if (flag2)
             {
@@ -75,15 +69,13 @@ namespace TorannMagic
             cellRect.ClipInsideMap(map);
 
             IntVec3 centerCell = cellRect.CenterCell;
-            Thing summonableThing = new Thing();
-            FlyingObject summonablePawn = new FlyingObject();
             Pawn victim = null;
             //dinfo.SetAmount(10);            
             //dinfo.SetWeaponHediff(TorannMagicDefOf.TM_GrapplingHook);
 
             bool pflag = true;
 
-            summonableThing = centerCell.GetFirstPawn(map);
+            Thing summonableThing = centerCell.GetFirstPawn(map);
             if (summonableThing == null)
             {
                 pflag = false;
@@ -103,14 +95,13 @@ namespace TorannMagic
                         Faction faction = victim.Faction;
                         faction.TrySetRelationKind(this.CasterPawn.Faction, FactionRelationKind.Ally, false, null);
                     }
-                }                
-                
+                }
+
             }
-            bool result;
+
             bool arg_40_0;
             if (this.currentTarget != null && base.caster != null)
             {
-                IntVec3 arg_29_0 = this.currentTarget.Cell;
                 arg_40_0 = this.caster.Position.IsValid;
             }
             else
@@ -140,7 +131,7 @@ namespace TorannMagic
                         }
                         else if (victim.RaceProps.Humanlike && victim.Faction != this.CasterPawn.Faction && Rand.Chance(TM_Calc.GetSpellSuccessChance(this.CasterPawn, victim, true)))
                         {
-                            if(ModCheck.Validate.GiddyUp.Core_IsInitialized())
+                            if (ModCheck.Validate.GiddyUp.Core_IsInitialized())
                             {
                                 ModCheck.GiddyUp.ForceDismount(victim);
                             }
@@ -160,7 +151,6 @@ namespace TorannMagic
                     {
                         //miss
                     }
-                    result = true;
                 }
             }
             else
@@ -169,7 +159,7 @@ namespace TorannMagic
             }
             //this.burstShotsLeft = 0;
             //this.ability.TicksUntilCasting = (int)base.UseAbilityProps.SecondsToRecharge * 60;
-            this.PostCastShot(flag10, out flag10);
+            this.PostCastShot(flag10, out _);
             return flag;
         }
 

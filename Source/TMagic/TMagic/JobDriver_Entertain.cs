@@ -2,15 +2,12 @@
 using Verse.AI;
 using Verse;
 using RimWorld;
-using System;
-using UnityEngine;
 
 
 namespace TorannMagic
 {
     internal class JobDriver_Entertain : JobDriver
     {
-        private const TargetIndex entertaineeTI = TargetIndex.A;
         CompAbilityUserMagic comp;
 
         int age = -1;
@@ -57,7 +54,7 @@ namespace TorannMagic
                     age++;
                 },
                 defaultCompleteMode = ToilCompleteMode.Never
-            };            
+            };
             yield return entertain;
         }
     }

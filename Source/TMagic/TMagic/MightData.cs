@@ -1,5 +1,4 @@
-﻿using AbilityUser;
-using RimWorld;
+﻿using RimWorld;
 using System.Collections.Generic;
 using System.Linq;
 using Verse;
@@ -10,13 +9,12 @@ namespace TorannMagic
     [StaticConstructorOnStartup]
     public class MightData : IExposable
     {
-        private Pawn mightPawn;        
+        private Pawn mightPawn;
         private int mightUserLevel = 0;
         private int mightAbilityPoints = 0;
         private int mightUserXP = 1;
         private int ticksToLearnMightXP = -1;
         public bool initialized = false;
-        private Faction affiliation = null;
         private int ticksAffiliation = 0;
         //public ThingOwner<ThingWithComps> equipmentContainer = new ThingOwner<ThingWithComps>();
 
@@ -31,13 +29,13 @@ namespace TorannMagic
                 if (flag)
                 {
                     this.customPowersInitialized = true;
-                    IEnumerable<TM_CustomPowerDef> enumerable = TM_Data.CustomFighterPowerDefs();
+                    IEnumerable<TM_CustomPowerDef> enumerable = TM_Data.CustomFighterPowerDefs;
 
                     if (mightPowerCustom == null || mightPowerCustom.Count <= 0)
                     {
                         this.mightPowerCustom = new List<MightPower>();
                         this.mightPowerCustom.Clear();
-                    }                    
+                    }
                     foreach (TM_CustomPowerDef current in enumerable)
                     {
                         bool newPower = false;
@@ -50,8 +48,8 @@ namespace TorannMagic
                         if (!mightPowerCustom.Any(a => a.GetAbilityDef(0) == mp.GetAbilityDef(0)))
                         {
                             newPower = true;
-                        } 
-                        
+                        }
+
                         bool hasSkills = false;
                         if (current.customPower.skills != null)
                         {
@@ -172,7 +170,7 @@ namespace TorannMagic
                         new MightPower(new List<AbilityUser.AbilityDef>
                         {
                             TorannMagicDefOf.TM_TempestStrike
-                        }),                        
+                        }),
                     };
                 }
                 return this.mightPowerStandalone;
@@ -204,7 +202,7 @@ namespace TorannMagic
                         new MightPower(new List<AbilityUser.AbilityDef>
                         {
                             TorannMagicDefOf.TM_VeilOfShadows
-                        }),                        
+                        }),
                     };
                 }
                 return this.mightPowerShadow;
@@ -698,7 +696,7 @@ namespace TorannMagic
         {
             get
             {
-                bool flag = this.mightPowerSkill_Chi== null;
+                bool flag = this.mightPowerSkill_Chi == null;
                 if (flag)
                 {
                     this.mightPowerSkill_Chi = new List<MightPowerSkill>
@@ -1017,9 +1015,9 @@ namespace TorannMagic
                 {
                     this.mightPowerSkill_PsionicBlast = new List<MightPowerSkill>
                     {
-                        new MightPowerSkill("TM_PsionicBlast_pwr", "TM_PsionicBlast_pwr_desc"), 
+                        new MightPowerSkill("TM_PsionicBlast_pwr", "TM_PsionicBlast_pwr_desc"),
                         new MightPowerSkill("TM_PsionicBlast_eff", "TM_PsionicBlast_eff_desc"),
-                        new MightPowerSkill("TM_PsionicBlast_ver", "TM_PsionicBlast_ver_desc") 
+                        new MightPowerSkill("TM_PsionicBlast_ver", "TM_PsionicBlast_ver_desc")
                     };
                 }
                 return this.mightPowerSkill_PsionicBlast;
@@ -1036,7 +1034,7 @@ namespace TorannMagic
                     {
                         new MightPowerSkill("TM_PsionicDash_pwr", "TM_PsionicDash_pwr_desc"),
                         new MightPowerSkill("TM_PsionicDash_eff", "TM_PsionicDash_eff_desc"),
-                        new MightPowerSkill("TM_PsionicDash_ver", "TM_PsionicDash_ver_desc") 
+                        new MightPowerSkill("TM_PsionicDash_ver", "TM_PsionicDash_ver_desc")
                     };
                 }
                 return this.mightPowerSkill_PsionicDash;
@@ -1114,7 +1112,7 @@ namespace TorannMagic
                     this.mightPowerSkill_Disguise = new List<MightPowerSkill>
                     {
                         new MightPowerSkill("TM_Disguise_pwr", "TM_Disguise_pwr_desc"), //duration of skill
-                        new MightPowerSkill("TM_Disguise_eff", "TM_Disguise_eff_desc"), 
+                        new MightPowerSkill("TM_Disguise_eff", "TM_Disguise_eff_desc"),
                         new MightPowerSkill("TM_Disguise_ver", "TM_Disguise_ver_desc") //chance to avoid detection at different ranges
                     };
                 }
@@ -1376,7 +1374,6 @@ namespace TorannMagic
                             TorannMagicDefOf.TM_ShadowSlayer
                         });
                         this.mightPowerS.Add(pSS);
-                        sniperHasSS = true;
                     }
                 }
                 return this.mightPowerS;
@@ -1861,17 +1858,7 @@ namespace TorannMagic
             }
         }
 
-        public Faction Affiliation
-        {
-            get
-            {
-                return this.affiliation;
-            }
-            set
-            {
-                this.affiliation = value;
-            }
-        }
+        public Faction Affiliation { get; set; } = null;
 
         List<MightPower> allMightPowersList = new List<MightPower>();
         public List<MightPower> AllMightPowers
@@ -1971,7 +1958,7 @@ namespace TorannMagic
                     allMightPowerSkills.AddRange(this.MightPowerSkill_Reversal);
                     allMightPowerSkills.AddRange(this.MightPowerSkill_RifleSpec);
                     allMightPowerSkills.AddRange(this.MightPowerSkill_SeismicSlash);
-                    allMightPowerSkills.AddRange(this.MightPowerSkill_ShadowSlayer);                   
+                    allMightPowerSkills.AddRange(this.MightPowerSkill_ShadowSlayer);
                     allMightPowerSkills.AddRange(this.MightPowerSkill_ShotgunSpec);
                     allMightPowerSkills.AddRange(this.MightPowerSkill_Shroud);
                     allMightPowerSkills.AddRange(this.MightPowerSkill_SniperFocus);
@@ -1996,7 +1983,7 @@ namespace TorannMagic
 
         private Dictionary<TMAbilityDef, MightPowerSkill> skillEfficiency = new Dictionary<TMAbilityDef, MightPowerSkill>();
         public MightPowerSkill GetSkill_Efficiency(TMAbilityDef ability)
-        {            
+        {
             if (!skillEfficiency.ContainsKey(ability))
             {
                 bool hasSkill = false;
@@ -2005,7 +1992,7 @@ namespace TorannMagic
                 s = s.TrimEnd(trim) + "_eff";
                 for (int i = 0; i < AllMightPowerSkills.Count; i++)
                 {
-                    MightPowerSkill mps = AllMightPowerSkills[i];                    
+                    MightPowerSkill mps = AllMightPowerSkills[i];
                     if (mps.label.Contains(s))
                     {
                         skillEfficiency.Add(ability, mps);
@@ -2014,23 +2001,30 @@ namespace TorannMagic
                 }
                 if (!hasSkill) //check custom powers for different ability pairing for skill names
                 {
-                    List<TM_CustomPowerDef> customPowers = TM_Data.CustomFighterPowerDefs().ToList();
-                    for (int i = 0; i < customPowers.Count; i++)
+                    IEnumerable<TM_CustomPowerDef> customPowers = TM_Data.CustomFighterPowerDefs;
+                    foreach (TM_CustomPowerDef power in customPowers)
                     {
-                        for (int j = 0; j < customPowers[i].customPower.abilityDefs.Count; j++)
+                        bool shouldLoop = false;
+                        for (int j = 0; j < power.customPower.abilityDefs.Count; j++)
                         {
-                            if (ability.defName == customPowers[i].customPower.abilityDefs[j].ToString())
+                            if (ability.defName == power.customPower.abilityDefs[j].ToString())
                             {
-                                for (int k = 0; k < AllMightPowerSkills.Count; k++)
+                                shouldLoop = true;
+                                break;
+                            }
+                        }
+
+                        if (shouldLoop)
+                        {
+                            for (int k = 0; k < AllMightPowerSkills.Count; k++)
+                            {
+                                MightPowerSkill mps = AllMightPowerSkills[k];
+                                foreach (TM_CustomSkill cs in power.customPower.skills)
                                 {
-                                    MightPowerSkill mps = AllMightPowerSkills[k];
-                                    foreach (TM_CustomSkill cs in customPowers[i].customPower.skills)
+                                    if (cs.label.Contains("_eff") && cs.label == mps.label)
                                     {
-                                        if (cs.label.Contains("_eff") && cs.label == mps.label)
-                                        {
-                                            skillEfficiency.Add(ability, mps);
-                                            hasSkill = true;
-                                        }
+                                        skillEfficiency.Add(ability, mps);
+                                        hasSkill = true;
                                     }
                                 }
                             }
@@ -2055,9 +2049,9 @@ namespace TorannMagic
                 char[] trim = { '_', 'I', 'V', 'X' };
                 s = s.TrimEnd(trim) + "_ver";
                 for (int i = 0; i < AllMightPowerSkills.Count; i++)
-                {                    
+                {
                     MightPowerSkill mps = AllMightPowerSkills[i];
-                    
+
                     if (mps.label.Contains(s))
                     {
                         skillVersatility.Add(ability, mps);
@@ -2066,23 +2060,29 @@ namespace TorannMagic
                 }
                 if (!hasSkill) //check custom powers for different ability to skill names
                 {
-                    List<TM_CustomPowerDef> customPowers = TM_Data.CustomFighterPowerDefs().ToList();
-                    for (int i = 0; i < customPowers.Count; i++)
+                    IEnumerable<TM_CustomPowerDef> customPowers = TM_Data.CustomFighterPowerDefs;
+                    foreach (TM_CustomPowerDef power in customPowers)
                     {
-                        for (int j = 0; j < customPowers[i].customPower.abilityDefs.Count; j++)
+                        bool shouldLoop = false;
+                        for (int j = 0; j < power.customPower.abilityDefs.Count; j++)
                         {
-                            if (ability.defName == customPowers[i].customPower.abilityDefs[j].ToString())
+                            if (ability.defName == power.customPower.abilityDefs[j].ToString())
                             {
-                                for (int k = 0; k < AllMightPowerSkills.Count; k++)
+                                shouldLoop = true;
+                                break;
+                            }
+                        }
+                        if (shouldLoop)
+                        {
+                            for (int k = 0; k < AllMightPowerSkills.Count; k++)
+                            {
+                                MightPowerSkill mps = AllMightPowerSkills[k];
+                                foreach (TM_CustomSkill cs in power.customPower.skills)
                                 {
-                                    MightPowerSkill mps = AllMightPowerSkills[k];
-                                    foreach (TM_CustomSkill cs in customPowers[i].customPower.skills)
+                                    if (cs.label.Contains("_ver") && cs.label == mps.label)
                                     {
-                                        if (cs.label.Contains("_ver") && cs.label == mps.label)
-                                        {
-                                            skillVersatility.Add(ability, mps);
-                                            hasSkill = true;
-                                        }
+                                        skillVersatility.Add(ability, mps);
+                                        hasSkill = true;
                                     }
                                 }
                             }
@@ -2107,37 +2107,43 @@ namespace TorannMagic
                 char[] trim = { '_', 'I', 'V', 'X' };
                 s = s.TrimEnd(trim) + "_pwr";
                 for (int i = 0; i < AllMightPowerSkills.Count; i++)
-                {                    
+                {
                     MightPowerSkill mps = AllMightPowerSkills[i];
-                    
+
                     if (mps.label.Contains(s))
                     {
                         skillPower.Add(ability, mps);
                         hasSkill = true;
                     }
                 }
-                if(!hasSkill) //check custom powers for different ability to skill names
+                if (!hasSkill) //check custom powers for different ability to skill names
                 {
-                    List<TM_CustomPowerDef> customPowers = TM_Data.CustomFighterPowerDefs().ToList();
-                    for (int i = 0; i < customPowers.Count; i++)
+                    IEnumerable<TM_CustomPowerDef> customPowers = TM_Data.CustomFighterPowerDefs;
+                    foreach (var power in customPowers)
                     {
-                        for (int j = 0; j < customPowers[i].customPower.abilityDefs.Count; j++)
+                        bool shouldLoop = false;
+                        for (int j = 0; j < power.customPower.abilityDefs.Count; j++)
                         {
-                            if(ability.defName == customPowers[i].customPower.abilityDefs[j].ToString())
+                            if (ability.defName == power.customPower.abilityDefs[j].ToString())
                             {
-                                for (int k = 0; k < AllMightPowerSkills.Count; k++)
+                                shouldLoop = true;
+                                break;
+                            }
+                        }
+                        if (shouldLoop)
+                        {
+                            for (int k = 0; k < AllMightPowerSkills.Count; k++)
+                            {
+                                MightPowerSkill mps = AllMightPowerSkills[k];
+                                foreach (TM_CustomSkill cs in power.customPower.skills)
                                 {
-                                    MightPowerSkill mps = AllMightPowerSkills[k];
-                                    foreach(TM_CustomSkill cs in customPowers[i].customPower.skills)
+                                    if (cs.label.Contains("_pwr") && cs.label == mps.label)
                                     {
-                                        if(cs.label.Contains("_pwr") && cs.label == mps.label)
-                                        {
-                                            skillPower.Add(ability, mps);
-                                            hasSkill = true;
-                                        }
+                                        skillPower.Add(ability, mps);
+                                        hasSkill = true;
                                     }
                                 }
-                            }                            
+                            }
                         }
                     }
                 }
@@ -2167,7 +2173,7 @@ namespace TorannMagic
                         }
                     }
                 }
-                if(!hasAbility)
+                if (!hasAbility)
                 {
                     hediffAbility.Add(hd.def, null);
                 }
@@ -2178,25 +2184,24 @@ namespace TorannMagic
         private int uniquePowersCount = 0;
         public int GetUniquePowersWithSkillsCount(TMDefs.TM_CustomClass customClass)
         {
-            if(uniquePowersCount != 0)
+            if (uniquePowersCount != 0)
             {
                 return uniquePowersCount;
             }
             List<TMAbilityDef> abilities = new List<TMAbilityDef>();
-            abilities.Clear();
-            for(int i = 0; i < customClass.classFighterAbilities.Count; i++)
+            foreach (var classAbility in customClass.classFighterAbilities)
             {
                 bool unique = true;
-                for(int j = 0; j < abilities.Count; j++)
+                for (int j = 0; j < abilities.Count; j++)
                 {
-                    if(customClass.classFighterAbilities[i].defName.Contains(abilities[j].defName))
+                    if (classAbility.defName.Contains(abilities[j].defName))
                     {
                         unique = false;
                     }
                 }
-                if(unique)
+                if (unique)
                 {
-                    abilities.Add(customClass.classFighterAbilities[i]);
+                    abilities.Add(classAbility);
                 }
             }
             uniquePowersCount = abilities.Count;
@@ -2205,9 +2210,9 @@ namespace TorannMagic
 
         public MightPower ReturnMatchingMightPower(TMAbilityDef def)
         {
-            for(int i = 0; i < AllMightPowers.Count; i++)
+            for (int i = 0; i < AllMightPowers.Count; i++)
             {
-                if(AllMightPowers[i].TMabilityDefs.Contains(def))
+                if (AllMightPowers[i].TMabilityDefs.Contains(def))
                 {
                     return AllMightPowers[i];
                 }
@@ -2218,7 +2223,7 @@ namespace TorannMagic
         public IEnumerable<MightPower> Powers
         {
             get
-            {                
+            {
                 return this.MightPowersSS.Concat(this.MightPowersC.Concat(this.MightPowersW.Concat(this.MightPowersM.Concat(this.MightPowersDK.Concat(this.MightPowersG.Concat(this.MightPowersS.Concat(this.MightPowersB.Concat(this.mightPowerR.Concat(this.MightPowersF.Concat(this.mightPowerP.Concat(this.mightPowerStandalone)))))))))));
             }
         }

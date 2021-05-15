@@ -1,18 +1,15 @@
 ﻿using RimWorld;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Verse;
 using Verse.Sound;
 using AbilityUser;
-using UnityEngine;
-using Verse.AI.Group;
 
 namespace TorannMagic
 {
-    public class Verb_Stoneskin : Verb_UseAbility  
+    public class Verb_Stoneskin : Verb_UseAbility
     {
-        
+
         int pwrVal;
         int verVal;
         CompAbilityUserMagic comp;
@@ -29,8 +26,7 @@ namespace TorannMagic
             {
                 if ((root - targ.Cell).LengthHorizontal < this.verbProps.range)
                 {
-                    ShootLine shootLine;
-                    validTarg = this.TryFindShootLineFromTo(root, targ, out shootLine);
+                    validTarg = this.TryFindShootLineFromTo(root, targ, out _);
                 }
                 else
                 {
@@ -69,18 +65,18 @@ namespace TorannMagic
             if (pawn != null && pawn.health != null && pawn.health.hediffSet != null)
             {
                 IEnumerable<Pawn> enumerable = from geomancer in caster.Map.mapPawns.AllPawnsSpawned
-                                                   where (geomancer.RaceProps.Humanlike && geomancer.story.traits.HasTrait(TorannMagicDefOf.Geomancer))
-                                                   select geomancer;
+                                               where geomancer.RaceProps.Humanlike && geomancer.story.traits.HasTrait(TorannMagicDefOf.Geomancer)
+                                               select geomancer;
                 List<Pawn> geomancers = enumerable.ToList();
-                for (int i = 0; i < geomancers.Count(); i++)
+                foreach (var geomancer in enumerable)
                 {
-                    CompAbilityUserMagic compGeo = geomancers[i].GetComp<CompAbilityUserMagic>();
-                    if(compGeo != null && compGeo.stoneskinPawns.Contains(pawn))
+                    CompAbilityUserMagic compGeo = geomancer.GetComp<CompAbilityUserMagic>();
+                    if (compGeo != null && compGeo.stoneskinPawns.Contains(pawn))
                     {
                         compGeo.stoneskinPawns.Remove(pawn);
                     }
                 }
-                if(pawn.health.hediffSet.HasHediff(HediffDef.Named("TM_StoneskinHD"), false))
+                if (pawn.health.hediffSet.HasHediff(HediffDef.Named("TM_StoneskinHD"), false))
                 {
                     Hediff hediff = new Hediff();
                     hediff = pawn.health.hediffSet.GetFirstHediffOfDef(HediffDef.Named("TM_StoneskinHD"));
@@ -103,7 +99,7 @@ namespace TorannMagic
                     ApplyStoneskin(pawn);
                 }
             }
-            
+
             return true;
         }
 
@@ -111,12 +107,13 @@ namespace TorannMagic
         {
             if (comp != null && !pawn.DestroyedOrNull() && !pawn.Dead && pawn.Map != null)
             {
-                if (comp.StoneskinPawns.Count() < verVal + 2)
+                var stoneSkinPawns = comp.StoneskinPawns;
+                if (stoneSkinPawns.Count() < verVal + 2)
                 {
                     ApplyHediffs(pawn);
-                    if (!comp.StoneskinPawns.Contains(pawn))
+                    if (!stoneSkinPawns.Contains(pawn))
                     {
-                        comp.stoneskinPawns.Add(pawn);
+                        stoneSkinPawns.Add(pawn);
                     }
                     SoundInfo info = SoundInfo.InMap(new TargetInfo(pawn.Position, pawn.Map, false), MaintenanceType.None);
                     info.pitchFactor = .7f;
@@ -130,16 +127,16 @@ namespace TorannMagic
                 else
                 {
                     string stoneskinPawns = "";
-                    int count = comp.StoneskinPawns.Count();
+                    int count = stoneSkinPawns.Count;
                     for (int i = 0; i < count; i++)
                     {
                         if (i + 1 == count) //last name
                         {
-                            stoneskinPawns += comp.StoneskinPawns[i].LabelShort;
+                            stoneskinPawns += stoneSkinPawns[i].LabelShort;
                         }
                         else
                         {
-                            stoneskinPawns += comp.StoneskinPawns[i].LabelShort + " & ";
+                            stoneskinPawns += stoneSkinPawns[i].LabelShort + " & ";
                         }
                     }
                     if (comp.Pawn.IsColonist)
@@ -165,20 +162,19 @@ namespace TorannMagic
             {
                 HealthUtility.AdjustSeverity(target, HediffDef.Named("TM_StoneskinHD"), 6);
             }
-            else if(pwrVal == 1)
+            else if (pwrVal == 1)
             {
                 HealthUtility.AdjustSeverity(target, HediffDef.Named("TM_StoneskinHD"), 5);
             }
             else
             {
-                HealthUtility.AdjustSeverity(target, HediffDef.Named("TM_StoneskinHD"), 4);                
-            }            
+                HealthUtility.AdjustSeverity(target, HediffDef.Named("TM_StoneskinHD"), 4);
+            }
         }
 
         private void RemoveHediffs(Pawn target)
         {
-            Hediff hediff = new Hediff();
-            hediff = target.health.hediffSet.GetFirstHediffOfDef(HediffDef.Named("TM_StoneskinHD"));
+            Hediff hediff = target.health.hediffSet.GetFirstHediffOfDef(HediffDef.Named("TM_StoneskinHD"));
             target.health.RemoveHediff(hediff);
         }
     }

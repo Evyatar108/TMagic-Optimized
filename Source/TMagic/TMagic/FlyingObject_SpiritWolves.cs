@@ -1,10 +1,8 @@
 ﻿using RimWorld;
-using System;
 using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using Verse;
-using Verse.Sound;
 
 namespace TorannMagic
 {
@@ -102,7 +100,7 @@ namespace TorannMagic
                 GetVector();
                 this.angle = (Quaternion.AngleAxis(90, Vector3.up) * this.direction).ToAngleFlat();
                 CompAbilityUserMagic comp = pawn.TryGetComp<CompAbilityUserMagic>();
-                if(comp != null && comp.IsMagicUser)
+                if (comp != null && comp.IsMagicUser)
                 {
                     verVal = TM_Calc.GetMagicSkillLevel(pawn, comp.MagicData.MagicPowerSkill_SpiritWolves, "TM_SpiritWolves", "_ver", true);
                     pwrVal = TM_Calc.GetMagicSkillLevel(pawn, comp.MagicData.MagicPowerSkill_SpiritWolves, "TM_SpiritWolves", "_pwr", true);
@@ -113,7 +111,7 @@ namespace TorannMagic
 
         public void GetVector()
         {
-            Vector3 heading = (this.destination - this.ExactPosition);
+            Vector3 heading = this.destination - this.ExactPosition;
             float distance = heading.magnitude;
             this.direction = heading / distance;
             this.directionP = Quaternion.AngleAxis(90, Vector3.up) * this.direction;
@@ -153,7 +151,7 @@ namespace TorannMagic
         }
 
         public override void Tick()
-        {            
+        {
             if (this.ticksToImpact >= 0 && Find.TickManager.TicksGame % 3 == 0)
             {
                 IEnumerable<IntVec3> effectRadial = GenRadial.RadialCellsAround(this.ExactPosition.ToIntVec3(), 2 + (.2f * verVal), true);
@@ -251,26 +249,23 @@ namespace TorannMagic
                         }
                     }
                 }
-            }            
+            }
         }
 
         public void DoEffects(IEnumerable<IntVec3> effectRadial1)
         {
             IEnumerable<IntVec3> effectRadial2 = GenRadial.RadialCellsAround(this.ExactPosition.ToIntVec3(), 1, true);
             IEnumerable<IntVec3> effectRadial = effectRadial1.Except(effectRadial2);
-            IntVec3 curCell;
-            List<Thing> hitList = new List<Thing>();
             bool shouldAddAbilities = false;
             bool addAbilities = false;
             if (pawn != null)
             {
                 CompAbilityUserMagic comp = pawn.TryGetComp<CompAbilityUserMagic>();
-                for (int i = 0; i < effectRadial.Count(); i++)
+                foreach (var curCell in effectRadial)
                 {
-                    curCell = effectRadial.ToArray<IntVec3>()[i];
                     if (curCell.InBounds(base.Map) && curCell.IsValid)
                     {
-                        hitList = curCell.GetThingList(base.Map);
+                        List<Thing> hitList = curCell.GetThingList(base.Map);
                         for (int j = 0; j < hitList.Count; j++)
                         {
                             if (hitList[j] is Pawn && hitList[j].Faction != pawn.Faction)
@@ -280,16 +275,17 @@ namespace TorannMagic
                                 {
                                     if (comp != null)
                                     {
-                                        shouldAddAbilities = comp.HexedPawns.Count <= 0;
+                                        var hexedPawns = comp.HexedPawns;
+                                        shouldAddAbilities = hexedPawns.Count <= 0;
                                         Pawn newPawn = hitList[j] as Pawn;
                                         if (newPawn.RaceProps.IsFlesh && !TM_Calc.IsUndead(newPawn) && !newPawn.Destroyed && !newPawn.Dead)
                                         {
                                             if (Rand.Chance(.3f) && !newPawn.health.hediffSet.HasHediff(TorannMagicDefOf.TM_HexHD))
                                             {
                                                 HealthUtility.AdjustSeverity(newPawn, TorannMagicDefOf.TM_HexHD, 1f);
-                                                if (!comp.HexedPawns.Contains(newPawn))
+                                                if (!hexedPawns.Contains(newPawn))
                                                 {
-                                                    comp.HexedPawns.Add(newPawn);
+                                                    hexedPawns.Add(newPawn);
                                                 }
                                                 addAbilities = true;
                                                 TM_MoteMaker.ThrowGenericMote(TorannMagicDefOf.Mote_Hex, newPawn.DrawPos, newPawn.Map, .6f, .1f, .2f, .2f, 0, 0, 0, 0);
@@ -314,7 +310,7 @@ namespace TorannMagic
         {
             int amt = Mathf.RoundToInt(Rand.Range(this.def.projectile.GetDamageAmount(1, null) * .9f, this.def.projectile.GetDamageAmount(1, null) * 1.4f) + pwrVal);
             DamageInfo dinfo = new DamageInfo(DamageDefOf.Stun, amt, 5, (float)-1, pawn, null, null, DamageInfo.SourceCategory.ThingOrUnknown);
-            DamageInfo dinfo2 = new DamageInfo(TMDamageDefOf.DamageDefOf.TM_Spirit, Mathf.RoundToInt(amt *.15f), 5, (float)-1, pawn, null, null, DamageInfo.SourceCategory.ThingOrUnknown);
+            DamageInfo dinfo2 = new DamageInfo(TMDamageDefOf.DamageDefOf.TM_Spirit, Mathf.RoundToInt(amt * .15f), 5, (float)-1, pawn, null, null, DamageInfo.SourceCategory.ThingOrUnknown);
             bool flag = e != null;
             if (flag)
             {
@@ -361,7 +357,7 @@ namespace TorannMagic
             if (flag)
             {
                 Pawn pawn;
-                bool flag2 = (pawn = (base.Position.GetThingList(base.Map).FirstOrDefault((Thing x) => x == this.assignedTarget) as Pawn)) != null;
+                bool flag2 = (pawn = base.Position.GetThingList(base.Map).FirstOrDefault((Thing x) => x == this.assignedTarget) as Pawn) != null;
                 if (flag2)
                 {
                     hitThing = pawn;

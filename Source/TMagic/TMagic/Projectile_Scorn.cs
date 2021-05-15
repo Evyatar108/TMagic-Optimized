@@ -3,7 +3,6 @@ using AbilityUser;
 using UnityEngine;
 using System.Linq;
 using System.Collections.Generic;
-using System;
 using RimWorld;
 
 namespace TorannMagic
@@ -22,7 +21,6 @@ namespace TorannMagic
         float angle = 0;
         List<IntVec3> cellList;
         Pawn pawn;
-        IEnumerable<IntVec3> targets;
         Skyfaller skyfaller2;
         Skyfaller skyfaller;
         Map map;
@@ -66,15 +64,15 @@ namespace TorannMagic
         }
 
         protected override void Impact(Thing hitThing)
-        {            
+        {
             base.Impact(hitThing);
-           
-            ThingDef def = this.def;          
+
+            ThingDef def = this.def;
 
             if (!this.initialized)
             {
                 this.pawn = this.launcher as Pawn;
-                this.map = this.pawn.Map;                
+                this.map = this.pawn.Map;
                 CompAbilityUserMagic comp = pawn.GetComp<CompAbilityUserMagic>();
                 MagicPowerSkill pwr = pawn.GetComp<CompAbilityUserMagic>().MagicData.MagicPowerSkill_Scorn.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_Scorn_pwr");
                 MagicPowerSkill ver = pawn.GetComp<CompAbilityUserMagic>().MagicData.MagicPowerSkill_Scorn.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_Scorn_ver");
@@ -100,7 +98,7 @@ namespace TorannMagic
                     ModCheck.GiddyUp.ForceDismount(pawn);
                 }
                 skyfaller = SkyfallerMaker.SpawnSkyfaller(ThingDef.Named("TM_ScornLeaving"), pawn.Position, this.map);
-                if(base.Position.x < pawn.Position.x)
+                if (base.Position.x < pawn.Position.x)
                 {
                     this.angle = Rand.Range(20, 40);
                 }
@@ -147,15 +145,15 @@ namespace TorannMagic
                     pawn.drafter.Drafted = true;
                 }
                 ModOptions.Constants.SetPawnInFlight(false);
-                if(verVal == 0)
+                if (verVal == 0)
                 {
                     HealthUtility.AdjustSeverity(pawn, TorannMagicDefOf.TM_DemonScornHD, 60f + (pwrVal * 15));
                 }
-                else if(verVal == 1)
+                else if (verVal == 1)
                 {
                     HealthUtility.AdjustSeverity(pawn, TorannMagicDefOf.TM_DemonScornHD_I, 60f + (pwrVal * 15));
                 }
-                else if(verVal == 2)
+                else if (verVal == 2)
                 {
                     HealthUtility.AdjustSeverity(pawn, TorannMagicDefOf.TM_DemonScornHD_II, 60f + (pwrVal * 15));
                 }
@@ -164,28 +162,28 @@ namespace TorannMagic
                     HealthUtility.AdjustSeverity(pawn, TorannMagicDefOf.TM_DemonScornHD_III, 60f + (pwrVal * 15));
                 }
             }
-            if(landedFlag)
-            { 
+            if (landedFlag)
+            {
                 if (Find.TickManager.TicksGame % strikeDelay == 0)
                 {
                     if (safePos.DistanceToEdge(this.map) > strikeNum)
                     {
-                        List<IntVec3> targets;
+                        IEnumerable<IntVec3> targets;
                         if (strikeNum == 1)
                         {
-                            targets = GenRadial.RadialCellsAround(safePos, this.strikeNum, false).ToList();
+                            targets = GenRadial.RadialCellsAround(safePos, this.strikeNum, false);
                         }
                         else
                         {
                             IEnumerable<IntVec3> oldTargets = GenRadial.RadialCellsAround(base.Position, this.strikeNum - 1, false);
-                            targets = GenRadial.RadialCellsAround(safePos, this.strikeNum, false).Except(oldTargets).ToList();
+                            targets = GenRadial.RadialCellsAround(safePos, this.strikeNum, false).Except(oldTargets);
                         }
-                        for (int j = 0; j < targets.Count(); j++)
+                        foreach (var cell in targets)
                         {
-                            IntVec3 curCell = targets[j];
+                            IntVec3 curCell = cell;
                             if (this.map != null && curCell.IsValid && curCell.InBounds(this.map))
                             {
-                                GenExplosion.DoExplosion(curCell, this.Map, .4f, TMDamageDefOf.DamageDefOf.TM_Shadow, this.pawn, (int)((this.def.projectile.GetDamageAmount(1, null) * (1 + .15 * pwrVal)) * this.arcaneDmg * Rand.Range(.75f, 1.25f)), 0, TorannMagicDefOf.TM_SoftExplosion, def, null, null, null, 0f, 1, false, null, 0f, 1, 0f, false);
+                                GenExplosion.DoExplosion(curCell, this.Map, .4f, TMDamageDefOf.DamageDefOf.TM_Shadow, this.pawn, (int)(this.def.projectile.GetDamageAmount(1, null) * (1 + (.15 * pwrVal)) * this.arcaneDmg * Rand.Range(.75f, 1.25f)), 0, TorannMagicDefOf.TM_SoftExplosion, def, null, null, null, 0f, 1, false, null, 0f, 1, 0f, false);
                             }
                         }
                         this.strikeNum++;
@@ -194,7 +192,7 @@ namespace TorannMagic
                     {
                         strikeNum = (int)this.radius + 1;
                     }
-                }               
+                }
             }
             if (this.strikeNum > this.radius)
             {
@@ -235,5 +233,5 @@ namespace TorannMagic
                 e.TakeDamage(dinfo);
             }
         }
-    }    
+    }
 }

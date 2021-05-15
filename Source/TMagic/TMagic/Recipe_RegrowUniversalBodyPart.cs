@@ -12,7 +12,7 @@ namespace TorannMagic
         public override IEnumerable<BodyPartRecord> GetPartsToApplyOn(Pawn pawn, RecipeDef recipe)
         {
             IEnumerable<BodyPartRecord> regrowthParts = from parts in pawn.def.race.body.AllParts
-                                                        where (!TorannMagicDefOf.Regrowth.appliedOnFixedBodyParts.Contains(parts.def))
+                                                        where !TorannMagicDefOf.Regrowth.appliedOnFixedBodyParts.Contains(parts.def)
                                                         select parts;
             if (pawn.def != ThingDefOf.Human)
             {
@@ -81,18 +81,18 @@ namespace TorannMagic
             if (comp.IsMagicUser)
             {
                 bool canRegrow = false;
-                if(comp.spell_RegrowLimb)
+                if (comp.spell_RegrowLimb)
                 {
                     canRegrow = true;
                 }
-                if(comp.customClass != null && comp.MagicData.MagicPowersD.FirstOrDefault((MagicPower x) => x.abilityDef == TorannMagicDefOf.TM_RegrowLimb).learned)
+                if (comp.customClass != null && comp.MagicData.MagicPowersD.FirstOrDefault((MagicPower x) => x.abilityDef == TorannMagicDefOf.TM_RegrowLimb).learned)
                 {
                     canRegrow = true;
                 }
                 if (canRegrow)
                 {
                     MagicPowerSkill eff = surgeon.GetComp<CompAbilityUserMagic>().MagicData.MagicPowerSkill_RegrowLimb.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_RegrowLimb_eff");
-                    if (comp.Mana.CurLevel < (.9f - ((eff.level * .08f) * .9f)))
+                    if (comp.Mana.CurLevel < (.9f - (eff.level * .08f * .9f)))
                     {
                         comp.Mana.CurLevel = comp.Mana.CurLevel / 2;
 
@@ -109,7 +109,7 @@ namespace TorannMagic
                     }
                     else // regrowth surgery success
                     {
-                        comp.Mana.CurLevel -= ((.9f - ((eff.level * .08f) * .9f)) / comp.arcaneDmg);
+                        comp.Mana.CurLevel -= (.9f - (eff.level * .08f * .9f)) / comp.arcaneDmg;
                         int num = Mathf.RoundToInt(Rand.Range(160, 280) * comp.xpGain);
                         comp.MagicUserXP += num;
                         MoteMaker.ThrowText(surgeon.DrawPos, surgeon.MapHeld, "XP +" + num, -1f);
@@ -148,7 +148,7 @@ namespace TorannMagic
 
         public void ApplyHediff(Pawn patient, BodyPartRecord part, Pawn billdoer)
         {
-            patient.health.AddHediff(HediffDef.Named("TM_StandardRegrowth"), part, null);            
+            patient.health.AddHediff(HediffDef.Named("TM_StandardRegrowth"), part, null);
         }
     }
 }

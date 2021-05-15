@@ -2,10 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Verse;
-using Verse.AI;
 using Verse.AI.Group;
-using System.Diagnostics;
-using UnityEngine;
 using RimWorld;
 using AbilityUser;
 
@@ -37,7 +34,7 @@ namespace TorannMagic
             base.SpawnSetup(map, respawningAfterLoad);
             //LessonAutoActivator.TeachOpportunity(ConceptDef.Named("TM_Portals"), OpportunityType.GoodToKnow);
         }
-                
+
         public override void Tick()
         {
             if (this.age > 10)
@@ -45,7 +42,7 @@ namespace TorannMagic
                 if (!initialized)
                 {
                     List<Pawn> mapPawns = this.Map.mapPawns.AllPawnsSpawned;
-                    for(int i = 0; i < mapPawns.Count(); i++)
+                    for (int i = 0; i < mapPawns.Count(); i++)
                     {
                         if (!mapPawns[i].DestroyedOrNull() && mapPawns[i].Spawned && !mapPawns[i].Downed && mapPawns[i].RaceProps.Humanlike)
                         {
@@ -54,16 +51,16 @@ namespace TorannMagic
                             {
                                 for (int j = 0; j < comp.summonedSentinels.Count(); j++)
                                 {
-                                    if(comp.summonedSentinels[j] == this)
+                                    if (comp.summonedSentinels[j] == this)
                                     {
                                         this.sustainerPawn = comp.Pawn;
                                         pwrVal = comp.MagicData.MagicPowerSkill_Sentinel.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_Sentinel_pwr").level;
                                         break;
-                                    }                                        
+                                    }
                                 }
                             }
                         }
-                        if(this.sustainerPawn != null)
+                        if (this.sustainerPawn != null)
                         {
                             break;
                         }
@@ -74,7 +71,7 @@ namespace TorannMagic
                         TM_MoteMaker.ThrowGenericMote(ThingDefOf.Mote_Smoke, base.Position.ToVector3Shifted(), this.Map, Rand.Range(.5f, .8f), Rand.Range(.8f, 1.3f), .05f, Rand.Range(1f, 1.5f), Rand.Range(-20, 20), Rand.Range(1f, 2f), Rand.Range(0, 360), Rand.Range(0, 360));
                     }
                     initialized = true;
-                }                
+                }
 
                 if (Find.TickManager.TicksGame % 180 == 0)
                 {
@@ -124,7 +121,7 @@ namespace TorannMagic
             Pawn threat = null;
 
             List<Pawn> allPawns = this.Map.mapPawns.AllPawnsSpawned;
-            for(int i = 0; i < allPawns.Count(); i++)
+            for (int i = 0; i < allPawns.Count(); i++)
             {
                 if (!allPawns[i].DestroyedOrNull())
                 {
@@ -136,8 +133,8 @@ namespace TorannMagic
                             {
                                 if (FactionUtility.HostileTo(this.sustainerPawn.Faction, allPawns[i].Faction) || (allPawns[i].RaceProps.Animal && allPawns[i].InAggroMentalState))
                                 {
-                                    if(!allPawns[i].IsPrisoner || (allPawns[i].IsPrisoner && allPawns[i].IsFighting()))
-                                    { 
+                                    if (!allPawns[i].IsPrisoner || (allPawns[i].IsPrisoner && allPawns[i].IsFighting()))
+                                    {
                                         threat = allPawns[i];
                                         break;
                                     }
@@ -161,12 +158,12 @@ namespace TorannMagic
         {
             IntVec3 curCell = this.Position;
             SpawnThings sentinel = new SpawnThings();
-            if(pwrVal == 2)
+            if (pwrVal == 2)
             {
                 sentinel.def = ThingDef.Named("TM_Greater_SentinelR");
                 sentinel.kindDef = PawnKindDef.Named("TM_Greater_Sentinel");
             }
-            else if(pwrVal == 1)
+            else if (pwrVal == 1)
             {
                 sentinel.def = ThingDef.Named("TM_SentinelR");
                 sentinel.kindDef = PawnKindDef.Named("TM_Sentinel");
@@ -241,7 +238,7 @@ namespace TorannMagic
                                 }
                                 lord.AddPawn(newPawn);
                             }
-                            catch(NullReferenceException ex)
+                            catch (NullReferenceException)
                             {
                                 //
                             }

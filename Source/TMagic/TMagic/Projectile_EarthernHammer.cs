@@ -33,12 +33,12 @@ namespace TorannMagic
         private int spinRate = 20;
         private int ticksTillNextStrike = 50;
         private int baseGravityPoints = 8;
- 
+
         public override void ExposeData()
         {
             base.ExposeData();
             Scribe_Values.Look<bool>(ref this.initialized, "initialized", true, false);
-            Scribe_Values.Look<int>(ref this.age, "age", -1, false);            
+            Scribe_Values.Look<int>(ref this.age, "age", -1, false);
             Scribe_Values.Look<int>(ref this.gravityPoints, "gravityPoints", 0, false);
             Scribe_Values.Look<int>(ref this.verVal, "verVal", 0, false);
             Scribe_Values.Look<int>(ref this.pwrVal, "pwrVal", 0, false);
@@ -80,33 +80,35 @@ namespace TorannMagic
             this.launchCells.Clear();
 
             this.launchCells = GenRadial.RadialCellsAround(caster.Position, this.radius, false).ToList();
-            for (int i = 0; i < launchCells.Count(); i++)
+            for (int i = 0; i < launchCells.Count; i++)
             {
-                if (launchCells[i].IsValid && launchCells[i].InBounds(caster.Map))
+                var cell = launchCells[i];
+                if (cell.IsValid && cell.InBounds(caster.Map))
                 {
-                    List<Thing> cellList = launchCells[i].GetThingList(caster.Map);
+                    List<Thing> thingList = cell.GetThingList(caster.Map);
                     bool invalidCell = false;
-                    for (int j = 0; j < cellList.Count(); j++)
+                    for (int j = 0; j < thingList.Count; j++)
                     {
+                        var thing = thingList[i];
                         try
                         {
-                            if (cellList[j].def.designationCategory != null)
+                            if (thing.def.designationCategory != null)
                             {
-                                if (cellList[j].def.designationCategory == DesignationCategoryDefOf.Structure || cellList[j].def.altitudeLayer == AltitudeLayer.Building || cellList[j].def.altitudeLayer == AltitudeLayer.Item || cellList[j].def.altitudeLayer == AltitudeLayer.ItemImportant)
+                                if (thing.def.designationCategory == DesignationCategoryDefOf.Structure || thing.def.altitudeLayer == AltitudeLayer.Building || thing.def.altitudeLayer == AltitudeLayer.Item || thing.def.altitudeLayer == AltitudeLayer.ItemImportant)
                                 {
                                     invalidCell = true;
                                 }
                             }
 
-                            if (cellList[j].def.thingCategories != null)
+                            if (thing.def.thingCategories != null)
                             {
-                                if (cellList[j].def.thingCategories.Contains(ThingCategoryDefOf.StoneChunks) || cellList[j].def.thingCategories.Contains(ThingCategoryDefOf.StoneBlocks))
+                                if (thing.def.thingCategories.Contains(ThingCategoryDefOf.StoneChunks) || thing.def.thingCategories.Contains(ThingCategoryDefOf.StoneBlocks))
                                 {
-                                    this.launchableThings.Add(cellList[j]);
+                                    this.launchableThings.Add(thing);
                                 }
                             }
                         }
-                        catch (NullReferenceException ex)
+                        catch (NullReferenceException)
                         {
                             //Log.Message("threw exception " + ex);
                         }
@@ -121,12 +123,12 @@ namespace TorannMagic
 
         protected override void Impact(Thing hitThing)
         {
-            base.Impact(hitThing);                       
+            base.Impact(hitThing);
 
             if (!initialized)
             {
                 Initialize();
-                DamageInfo dinfo = new DamageInfo(DamageDefOf.Stun, (20 * (1 - (.2f * verVal))), 0, -1, this.caster, null, null, DamageInfo.SourceCategory.ThingOrUnknown, this.caster);
+                DamageInfo dinfo = new DamageInfo(DamageDefOf.Stun, 20 * (1 - (.2f * verVal)), 0, -1, this.caster, null, null, DamageInfo.SourceCategory.ThingOrUnknown, this.caster);
                 this.caster.TakeDamage(dinfo);
                 this.initialized = true;
             }
@@ -164,7 +166,7 @@ namespace TorannMagic
                         }
                     }
 
-                    this.nextStrike = this.age + Mathf.RoundToInt((ticksTillNextStrike * (1 - .15f * verVal)));
+                    this.nextStrike = this.age + Mathf.RoundToInt(ticksTillNextStrike * (1 - (.15f * verVal)));
                     this.gravityStep++;
                 }
             }
@@ -181,7 +183,7 @@ namespace TorannMagic
             AbilityUser.SpawnThings tempPod = new SpawnThings();
             tempPod.def = ThingDef.Named("ChunkSandstone");
             tempPod.spawnCount = 1;
-            IntVec3 origin = this.launchCells.RandomElement();          
+            IntVec3 origin = this.launchCells.RandomElement();
             SingleSpawnLoop(tempPod, origin, this.caster.Map);
 
             float magnitude = (origin.ToVector3Shifted() - Find.Camera.transform.position).magnitude;
@@ -192,14 +194,14 @@ namespace TorannMagic
 
         public void SearchAndThrow()
         {
-            this.gravityPoints--;            
+            this.gravityPoints--;
 
             this.launchableThing = this.launchableThings.RandomElement();
             this.launchableThings.Remove(this.launchableThing);
             IntVec3 origin = this.launchableThing.Position;
 
             ThrowStone(origin);
-        }        
+        }
 
         public void ThrowStone(IntVec3 origin)
         {
@@ -208,16 +210,16 @@ namespace TorannMagic
             info.volumeFactor = 2f;
             TorannMagicDefOf.TM_AirWoosh.PlayOneShot(info);
 
-            CellRect cellRect = CellRect.CenteredOn(base.Position, radius+2);
+            CellRect cellRect = CellRect.CenteredOn(base.Position, radius + 2);
             cellRect.ClipInsideMap(this.caster.Map);
             IntVec3 destination = cellRect.RandomCell;
 
             if (launchableThing != null && destination != null)
-            {                
+            {
                 float launchAngle = (Quaternion.AngleAxis(90, Vector3.up) * TM_Calc.GetVector(origin, destination)).ToAngleFlat();
                 for (int m = 0; m < 4; m++)
                 {
-                    TM_MoteMaker.ThrowGenericMote(ThingDef.Named("Mote_ThickDust"), origin.ToVector3Shifted(), this.caster.Map, Rand.Range(.4f, .7f), Rand.Range(.2f, .3f), .05f, Rand.Range(.4f, .6f), Rand.Range(-20, 20), Rand.Range(3f, 5f), launchAngle += Rand.Range(-25,25), Rand.Range(0, 360));
+                    TM_MoteMaker.ThrowGenericMote(ThingDef.Named("Mote_ThickDust"), origin.ToVector3Shifted(), this.caster.Map, Rand.Range(.4f, .7f), Rand.Range(.2f, .3f), .05f, Rand.Range(.4f, .6f), Rand.Range(-20, 20), Rand.Range(3f, 5f), launchAngle += Rand.Range(-25, 25), Rand.Range(0, 360));
                 }
                 FlyingObject_Spinning flyingObject = (FlyingObject_Spinning)GenSpawn.Spawn(ThingDef.Named("FlyingObject_Spinning"), origin, this.caster.Map);
                 flyingObject.force = this.arcaneDmg + .2f;

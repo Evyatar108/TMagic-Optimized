@@ -1,6 +1,4 @@
-﻿using RimWorld;
-using Verse;
-using UnityEngine;
+﻿using Verse;
 
 namespace TorannMagic
 {
@@ -47,7 +45,7 @@ namespace TorannMagic
                     initialized = true;
                     this.Initialize();
                 }
-                if(this.age <=0)
+                if (this.age <= 0)
                 {
                     severityAdjustment--;
                     this.age = 60;

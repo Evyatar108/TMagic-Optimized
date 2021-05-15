@@ -5,8 +5,6 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
-using Verse.AI;
-using Verse.AI.Group;
 
 namespace TorannMagic
 {
@@ -24,10 +22,8 @@ namespace TorannMagic
         {
             Map map = base.Map;
             base.Impact(hitThing);
-            ThingDef def = this.def;
             pawn = this.launcher as Pawn;
             Pawn victim = hitThing as Pawn;
-            
             try
             {
                 CompAbilityUserMight comp = pawn.GetComp<CompAbilityUserMight>();
@@ -49,11 +45,11 @@ namespace TorannMagic
                     this.PenetratingShot(victim, dmg, this.def.projectile.damageDef);
                     if (victim.Dead)
                     {
-                        comp.Stamina.CurLevel += (.1f * verVal);
+                        comp.Stamina.CurLevel += .1f * verVal;
                     }
                 }
             }
-            catch(NullReferenceException ex)
+            catch (NullReferenceException)
             {
                 //Log.Message("null error " + ex);
             }
@@ -111,10 +107,9 @@ namespace TorannMagic
 
         public int HitBodyPartOrParent(Pawn victim, int dmg, DamageDef dmgType, BodyPartRecord hitPart, int penetratedParts)
         {
-            BodyPartRecord parentPart = null;            
             if (hitPart.parent != null && hitPart.depth == BodyPartDepth.Inside)
             {
-                parentPart = hitPart.parent;
+                BodyPartRecord parentPart = hitPart.parent;
                 dmg = this.HitBodyPartOrParent(victim, dmg, dmgType, parentPart, penetratedParts + 1);
                 if (penetratedParts == 0)
                 {
@@ -126,40 +121,40 @@ namespace TorannMagic
                     float maxDmg = this.destroyParentPartPctTo * hitPart.def.GetMaxHealth(victim);
                     if (dmg > maxDmg)
                     {
-                        damageEntities(victim, hitPart, (int)maxDmg , dmgType, penetratedParts);
+                        damageEntities(victim, hitPart, (int)maxDmg, dmgType, penetratedParts);
                         dmg = dmg - (int)maxDmg;
                     }
                     else
                     {
-                        damageEntities(victim, hitPart, dmg , dmgType, penetratedParts);
+                        damageEntities(victim, hitPart, dmg, dmgType, penetratedParts);
                         dmg = 0;
-                    }                    
+                    }
                 }
                 return dmg;
             }
             else
             {
-                float maxDmg = (this.destroyParentPartPctTo * hitPart.def.GetMaxHealth(victim));
-                if ( dmg > maxDmg )
+                float maxDmg = this.destroyParentPartPctTo * hitPart.def.GetMaxHealth(victim);
+                if (dmg > maxDmg)
                 {
                     damageEntities(victim, hitPart, (int)maxDmg, dmgType, penetratedParts);
-                    dmg = dmg - (int)maxDmg;                 
+                    dmg = dmg - (int)maxDmg;
                 }
                 else
                 {
                     damageEntities(victim, hitPart, dmg, dmgType, penetratedParts);
-                    
+
                     dmg = 0;
-                }                
+                }
                 return dmg;
-            }            
+            }
         }
 
         public void damageEntities(Pawn victim, BodyPartRecord hitPart, int amt, DamageDef type, int penetratedParts)
         {
             DamageInfo dinfo;
             amt = (int)((float)amt * Rand.Range(.5f, 1.5f));
-            
+
             if (hitPart.def.GetMaxHealth(victim) > amt)
             {
                 //Very large animals or creatures

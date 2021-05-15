@@ -1,10 +1,4 @@
-﻿using RimWorld.Planet;
-using System;
-using System.Linq;
-using UnityEngine;
-using Verse;
-using RimWorld;
-using System.Collections.Generic;
+﻿using RimWorld;
 
 namespace TorannMagic
 {
@@ -139,7 +133,7 @@ namespace TorannMagic
         //    Thing item = new Thing();
         //    Faction playerFaction = new Faction();
         //    playerFaction.def = FactionDefOf.PlayerColony;
-            
+
         //    target.requestCount = IncidentWorker_ArcaneScriptCaravan.RandomRequestCount(target.requestThingDef, map);
         //    target.rewards.ClearAndDestroyContents(DestroyMode.Vanish);
         //    System.Random random = new System.Random();
@@ -376,7 +370,7 @@ namespace TorannMagic
         //            }
 
         //        }
-                    
+
         //    }
 
         //    if(item == null)

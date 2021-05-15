@@ -1,9 +1,6 @@
 ﻿using Verse;
 using RimWorld;
-using System.Linq;
 using UnityEngine;
-using System;
-using System.Collections.Generic;
 
 namespace TorannMagic.Enchantment
 {
@@ -15,12 +12,12 @@ namespace TorannMagic.Enchantment
         public override void CompExposeData()
         {
             Scribe_Values.Look<float>(ref this.maxSeverity, "maxSeverity", 0, false);
-            base.CompExposeData();            
+            base.CompExposeData();
         }
 
         public override void PostInitialize()
         {
-            this.hediffActionRate = 300;            
+            this.hediffActionRate = 300;
         }
 
         public override void HediffActionTick()

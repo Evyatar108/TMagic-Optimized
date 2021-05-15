@@ -1,14 +1,11 @@
 ﻿using RimWorld;
-using System;
 using Verse;
 using AbilityUser;
-using UnityEngine;
 using System.Linq;
-using System.Collections.Generic;
 
 namespace TorannMagic
 {
-    public class Verb_EnchantedAura : Verb_UseAbility  
+    public class Verb_EnchantedAura : Verb_UseAbility
     {
 
         protected override bool TryCastShot()
@@ -23,14 +20,14 @@ namespace TorannMagic
 
             if (pawn != null && !pawn.Downed)
             {
-                if(pawn.health.hediffSet.HasHediff(TorannMagicDefOf.TM_EnchantedBodyHD))
+                if (pawn.health.hediffSet.HasHediff(TorannMagicDefOf.TM_EnchantedBodyHD))
                 {
                     comp.MagicData.MagicPowersE.FirstOrDefault<MagicPower>((MagicPower x) => x.abilityDef == TorannMagicDefOf.TM_EnchantedBody).AutoCast = false;
                     pawn.health.RemoveHediff(pawn.health.hediffSet.GetFirstHediffOfDef(TorannMagicDefOf.TM_EnchantedBodyHD, false));
                     MoteMaker.ThrowHeatGlow(pawn.Position, pawn.Map, 1f);
                 }
 
-                if(pawn.health.hediffSet.HasHediff(TorannMagicDefOf.TM_EnchantedAuraHD))
+                if (pawn.health.hediffSet.HasHediff(TorannMagicDefOf.TM_EnchantedAuraHD))
                 {
                     comp.MagicData.MagicPowersStandalone.FirstOrDefault<MagicPower>((MagicPower x) => x.abilityDef == TorannMagicDefOf.TM_EnchantedAura).AutoCast = false;
                     pawn.health.RemoveHediff(pawn.health.hediffSet.GetFirstHediffOfDef(TorannMagicDefOf.TM_EnchantedAuraHD, false));
@@ -65,7 +62,7 @@ namespace TorannMagic
             bool flag = arg_40_0;
             if (flag)
             {
-                
+
             }
             else
             {

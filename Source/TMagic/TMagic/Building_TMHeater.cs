@@ -1,5 +1,4 @@
 ﻿using Verse;
-using UnityEngine;
 using RimWorld;
 using System.Collections.Generic;
 
@@ -15,15 +14,15 @@ namespace TorannMagic
         public bool buffWarm = false;
         public bool boostJoy = false;
 
-                
+
         public override void Tick()
         {
-            if(!initialized)
+            if (!initialized)
             {
                 this.nextSearch = Find.TickManager.TicksGame + Rand.Range(280, 320);
                 initialized = true;
             }
-            if(Find.TickManager.TicksGame >= this.nextSearch)
+            if (Find.TickManager.TicksGame >= this.nextSearch)
             {
                 this.nextSearch = Find.TickManager.TicksGame + Rand.Range(280, 320);
                 if (defensive)
@@ -61,7 +60,7 @@ namespace TorannMagic
                             if (p.needs != null && p.needs.joy != null)
                             {
                                 Need joy = p.needs.TryGetNeed(NeedDefOf.Joy);
-                                if(joy != null)
+                                if (joy != null)
                                 {
                                     joy.CurLevel += Rand.Range(.01f, .02f);
                                 }

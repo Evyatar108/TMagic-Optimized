@@ -73,24 +73,9 @@ namespace TorannMagic
             }
         }
 
-        private Thing Thing
-        {
-            get
-            {
-                Thing thing = this.parent as Thing;
-                bool flag = thing == null;
-                if (flag)
-                {
-                    Log.Error("pawn is null");
-                }
-                return thing;
-            }
-        }
-
         public override void Initialize(CompProperties props)
         {
             base.Initialize(props);
-            Pawn pawn = this.parent as Pawn;
         }
 
         public override void PostExposeData()
@@ -102,7 +87,7 @@ namespace TorannMagic
             Scribe_Values.Look<int>(ref this.ticksToDestroy, "ticksToDestroy", 3600, false);
             Scribe_Values.Look<CompAbilityUserMagic>(ref this.compSummoner, "compSummoner", null, false);
             Scribe_References.Look<Pawn>(ref this.spawner, "spawner", false);
-        }       
+        }
 
         public void SpawnSetup()
         {
@@ -112,7 +97,7 @@ namespace TorannMagic
         public override void CompTick()
         {
             base.CompTick();
-            if(!initialized)
+            if (!initialized)
             {
                 SpawnSetup();
                 this.initialized = true;
@@ -140,7 +125,6 @@ namespace TorannMagic
                         }
                         else
                         {
-                            LocalTargetInfo localTargetInfo = this.parent;
                             bool spawned2 = base.parent.Spawned;
                             if (spawned2)
                             {
@@ -150,14 +134,14 @@ namespace TorannMagic
                             bool flag5 = mote != null;
                             if (flag5)
                             {
-                                float value = 1f - (float)(this.TicksToDestroy - this.ticksLeft) / (float)this.TicksToDestroy;
+                                float value = 1f - ((float)(this.TicksToDestroy - this.ticksLeft) / (float)this.TicksToDestroy);
                                 mote.progress = Mathf.Clamp01(value);
                                 mote.offsetZ = -0.5f;
                             }
                         }
                     }
                 }
-                if(this.sustained)
+                if (this.sustained)
                 {
                     if (this.spawner != null && !this.spawner.Destroyed)
                     {
@@ -168,7 +152,7 @@ namespace TorannMagic
                                 Messages.Message("TM_SunlightCollapse".Translate(
                                     this.spawner.LabelShort
                                 ), MessageTypeDefOf.NeutralEvent);
-                                this.parent.Destroy();                                
+                                this.parent.Destroy();
                             }
                         }
                     }
@@ -178,7 +162,7 @@ namespace TorannMagic
                         if (this.parent != null && !this.parent.Destroyed)
                         {
                             Log.Message("A sunlight has been destroyed, spawner found to be null.");
-                            this.parent.Destroy();                            
+                            this.parent.Destroy();
                         }
                     }
                 }
@@ -197,7 +181,7 @@ namespace TorannMagic
 
                 MoteMaker.ThrowSmoke(this.parent.Position.ToVector3(), this.parent.Map, 1);
                 MoteMaker.ThrowHeatGlow(this.parent.Position, this.parent.Map, 1);
-                
+
                 if (parent.def.defName.Contains("TM_ManaMine"))
                 {
                     Messages.Message("MineDeSpawn".Translate(), MessageTypeDefOf.SilentInput);
@@ -215,7 +199,7 @@ namespace TorannMagic
             }
         }
 
-        
+
         public override void PostDeSpawn(Map map)
         {
             bool flag = this.effecter != null && this.effecter.children != null;

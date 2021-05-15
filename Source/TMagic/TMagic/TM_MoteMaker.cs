@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using Verse;
 using RimWorld;
 
@@ -14,7 +12,7 @@ namespace TorannMagic
             Mote obj = (Mote)ThingMaker.MakeThing(moteDef);
             obj.Attach(target);
             obj.Scale = scale;
-            obj.exactPosition = target.DrawPos + offset;            
+            obj.exactPosition = target.DrawPos + offset;
             obj.exactRotation = lookAngle;
             obj.def.mote.fadeInTime = fadeIn;
             obj.def.mote.fadeOutTime = fadeOut;
@@ -29,7 +27,7 @@ namespace TorannMagic
             Mote obj = (Mote)ThingMaker.MakeThing(moteDef);
             obj.Attach(target);
             obj.Scale = scale;
-            obj.exactPosition = target.CenterVector3 + offset;            
+            obj.exactPosition = target.CenterVector3 + offset;
             obj.exactRotation = lookAngle;
             obj.def.mote.fadeInTime = fadeIn;
             obj.def.mote.fadeOutTime = fadeOut;
@@ -151,7 +149,7 @@ namespace TorannMagic
             moteThrown.Scale = 1.9f * scale;
             moteThrown.rotationRate = (float)Rand.Range(0, 30);
             moteThrown.exactPosition = loc;
-            moteThrown.SetVelocity(0,0);
+            moteThrown.SetVelocity(0, 0);
             moteThrown.def.mote.fadeOutTime = .6f;
             GenSpawn.Spawn(moteThrown, loc.ToIntVec3(), map);
         }
@@ -327,8 +325,8 @@ namespace TorannMagic
             if (!loc.ShouldSpawnMotesAt(map) || map.moteCounter.SaturatedLowPriority)
             {
                 return;
-            }            
-            MoteThrown moteThrown = (MoteThrown)ThingMaker.MakeThing(moteDef, null);            
+            }
+            MoteThrown moteThrown = (MoteThrown)ThingMaker.MakeThing(moteDef, null);
             moteThrown.Scale = 1.9f * scale;
             moteThrown.rotationRate = rotationRate;
             moteThrown.exactPosition = loc;
@@ -339,7 +337,7 @@ namespace TorannMagic
             moteThrown.def.mote.fadeOutTime = fadeOut;
 
             GenSpawn.Spawn(moteThrown, loc.ToIntVec3(), map);
-            
+
 
         }
 
@@ -478,7 +476,7 @@ namespace TorannMagic
             ColorInt colorInt = new ColorInt(r, g, b);
             Color arg_50_0 = colorInt.ToColor;
             moteThrown.SetColor(arg_50_0, false);
-            GenSpawn.Spawn(moteThrown, loc.ToIntVec3(), map);            
+            GenSpawn.Spawn(moteThrown, loc.ToIntVec3(), map);
         }
 
         public static void ThrowArcaneDaggers(Vector3 loc, Map map, float scale)
@@ -507,7 +505,7 @@ namespace TorannMagic
             mote.exactPosition = cell.ToVector3Shifted();
             mote.Scale = scale;
             mote.rotationRate = rot;
-            mote.def.mote.solidTime = (duration - fadeIn - fadeOut);
+            mote.def.mote.solidTime = duration - fadeIn - fadeOut;
             mote.def.mote.fadeInTime = fadeIn;
             mote.def.mote.fadeOutTime = fadeOut;
             GenSpawn.Spawn(mote, cell, map);
@@ -519,7 +517,7 @@ namespace TorannMagic
             mote.exactPosition = cell.ToVector3Shifted();
             mote.Scale = scale;
             mote.rotationRate = rot;
-            mote.def.mote.solidTime = (duration - fadeIn - fadeOut);
+            mote.def.mote.solidTime = duration - fadeIn - fadeOut;
             mote.def.mote.fadeInTime = fadeIn;
             mote.def.mote.fadeOutTime = fadeOut;
             GenSpawn.Spawn(mote, cell, map);
@@ -527,12 +525,12 @@ namespace TorannMagic
 
         public static void MakePowerBeamMoteColor(IntVec3 cell, Map map, float scale, float rot, float duration, float fadeIn, float fadeOut, Color color)
         {
-            
-            Mote mote = (Mote)ThingMaker.MakeThing(TorannMagicDefOf.Mote_PowerBeamGold, null);            
+
+            Mote mote = (Mote)ThingMaker.MakeThing(TorannMagicDefOf.Mote_PowerBeamGold, null);
             mote.exactPosition = cell.ToVector3Shifted();
             mote.Scale = scale;
             mote.rotationRate = rot;
-            mote.def.mote.solidTime = (duration - fadeIn - fadeOut);
+            mote.def.mote.solidTime = duration - fadeIn - fadeOut;
             mote.def.mote.fadeInTime = fadeIn;
             mote.def.mote.fadeOutTime = fadeOut;
             //mote.Graphic.color = color;
@@ -550,8 +548,8 @@ namespace TorannMagic
             Mote mote = (Mote)ThingMaker.MakeThing(ThingDefOf.Mote_Bombardment, null);
             mote.exactPosition = cell.ToVector3Shifted();
             mote.Scale = scale * 6f;
-            mote.rotationRate = rot;       
-            mote.def.mote.solidTime = (duration - fadeIn - fadeOut);
+            mote.rotationRate = rot;
+            mote.def.mote.solidTime = duration - fadeIn - fadeOut;
             GenSpawn.Spawn(mote, cell, map);
         }
     }

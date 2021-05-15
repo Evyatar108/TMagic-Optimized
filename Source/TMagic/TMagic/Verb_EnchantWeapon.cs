@@ -1,18 +1,13 @@
 ﻿using RimWorld;
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using Verse;
-using Verse.Sound;
 using AbilityUser;
-using UnityEngine;
-using Verse.AI.Group;
 
 namespace TorannMagic
 {
-    public class Verb_EnchantWeapon : Verb_UseAbility  
+    public class Verb_EnchantWeapon : Verb_UseAbility
     {
-        
+
         int pwrVal;
         CompAbilityUserMagic comp;
 
@@ -28,8 +23,7 @@ namespace TorannMagic
             {
                 if ((root - targ.Cell).LengthHorizontal < this.verbProps.range)
                 {
-                    ShootLine shootLine;
-                    validTarg = this.TryFindShootLineFromTo(root, targ, out shootLine);
+                    validTarg = this.TryFindShootLineFromTo(root, targ, out _);
                 }
                 else
                 {
@@ -68,7 +62,7 @@ namespace TorannMagic
                     RemoveExistingEnchantment(pawn);
                     ApplyEnchantment(pawn);
                 }
-                else if(this.CasterPawn.IsColonist)
+                else if (this.CasterPawn.IsColonist)
                 {
                     Messages.Message("TM_NoMeleeWeaponToEnchant".Translate(
                     pawn
@@ -76,17 +70,17 @@ namespace TorannMagic
                     return false;
                 }
             }
-            
+
             return true;
-        } 
-        
+        }
+
         public void ApplyEnchantment(Pawn pawn)
         {
-            HediffDef hediff = null;
             float rnd = Rand.Range(0, 1f);
+            HediffDef hediff;
             if (rnd < .25f)
             {
-                hediff = TorannMagicDefOf.TM_WeaponEnchantment_FireHD;                
+                hediff = TorannMagicDefOf.TM_WeaponEnchantment_FireHD;
                 TM_MoteMaker.ThrowGenericMote(ThingDef.Named("Mote_Heat"), pawn.DrawPos, pawn.Map, 1f, .2f, .1f, .8f, Rand.Range(-30, 30), .3f, Rand.Range(-30, 30), Rand.Range(0, 360));
                 MoteMaker.ThrowFireGlow(pawn.Position, pawn.Map, 1f);
             }
@@ -107,7 +101,7 @@ namespace TorannMagic
                 TM_MoteMaker.ThrowGenericMote(ThingDef.Named("Mote_Shadow"), pawn.DrawPos, pawn.Map, 1f, .2f, .1f, .8f, Rand.Range(-30, 30), .3f, Rand.Range(-30, 30), Rand.Range(0, 360));
             }
             HealthUtility.AdjustSeverity(pawn, hediff, .5f + pwrVal);
-            CompAbilityUserMagic comp = this.CasterPawn.GetComp<CompAbilityUserMagic>();            
+            CompAbilityUserMagic comp = this.CasterPawn.GetComp<CompAbilityUserMagic>();
             comp.weaponEnchants.Add(pawn);
             Hediff diff = pawn.health.hediffSet.GetFirstHediffOfDef(hediff, false);
             HediffComp_EnchantedWeapon ewComp = diff.TryGetComp<HediffComp_EnchantedWeapon>();
@@ -118,28 +112,21 @@ namespace TorannMagic
 
         public void RemoveExistingEnchantment(Pawn pawn)
         {
-            Hediff hediff = null;
-            List<Hediff> allHediffs = new List<Hediff>();
-            allHediffs.Clear();
-            allHediffs = pawn.health.hediffSet.GetHediffs<Hediff>().ToList();
-            if (allHediffs != null && allHediffs.Count > 0)
+            var allHediffs = pawn.health.hediffSet.GetHediffs<Hediff>();
+            foreach (var hediff in allHediffs)
             {
-                for (int i = 0; i < allHediffs.Count; i++)
+                if (hediff.def.defName.Contains("TM_WeaponEnchantment"))
                 {
-                    hediff = allHediffs[i];
-                    if(hediff.def.defName.Contains("TM_WeaponEnchantment"))
+                    HediffComp_EnchantedWeapon ewComp = hediff.TryGetComp<HediffComp_EnchantedWeapon>();
+                    if (ewComp != null)
                     {
-                        HediffComp_EnchantedWeapon ewComp = hediff.TryGetComp<HediffComp_EnchantedWeapon>();
-                        if (ewComp != null)
+                        CompAbilityUserMagic comp = ewComp.enchanterPawn.GetComp<CompAbilityUserMagic>();
+                        if (comp != null)
                         {
-                            CompAbilityUserMagic comp = ewComp.enchanterPawn.GetComp<CompAbilityUserMagic>();
-                            if (comp != null)
-                            {
-                                comp.weaponEnchants.Remove(pawn);
-                            }
+                            comp.weaponEnchants.Remove(pawn);
                         }
-                        pawn.health.RemoveHediff(hediff);
                     }
+                    pawn.health.RemoveHediff(hediff);
                 }
             }
         }

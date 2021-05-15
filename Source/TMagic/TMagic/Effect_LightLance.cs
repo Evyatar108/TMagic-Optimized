@@ -2,10 +2,9 @@
 using AbilityUser;
 using System.Collections.Generic;
 using RimWorld;
-using System.Linq;
 
 namespace TorannMagic
-{    
+{
     public class Effect_LightLance : Verb_UseAbility
     {
         bool validTarg;
@@ -31,7 +30,7 @@ namespace TorannMagic
                     else
                     {
                         validTarg = true;
-                    }                    
+                    }
                 }
                 else
                 {
@@ -49,7 +48,7 @@ namespace TorannMagic
         protected override bool TryCastShot()
         {
             int shotCount = 3;
-            if(!base.CasterPawn.DestroyedOrNull())
+            if (!base.CasterPawn.DestroyedOrNull())
             {
                 CompAbilityUserMagic comp = base.CasterPawn.GetComp<CompAbilityUserMagic>();
                 if (comp != null)
@@ -83,7 +82,7 @@ namespace TorannMagic
         }
 
         public virtual void Effect()
-        {            
+        {
             LocalTargetInfo t = this.TargetsAoE[0];
             bool flag = t.Cell != default(IntVec3);
             if (flag)
@@ -92,7 +91,6 @@ namespace TorannMagic
                 {
                     def = TorannMagicDefOf.FlyingObject_LightLance
                 };
-                Pawn casterPawn = base.CasterPawn;
                 FlyingObject_LightLance flyingObject = (FlyingObject_LightLance)GenSpawn.Spawn(ThingDef.Named("FlyingObject_LightLance"), this.CasterPawn.Position, this.CasterPawn.Map);
                 flyingObject.Launch(this.CasterPawn, t.Cell, launchedThing);
             }
@@ -101,9 +99,9 @@ namespace TorannMagic
         public override void PostCastShot(bool inResult, out bool outResult)
         {
             outResult = inResult;
-            this.Effect();            
+            this.Effect();
         }
 
-        
-    }    
+
+    }
 }

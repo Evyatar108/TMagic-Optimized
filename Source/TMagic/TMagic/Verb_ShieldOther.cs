@@ -1,20 +1,11 @@
 ﻿using RimWorld;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Verse;
-using Verse.Sound;
 using AbilityUser;
-using UnityEngine;
-using Verse.AI.Group;
 
 namespace TorannMagic
 {
-    public class Verb_ShieldOther : Verb_UseAbility  
+    public class Verb_ShieldOther : Verb_UseAbility
     {
-        
-        int pwrVal;
-        int verVal;
         CompAbilityUserMagic comp;
 
         bool validTarg;
@@ -29,8 +20,7 @@ namespace TorannMagic
             {
                 if ((root - targ.Cell).LengthHorizontal < this.verbProps.range)
                 {
-                    ShootLine shootLine;
-                    validTarg = this.TryFindShootLineFromTo(root, targ, out shootLine);
+                    validTarg = this.TryFindShootLineFromTo(root, targ, out _);
                 }
                 else
                 {
@@ -54,8 +44,8 @@ namespace TorannMagic
 
             if (pawn != null)
             {
-                ApplyShield(pawn);                
-            }            
+                ApplyShield(pawn);
+            }
             return true;
         }
 
@@ -68,7 +58,7 @@ namespace TorannMagic
 
         private void ApplyHediffs(Pawn target)
         {
-            HealthUtility.AdjustSeverity(target, TorannMagicDefOf.TM_MagicShieldHD, ((.32f + (.002f * comp.MagicUserLevel)) * comp.arcaneDmg));
+            HealthUtility.AdjustSeverity(target, TorannMagicDefOf.TM_MagicShieldHD, (.32f + (.002f * comp.MagicUserLevel)) * comp.arcaneDmg);
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using RimWorld;
 using Verse;
@@ -19,7 +18,7 @@ namespace TorannMagic
         {
             get
             {
-                if(bondedPawn != null)
+                if (bondedPawn != null)
                 {
                     return base.Def.LabelCap + "(" + bondedPawn.LabelShort + ")";
                 }
@@ -45,12 +44,12 @@ namespace TorannMagic
             if (spawned)
             {
                 MoteMaker.ThrowHeatGlow(base.Pawn.DrawPos.ToIntVec3(), base.Pawn.Map, 2f);
-            }            
+            }
         }
 
         public override void CompPostTick(ref float severityAdjustment)
         {
-            base.CompPostTick(ref severityAdjustment);            
+            base.CompPostTick(ref severityAdjustment);
             bool flag = base.Pawn != null;
             if (flag)
             {
@@ -67,7 +66,7 @@ namespace TorannMagic
                 CompAbilityUserMagic comp = pawn.GetComp<CompAbilityUserMagic>();
                 Pawn soulPawn = comp.soulBondPawn;
                 bondedPawn = soulPawn;
-                if(soulPawn != null)
+                if (soulPawn != null)
                 {
                     if (soulPawn.Dead || soulPawn.Destroyed)
                     {
@@ -90,7 +89,7 @@ namespace TorannMagic
                                         HealthUtility.AdjustSeverity(soulPawn, HediffDef.Named("TM_SoulBondPhysicalHD"), 0.5f + comp.MagicData.MagicPowerSkill_SoulBond.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_SoulBond_ver").level);
                                     }
                                 }
-                                else if(rec.def.defName == "TM_SoulBondMentalHD")
+                                else if (rec.def.defName == "TM_SoulBondMentalHD")
                                 {
                                     soulPawnHasHediff = true;
                                     if (rec.Severity != .5f + comp.MagicData.MagicPowerSkill_SoulBond.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_SoulBond_ver").level)
@@ -101,20 +100,20 @@ namespace TorannMagic
                                 }
                             }
                         }
-                        if(!soulPawnHasHediff)
+                        if (!soulPawnHasHediff)
                         {
-                            if(this.Pawn.gender == Gender.Female)
+                            if (this.Pawn.gender == Gender.Female)
                             {
                                 HealthUtility.AdjustSeverity(soulPawn, HediffDef.Named("TM_SoulBondPhysicalHD"), -4f);
                                 HealthUtility.AdjustSeverity(soulPawn, HediffDef.Named("TM_SoulBondPhysicalHD"), 0.5f + comp.MagicData.MagicPowerSkill_SoulBond.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_SoulBond_ver").level);
                             }
-                            else if(this.Pawn.gender == Gender.Male)
+                            else if (this.Pawn.gender == Gender.Male)
                             {
                                 HealthUtility.AdjustSeverity(soulPawn, HediffDef.Named("TM_SoulBondMentalHD"), -4f);
                                 HealthUtility.AdjustSeverity(soulPawn, HediffDef.Named("TM_SoulBondMentalHD"), 0.5f + comp.MagicData.MagicPowerSkill_SoulBond.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_SoulBond_ver").level);
                             }
                         }
-                        if(this.parent.Severity != .5f + comp.MagicData.MagicPowerSkill_SoulBond.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_SoulBond_pwr").level)
+                        if (this.parent.Severity != .5f + comp.MagicData.MagicPowerSkill_SoulBond.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_SoulBond_pwr").level)
                         {
                             if (this.parent.def.defName == "TM_SDSoulBondPhysicalHD")
                             {
@@ -125,7 +124,7 @@ namespace TorannMagic
                             {
                                 HealthUtility.AdjustSeverity(pawn, HediffDef.Named("TM_WDSoulBondMentalHD"), -4f);
                                 HealthUtility.AdjustSeverity(pawn, HediffDef.Named("TM_WDSoulBondMentalHD"), 0.5f + comp.MagicData.MagicPowerSkill_SoulBond.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_SoulBond_pwr").level);
-                            }                            
+                            }
                         }
                     }
                 }

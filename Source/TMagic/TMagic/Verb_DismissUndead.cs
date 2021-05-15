@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using RimWorld;
+﻿using RimWorld;
 using AbilityUser;
 using Verse;
-using UnityEngine;
 
 
 namespace TorannMagic
@@ -23,8 +19,7 @@ namespace TorannMagic
             {
                 if ((root - targ.Cell).LengthHorizontal < this.verbProps.range)
                 {
-                    ShootLine shootLine;
-                    validTarg = this.TryFindShootLineFromTo(root, targ, out shootLine);
+                    validTarg = this.TryFindShootLineFromTo(root, targ, out _);
                 }
                 else
                 {
@@ -42,7 +37,7 @@ namespace TorannMagic
         {
             Pawn caster = base.CasterPawn;
             Pawn target = this.currentTarget.Thing as Pawn;
-            
+
             CompAbilityUserMagic comp = caster.GetComp<CompAbilityUserMagic>();
             if (comp.IsMagicUser && target != null)
             {
@@ -59,12 +54,12 @@ namespace TorannMagic
                     {
                         target.Kill(null, null);
                     }
-                }                
+                }
                 else
                 {
                     Messages.Message("TM_NoValidUndeadToDismiss".Translate(), MessageTypeDefOf.RejectInput);
                 }
-                
+
                 if (!target.Dead && target.story != null && target.story.traits != null && target.story.traits.HasTrait(TorannMagicDefOf.Undead) && target.Faction == caster.Faction)
                 {
                     target.Kill(null, null);

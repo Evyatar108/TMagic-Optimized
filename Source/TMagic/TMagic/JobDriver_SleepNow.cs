@@ -2,7 +2,6 @@
 using Verse.AI;
 using RimWorld;
 using Verse;
-using AbilityUser;
 using System.Linq;
 
 
@@ -26,7 +25,7 @@ namespace TorannMagic
                 Pawn actor = layDown.actor;
                 actor.pather.StopDead();
                 JobDriver curDriver = actor.jobs.curDriver;
-                actor.jobs.posture = PawnPosture.LayingOnGroundNormal;              
+                actor.jobs.posture = PawnPosture.LayingOnGroundNormal;
                 curDriver.asleep = false;
                 if (actor.mindState.applyBedThoughtsTick == 0)
                 {
@@ -51,17 +50,17 @@ namespace TorannMagic
                         curDriver.asleep = true;
                     }
                 }
-                else if ((actor.needs.rest == null || actor.needs.rest.CurLevel >= RestUtility.WakeThreshold(actor)))
+                else if (actor.needs.rest == null || actor.needs.rest.CurLevel >= RestUtility.WakeThreshold(actor))
                 {
                     actor.mindState.priorityWork.ClearPrioritizedWorkAndJobQueue();
                     this.EndJobWith(JobCondition.Incompletable);
                 }
 
                 if (curDriver.asleep && actor.needs.rest != null)
-                {                    
-                    num = 0.7f * num + 0.3f * num;  //talk about convoluted calculations...
+                {
+                    num = (0.7f * num) + (0.3f * num);  //talk about convoluted calculations...
                     actor.needs.rest.TickResting(num);
-                    if(actor.needs.rest.CurLevel >= .99f * RestUtility.WakeThreshold(actor))
+                    if (actor.needs.rest.CurLevel >= .99f * RestUtility.WakeThreshold(actor))
                     {
                         curDriver.asleep = false;
                         actor.mindState.priorityWork.ClearPrioritizedWorkAndJobQueue();

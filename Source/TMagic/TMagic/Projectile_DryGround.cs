@@ -2,7 +2,6 @@
 using RimWorld;
 using Verse;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace TorannMagic
 {
@@ -12,7 +11,6 @@ namespace TorannMagic
         {
             Map map = base.Map;
             base.Impact(hitThing);
-            ThingDef def = this.def;
             CellRect cellRect = CellRect.CenteredOn(base.Position, 1);
             cellRect.ClipInsideMap(map);
 
@@ -20,12 +18,12 @@ namespace TorannMagic
             TerrainDef terrain;
             float radius = this.def.projectile.explosionRadius;
             IntVec3 curCell;
-            if(map.Biome != BiomeDefOf.SeaIce)
-            { 
+            if (map.Biome != BiomeDefOf.SeaIce)
+            {
                 IEnumerable<IntVec3> cells = GenRadial.RadialCellsAround(c, radius, true);
-                for (int i = 0; i < cells.Count(); i++)
+                foreach (var cell in cells)
                 {
-                    curCell = cells.ToArray<IntVec3>()[i];
+                    curCell = cell;
                     terrain = curCell.GetTerrain(map);
                     if (curCell.InBounds(map) && curCell.IsValid && terrain.driesTo != null)
                     {

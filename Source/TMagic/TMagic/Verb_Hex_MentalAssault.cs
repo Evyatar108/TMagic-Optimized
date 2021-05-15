@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using RimWorld;
+﻿using RimWorld;
 using AbilityUser;
 using Verse;
 using Verse.AI;
-using UnityEngine;
 
 
 namespace TorannMagic
@@ -19,9 +15,10 @@ namespace TorannMagic
 
             CompAbilityUserMagic comp = pawn.GetComp<CompAbilityUserMagic>();
             int verVal = TM_Calc.GetMagicSkillLevel(CasterPawn, comp.MagicData.MagicPowerSkill_Hex, "TM_Hex", "_ver", true);
-            if (comp != null && comp.HexedPawns.Count > 0)
+            var hexedPawns = comp.HexedPawns;
+            if (comp != null && hexedPawns.Count > 0)
             {
-                foreach(Pawn p in comp.HexedPawns)
+                foreach (Pawn p in hexedPawns)
                 {
                     if (p.mindState != null && p.mindState.mentalStateHandler != null)
                     {
@@ -42,9 +39,9 @@ namespace TorannMagic
                             {
                                 if (p.Faction == Faction.OfPlayer)
                                 {
-                                    if(p.drafter != null && p.Drafted)
+                                    if (p.drafter != null && p.Drafted)
                                     {
-                                        p.drafter.Drafted = false;                                        
+                                        p.drafter.Drafted = false;
                                     }
                                     p.jobs.EndCurrentJob(JobCondition.InterruptForced);
                                     Job job = new Job(JobDefOf.FleeAndCower, p.Position);
@@ -58,7 +55,7 @@ namespace TorannMagic
                             }
                             TM_MoteMaker.ThrowGenericMote(TorannMagicDefOf.Mote_ScreamMote, p.DrawPos, p.Map, .4f, .2f, .2f, .3f, 0, Rand.Range(.5f, 1f), Rand.Range(-90, 90), 0);
                         }
-                    }                    
+                    }
                 }
             }
             return true;

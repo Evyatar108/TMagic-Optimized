@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using UnityEngine;
+﻿using System.Collections.Generic;
 using Verse;
-using RimWorld;
 
 namespace TorannMagic
 {
@@ -21,7 +17,7 @@ namespace TorannMagic
         private float collectiveMarketValue = 0;
 
         public List<Thing> Generate(int totalMarketValue, List<Thing> outThings)
-        {            
+        {
             for (int j = 0; j < 10; j++)
             {
                 //Raw Magicyte
@@ -30,7 +26,7 @@ namespace TorannMagic
                     Thing thing = ThingMaker.MakeThing(TorannMagicDefOf.RawMagicyte, null);
                     thing.stackCount = RawMagicyteRange.RandomInRange;
                     outThings.Add(thing);
-                    collectiveMarketValue += thing.MarketValue * thing.stackCount;                 
+                    collectiveMarketValue += thing.MarketValue * thing.stackCount;
                 }
                 //Minor Magicyte
                 if (Rand.Chance(MinorMagicyteChance) && (totalMarketValue - collectiveMarketValue) > ThingDef.Named("TM_EStone_maxMP_minor").BaseMarketValue)
@@ -40,7 +36,7 @@ namespace TorannMagic
                     switch (rnd)
                     {
                         case 1:
-                            thing = ThingMaker.MakeThing(ThingDef.Named("TM_EStone_maxMP_minor"),null);
+                            thing = ThingMaker.MakeThing(ThingDef.Named("TM_EStone_maxMP_minor"), null);
                             break;
                         case 2:
                             thing = ThingMaker.MakeThing(ThingDef.Named("TM_EStone_mpRegenRate_minor"), null);
@@ -109,9 +105,9 @@ namespace TorannMagic
                     }
                     outThings.Add(thing);
                     collectiveMarketValue += thing.MarketValue;
-                }                
+                }
             }
-            
+
             return outThings;
         }
     }

@@ -1,5 +1,4 @@
 ﻿using RimWorld;
-using System;
 using System.Collections.Generic;
 using Verse;
 using AbilityUser;
@@ -7,7 +6,7 @@ using UnityEngine;
 
 namespace TorannMagic.Enchantment
 {
-    public class Verb_OrbTraitInfuse : Verb_UseAbility  
+    public class Verb_OrbTraitInfuse : Verb_UseAbility
     {
 
         bool validTarg;
@@ -22,8 +21,7 @@ namespace TorannMagic.Enchantment
             {
                 if ((root - targ.Cell).LengthHorizontal < this.verbProps.range)
                 {
-                    ShootLine shootLine;
-                    validTarg = this.TryFindShootLineFromTo(root, targ, out shootLine);
+                    validTarg = this.TryFindShootLineFromTo(root, targ, out _);
                 }
                 else
                 {
@@ -34,25 +32,23 @@ namespace TorannMagic.Enchantment
             {
                 validTarg = false;
             }
-            return validTarg;        
+            return validTarg;
         }
 
         protected override bool TryCastShot()
         {
             bool result = false;
-            
+
             if (this.currentTarget != null && base.CasterPawn != null)
             {
-                if(this.currentTarget.Thing != null && this.currentTarget.Thing is Pawn)
+                if (this.currentTarget.Thing != null && this.currentTarget.Thing is Pawn)
                 {
                     Pawn victim = this.currentTarget.Thing as Pawn;
-                    if(victim.Faction != null && victim.RaceProps.Humanlike && victim.story != null && victim.story.traits != null && !TM_Calc.IsUndeadNotVamp(victim))
+                    if (victim.Faction != null && victim.RaceProps.Humanlike && victim.story != null && victim.story.traits != null && !TM_Calc.IsUndeadNotVamp(victim))
                     {
                         int traitsApplied = 0;
                         List<Apparel> apparel = this.CasterPawn.apparel.WornApparel;
-                        List<Trait> orbTraits = new List<Trait>();
-                        orbTraits.Clear();
-                        CompEnchantedItem itemComp = null;
+                        HashSet<Trait> orbTraits = new HashSet<Trait>();
                         if (apparel != null)
                         {
                             for (int i = 0; i < apparel.Count; i++)
@@ -60,8 +56,8 @@ namespace TorannMagic.Enchantment
                                 Apparel item = apparel[i];
                                 if (item != null && item.def == TorannMagicDefOf.TM_Artifact_OrbOfSouls_Full)
                                 {
-                                    itemComp = item.GetComp<CompEnchantedItem>();
-                                    if(itemComp != null)
+                                    CompEnchantedItem itemComp = item.GetComp<CompEnchantedItem>();
+                                    if (itemComp != null)
                                     {
                                         orbTraits = itemComp.SoulOrbTraits;
                                     }
@@ -70,20 +66,21 @@ namespace TorannMagic.Enchantment
                         }
                         if (orbTraits.Count > 0)
                         {
-                            for(int i = 0; i < orbTraits.Count; i++)
+                            foreach (var orbTrait in orbTraits)
+                            for (int i = 0; i < orbTraits.Count; i++)
                             {
                                 bool conflicting = false;
-                                for(int j =0; j < victim.story.traits.allTraits.Count; j++)
+                                for (int j = 0; j < victim.story.traits.allTraits.Count; j++)
                                 {
-                                    if(victim.story.traits.allTraits[j].def.ConflictsWith(orbTraits[i]))
+                                    if (victim.story.traits.allTraits[j].def.ConflictsWith(orbTrait))
                                     {
                                         conflicting = true;
                                     }
                                 }
 
-                                if(!conflicting)
+                                if (!conflicting)
                                 {
-                                    AddTrait(victim, orbTraits[i]);
+                                    AddTrait(victim, orbTrait);
                                     traitsApplied++;
                                 }
                             }
@@ -103,7 +100,7 @@ namespace TorannMagic.Enchantment
                         {
                             Log.Message("no traits found in orb - was this dev-mode generated?");
                             result = true; //destroy anyways
-                        }                        
+                        }
                     }
                     else
                     {
@@ -136,9 +133,9 @@ namespace TorannMagic.Enchantment
         private void AddTrait(Pawn pawn, Trait trait)
         {
             List<Trait> pawnTraits = pawn.story.traits.allTraits;
-            if(pawnTraits.Count >= 7)
+            if (pawnTraits.Count >= 7)
             {
-                if(Rand.Chance(.75f))
+                if (Rand.Chance(.75f))
                 {
                     RemoveTrait(pawn, pawnTraits, pawnTraits.RandomElement().def);
                     pawn.story.traits.GainTrait(trait);
@@ -180,7 +177,7 @@ namespace TorannMagic.Enchantment
 
         public void PostCastShot(bool inResult)
         {
-            if(inResult)
+            if (inResult)
             {
                 List<Apparel> apparel = this.CasterPawn.apparel.WornApparel;
                 if (apparel != null)
@@ -195,7 +192,7 @@ namespace TorannMagic.Enchantment
                     }
                 }
                 CompAbilityUser comp = this.CasterPawn.GetComp<CompAbilityUser>();
-                if(comp != null)
+                if (comp != null)
                 {
                     comp.RemoveApparelAbility(TorannMagicDefOf.TM_Artifact_TraitInfuse);
                 }

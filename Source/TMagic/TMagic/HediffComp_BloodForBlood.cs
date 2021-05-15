@@ -4,7 +4,6 @@ using UnityEngine;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using HarmonyLib;
 
 namespace TorannMagic
 {
@@ -56,7 +55,7 @@ namespace TorannMagic
         {
             bool spawned = base.Pawn.Spawned;
             CompAbilityUserMagic comp = this.linkedPawn.GetComp<CompAbilityUserMagic>();
-            if(TM_Calc.GetBloodLossTypeDef(this.Pawn.health.hediffSet.hediffs) == null)
+            if (TM_Calc.GetBloodLossTypeDef(this.Pawn.health.hediffSet.hediffs) == null)
             {
                 HealthUtility.AdjustSeverity(this.Pawn, HediffDefOf.BloodLoss, .05f);
             }
@@ -70,7 +69,7 @@ namespace TorannMagic
             {
                 this.removeNow = true;
             }
-        }        
+        }
 
         public override void CompPostTick(ref float severityAdjustment)
         {
@@ -86,7 +85,7 @@ namespace TorannMagic
 
                 if (Find.TickManager.TicksGame % this.eventFrequency == 0)
                 {
-                    if(!this.linkedPawn.DestroyedOrNull() && !this.linkedPawn.Dead)
+                    if (!this.linkedPawn.DestroyedOrNull() && !this.linkedPawn.Dead)
                     {
                         directionToLinkedPawn = TM_Calc.GetVector(this.Pawn.DrawPos, linkedPawn.DrawPos);
                         HealWounds();
@@ -112,7 +111,7 @@ namespace TorannMagic
                                 if (need.def.defName == "ROMV_Blood")
                                 {
                                     need.CurLevel--;
-                                    if(need.CurLevel <= .5f)
+                                    if (need.CurLevel <= .5f)
                                     {
                                         this.Pawn.Kill(null, null);
                                     }
@@ -120,7 +119,7 @@ namespace TorannMagic
                             }
                         }
 
-                    }                    
+                    }
                     else
                     {
                         this.removeNow = true;
@@ -135,49 +134,49 @@ namespace TorannMagic
 
         public void AdjustBloodLoss()
         {
-            float bloodLoss = 1 + (.25f *this.bleedRate);
-            if(this.Pawn.Faction == this.linkedPawn.Faction)
+            float bloodLoss = 1 + (.25f * this.bleedRate);
+            if (this.Pawn.Faction == this.linkedPawn.Faction)
             {
-                bloodLoss = (bloodLoss / 2f);
+                bloodLoss = bloodLoss / 2f;
             }
             //Log.Message("adjusting blood loss by " + .03f * bloodLoss +  " bleed rate is " + this.bleedRate);
             HediffDef bloodType = TM_Calc.GetBloodLossTypeDef(this.Pawn.health.hediffSet.hediffs);
             if (bloodType != null)
             {
-                HealthUtility.AdjustSeverity(this.Pawn, HediffDef.Named(bloodType.ToString()), (.04f * bloodLoss)/Mathf.Clamp(this.Pawn.BodySize,.25f, 4f));
+                HealthUtility.AdjustSeverity(this.Pawn, HediffDef.Named(bloodType.ToString()), .04f * bloodLoss / Mathf.Clamp(this.Pawn.BodySize, .25f, 4f));
             }
-            bloodType = null;
+
             bloodType = TM_Calc.GetBloodLossTypeDef(this.linkedPawn.health.hediffSet.hediffs);
             if (bloodType != null)
             {
-                HealthUtility.AdjustSeverity(this.linkedPawn, HediffDef.Named(bloodType.ToString()), -((.03f * bloodLoss)/Mathf.Clamp(this.linkedPawn.BodySize, .25f, 4f)));
+                HealthUtility.AdjustSeverity(this.linkedPawn, HediffDef.Named(bloodType.ToString()), -(.03f * bloodLoss / Mathf.Clamp(this.linkedPawn.BodySize, .25f, 4f)));
             }
         }
 
         public void HealLinkedPawnWounds()
         {
-            List<IntVec3> cellList = GenRadial.RadialCellsAround(this.linkedPawn.Position, .4f + this.bfbVer, true).ToList();
-            for (int i =0; i< cellList.Count; i++)
+            IEnumerable<IntVec3> cellList = GenRadial.RadialCellsAround(this.linkedPawn.Position, .4f + this.bfbVer, true);
+            foreach (var cell in cellList)
             {
-                Pawn healedPawn = cellList[i].GetFirstPawn(this.linkedPawn.Map);
-                if(healedPawn != null && healedPawn.Faction != null && healedPawn.Faction == linkedPawn.Faction)
+                Pawn healedPawn = cell.GetFirstPawn(this.linkedPawn.Map);
+                if (healedPawn != null && healedPawn.Faction != null && healedPawn.Faction == linkedPawn.Faction)
                 {
-                    TM_Action.DoAction_HealPawn(this.linkedPawn, healedPawn, 1, (1f + .35f * this.bfbVer) * (1 + bleedRate) * this.arcaneDmg);
-                    if(healedPawn == linkedPawn)
+                    TM_Action.DoAction_HealPawn(this.linkedPawn, healedPawn, 1, (1f + (.35f * this.bfbVer)) * (1 + bleedRate) * this.arcaneDmg);
+                    if (healedPawn == linkedPawn)
                     {
                         Vector3 revDir = this.linkedPawn.DrawPos - (2 * this.directionToLinkedPawn);
                         TM_MoteMaker.ThrowGenericMote(ThingDef.Named("Mote_BloodMist"), revDir, this.Pawn.Map, Rand.Range(.8f, 1f), .2f, 0.05f, 1f, Rand.Range(-50, 50), Rand.Range(2f, 3f), (Quaternion.AngleAxis(90, Vector3.up) * this.directionToLinkedPawn).ToAngleFlat(), Rand.Range(0, 360));
                     }
                 }
             }
-            if(this.bfbVer > 0)
+            if (this.bfbVer > 0)
             {
                 Effecter BFBEffect = TorannMagicDefOf.TM_BFBEffecter.Spawn();
                 BFBEffect.Trigger(new TargetInfo(this.linkedPawn.Position, this.linkedPawn.Map, false), new TargetInfo(this.linkedPawn.Position, this.linkedPawn.Map, false));
                 BFBEffect.Cleanup();
             }
             int num = 1;
-            using (IEnumerator<BodyPartRecord> enumerator =linkedPawn.health.hediffSet.GetInjuredParts().GetEnumerator())
+            using (IEnumerator<BodyPartRecord> enumerator = linkedPawn.health.hediffSet.GetInjuredParts().GetEnumerator())
             {
                 while (enumerator.MoveNext())
                 {
@@ -189,7 +188,7 @@ namespace TorannMagic
                         IEnumerable<Hediff_Injury> arg_BB_0 = linkedPawn.health.hediffSet.GetHediffs<Hediff_Injury>();
                         Func<Hediff_Injury, bool> arg_BB_1;
 
-                        arg_BB_1 = ((Hediff_Injury injury) => injury.Part == rec);
+                        arg_BB_1 = (Hediff_Injury injury) => injury.Part == rec;
 
                         foreach (Hediff_Injury current in arg_BB_0.Where(arg_BB_1))
                         {
@@ -234,13 +233,13 @@ namespace TorannMagic
                         IEnumerable<Hediff_Injury> arg_BB_0 = this.Pawn.health.hediffSet.GetHediffs<Hediff_Injury>();
                         Func<Hediff_Injury, bool> arg_BB_1;
 
-                        arg_BB_1 = ((Hediff_Injury injury) => injury.Part == rec);
+                        arg_BB_1 = (Hediff_Injury injury) => injury.Part == rec;
 
                         foreach (Hediff_Injury current in arg_BB_0.Where(arg_BB_1))
                         {
                             bool flag4 = num2 > 0;
                             if (flag4)
-                            {                                
+                            {
                                 bool flag5 = current.CanHealNaturally() && !current.IsPermanent();
                                 if (flag5)
                                 {
@@ -263,6 +262,6 @@ namespace TorannMagic
             {
                 return base.CompShouldRemove || this.removeNow;
             }
-        }        
+        }
     }
 }

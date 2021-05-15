@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using RimWorld;
 
 namespace TorannMagic
-{    
+{
     public class Effect_EyeOfTheStorm : Verb_UseAbility
     {
         bool validTarg;
@@ -30,7 +30,7 @@ namespace TorannMagic
                     else
                     {
                         validTarg = true;
-                    }                    
+                    }
                 }
                 else
                 {
@@ -67,9 +67,8 @@ namespace TorannMagic
             if (inResult)
             {
                 this.Effect();
-                outResult = true;
             }
             outResult = inResult;
         }
-    }    
+    }
 }

@@ -42,95 +42,6 @@ namespace TorannMagic
         public float weaponDamage = 1;
         public float weaponCritChance = 0f;
         public LocalTargetInfo SecondTarget = null;
-
-        private float IF_RayofHope_eff = 0.08f;
-        private float IF_Firebolt_eff = 0.10f;
-        private float IF_Fireclaw_eff = 0.10f;
-        private float IF_Fireball_eff = 0.08f;
-        private float IF_Firestorm_eff = 0.05f;
-        private float HoF_Soothe_eff = 0.08f;
-        private float HoF_Icebolt_eff = 0.08f;
-        private float HoF_FrostRay_eff = 0.08f;
-        private float HoF_Snowball_eff = 0.08f;
-        private float HoF_Blizzard_eff = 0.05f;
-        private float HoF_Rainmaker_eff = 0.15f;
-        private float SB_AMP_eff = 0.08f;
-        private float SB_LightningBolt_eff = 0.08f;
-        private float SB_LightningCloud_eff = 0.06f;
-        private float SB_LightningStorm_eff = 0.06f;
-        private float SB_EyeOfTheStorm_eff = 0.05f;
-        private float A_Shadow_eff = 0.08f;
-        private float A_MagicMissile_eff = 0.08f;
-        private float A_Blink_eff = 0.10f;
-        private float A_Summon_eff = 0.10f;
-        private float A_Teleport_eff = 0.10f;
-        private float A_FoldReality_eff = 0.06f;
-        private float P_Heal_eff = 0.07f;
-        private float P_Shield_eff = 0.08f;
-        private float P_ValiantCharge_eff = 0.08f;
-        private float P_Overwhelm_eff = 0.10f;
-        private float P_HolyWrath_eff = 0.05f;
-        private float S_SummonElemental_eff = 0.06f;
-        private float S_SummonExplosive_eff = 0.08f;
-        private float S_SummonMinion_eff = 0.10f;
-        private float S_SummonPylon_eff = 0.08f;
-        private float S_SummonPoppi_eff = 0.05f;
-        private float D_Poison_eff = 0.10f;
-        private float D_SootheAnimal_eff = 0.1f;
-        private float D_Regenerate_eff = 0.07f;
-        private float D_CureDisease_eff = 0.10f;
-        private float D_RegrowLimb_eff = 0.06f;
-        private float N_RaiseUndead_eff = 0.05f;
-        private float N_DeathMark_eff = 0.08f;
-        private float N_FogOfTorment_eff = 0.08f;
-        private float N_ConsumeCorpse_eff = 0.0f;
-        private float N_CorpseExplosion_eff = 0.08f;
-        private float N_DeathBolt_eff = 0.06f;
-        private float PR_AdvancedHeal_eff = 0.08f;
-        private float PR_Purify_eff = 0.07f;
-        private float PR_HealingCircle_eff = 0.07f;
-        private float PR_BestowMight_eff = 0.08f;
-        private float PR_Resurrection_eff = 0.05f;
-        private float B_Lullaby_eff = 0.08f;
-        private float B_BattleHymn_eff = 0.06f;
-        private float SoulBond_eff = 0.10f;
-        private float ShadowBolt_eff = .08f;
-        private float Dominate_eff = 0.06f;
-        private float WD_Repulsion_eff = .08f;
-        private float WD_PsychicShock_eff = .06f;
-        private float SD_Attraction_eff = .08f;
-        private float SD_Scorn_eff = .06f;
-        private float G_Encase_eff = .08f;
-        private float G_EarthSprites_eff = 0.06f;
-        private float G_EarthernHammer_eff = 0.06f;
-        private float G_Meteor_eff = 0.05f;
-        private float T_TechnoTurret_eff = 0.02f;
-        private float T_TechnoShield_eff = 0.06f;
-        private float T_Overdrive_eff = 0.08f;
-        private float T_Sabotage_eff = 0.06f;
-        private float T_OrbitalStrike_eff = 0.05f;
-        private float BM_BloodGift_eff = 0.05f;
-        private float BM_IgniteBlood_eff = .06f;
-        private float BM_BloodForBlood_eff = .06f;
-        private float BM_BloodShield_eff = .06f;
-        private float BM_Rend_eff = .08f;
-        private float BM_BloodMoon_eff = .05f;
-        private float E_EnchantedBody_eff = .15f;
-        private float E_Transmutate_eff = .12f;
-        private float E_EnchantWeapon_eff = .1f;
-        private float E_EnchanterStone_eff = .10f;
-        private float E_Polymorph_eff = .06f;
-        private float E_Shapeshift_eff = .05f;
-        private float C_Prediction_eff = .15f;
-        private float C_AlterFate_eff = .1f;
-        private float C_AccelerateTime_eff = .08f;
-        private float C_ReverseTime_eff = .08f;
-        private float C_ChronostaticField_eff = .06f;
-        private float C_Recall_eff = .1f;
-
-        private float W_eff = .01f;
-        private float global_eff = 0.025f;
-
         public bool spell_Rain = false;
         public bool spell_Blink = false;
         public bool spell_Teleport = false;
@@ -203,7 +114,7 @@ namespace TorannMagic
 
         public List<TM_ChaosPowers> chaosPowers = new List<TM_ChaosPowers>();
         public TMAbilityDef mimicAbility = null;
-        public List<Thing> summonedMinions = new List<Thing>();
+        public HashSet<Thing> summonedMinions = new HashSet<Thing>();
         public List<Thing> supportedUndead = new List<Thing>();
         public List<Thing> summonedSentinels = new List<Thing>();
         public List<Pawn> stoneskinPawns = new List<Pawn>();
@@ -254,12 +165,12 @@ namespace TorannMagic
         public bool ArcaneForging = false;
         public List<Pawn> weaponEnchants = new List<Pawn>();
         public Thing enchanterStone = null;
-        public List<Thing> enchanterStones = new List<Thing>();
-        public List<Thing> lightningTraps = new List<Thing>();        
+        public HashSet<Thing> enchanterStones = new HashSet<Thing>();
+        public List<Thing> lightningTraps = new List<Thing>();
         public IncidentDef predictionIncidentDef = null;
         public int predictionTick = 0;
         public int predictionHash = 0;
-        private List<Pawn> hexedPawns = new List<Pawn>();
+        private HashSet<Pawn> hexedPawns = new HashSet<Pawn>();
         //Recall fields
         //position, hediffs, needs, mana, manual recall bool, recall duration
         public IntVec3 recallPosition = default(IntVec3);
@@ -287,24 +198,19 @@ namespace TorannMagic
         {
             get
             {
-                if(stoneskinPawns == null)
+                if (stoneskinPawns == null)
                 {
                     stoneskinPawns = new List<Pawn>();
-                    stoneskinPawns.Clear();
                 }
-                List<Pawn> tmpList = new List<Pawn>();
-                tmpList.Clear();
-                foreach(Pawn p in stoneskinPawns)
+                HashSet<Pawn> tmpList = new HashSet<Pawn>();
+                foreach (Pawn p in stoneskinPawns)
                 {
-                    if(p.DestroyedOrNull() || p.Dead)
+                    if (p.DestroyedOrNull() || p.Dead)
                     {
                         tmpList.Add(p);
                     }
                 }
-                for(int i = 0; i < tmpList.Count; i++)
-                {
-                    stoneskinPawns.Remove(tmpList[i]);
-                }
+                stoneskinPawns.RemoveAll(x => tmpList.Contains(x));
                 return stoneskinPawns;
             }
         }
@@ -313,11 +219,11 @@ namespace TorannMagic
         {
             get
             {
-                if(this.guardianSpiritType == null)
+                if (this.guardianSpiritType == null)
                 {
                     float rnd = Rand.Value;
-                    
-                    if(rnd < .34f)
+
+                    if (rnd < .34f)
                     {
                         this.guardianSpiritType = TorannMagicDefOf.TM_SpiritBearR;
                     }
@@ -394,28 +300,29 @@ namespace TorannMagic
             }
         }
 
-        public List<Pawn> HexedPawns
+        public HashSet<Pawn> HexedPawns
         {
             get
             {
-                if(hexedPawns == null)
+                if (hexedPawns == null)
                 {
-                    this.hexedPawns = new List<Pawn>();
-                    this.hexedPawns.Clear();
+                    this.hexedPawns = new HashSet<Pawn>();
                 }
-                List<Pawn> validPawns = new List<Pawn>();
-                validPawns.Clear();
+
+                var tmpList = new List<Pawn>();
                 foreach (Pawn p in this.hexedPawns)
                 {
                     if (p != null && !p.Destroyed && !p.Dead)
                     {
                         if (p.health != null && p.health.hediffSet != null && p.health.hediffSet.HasHediff(TorannMagicDefOf.TM_HexHD))
                         {
-                            validPawns.Add(p);
+                            tmpList.Add(p);
                         }
                     }
                 }
-                this.hexedPawns = validPawns;
+
+                this.hexedPawns.AddRange(tmpList);
+
                 return this.hexedPawns;
             }
         }
@@ -476,7 +383,6 @@ namespace TorannMagic
 
         private void DrawTechnoBit()
         {
-            float num = Mathf.Lerp(1.2f, 1.55f, 1f);
             if (this.bitFloatingDown)
             {
                 if (this.bitOffset < .38f)
@@ -509,10 +415,7 @@ namespace TorannMagic
         {
             if (!mageLightSet)
             {
-                float num = Mathf.Lerp(1.2f, 1.55f, 1f);
-                Vector3 lightPos = Vector3.zero;
-
-                lightPos = this.AbilityUser.Drawer.DrawPos;
+                Vector3 lightPos = this.AbilityUser.Drawer.DrawPos;
                 lightPos.x -= .5f;
                 lightPos.z += .6f;
 
@@ -528,7 +431,6 @@ namespace TorannMagic
 
         public void DrawMageMark()
         {
-            float num = Mathf.Lerp(1.2f, 1.55f, 1f);
             Vector3 vector = this.AbilityUser.Drawer.DrawPos;
             vector.x = vector.x + .45f;
             vector.z = vector.z + .45f;
@@ -634,7 +536,6 @@ namespace TorannMagic
 
         public void DrawEnchantMark()
         {
-            float num = Mathf.Lerp(1.2f, 1.55f, 1f);
             Vector3 vector = this.AbilityUser.Drawer.DrawPos;
             vector.x = vector.x + .45f;
             vector.z = vector.z + .45f;
@@ -652,14 +553,13 @@ namespace TorannMagic
             bool flag = !this.Pawn.Dead && !this.Pawn.Downed;
             if (flag)
             {
-                float num = Mathf.Lerp(1.2f, 1.55f, 1f);
                 Vector3 vector = this.Pawn.Drawer.DrawPos;
                 vector.y = Altitudes.AltitudeFor(AltitudeLayer.Pawn);
                 if (this.Pawn.Rotation == Rot4.North)
                 {
                     vector.y = Altitudes.AltitudeFor(AltitudeLayer.PawnState);
                 }
-                float angle = (float)Rand.Range(0, 360);
+
                 Vector3 s = new Vector3(3f, 3f, 3f);
                 Matrix4x4 matrix = default(Matrix4x4);
                 matrix.SetTRS(vector, Quaternion.AngleAxis(0f, Vector3.up), s);
@@ -1845,14 +1745,8 @@ namespace TorannMagic
                                 if (this.Pawn.IsColonist)
                                 {
                                     ResolveEnchantments();
-                                    for (int i = 0; i < this.summonedMinions.Count; i++)
-                                    {
-                                        Pawn evaluateMinion = this.summonedMinions[i] as Pawn;
-                                        if (evaluateMinion == null || evaluateMinion.Dead || evaluateMinion.Destroyed)
-                                        {
-                                            this.summonedMinions.Remove(this.summonedMinions[i]);
-                                        }
-                                    }
+                                    this.summonedLights.RemoveAll(x => x is Pawn pawn && (pawn == null || pawn.Dead || pawn.Destroyed));
+
                                     ResolveMinions();
                                     ResolveSustainers();
                                     if (this.Pawn.story.traits.HasTrait(TorannMagicDefOf.Necromancer) || this.Pawn.story.traits.HasTrait(TorannMagicDefOf.Lich) || (this.customClass != null && this.customClass.isNecromancer))
@@ -1875,13 +1769,13 @@ namespace TorannMagic
                                         this.autocastTick = Find.TickManager.TicksGame + (int)Rand.Range(.8f * settingsRef.autocastEvaluationFrequency, 1.2f * settingsRef.autocastEvaluationFrequency);
                                         ResolveAutoCast();
                                     }
-                                    else if(settingsRef.AICasting && (!this.Pawn.IsPrisoner || this.Pawn.IsFighting()))
+                                    else if (settingsRef.AICasting && (!this.Pawn.IsPrisoner || this.Pawn.IsFighting()))
                                     {
                                         float tickMult = settingsRef.AIAggressiveCasting ? 1f : 2f;
                                         this.autocastTick = Find.TickManager.TicksGame + (int)(Rand.Range(.8f * settingsRef.autocastEvaluationFrequency, 1.2f * settingsRef.autocastEvaluationFrequency) * tickMult);
                                         ResolveAIAutoCast();
                                     }
-                                }                                
+                                }
                             }
                             if (!this.Pawn.IsColonist && settingsRef.AICasting && settingsRef.AIAggressiveCasting && Find.TickManager.TicksGame > this.nextAICastAttemptTick) //Aggressive AI Casting
                             {
@@ -1971,7 +1865,7 @@ namespace TorannMagic
                                 if (AbilityData?.AllPowers != null)
                                 {
                                     AbilityData obj = AbilityData;
-                                    num = ((obj != null && obj.AllPowers.Count > 0) ? 1 : 0);
+                                    num = (obj != null && obj.AllPowers.Count > 0) ? 1 : 0;
                                 }
                                 else
                                 {
@@ -2066,7 +1960,6 @@ namespace TorannMagic
             get
             {
                 bool flag = base.AbilityUser != null;
-                bool result;
                 if (flag)
                 {
                     bool flag3 = base.AbilityUser.story != null;
@@ -2100,7 +1993,7 @@ namespace TorannMagic
                             base.AbilityUser.story.traits.HasTrait(TorannMagicDefOf.HeartOfFrost) || base.AbilityUser.story.traits.HasTrait(TorannMagicDefOf.StormBorn) ||
                             base.AbilityUser.story.traits.HasTrait(TorannMagicDefOf.Arcanist) || base.AbilityUser.story.traits.HasTrait(TorannMagicDefOf.Paladin) ||
                             base.AbilityUser.story.traits.HasTrait(TorannMagicDefOf.Summoner) || base.AbilityUser.story.traits.HasTrait(TorannMagicDefOf.Druid) ||
-                            (base.AbilityUser.story.traits.HasTrait(TorannMagicDefOf.Necromancer) || base.AbilityUser.story.traits.HasTrait(TorannMagicDefOf.Lich)) ||
+                            base.AbilityUser.story.traits.HasTrait(TorannMagicDefOf.Necromancer) || base.AbilityUser.story.traits.HasTrait(TorannMagicDefOf.Lich) ||
                             base.AbilityUser.story.traits.HasTrait(TorannMagicDefOf.Priest) || base.AbilityUser.story.traits.HasTrait(TorannMagicDefOf.TM_Bard) ||
                             base.AbilityUser.story.traits.HasTrait(TorannMagicDefOf.Chronomancer) || TM_Calc.IsWanderer(base.AbilityUser) || base.AbilityUser.story.traits.HasTrait(TorannMagicDefOf.ChaosMage);
                         if (flag4)
@@ -2157,7 +2050,7 @@ namespace TorannMagic
         public int MagicUserLevel
         {
             get
-            {                
+            {
                 return this.MagicData.MagicUserLevel;
             }
             set
@@ -2187,7 +2080,7 @@ namespace TorannMagic
                 this.MagicData.MagicUserXP = value;
             }
         }
-        
+
         public float XPLastLevel
         {
             get
@@ -2196,7 +2089,7 @@ namespace TorannMagic
                 bool flag = this.MagicUserLevel > 0;
                 if (flag)
                 {
-                    
+
                     result = GetXPForLevel(this.MagicUserLevel - 1);
                 }
                 return result;
@@ -2215,7 +2108,7 @@ namespace TorannMagic
         {
             get
             {
-                if(MagicUserXP < XPLastLevel)
+                if (MagicUserXP < XPLastLevel)
                 {
                     MagicUserXP = (int)XPLastLevel;
                 }
@@ -2362,7 +2255,7 @@ namespace TorannMagic
                         this.MagicData.AllMagicPowers[z] == this.MagicData.MagicPowersWD.FirstOrDefault((MagicPower x) => x.abilityDef == TorannMagicDefOf.TM_Dominate))
                         {
                             this.MagicData.AllMagicPowers[z].learned = false;
-                        }                        
+                        }
                         if (this.MagicData.AllMagicPowers[z].requiresScroll)
                         {
                             this.MagicData.AllMagicPowers[z].learned = false;
@@ -2387,7 +2280,7 @@ namespace TorannMagic
                                     }
                                 }
                             }
-                        }                        
+                        }
                     }
                     if (this.customClass.classHediff != null)
                     {
@@ -2732,7 +2625,7 @@ namespace TorannMagic
                         }
                         else
                         {
-                            for(int i = 0; i < this.MagicData.MagicPowersA.Count; i++)
+                            for (int i = 0; i < this.MagicData.MagicPowersA.Count; i++)
                             {
                                 this.MagicData.MagicPowersA[i].learned = true;
                             }
@@ -2752,7 +2645,7 @@ namespace TorannMagic
                         //Log.Message("Initializing Paladin Abilities");
                         if (abilityUser.IsColonist && !abilityUser.health.hediffSet.HasHediff(TorannMagicDefOf.TM_Uncertainty, false))
                         {
-                            if(Rand.Chance(TorannMagicDefOf.TM_P_RayofHope.learnChance))
+                            if (Rand.Chance(TorannMagicDefOf.TM_P_RayofHope.learnChance))
                             {
                                 this.MagicData.MagicPowersP.FirstOrDefault<MagicPower>((MagicPower x) => x.abilityDef == TorannMagicDefOf.TM_P_RayofHope).learned = true;
                                 this.AddPawnAbility(TorannMagicDefOf.TM_P_RayofHope);
@@ -2818,12 +2711,12 @@ namespace TorannMagic
                             {
                                 this.AddPawnAbility(TorannMagicDefOf.TM_SummonPylon);
                                 this.MagicData.MagicPowersS.FirstOrDefault<MagicPower>((MagicPower x) => x.abilityDef == TorannMagicDefOf.TM_SummonPylon).learned = true;
-                            }                            
+                            }
                             if (Rand.Chance(.5f))
                             {
                                 this.AddPawnAbility(TorannMagicDefOf.TM_SummonExplosive);
                                 this.MagicData.MagicPowersS.FirstOrDefault<MagicPower>((MagicPower x) => x.abilityDef == TorannMagicDefOf.TM_SummonExplosive).learned = true;
-                            }                            
+                            }
                             if (Rand.Chance(.2f))
                             {
                                 this.AddPawnAbility(TorannMagicDefOf.TM_SummonElemental);
@@ -2862,17 +2755,17 @@ namespace TorannMagic
                             {
                                 this.AddPawnAbility(TorannMagicDefOf.TM_Poison);
                                 this.MagicData.MagicPowersD.FirstOrDefault<MagicPower>((MagicPower x) => x.abilityDef == TorannMagicDefOf.TM_Poison).learned = true;
-                            }                            
+                            }
                             if (Rand.Chance(.5f))
                             {
                                 this.AddPawnAbility(TorannMagicDefOf.TM_SootheAnimal);
                                 this.MagicData.MagicPowersD.FirstOrDefault<MagicPower>((MagicPower x) => x.abilityDef == TorannMagicDefOf.TM_SootheAnimal).learned = true;
-                            }                            
+                            }
                             if (Rand.Chance(.3f))
                             {
                                 this.AddPawnAbility(TorannMagicDefOf.TM_Regenerate);
                                 this.MagicData.MagicPowersD.FirstOrDefault<MagicPower>((MagicPower x) => x.abilityDef == TorannMagicDefOf.TM_Regenerate).learned = true;
-                            }                            
+                            }
                             if (Rand.Chance(.3f))
                             {
                                 this.AddPawnAbility(TorannMagicDefOf.TM_CureDisease);
@@ -2902,22 +2795,22 @@ namespace TorannMagic
                             {
                                 this.AddPawnAbility(TorannMagicDefOf.TM_RaiseUndead);
                                 this.MagicData.MagicPowersN.FirstOrDefault<MagicPower>((MagicPower x) => x.abilityDef == TorannMagicDefOf.TM_RaiseUndead).learned = true;
-                            }                            
+                            }
                             if (Rand.Chance(.3f))
                             {
                                 this.AddPawnAbility(TorannMagicDefOf.TM_DeathMark);
                                 this.MagicData.MagicPowersN.FirstOrDefault<MagicPower>((MagicPower x) => x.abilityDef == TorannMagicDefOf.TM_DeathMark).learned = true;
-                            }                            
+                            }
                             if (Rand.Chance(.4f))
                             {
                                 this.AddPawnAbility(TorannMagicDefOf.TM_FogOfTorment);
                                 this.MagicData.MagicPowersN.FirstOrDefault<MagicPower>((MagicPower x) => x.abilityDef == TorannMagicDefOf.TM_FogOfTorment).learned = true;
-                            }                            
+                            }
                             if (Rand.Chance(.3f))
                             {
                                 this.AddPawnAbility(TorannMagicDefOf.TM_ConsumeCorpse);
                                 this.MagicData.MagicPowersN.FirstOrDefault<MagicPower>((MagicPower x) => x.abilityDef == TorannMagicDefOf.TM_ConsumeCorpse).learned = true;
-                            }                           
+                            }
                             if (Rand.Chance(.2f))
                             {
                                 this.AddPawnAbility(TorannMagicDefOf.TM_CorpseExplosion);
@@ -2956,17 +2849,17 @@ namespace TorannMagic
                             {
                                 this.AddPawnAbility(TorannMagicDefOf.TM_AdvancedHeal);
                                 this.MagicData.MagicPowersPR.FirstOrDefault<MagicPower>((MagicPower x) => x.abilityDef == TorannMagicDefOf.TM_AdvancedHeal).learned = true;
-                            }                            
+                            }
                             if (Rand.Chance(.3f))
                             {
                                 this.AddPawnAbility(TorannMagicDefOf.TM_Purify);
                                 this.MagicData.MagicPowersPR.FirstOrDefault<MagicPower>((MagicPower x) => x.abilityDef == TorannMagicDefOf.TM_Purify).learned = true;
-                            }                            
+                            }
                             if (Rand.Chance(.3f))
                             {
                                 this.AddPawnAbility(TorannMagicDefOf.TM_HealingCircle);
                                 this.MagicData.MagicPowersPR.FirstOrDefault<MagicPower>((MagicPower x) => x.abilityDef == TorannMagicDefOf.TM_HealingCircle).learned = true;
-                            }                            
+                            }
                             if (Rand.Chance(.4f))
                             {
                                 this.AddPawnAbility(TorannMagicDefOf.TM_BestowMight);
@@ -3427,10 +3320,10 @@ namespace TorannMagic
                         if (this.MagicData.AllMagicPowers[j].learned && !this.customClass.classMageAbilities.Contains(this.MagicData.AllMagicPowers[j].abilityDef))
                         {
                             this.RemovePawnAbility(this.MagicData.AllMagicPowers[j].abilityDef);
-                            this.AddPawnAbility(this.MagicData.AllMagicPowers[j].abilityDef);                            
+                            this.AddPawnAbility(this.MagicData.AllMagicPowers[j].abilityDef);
                         }
                     }
-                    if(this.recallSpell)
+                    if (this.recallSpell)
                     {
                         this.RemovePawnAbility(TorannMagicDefOf.TM_Recall);
                         this.AddPawnAbility(TorannMagicDefOf.TM_Recall);
@@ -3476,7 +3369,7 @@ namespace TorannMagic
                             this.AddPawnAbility(TorannMagicDefOf.TM_Teleport);
                         }
                     }
-                    
+
                     if (this.spell_Heal == true && !abilityUser.story.traits.HasTrait(TorannMagicDefOf.Paladin))
                     {
                         if (!abilityUser.story.traits.HasTrait(TorannMagicDefOf.ChaosMage))
@@ -3886,7 +3779,7 @@ namespace TorannMagic
                         this.RemovePawnAbility(TorannMagicDefOf.TM_Ignite);
                         this.AddPawnAbility(TorannMagicDefOf.TM_Ignite);
                     }
-                    
+
                     if (this.IsMagicUser && this.MagicData.MagicPowersCustom != null && this.MagicData.MagicPowersCustom.Count > 0)
                     {
                         for (int j = 0; j < this.MagicData.MagicPowersCustom.Count; j++)
@@ -3917,9 +3810,9 @@ namespace TorannMagic
                         for (int j = 0; j < mp.TMabilityDefs.Count; j++)
                         {
                             TMAbilityDef tmad = mp.TMabilityDefs[j] as TMAbilityDef;
-                            if(tmad.childAbilities != null && tmad.childAbilities.Count > 0)
+                            if (tmad.childAbilities != null && tmad.childAbilities.Count > 0)
                             {
-                                for(int k = 0; k < tmad.childAbilities.Count; k++)
+                                for (int k = 0; k < tmad.childAbilities.Count; k++)
                                 {
                                     this.RemovePawnAbility(tmad.childAbilities[k]);
                                 }
@@ -4293,18 +4186,10 @@ namespace TorannMagic
 
         public bool TryAddPawnAbility(TMAbilityDef ability)
         {
-            //add check to verify no ability is already added
-            bool result = false;
             base.AddPawnAbility(ability, true, -1f);
-            result = true;
+            //add check to verify no ability is already added
+            bool result = true;
             return result;
-        }
-
-        private void ClearPower(MagicPower current)
-        {
-            Log.Message("Removing ability: " + current.abilityDef.defName.ToString());
-            base.RemovePawnAbility(current.abilityDef);
-            base.UpdateAbilities();
         }
 
         public void ResetSkills()
@@ -4334,9 +4219,9 @@ namespace TorannMagic
                     mps.level = 0;
                 }
             }
-            for(int i = 0; i < this.MagicData.AllMagicPowers.Count; i++)
-            {                
-                for(int j = 0; j < this.MagicData.AllMagicPowers[i].TMabilityDefs.Count; j++)
+            for (int i = 0; i < this.MagicData.AllMagicPowers.Count; i++)
+            {
+                for (int j = 0; j < this.MagicData.AllMagicPowers[i].TMabilityDefs.Count; j++)
                 {
                     TMAbilityDef ability = (TMAbilityDef)this.MagicData.AllMagicPowers[i].TMabilityDefs[j];
                     this.RemovePawnAbility(ability);
@@ -4352,96 +4237,47 @@ namespace TorannMagic
             //CompAbilityUserMagic.MagicAbilities = null;
             //this.magicData = null;
             this.AssignAbilities();
-          
-        }
 
-        private void LoadPowers()
-        {
-            foreach (MagicPower currentA in this.MagicData.MagicPowersA)
-            {
-                //Log.Message("Removing ability: " + currentA.abilityDef.defName.ToString());
-                currentA.level = 0;
-                base.RemovePawnAbility(currentA.abilityDef);
-            }
-            foreach (MagicPower currentHoF in this.MagicData.MagicPowersHoF)
-            {
-                //Log.Message("Removing ability: " + currentHoF.abilityDef.defName.ToString());
-                currentHoF.level = 0;
-                base.RemovePawnAbility(currentHoF.abilityDef);
-            }
-            foreach (MagicPower currentSB in this.MagicData.MagicPowersSB)
-            {
-                //Log.Message("Removing ability: " + currentSB.abilityDef.defName.ToString());
-                currentSB.level = 0;
-                base.RemovePawnAbility(currentSB.abilityDef);
-            }
-            foreach (MagicPower currentIF in this.MagicData.MagicPowersIF)
-            {
-                //Log.Message("Removing ability: " + currentIF.abilityDef.defName.ToString());
-                currentIF.level = 0;
-                base.RemovePawnAbility(currentIF.abilityDef);
-            }
-            foreach (MagicPower currentP in this.MagicData.MagicPowersP)
-            {
-                //Log.Message("Removing ability: " + currentP.abilityDef.defName.ToString());
-                currentP.level = 0;
-                base.RemovePawnAbility(currentP.abilityDef);
-            }
-            foreach (MagicPower currentS in this.MagicData.MagicPowersS)
-            {
-                //Log.Message("Removing ability: " + currentP.abilityDef.defName.ToString());
-                currentS.level = 0;
-                base.RemovePawnAbility(currentS.abilityDef);
-            }
-            foreach (MagicPower currentD in this.MagicData.MagicPowersD)
-            {
-                //Log.Message("Removing ability: " + currentP.abilityDef.defName.ToString());
-                currentD.level = 0;
-                base.RemovePawnAbility(currentD.abilityDef);
-            }
-            foreach (MagicPower currentN in this.MagicData.MagicPowersN)
-            {
-                //Log.Message("Removing ability: " + currentP.abilityDef.defName.ToString());
-                currentN.level = 0;
-                base.RemovePawnAbility(currentN.abilityDef);
-            }
         }
 
         public void RemoveTraits()
         {
             List<Trait> traits = this.AbilityUser.story.traits.allTraits;
+            HashSet<Trait> toRemove = new HashSet<Trait>();
             for (int i = 0; i < traits.Count; i++)
             {
-                if (traits[i].def == TorannMagicDefOf.InnerFire || traits[i].def == TorannMagicDefOf.HeartOfFrost || traits[i].def == TorannMagicDefOf.StormBorn || traits[i].def == TorannMagicDefOf.Arcanist || traits[i].def == TorannMagicDefOf.Paladin ||
-                    traits[i].def == TorannMagicDefOf.Druid || traits[i].def == TorannMagicDefOf.Priest || traits[i].def == TorannMagicDefOf.Necromancer || traits[i].def == TorannMagicDefOf.Warlock || traits[i].def == TorannMagicDefOf.Succubus ||
-                    traits[i].def == TorannMagicDefOf.TM_Bard || traits[i].def == TorannMagicDefOf.Geomancer || traits[i].def == TorannMagicDefOf.Technomancer || traits[i].def == TorannMagicDefOf.BloodMage || traits[i].def == TorannMagicDefOf.Enchanter ||
-                    traits[i].def == TorannMagicDefOf.Chronomancer || traits[i].def == TorannMagicDefOf.ChaosMage || traits[i].def == TorannMagicDefOf.TM_Wanderer)
+                var trait = traits[i];
+                if (trait.def == TorannMagicDefOf.InnerFire || trait.def == TorannMagicDefOf.HeartOfFrost || trait.def == TorannMagicDefOf.StormBorn || trait.def == TorannMagicDefOf.Arcanist || trait.def == TorannMagicDefOf.Paladin ||
+                    trait.def == TorannMagicDefOf.Druid || trait.def == TorannMagicDefOf.Priest || trait.def == TorannMagicDefOf.Necromancer || trait.def == TorannMagicDefOf.Warlock || trait.def == TorannMagicDefOf.Succubus ||
+                    trait.def == TorannMagicDefOf.TM_Bard || trait.def == TorannMagicDefOf.Geomancer || trait.def == TorannMagicDefOf.Technomancer || trait.def == TorannMagicDefOf.BloodMage || trait.def == TorannMagicDefOf.Enchanter ||
+                    trait.def == TorannMagicDefOf.Chronomancer || trait.def == TorannMagicDefOf.ChaosMage || trait.def == TorannMagicDefOf.TM_Wanderer)
                 {
-                    Log.Message("Removing trait " + traits[i].Label);
-                    traits.Remove(traits[i]);
-                    i--;
+                    // Log.Message("Removing trait " + trait.Label);
+                    toRemove.Add(trait);
+                    traits.Remove(trait);
                 }
                 if (this.customClass != null)
                 {
-                    traits.Remove(this.AbilityUser.story.traits.GetTrait(this.customClass.classTrait));
+                    toRemove.Add(this.AbilityUser.story.traits.GetTrait(this.customClass.classTrait));
                     this.customClass = null;
                     this.customIndex = -2;
                 }
             }
+
+            traits.RemoveAll(x => toRemove.Contains(x));
         }
 
         public void RemoveTMagicHediffs()
         {
-            List<Hediff> allHediffs = this.Pawn.health.hediffSet.GetHediffs<Hediff>().ToList();
+            IEnumerable<Hediff> allHediffs = this.Pawn.health.hediffSet.GetHediffs<Hediff>();
             for (int i = 0; i < allHediffs.Count(); i++)
-            {
-                Hediff hediff = allHediffs[i];
-                if (hediff.def.defName.Contains("TM_"))
+                foreach (Hediff hediff in allHediffs)
                 {
-                    this.Pawn.health.RemoveHediff(hediff);
+                    if (hediff.def.defName.Contains("TM_"))
+                    {
+                        this.Pawn.health.RemoveHediff(hediff);
+                    }
                 }
-
-            }
         }
 
         public void RemoveAbilityUser()
@@ -5282,11 +5118,11 @@ namespace TorannMagic
                 {
                     adjustedManaCost *= 1f - (magicDef.efficiencyReductionPercent * this.MagicData.GetSkill_Efficiency(TorannMagicDefOf.TM_SoulBond).level);
                 }
-                else if( magicDef == TorannMagicDefOf.TM_LightSkipGlobal || magicDef == TorannMagicDefOf.TM_LightSkipMass)
+                else if (magicDef == TorannMagicDefOf.TM_LightSkipGlobal || magicDef == TorannMagicDefOf.TM_LightSkipMass)
                 {
                     adjustedManaCost *= 1f - (magicDef.efficiencyReductionPercent * this.MagicData.GetSkill_Efficiency(TorannMagicDefOf.TM_LightSkip).level);
-                }      
-                else if(magicDef == TorannMagicDefOf.TM_SummonTotemEarth || magicDef == TorannMagicDefOf.TM_SummonTotemHealing || magicDef == TorannMagicDefOf.TM_SummonTotemLightning)
+                }
+                else if (magicDef == TorannMagicDefOf.TM_SummonTotemEarth || magicDef == TorannMagicDefOf.TM_SummonTotemHealing || magicDef == TorannMagicDefOf.TM_SummonTotemLightning)
                 {
                     adjustedManaCost *= 1f - (magicDef.efficiencyReductionPercent * this.MagicData.GetSkill_Efficiency(TorannMagicDefOf.TM_Totems).level);
                 }
@@ -5294,7 +5130,7 @@ namespace TorannMagic
                 {
                     adjustedManaCost *= 1f - (magicDef.efficiencyReductionPercent * this.MagicData.GetSkill_Efficiency(TorannMagicDefOf.TM_Hex).level);
                 }
-                else if(this.Pawn.story.traits.HasTrait(TorannMagicDefOf.Faceless))
+                else if (this.Pawn.story.traits.HasTrait(TorannMagicDefOf.Faceless))
                 {
                     CompAbilityUserMight compMight = this.Pawn.TryGetComp<CompAbilityUserMight>();
                     adjustedManaCost *= 1f - (magicDef.efficiencyReductionPercent * compMight.MightData.GetSkill_Efficiency(TorannMagicDefOf.TM_Mimic).level);
@@ -5317,7 +5153,7 @@ namespace TorannMagic
             {
                 if (magicDef == TorannMagicDefOf.TM_Explosion)
                 {
-                    adjustedManaCost = adjustedManaCost * (1f - ((1f - this.mpCost)/10f));
+                    adjustedManaCost = adjustedManaCost * (1f - ((1f - this.mpCost) / 10f));
                 }
                 else
                 {
@@ -5337,7 +5173,7 @@ namespace TorannMagic
                 adjustedManaCost = adjustedManaCost * 1.2f;
             }
 
-            return Mathf.Max(adjustedManaCost, (.5f * magicDef.manaCost));
+            return Mathf.Max(adjustedManaCost, .5f * magicDef.manaCost);
         }
 
         public override List<HediffDef> IgnoredHediffs()
@@ -5369,7 +5205,7 @@ namespace TorannMagic
                 else
                 {
                     HediffSet expr_26 = expr_1A.hediffSet;
-                    arg_32_1 = ((expr_26 != null) ? expr_26.hediffs : null);
+                    arg_32_1 = (expr_26 != null) ? expr_26.hediffs : null;
                 }
             }
             arg_32_0.AddRange(arg_32_1);
@@ -5389,7 +5225,7 @@ namespace TorannMagic
                 else
                 {
                     HediffSet expr_66 = expr_52.hediffSet;
-                    arg_84_0 = ((expr_66 != null) ? new int?(expr_66.hediffs.Count<Hediff>()) : null);
+                    arg_84_0 = (expr_66 != null) ? new int?(expr_66.hediffs.Count<Hediff>()) : null;
                 }
             }
             bool flag = (arg_84_0 ?? 0) > 0;
@@ -5403,7 +5239,7 @@ namespace TorannMagic
                         MoteMaker.MakeStaticMote(AbilityUser.Position, AbilityUser.Map, ThingDefOf.Mote_ExplosionFlash, 10);
                         dinfo.SetAmount(0);
                         return;
-                    }                    
+                    }
                     if (current.def == TorannMagicDefOf.TM_HediffEnchantment_phantomShift && Rand.Chance(.2f))
                     {
                         absorbed = true;
@@ -5411,7 +5247,7 @@ namespace TorannMagic
                         MoteMaker.ThrowSmoke(abilityUser.Position.ToVector3Shifted(), abilityUser.Map, 1.2f);
                         dinfo.SetAmount(0);
                         return;
-                    }                    
+                    }
                     if (current.def == TorannMagicDefOf.TM_HediffShield)
                     {
                         float sev = current.Severity;
@@ -5569,7 +5405,7 @@ namespace TorannMagic
             MoteMaker.MakeStaticMote(pawn.TrueCenter(), pawn.Map, ThingDefOf.Mote_ExplosionFlash, 12f);
             for (int i = 0; i < 6; i++)
             {
-                Vector3 loc = pawn.TrueCenter() + Vector3Utility.HorizontalVectorFromAngle((float)Rand.Range(0, 360)) * Rand.Range(0.3f, 0.6f);
+                Vector3 loc = pawn.TrueCenter() + (Vector3Utility.HorizontalVectorFromAngle((float)Rand.Range(0, 360)) * Rand.Range(0.3f, 0.6f));
                 MoteMaker.ThrowDustPuff(loc, pawn.Map, Rand.Range(0.8f, 1.2f));
             }
         }
@@ -5579,7 +5415,6 @@ namespace TorannMagic
             if (this.Pawn.CurJob.targetA.Thing.def.defName == "TableArcaneForge")
             {
                 this.ArcaneForging = true;
-                Job job = this.Pawn.CurJob;
                 Thing forge = this.Pawn.CurJob.targetA.Thing;
                 if (this.Pawn.Position == forge.InteractionCell && this.Pawn.jobs.curDriver.CurToilIndex >= 10)
                 {
@@ -5637,7 +5472,7 @@ namespace TorannMagic
             //{
             //    compMight = this.Pawn.TryGetComp<CompAbilityUserMight>();
             //}
-            if (settingsRef.autocastEnabled && this.Pawn.jobs != null && this.Pawn.CurJob != null && this.Pawn.CurJob.def != TorannMagicDefOf.TMCastAbilityVerb && this.Pawn.CurJob.def != TorannMagicDefOf.TMCastAbilitySelf && 
+            if (settingsRef.autocastEnabled && this.Pawn.jobs != null && this.Pawn.CurJob != null && this.Pawn.CurJob.def != TorannMagicDefOf.TMCastAbilityVerb && this.Pawn.CurJob.def != TorannMagicDefOf.TMCastAbilitySelf &&
                 this.Pawn.CurJob.def != JobDefOf.Ingest && this.Pawn.CurJob.def != JobDefOf.ManTurret && this.Pawn.GetPosture() == PawnPosture.Standing && !this.Pawn.CurJob.playerForced)
             {
                 //Log.Message("pawn " + this.Pawn.LabelShort + " current job is " + this.Pawn.CurJob.def.defName);
@@ -5743,7 +5578,7 @@ namespace TorannMagic
                                 }
                                 if (mp.autocasting.type == TMDefs.AutocastType.OnNearby)
                                 {
-                                    if(mp.autocasting.maxRange == 0f)
+                                    if (mp.autocasting.maxRange == 0f)
                                     {
                                         mp.autocasting.maxRange = mp.abilityDef.MainVerb.range;
                                     }
@@ -5834,7 +5669,7 @@ namespace TorannMagic
                                             if (castSuccess) goto AutoCastExit;
                                         }
                                     }
-                                    if ((tmad == TorannMagicDefOf.TM_Blink || tmad == TorannMagicDefOf.TM_Blink_I || tmad == TorannMagicDefOf.TM_Blink_II || tmad == TorannMagicDefOf.TM_Blink_III))
+                                    if (tmad == TorannMagicDefOf.TM_Blink || tmad == TorannMagicDefOf.TM_Blink_I || tmad == TorannMagicDefOf.TM_Blink_II || tmad == TorannMagicDefOf.TM_Blink_III)
                                     {
                                         MagicPower magicPower = this.MagicData.MagicPowersA.FirstOrDefault<MagicPower>((MagicPower x) => x.abilityDef == tmad);
                                         if (magicPower != null && magicPower.learned && magicPower.autocast)
@@ -5901,7 +5736,6 @@ namespace TorannMagic
                                         MagicPowerSkill ver = this.MagicData.MagicPowerSkill_CureDisease.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_CureDisease_ver");
 
                                         List<string> afflictionList = new List<string>();
-                                        afflictionList.Clear();
                                         foreach (TMDefs.TM_CategoryHediff chd in HediffCategoryList.Named("TM_Category_Hediffs").diseases)
                                         {
                                             if (chd.requiredSkillName == "TM_CureDisease_ver" && chd.requiredSkillLevel <= ver.level)
@@ -5963,8 +5797,8 @@ namespace TorannMagic
                         {
                             if (current != null && current.abilityDef != null && current.learned && !this.Pawn.CurJob.playerForced)
                             {
-                                foreach(TMAbilityDef tmad in current.TMabilityDefs)
-                                { 
+                                foreach (TMAbilityDef tmad in current.TMabilityDefs)
+                                {
                                     if (tmad == TorannMagicDefOf.TM_Heal)
                                     {
                                         MagicPower magicPower = this.MagicData.MagicPowersP.FirstOrDefault<MagicPower>((MagicPower x) => x.abilityDef == tmad);
@@ -5975,7 +5809,7 @@ namespace TorannMagic
                                             if (castSuccess) goto AutoCastExit;
                                         }
                                     }
-                                    if ((tmad == TorannMagicDefOf.TM_Shield || tmad == TorannMagicDefOf.TM_Shield_I || tmad == TorannMagicDefOf.TM_Shield_II || tmad == TorannMagicDefOf.TM_Shield_III))
+                                    if (tmad == TorannMagicDefOf.TM_Shield || tmad == TorannMagicDefOf.TM_Shield_I || tmad == TorannMagicDefOf.TM_Shield_II || tmad == TorannMagicDefOf.TM_Shield_III)
                                     {
                                         MagicPower magicPower = this.MagicData.MagicPowersP.FirstOrDefault<MagicPower>((MagicPower x) => x.abilityDef == tmad);
                                         if (magicPower != null && magicPower.learned && magicPower.autocast)
@@ -5984,7 +5818,7 @@ namespace TorannMagic
                                             AutoCast.Shield.Evaluate(this, tmad, ability, magicPower, out castSuccess);
                                             if (castSuccess) goto AutoCastExit;
                                         }
-                                    }                                        
+                                    }
                                 }
                             }
                         }
@@ -6018,10 +5852,9 @@ namespace TorannMagic
                                             AutoCast.HealPermanentSpell.Evaluate(this, TorannMagicDefOf.TM_Purify, ability, magicPower, out castSuccess);
                                             if (castSuccess) goto AutoCastExit;
                                             List<string> afflictionList = new List<string>();
-                                            afflictionList.Clear();
-                                            foreach(TMDefs.TM_CategoryHediff chd in HediffCategoryList.Named("TM_Category_Hediffs").ailments)
+                                            foreach (TMDefs.TM_CategoryHediff chd in HediffCategoryList.Named("TM_Category_Hediffs").ailments)
                                             {
-                                                if(chd.requiredSkillName == "TM_Purify_ver" && chd.requiredSkillLevel <= ver.level)
+                                                if (chd.requiredSkillName == "TM_Purify_ver" && chd.requiredSkillLevel <= ver.level)
                                                 {
                                                     afflictionList.Add(chd.hediffDefname);
                                                 }
@@ -6054,8 +5887,7 @@ namespace TorannMagic
                                             //}
                                             AutoCast.CureSpell.Evaluate(this, TorannMagicDefOf.TM_Purify, ability, magicPower, afflictionList, out castSuccess);
                                             if (castSuccess) goto AutoCastExit;
-                                            List<string> addictionList = new List<string>();
-                                            addictionList.Clear();
+                                            HashSet<string> addictionList = new HashSet<string>();
                                             //addictionList.Add("Alcohol");
                                             //addictionList.Add("Smokeleaf");
                                             //if (ver.level >= 1)
@@ -6077,13 +5909,13 @@ namespace TorannMagic
                                             if (ver.level >= 3)
                                             {
                                                 IEnumerable<ChemicalDef> enumerable = from def in DefDatabase<ChemicalDef>.AllDefs
-                                                                                      where (true)
+                                                                                      where true
                                                                                       select def;
                                                 foreach (ChemicalDef addiction in enumerable)
                                                 {
                                                     if (addiction.defName != "ROMV_VitaeAddiction" && addiction != TorannMagicDefOf.Luciferium)
                                                     {
-                                                        addictionList.AddDistinct(addiction.defName);
+                                                        addictionList.Add(addiction.defName);
                                                     }
                                                 }
                                             }
@@ -6126,10 +5958,9 @@ namespace TorannMagic
                         {
                             PawnAbility ability = this.AbilityData.Powers.FirstOrDefault((PawnAbility x) => x.Def == TorannMagicDefOf.TM_MechaniteReprogramming);
                             List<string> afflictionList = new List<string>();
-                            afflictionList.Clear();
                             foreach (TMDefs.TM_CategoryHediff chd in HediffCategoryList.Named("TM_Category_Hediffs").mechanites)
                             {
-                                afflictionList.Add(chd.hediffDefname);                                
+                                afflictionList.Add(chd.hediffDefname);
                             }
                             //afflictionList.Add("SensoryMechanites");
                             //afflictionList.Add("FibrousMechanites");
@@ -6421,7 +6252,7 @@ namespace TorannMagic
                                             if (castSuccess) goto AutoCastExit;
                                         }
                                     }
-                                    else if ((tmad == TorannMagicDefOf.TM_FrostRay || tmad == TorannMagicDefOf.TM_FrostRay_I || tmad == TorannMagicDefOf.TM_FrostRay_II || tmad == TorannMagicDefOf.TM_FrostRay_III))
+                                    else if (tmad == TorannMagicDefOf.TM_FrostRay || tmad == TorannMagicDefOf.TM_FrostRay_I || tmad == TorannMagicDefOf.TM_FrostRay_II || tmad == TorannMagicDefOf.TM_FrostRay_III)
                                     {
                                         MagicPower magicPower = this.MagicData.MagicPowersHoF.FirstOrDefault<MagicPower>((MagicPower x) => x.abilityDef == tmad);
                                         if (magicPower != null && magicPower.learned && magicPower.autocast)
@@ -6429,7 +6260,7 @@ namespace TorannMagic
                                             ability = this.AbilityData.Powers.FirstOrDefault((PawnAbility x) => x.Def == tmad);
                                             AutoCast.DamageSpell.Evaluate(this, tmad, ability, magicPower, out castSuccess);
                                             if (castSuccess) goto AutoCastExit;
-                                        }                                       
+                                        }
                                     }
                                 }
                             }
@@ -6464,7 +6295,7 @@ namespace TorannMagic
                             {
                                 foreach (TMAbilityDef tmad in current.TMabilityDefs)
                                 {
-                                    if ((tmad == TorannMagicDefOf.TM_MagicMissile || tmad == TorannMagicDefOf.TM_MagicMissile_I || tmad == TorannMagicDefOf.TM_MagicMissile_II || tmad == TorannMagicDefOf.TM_MagicMissile_III))
+                                    if (tmad == TorannMagicDefOf.TM_MagicMissile || tmad == TorannMagicDefOf.TM_MagicMissile_I || tmad == TorannMagicDefOf.TM_MagicMissile_II || tmad == TorannMagicDefOf.TM_MagicMissile_III)
                                     {
                                         MagicPower magicPower = this.MagicData.MagicPowersA.FirstOrDefault<MagicPower>((MagicPower x) => x.abilityDef == tmad);
                                         if (magicPower != null && magicPower.learned && magicPower.autocast)
@@ -6472,13 +6303,13 @@ namespace TorannMagic
                                             ability = this.AbilityData.Powers.FirstOrDefault((PawnAbility x) => x.Def == tmad);
                                             AutoCast.DamageSpell.Evaluate(this, tmad, ability, magicPower, out castSuccess);
                                             if (castSuccess) goto AutoCastExit;
-                                        }                                        
+                                        }
                                     }
                                 }
                             }
                         }
                     }
-                    if ((this.Pawn.story.traits.HasTrait(TorannMagicDefOf.Druid) || flagCM || isCustom))
+                    if (this.Pawn.story.traits.HasTrait(TorannMagicDefOf.Druid) || flagCM || isCustom)
                     {
                         PawnAbility ability = null;
                         foreach (MagicPower current in this.MagicData.MagicPowersD)
@@ -6536,7 +6367,7 @@ namespace TorannMagic
                             {
                                 foreach (TMAbilityDef tmad in current.TMabilityDefs)
                                 {
-                                    if ((tmad == TorannMagicDefOf.TM_ShadowBolt || tmad == TorannMagicDefOf.TM_ShadowBolt_I || tmad == TorannMagicDefOf.TM_ShadowBolt_II || tmad == TorannMagicDefOf.TM_ShadowBolt_III))
+                                    if (tmad == TorannMagicDefOf.TM_ShadowBolt || tmad == TorannMagicDefOf.TM_ShadowBolt_I || tmad == TorannMagicDefOf.TM_ShadowBolt_II || tmad == TorannMagicDefOf.TM_ShadowBolt_III)
                                     {
                                         MagicPower magicPower = this.MagicData.MagicPowersSD.FirstOrDefault<MagicPower>((MagicPower x) => x.abilityDef == tmad);
                                         if (magicPower != null && magicPower.learned && magicPower.autocast)
@@ -6544,7 +6375,7 @@ namespace TorannMagic
                                             ability = this.AbilityData.Powers.FirstOrDefault((PawnAbility x) => x.Def == tmad);
                                             AutoCast.DamageSpell.Evaluate(this, tmad, ability, magicPower, out castSuccess);
                                             if (castSuccess) goto AutoCastExit;
-                                        }                                        
+                                        }
                                     }
                                 }
                             }
@@ -6559,7 +6390,7 @@ namespace TorannMagic
                             {
                                 foreach (TMAbilityDef tmad in current.TMabilityDefs)
                                 {
-                                    if ((tmad == TorannMagicDefOf.TM_ShadowBolt || tmad == TorannMagicDefOf.TM_ShadowBolt_I || tmad == TorannMagicDefOf.TM_ShadowBolt_II || tmad == TorannMagicDefOf.TM_ShadowBolt_III))
+                                    if (tmad == TorannMagicDefOf.TM_ShadowBolt || tmad == TorannMagicDefOf.TM_ShadowBolt_I || tmad == TorannMagicDefOf.TM_ShadowBolt_II || tmad == TorannMagicDefOf.TM_ShadowBolt_III)
                                     {
                                         MagicPower magicPower = this.MagicData.MagicPowersWD.FirstOrDefault<MagicPower>((MagicPower x) => x.abilityDef == tmad);
                                         if (magicPower != null && magicPower.learned && magicPower.autocast)
@@ -6567,13 +6398,13 @@ namespace TorannMagic
                                             ability = this.AbilityData.Powers.FirstOrDefault((PawnAbility x) => x.Def == tmad);
                                             AutoCast.DamageSpell.Evaluate(this, tmad, ability, magicPower, out castSuccess);
                                             if (castSuccess) goto AutoCastExit;
-                                        }                                        
+                                        }
                                     }
                                 }
                             }
                         }
                     }
-                    if ((this.Pawn.story.traits.HasTrait(TorannMagicDefOf.Paladin) || flagCM || isCustom))
+                    if (this.Pawn.story.traits.HasTrait(TorannMagicDefOf.Paladin) || flagCM || isCustom)
                     {
                         PawnAbility ability = null;
                         foreach (MagicPower current in this.MagicData.MagicPowersP)
@@ -6592,7 +6423,7 @@ namespace TorannMagic
                                             if (castSuccess) goto AutoCastExit;
                                         }
                                     }
-                                    if ((tmad == TorannMagicDefOf.TM_Shield || tmad == TorannMagicDefOf.TM_Shield_I || tmad == TorannMagicDefOf.TM_Shield_II || tmad == TorannMagicDefOf.TM_Shield_III))
+                                    if (tmad == TorannMagicDefOf.TM_Shield || tmad == TorannMagicDefOf.TM_Shield_I || tmad == TorannMagicDefOf.TM_Shield_II || tmad == TorannMagicDefOf.TM_Shield_III)
                                     {
                                         MagicPower magicPower = this.MagicData.MagicPowersP.FirstOrDefault<MagicPower>((MagicPower x) => x.abilityDef == tmad);
                                         if (magicPower != null && magicPower.learned && magicPower.autocast)
@@ -6626,7 +6457,7 @@ namespace TorannMagic
                             }
                         }
                     }
-                    if ((this.spell_Heal && !this.Pawn.story.traits.HasTrait(TorannMagicDefOf.Paladin)))
+                    if (this.spell_Heal && !this.Pawn.story.traits.HasTrait(TorannMagicDefOf.Paladin))
                     {
                         MagicPower magicPower = this.MagicData.MagicPowersP.FirstOrDefault<MagicPower>((MagicPower x) => x.abilityDef == TorannMagicDefOf.TM_Heal);
                         if (magicPower.autocast)
@@ -6667,14 +6498,14 @@ namespace TorannMagic
                         }
                     }
                 }
-                AutoCastExit:;
+            AutoCastExit:;
             }
         }
 
         public void ResolveAIAutoCast()
         {
             ModOptions.SettingsRef settingsRef = new ModOptions.SettingsRef();
-            if (settingsRef.autocastEnabled && this.Pawn.jobs != null && this.Pawn.CurJob != null && this.Pawn.CurJob.def != TorannMagicDefOf.TMCastAbilityVerb && this.Pawn.CurJob.def != TorannMagicDefOf.TMCastAbilitySelf && 
+            if (settingsRef.autocastEnabled && this.Pawn.jobs != null && this.Pawn.CurJob != null && this.Pawn.CurJob.def != TorannMagicDefOf.TMCastAbilityVerb && this.Pawn.CurJob.def != TorannMagicDefOf.TMCastAbilitySelf &&
                 this.Pawn.CurJob.def != JobDefOf.Ingest && this.Pawn.CurJob.def != JobDefOf.ManTurret && this.Pawn.GetPosture() == PawnPosture.Standing)
             {
                 //Log.Message("pawn " + this.Pawn.LabelShort + " current job is " + this.Pawn.CurJob.def.defName);
@@ -6717,10 +6548,10 @@ namespace TorannMagic
                                             continue;
                                         }
                                         bool TE = mp.autocasting.targetEnemy && targetThing.Faction != null && targetThing.Faction.HostileTo(this.Pawn.Faction);
-                                        if(TE && targetThing is Pawn)
+                                        if (TE && targetThing is Pawn)
                                         {
                                             Pawn targetPawn = targetThing as Pawn;
-                                            if(targetPawn.Downed || targetPawn.IsPrisoner)
+                                            if (targetPawn.Downed || targetPawn.IsPrisoner)
                                             {
                                                 continue;
                                             }
@@ -6845,14 +6676,14 @@ namespace TorannMagic
                         }
                         if (castSuccess) goto AIAutoCastExit;
                     }
-                    AIAutoCastExit:;
+                AIAutoCastExit:;
                 }
             }
         }
 
         private void ResolveSpiritOfLight()
         {
-            if(this.SoL != null)
+            if (this.SoL != null)
             {
                 //if(!this.spell_CreateLight)
                 //{
@@ -6860,16 +6691,16 @@ namespace TorannMagic
                 //    this.AddPawnAbility(TorannMagicDefOf.TM_SoL_CreateLight);
                 //    this.spell_CreateLight = true;
                 //}
-                if(!this.spell_EqualizeLight)
+                if (!this.spell_EqualizeLight)
                 {
                     this.RemovePawnAbility(TorannMagicDefOf.TM_SoL_Equalize);
                     this.AddPawnAbility(TorannMagicDefOf.TM_SoL_Equalize);
                     this.spell_EqualizeLight = true;
                 }
             }
-            if(this.SoL == null)
+            if (this.SoL == null)
             {
-                if(this.spell_CreateLight || this.spell_EqualizeLight)
+                if (this.spell_CreateLight || this.spell_EqualizeLight)
                 {
                     //this.RemovePawnAbility(TorannMagicDefOf.TM_SoL_CreateLight);
                     this.RemovePawnAbility(TorannMagicDefOf.TM_SoL_Equalize);
@@ -6891,7 +6722,7 @@ namespace TorannMagic
             {
                 //Log.Message("stone");
                 Building mineTarget = this.earthSprites.GetFirstBuilding(this.earthSpriteMap);
-                this.nextEarthSpriteAction = Find.TickManager.TicksGame + Mathf.RoundToInt((300 * (1 - (.1f * magicPowerSkill.level))) / this.arcaneDmg);
+                this.nextEarthSpriteAction = Find.TickManager.TicksGame + Mathf.RoundToInt(300 * (1 - (.1f * magicPowerSkill.level)) / this.arcaneDmg);
                 TM_MoteMaker.ThrowGenericMote(ThingDef.Named("Mote_SparkFlash"), this.earthSprites.ToVector3Shifted(), this.earthSpriteMap, Rand.Range(2f, 5f), .05f, 0f, .1f, 0, 0f, 0f, 0f);
                 var mineable = mineTarget as Mineable;
                 int num = 80;
@@ -6972,7 +6803,7 @@ namespace TorannMagic
             else if (this.earthSpriteType == 2) //transforming soil
             {
                 //Log.Message("earth");
-                this.nextEarthSpriteAction = Find.TickManager.TicksGame + Mathf.RoundToInt((24000 * (1 - (.1f * magicPowerSkill.level))) / this.arcaneDmg);
+                this.nextEarthSpriteAction = Find.TickManager.TicksGame + Mathf.RoundToInt(24000 * (1 - (.1f * magicPowerSkill.level)) / this.arcaneDmg);
                 for (int m = 0; m < 4; m++)
                 {
                     TM_MoteMaker.ThrowGenericMote(ThingDef.Named("Mote_ThickDust"), this.earthSprites.ToVector3Shifted(), this.earthSpriteMap, Rand.Range(.3f, .5f), Rand.Range(.2f, .3f), .05f, Rand.Range(.4f, .6f), Rand.Range(-20, 20), Rand.Range(.5f, 1f), Rand.Range(0, 360), Rand.Range(0, 360));
@@ -7109,7 +6940,7 @@ namespace TorannMagic
                     bool flag5 = mote != null;
                     if (flag5)
                     {
-                        float value = (float)(this.powerModifier) / (float)(this.maxPower);
+                        float value = (float)this.powerModifier / (float)this.maxPower;
                         mote.progress = Mathf.Clamp01(value);
                         mote.offsetZ = +0.85f;
                     }
@@ -7121,20 +6952,7 @@ namespace TorannMagic
         {
             if (supportedUndead != null)
             {
-                List<Thing> tmpList = new List<Thing>();
-                tmpList.Clear();
-                for(int i =0; i < supportedUndead.Count; i++)
-                {
-                    Pawn p = supportedUndead[i] as Pawn;
-                    if(p.DestroyedOrNull() || p.Dead)
-                    {
-                        tmpList.Add(p);
-                    }
-                }
-                for(int i = 0; i < tmpList.Count; i++)
-                {
-                    supportedUndead.Remove(tmpList[i]);
-                }
+                supportedUndead.RemoveAll(x => (x is Pawn pawn) && (pawn.DestroyedOrNull() || pawn.Dead));
                 if (this.supportedUndead.Count > 0 && this.dismissUndeadSpell == false)
                 {
                     this.AddPawnAbility(TorannMagicDefOf.TM_DismissUndead);
@@ -7187,7 +7005,6 @@ namespace TorannMagic
                         List<Thought> otherThoughts = new List<Thought>();
                         otherPawn.needs.mood.thoughts.GetAllMoodThoughts(otherThoughts);
                         List<Thought_Memory> memoryThoughts = new List<Thought_Memory>();
-                        memoryThoughts.Clear();
                         float oldMemoryOffset = 0;
                         if (Rand.Chance(.3f)) //empathy absorbed by warlock
                         {
@@ -7256,13 +7073,9 @@ namespace TorannMagic
         {
             if (this.overdriveBuilding != null)
             {
-                List<Pawn> odPawns = ModOptions.Constants.GetOverdrivePawnList();
+                HashSet<Pawn> odPawns = ModOptions.Constants.GetOverdrivePawnList();
 
-                if (!odPawns.Contains(this.Pawn))
-                {
-                    odPawns.Add(this.Pawn);
-                    ModOptions.Constants.SetOverdrivePawnList(odPawns);
-                }
+                odPawns.Add(this.Pawn);
                 Vector3 rndPos = this.overdriveBuilding.DrawPos;
                 rndPos.x += Rand.Range(-.4f, .4f);
                 rndPos.z += Rand.Range(-.4f, .4f);
@@ -7279,7 +7092,7 @@ namespace TorannMagic
                 MagicPowerSkill damageControl = this.MagicData.MagicPowerSkill_Overdrive.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_Overdrive_ver");
                 if (Rand.Chance(.6f - (.06f * damageControl.level)))
                 {
-                    TM_Action.DamageEntities(this.overdriveBuilding, null, Rand.Range(3f, (7f - (1f * damageControl.level))), DamageDefOf.Burn, this.overdriveBuilding);
+                    TM_Action.DamageEntities(this.overdriveBuilding, null, Rand.Range(3f, 7f - (1f * damageControl.level)), DamageDefOf.Burn, this.overdriveBuilding);
                 }
                 this.overdriveFrequency = 100 + (10 * damageControl.level);
                 if (Rand.Chance(.4f))
@@ -7289,11 +7102,7 @@ namespace TorannMagic
                 this.overdriveDuration--;
                 if (this.overdriveDuration <= 0)
                 {
-                    if (odPawns != null && odPawns.Contains(this.Pawn))
-                    {
-                        odPawns.Remove(this.Pawn);
-                        ModOptions.Constants.SetOverdrivePawnList(odPawns);
-                    }
+                    odPawns.Remove(this.Pawn);
                     this.overdrivePowerOutput = 0;
                     this.overdriveBuilding = null;
                 }
@@ -7303,7 +7112,7 @@ namespace TorannMagic
         public void ResolveChronomancerTimeMark()
         {
             //Log.Message("pawn " + this.Pawn.LabelShort + " recallset: " + this.recallSet + " expiration: " + this.recallExpiration + " / " + Find.TickManager.TicksGame + " recallSpell: " + this.recallSpell + " position: " + this.recallPosition);
-            if(this.customClass != null && MagicData.MagicPowersC.FirstOrDefault((MagicPower x ) => x.abilityDef == TorannMagicDefOf.TM_Recall).learned && !MagicData.MagicPowersStandalone.FirstOrDefault((MagicPower x) => x.abilityDef == TorannMagicDefOf.TM_TimeMark).learned)
+            if (this.customClass != null && MagicData.MagicPowersC.FirstOrDefault((MagicPower x) => x.abilityDef == TorannMagicDefOf.TM_Recall).learned && !MagicData.MagicPowersStandalone.FirstOrDefault((MagicPower x) => x.abilityDef == TorannMagicDefOf.TM_TimeMark).learned)
             {
                 MagicData.MagicPowersStandalone.FirstOrDefault((MagicPower x) => x.abilityDef == TorannMagicDefOf.TM_TimeMark).learned = true;
                 this.RemovePawnAbility(TorannMagicDefOf.TM_TimeMark);
@@ -7355,7 +7164,7 @@ namespace TorannMagic
                 this.RemovePawnAbility(TorannMagicDefOf.TM_DispelStoneskin);
             }
 
-            if(this.bondedSpirit != null && !this.dismissGuardianSpirit)
+            if (this.bondedSpirit != null && !this.dismissGuardianSpirit)
             {
                 this.AddPawnAbility(TorannMagicDefOf.TM_DismissGuardianSpirit);
                 this.dismissGuardianSpirit = true;
@@ -7544,23 +7353,25 @@ namespace TorannMagic
 
             if (this.summonedMinions.Count > 0)
             {
-                for (int i = 0; i < this.summonedMinions.Count(); i++)
+                List<Thing> toRemove = new List<Thing>();
+                foreach (var minionThing in this.summonedMinions)
                 {
-                    Pawn minion = this.summonedMinions[i] as Pawn;
+                    Pawn minion = minionThing as Pawn;
                     if (minion != null)
                     {
                         if (minion.DestroyedOrNull() || minion.Dead)
                         {
-                            this.summonedMinions.Remove(this.summonedMinions[i]);
-                            i--;
+                            toRemove.Add(minionThing);
                         }
                     }
                     else
                     {
-                        this.summonedMinions.Remove(this.summonedMinions[i]);
-                        i--;
+                        toRemove.Add(minionThing);
                     }
                 }
+
+                foreach (var x in toRemove)
+                    this.summonedMinions.Remove(x);
             }
 
             if (this.earthSpriteType != 0 && dismissEarthSpriteSpell == false)
@@ -7638,9 +7449,9 @@ namespace TorannMagic
             bool flagCM = this.Pawn.story.traits.HasTrait(TorannMagicDefOf.ChaosMage);
             bool isCustom = this.customClass != null;
 
-            if(isCustom && this.customClass.classHediff != null && !this.Pawn.health.hediffSet.HasHediff(this.customClass.classHediff))
+            if (isCustom && this.customClass.classHediff != null && !this.Pawn.health.hediffSet.HasHediff(this.customClass.classHediff))
             {
-                HealthUtility.AdjustSeverity(this.Pawn, this.customClass.classHediff, this.customClass.hediffSeverity);                
+                HealthUtility.AdjustSeverity(this.Pawn, this.customClass.classHediff, this.customClass.hediffSeverity);
             }
 
             if (this.Pawn.story.traits.HasTrait(TorannMagicDefOf.BloodMage) || (isCustom && (this.customClass.classMageAbilities.Contains(TorannMagicDefOf.TM_BloodGift) || this.customClass.classHediff == TorannMagicDefOf.TM_BloodHD)))
@@ -7666,11 +7477,12 @@ namespace TorannMagic
             }
 
 
-            if(HexedPawns != null && HexedPawns.Count <= 0 && previousHexedPawns > 0)
+            var hexedPawns = HexedPawns;
+            if (hexedPawns != null && hexedPawns.Count <= 0 && previousHexedPawns > 0)
             {
-                if (HexedPawns.Count > 0)
+                if (hexedPawns.Count > 0)
                 {
-                    previousHexedPawns = HexedPawns.Count;
+                    previousHexedPawns = hexedPawns.Count;
                 }
                 else if (previousHexedPawns > 0)
                 {
@@ -7751,7 +7563,7 @@ namespace TorannMagic
                     shiftLoc.x += Rand.Range(-.3f, .3f);
                     shiftLoc.z += Rand.Range(-.3f, .3f);
                     TM_MoteMaker.ThrowGenericMote(TorannMagicDefOf.Mote_Twinkle, shiftLoc, this.Pawn.Map, Rand.Range(.6f, 1.4f), .15f, Rand.Range(.2f, .5f), Rand.Range(.2f, .5f), Rand.Range(-100, 100), Rand.Range(0f, .3f), Rand.Range(0, 360), 0);
-                    if(Rand.Chance(.3f))
+                    if (Rand.Chance(.3f))
                     {
                         shiftLoc = this.earthSprites.ToVector3Shifted();
                         shiftLoc.x += Rand.Range(-.3f, .3f);
@@ -7763,24 +7575,32 @@ namespace TorannMagic
 
             if (this.summonedSentinels.Count > 0)
             {
-                for (int i = 0; i < this.summonedSentinels.Count(); i++)
+                List<Thing> toRemove = new List<Thing>();
+                foreach (var summonedSentinal in this.summonedMinions)
                 {
-                    if (summonedSentinels[i].DestroyedOrNull())
+                    if (summonedSentinal.DestroyedOrNull())
                     {
-                        this.summonedSentinels.Remove(this.summonedSentinels[i]);
+                        toRemove.Add(summonedSentinal);
                     }
                 }
+
+                foreach (var x in toRemove)
+                    this.summonedSentinels.Remove(x);
             }
 
             if (this.lightningTraps.Count > 0)
             {
-                for (int i = 0; i < this.lightningTraps.Count(); i++)
+                var toRemove = new List<Thing>();
+                foreach (var trap in this.lightningTraps)
                 {
-                    if (lightningTraps[i].DestroyedOrNull())
+                    if (trap.DestroyedOrNull())
                     {
-                        this.lightningTraps.Remove(this.lightningTraps[i]);
+                        toRemove.Add(trap);
                     }
                 }
+
+                foreach (var x in toRemove)
+                    this.lightningTraps.Remove(x);
             }
 
             if (this.Pawn.story.traits.HasTrait(TorannMagicDefOf.Lich))
@@ -7805,6 +7625,7 @@ namespace TorannMagic
                     MagicPowerSkill bardtraining_pwr = this.Pawn.GetComp<CompAbilityUserMagic>().MagicData.MagicPowerSkill_BardTraining.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_BardTraining_pwr");
 
                     List<Trait> traits = this.Pawn.story.traits.allTraits;
+                    var toRemove = new HashSet<Trait>();
                     for (int i = 0; i < traits.Count; i++)
                     {
                         if (traits[i].def.defName == "TM_Bard")
@@ -7812,11 +7633,14 @@ namespace TorannMagic
                             if (traits[i].Degree != bardtraining_pwr.level)
                             {
                                 traits.Remove(traits[i]);
+                                toRemove.Add(traits[i]);
                                 this.Pawn.story.traits.GainTrait(new Trait(TorannMagicDefOf.TM_Bard, bardtraining_pwr.level, false));
                                 MoteMaker.ThrowHeatGlow(this.Pawn.Position, this.Pawn.Map, 2);
                             }
                         }
                     }
+
+                    traits.RemoveAll(x => toRemove.Contains(x));
                 }
 
                 if (this.Pawn.story.traits.HasTrait(TorannMagicDefOf.Succubus) || this.Pawn.story.traits.HasTrait(TorannMagicDefOf.Warlock))
@@ -7923,7 +7747,7 @@ namespace TorannMagic
                                 {
                                     _arcaneRes += .05f;
                                 }
-                                _arcalleumCooldown += (apparelWeight * (arcalleumFactor / 100));
+                                _arcalleumCooldown += apparelWeight * (arcalleumFactor / 100);
 
                             }
                             _maxMP += item.maxMP * enchantmentFactor;
@@ -7964,7 +7788,7 @@ namespace TorannMagic
                             {
                                 _arcaneDmg += .1f;
                             }
-                            _arcalleumCooldown += (this.Pawn.equipment.Primary.def.GetStatValueAbstract(StatDefOf.Mass, this.Pawn.equipment.Primary.Stuff) * (arcalleumFactor / 100f));
+                            _arcalleumCooldown += this.Pawn.equipment.Primary.def.GetStatValueAbstract(StatDefOf.Mass, this.Pawn.equipment.Primary.Stuff) * (arcalleumFactor / 100f);
 
                         }
                         else
@@ -7999,36 +7823,36 @@ namespace TorannMagic
             CleanupSummonedStructures();
 
             //Determine active or sustained hediffs and abilities
-            if(this.SoL != null)
+            if (this.SoL != null)
             {
-                _maxMPUpkeep += (TorannMagicDefOf.TM_SpiritOfLight.upkeepEnergyCost * (1 - (TorannMagicDefOf.TM_SpiritOfLight.upkeepEfficiencyPercent * this.MagicData.MagicPowerSkill_SpiritOfLight.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_SpiritOfLight_eff").level)));
-                _mpRegenRateUpkeep += (TorannMagicDefOf.TM_SpiritOfLight.upkeepRegenCost * (1 - (TorannMagicDefOf.TM_SpiritOfLight.upkeepEfficiencyPercent * this.MagicData.MagicPowerSkill_SpiritOfLight.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_SpiritOfLight_eff").level)));
+                _maxMPUpkeep += TorannMagicDefOf.TM_SpiritOfLight.upkeepEnergyCost * (1 - (TorannMagicDefOf.TM_SpiritOfLight.upkeepEfficiencyPercent * this.MagicData.MagicPowerSkill_SpiritOfLight.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_SpiritOfLight_eff").level));
+                _mpRegenRateUpkeep += TorannMagicDefOf.TM_SpiritOfLight.upkeepRegenCost * (1 - (TorannMagicDefOf.TM_SpiritOfLight.upkeepEfficiencyPercent * this.MagicData.MagicPowerSkill_SpiritOfLight.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_SpiritOfLight_eff").level));
             }
             if (this.summonedLights.Count > 0)
             {
-                _maxMPUpkeep += (this.summonedLights.Count * TorannMagicDefOf.TM_Sunlight.upkeepEnergyCost);
-                _mpRegenRateUpkeep += (this.summonedLights.Count * TorannMagicDefOf.TM_Sunlight.upkeepRegenCost);
+                _maxMPUpkeep += this.summonedLights.Count * TorannMagicDefOf.TM_Sunlight.upkeepEnergyCost;
+                _mpRegenRateUpkeep += this.summonedLights.Count * TorannMagicDefOf.TM_Sunlight.upkeepRegenCost;
             }
             if (this.summonedHeaters.Count > 0)
             {
-                _maxMPUpkeep += (this.summonedHeaters.Count * TorannMagicDefOf.TM_Heater.upkeepEnergyCost);
+                _maxMPUpkeep += this.summonedHeaters.Count * TorannMagicDefOf.TM_Heater.upkeepEnergyCost;
             }
             if (this.summonedCoolers.Count > 0)
             {
-                _maxMPUpkeep += (this.summonedCoolers.Count * TorannMagicDefOf.TM_Cooler.upkeepEnergyCost);
+                _maxMPUpkeep += this.summonedCoolers.Count * TorannMagicDefOf.TM_Cooler.upkeepEnergyCost;
             }
             if (this.summonedPowerNodes.Count > 0)
             {
-                _maxMPUpkeep += (this.summonedPowerNodes.Count * TorannMagicDefOf.TM_PowerNode.upkeepEnergyCost);
-                _mpRegenRateUpkeep += (this.summonedPowerNodes.Count * TorannMagicDefOf.TM_PowerNode.upkeepRegenCost);
+                _maxMPUpkeep += this.summonedPowerNodes.Count * TorannMagicDefOf.TM_PowerNode.upkeepEnergyCost;
+                _mpRegenRateUpkeep += this.summonedPowerNodes.Count * TorannMagicDefOf.TM_PowerNode.upkeepRegenCost;
             }
             if (this.weaponEnchants.Count > 0)
             {
-                _maxMPUpkeep += (this.weaponEnchants.Count * ActualManaCost(TorannMagicDefOf.TM_EnchantWeapon));
+                _maxMPUpkeep += this.weaponEnchants.Count * ActualManaCost(TorannMagicDefOf.TM_EnchantWeapon);
             }
             if (this.stoneskinPawns != null && this.stoneskinPawns.Count > 0)
             {
-                _maxMPUpkeep += (this.stoneskinPawns.Count * (TorannMagicDefOf.TM_Stoneskin.upkeepEnergyCost - (.02f * this.MagicData.GetSkill_Efficiency(TorannMagicDefOf.TM_Stoneskin).level)));
+                _maxMPUpkeep += this.stoneskinPawns.Count * (TorannMagicDefOf.TM_Stoneskin.upkeepEnergyCost - (.02f * this.MagicData.GetSkill_Efficiency(TorannMagicDefOf.TM_Stoneskin).level));
             }
             if (this.summonedSentinels != null && this.summonedSentinels.Count > 0)
             {
@@ -8036,18 +7860,18 @@ namespace TorannMagic
 
                 if (heartofstone.level == 3)
                 {
-                    _maxMPUpkeep += (.15f * this.summonedSentinels.Count);
+                    _maxMPUpkeep += .15f * this.summonedSentinels.Count;
                 }
                 else
                 {
-                    _maxMPUpkeep += ((.2f - (.02f * heartofstone.level)) * this.summonedSentinels.Count);
+                    _maxMPUpkeep += (.2f - (.02f * heartofstone.level)) * this.summonedSentinels.Count;
                 }
             }
             //Bonded spirit animal
             if (this.bondedSpirit != null)
             {
-                _maxMPUpkeep += (TorannMagicDefOf.TM_GuardianSpirit.upkeepEnergyCost * (1f - (TorannMagicDefOf.TM_GuardianSpirit.upkeepEfficiencyPercent * this.MagicData.GetSkill_Efficiency(TorannMagicDefOf.TM_GuardianSpirit).level)));
-                _mpRegenRateUpkeep += (TorannMagicDefOf.TM_GuardianSpirit.upkeepRegenCost * (1f - (TorannMagicDefOf.TM_GuardianSpirit.upkeepEfficiencyPercent * this.MagicData.GetSkill_Efficiency(TorannMagicDefOf.TM_GuardianSpirit).level)));
+                _maxMPUpkeep += TorannMagicDefOf.TM_GuardianSpirit.upkeepEnergyCost * (1f - (TorannMagicDefOf.TM_GuardianSpirit.upkeepEfficiencyPercent * this.MagicData.GetSkill_Efficiency(TorannMagicDefOf.TM_GuardianSpirit).level));
+                _mpRegenRateUpkeep += TorannMagicDefOf.TM_GuardianSpirit.upkeepRegenCost * (1f - (TorannMagicDefOf.TM_GuardianSpirit.upkeepEfficiencyPercent * this.MagicData.GetSkill_Efficiency(TorannMagicDefOf.TM_GuardianSpirit).level));
                 if (this.bondedSpirit.Dead || this.bondedSpirit.Destroyed)
                 {
                     this.bondedSpirit = null;
@@ -8060,10 +7884,10 @@ namespace TorannMagic
                 {
                     HealthUtility.AdjustSeverity(this.bondedSpirit, TorannMagicDefOf.TM_SpiritBondHD, .5f);
                 }
-                if(TorannMagicDefOf.TM_SpiritCrowR == this.GuardianSpiritType)
+                if (TorannMagicDefOf.TM_SpiritCrowR == this.GuardianSpiritType)
                 {
                     Hediff hd = this.Pawn.health.hediffSet.GetFirstHediffOfDef(TorannMagicDefOf.TM_CrowInsightHD);
-                    if(hd != null && hd.Severity != (.5f + this.MagicData.GetSkill_Power(TorannMagicDefOf.TM_GuardianSpirit).level))
+                    if (hd != null && hd.Severity != (.5f + this.MagicData.GetSkill_Power(TorannMagicDefOf.TM_GuardianSpirit).level))
                     {
                         this.Pawn.health.RemoveHediff(hd);
                         HealthUtility.AdjustSeverity(this.Pawn, TorannMagicDefOf.TM_CrowInsightHD, .5f + this.MagicData.GetSkill_Power(TorannMagicDefOf.TM_GuardianSpirit).level);
@@ -8076,14 +7900,18 @@ namespace TorannMagic
             }
             if (this.enchanterStones != null && this.enchanterStones.Count > 0)
             {
-                for (int i = 0; i < this.enchanterStones.Count; i++)
+                var toRemove = new List<Thing>();
+                foreach (var stone in this.enchanterStones)
                 {
-                    if (this.enchanterStones[i].DestroyedOrNull())
+                    if (stone.DestroyedOrNull())
                     {
-                        this.enchanterStones.Remove(this.enchanterStones[i]);
+                        toRemove.Add(stone);
                     }
                 }
-                _maxMPUpkeep += (this.enchanterStones.Count * (TorannMagicDefOf.TM_EnchanterStone.upkeepEnergyCost * (1f - TorannMagicDefOf.TM_EnchanterStone.upkeepEfficiencyPercent * this.MagicData.MagicPowerSkill_EnchanterStone.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_EnchanterStone_eff").level)));
+                foreach (var x in toRemove)
+                    this.enchanterStones.Remove(x);
+
+                _maxMPUpkeep += this.enchanterStones.Count * (TorannMagicDefOf.TM_EnchanterStone.upkeepEnergyCost * (1f - (TorannMagicDefOf.TM_EnchanterStone.upkeepEfficiencyPercent * this.MagicData.MagicPowerSkill_EnchanterStone.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_EnchanterStone_eff").level)));
             }
             try
             {
@@ -8135,13 +7963,13 @@ namespace TorannMagic
                             skill = this.MagicData.GetSkill_Efficiency(TorannMagicDefOf.TM_EnchantedBody);
                         }
 
-                        _maxMPUpkeep += (ability.upkeepEnergyCost * (1f - (ability.upkeepEfficiencyPercent * level)));
+                        _maxMPUpkeep += ability.upkeepEnergyCost * (1f - (ability.upkeepEfficiencyPercent * level));
 
                         if (ability == TorannMagicDefOf.TM_EnchantedAura || ability == TorannMagicDefOf.TM_EnchantedBody)
                         {
                             skill = this.MagicData.GetSkill_Versatility(TorannMagicDefOf.TM_EnchantedBody);
                         }
-                        _mpRegenRateUpkeep += (ability.upkeepRegenCost * (1f - (ability.upkeepEfficiencyPercent * level)));
+                        _mpRegenRateUpkeep += ability.upkeepRegenCost * (1f - (ability.upkeepEfficiencyPercent * level));
                     }
                     //else
                     //{
@@ -8196,19 +8024,19 @@ namespace TorannMagic
             }
 
             //class and global modifiers
-            _arcaneDmg += (.01f * this.MagicData.MagicPowerSkill_WandererCraft.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_WandererCraft_pwr").level);
-            _arcaneRes += (.02f * this.MagicData.MagicPowerSkill_WandererCraft.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_WandererCraft_pwr").level);
-            _mpCost -= (.01f * this.MagicData.MagicPowerSkill_WandererCraft.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_WandererCraft_eff").level);
-            _xpGain += (.02f * this.MagicData.MagicPowerSkill_WandererCraft.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_WandererCraft_eff").level);
-            _coolDown -= (.01f * this.MagicData.MagicPowerSkill_WandererCraft.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_WandererCraft_ver").level);
-            _mpRegenRate += (.01f * this.MagicData.MagicPowerSkill_WandererCraft.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_WandererCraft_ver").level);
-            _maxMP += (.02f * this.MagicData.MagicPowerSkill_WandererCraft.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_WandererCraft_ver").level);
+            _arcaneDmg += .01f * this.MagicData.MagicPowerSkill_WandererCraft.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_WandererCraft_pwr").level;
+            _arcaneRes += .02f * this.MagicData.MagicPowerSkill_WandererCraft.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_WandererCraft_pwr").level;
+            _mpCost -= .01f * this.MagicData.MagicPowerSkill_WandererCraft.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_WandererCraft_eff").level;
+            _xpGain += .02f * this.MagicData.MagicPowerSkill_WandererCraft.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_WandererCraft_eff").level;
+            _coolDown -= .01f * this.MagicData.MagicPowerSkill_WandererCraft.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_WandererCraft_ver").level;
+            _mpRegenRate += .01f * this.MagicData.MagicPowerSkill_WandererCraft.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_WandererCraft_ver").level;
+            _maxMP += .02f * this.MagicData.MagicPowerSkill_WandererCraft.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_WandererCraft_ver").level;
 
-            _maxMP += (.04f * this.MagicData.MagicPowerSkill_global_spirit.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_global_spirit_pwr").level);
-            _mpRegenRate += (.05f * this.MagicData.MagicPowerSkill_global_regen.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_global_regen_pwr").level);
-            _mpCost -= (.025f * this.MagicData.MagicPowerSkill_global_eff.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_global_eff_pwr").level);
-            _arcaneRes += ((1f - this.Pawn.GetStatValue(StatDefOf.PsychicSensitivity, false)) / 2f);
-            _arcaneDmg += ((this.Pawn.GetStatValue(StatDefOf.PsychicSensitivity, false) - 1f) / 4f);
+            _maxMP += .04f * this.MagicData.MagicPowerSkill_global_spirit.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_global_spirit_pwr").level;
+            _mpRegenRate += .05f * this.MagicData.MagicPowerSkill_global_regen.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_global_regen_pwr").level;
+            _mpCost -= .025f * this.MagicData.MagicPowerSkill_global_eff.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_global_eff_pwr").level;
+            _arcaneRes += (1f - this.Pawn.GetStatValue(StatDefOf.PsychicSensitivity, false)) / 2f;
+            _arcaneDmg += (this.Pawn.GetStatValue(StatDefOf.PsychicSensitivity, false) - 1f) / 4f;
 
             if (this.Pawn.story.traits.HasTrait(TorannMagicDefOf.TM_BoundlessTD))
             {
@@ -8219,13 +8047,13 @@ namespace TorannMagic
                 this.arcalleumCooldown = Mathf.Clamp(0f + _arcalleumCooldown, 0f, .5f);
             }
 
-            float val = (1f - (.03f * this.MagicData.MagicPowerSkill_Cantrips.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_Cantrips_eff").level));
+            float val = 1f - (.03f * this.MagicData.MagicPowerSkill_Cantrips.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_Cantrips_eff").level);
             _maxMPUpkeep *= val;
             _mpRegenRateUpkeep *= val;
 
             //resolve upkeep costs
-            _maxMP -= (_maxMPUpkeep);
-            _mpRegenRate -= (_mpRegenRateUpkeep);
+            _maxMP -= _maxMPUpkeep;
+            _mpRegenRate -= _mpRegenRateUpkeep;
 
             //finalize
             this.maxMP = Mathf.Clamp(1f + _maxMP, 0f, 5f);
@@ -8266,7 +8094,7 @@ namespace TorannMagic
                 {
                     HealthUtility.AdjustSeverity(this.Pawn, HediffDef.Named("TM_HediffEnchantment_dmgBonus"), .5f);
                 }
-                if(_arcalleumCooldown != 0 && !this.Pawn.health.hediffSet.HasHediff(HediffDef.Named("TM_HediffEnchantment_arcalleumCooldown")))
+                if (_arcalleumCooldown != 0 && !this.Pawn.health.hediffSet.HasHediff(HediffDef.Named("TM_HediffEnchantment_arcalleumCooldown")))
                 {
                     HealthUtility.AdjustSeverity(this.Pawn, HediffDef.Named("TM_HediffEnchantment_arcalleumCooldown"), .5f);
                 }
@@ -8274,7 +8102,7 @@ namespace TorannMagic
                 {
                     HealthUtility.AdjustSeverity(this.Pawn, HediffDef.Named("TM_HediffEnchantment_arcaneSpectre"), .5f);
                 }
-                else if(_arcaneSpectre == false && this.Pawn.health.hediffSet.HasHediff(HediffDef.Named("TM_HediffEnchantment_arcaneSpectre")))
+                else if (_arcaneSpectre == false && this.Pawn.health.hediffSet.HasHediff(HediffDef.Named("TM_HediffEnchantment_arcaneSpectre")))
                 {
                     this.Pawn.health.RemoveHediff(this.Pawn.health.hediffSet.GetFirstHediffOfDef(HediffDef.Named("TM_HediffEnchantment_arcaneSpectre")));
                 }
@@ -8285,52 +8113,17 @@ namespace TorannMagic
                 else if (_phantomShift == false && this.Pawn.health.hediffSet.HasHediff(HediffDef.Named("TM_HediffEnchantment_phantomShift")))
                 {
                     this.Pawn.health.RemoveHediff(this.Pawn.health.hediffSet.GetFirstHediffOfDef(HediffDef.Named("TM_HediffEnchantment_phantomShift")));
-                }               
+                }
             }
         }
 
         private void CleanupSummonedStructures()
         {
-            for (int i = 0; i < this.summonedLights.Count; i++)
-            {
-                if (this.summonedLights[i].DestroyedOrNull())
-                {
-                    this.summonedLights.Remove(this.summonedLights[i]);
-                    i--;
-                }
-            }
-            for (int i = 0; i < this.summonedHeaters.Count; i++)
-            {
-                if (this.summonedHeaters[i].DestroyedOrNull())
-                {
-                    this.summonedHeaters.Remove(this.summonedHeaters[i]);
-                    i--;
-                }
-            }
-            for (int i = 0; i < this.summonedCoolers.Count; i++)
-            {
-                if (this.summonedCoolers[i].DestroyedOrNull())
-                {
-                    this.summonedCoolers.Remove(this.summonedCoolers[i]);
-                    i--;
-                }
-            }
-            for (int i = 0; i < this.summonedPowerNodes.Count; i++)
-            {
-                if (this.summonedPowerNodes[i].DestroyedOrNull())
-                {
-                    this.summonedPowerNodes.Remove(this.summonedPowerNodes[i]);
-                    i--;
-                }
-            }
-            for (int i = 0; i < this.lightningTraps.Count; i++)
-            {
-                if (this.lightningTraps[i].DestroyedOrNull())
-                {
-                    this.lightningTraps.Remove(this.lightningTraps[i]);
-                    i--;
-                }
-            }
+            this.summonedLights.RemoveAll(x => x.DestroyedOrNull());
+            this.summonedHeaters.RemoveAll(x => x.DestroyedOrNull());
+            this.summonedCoolers.RemoveAll(x => x.DestroyedOrNull());
+            this.summonedPowerNodes.RemoveAll(x => x.DestroyedOrNull());
+            this.lightningTraps.RemoveAll(x => x.DestroyedOrNull());
         }
 
         public override void PostExposeData()
@@ -8457,14 +8250,14 @@ namespace TorannMagic
                 Pawn abilityUser = base.AbilityUser;
                 int index = TM_ClassUtility.IsCustomClassIndex(abilityUser.story.traits.allTraits);
                 if (index >= 0)
-                {                    
+                {
                     if (TM_ClassUtility.CustomClasses()[index].isMage)
                     {
                         this.customClass = TM_ClassUtility.CustomClasses()[index];
                         this.customIndex = index;
-                        for (int i = 0; i < this.customClass.classMageAbilities.Count; i++)
-                        {                            
-                            TMAbilityDef ability = customClass.classMageAbilities[i];
+                        foreach (var classAbility in this.customClass.classMageAbilities)
+                        {
+                            TMAbilityDef ability = classAbility;
 
                             for (int j = 0; j < this.MagicData.AllMagicPowers.Count; j++)
                             {
@@ -8474,9 +8267,9 @@ namespace TorannMagic
                                 {
                                     this.MagicData.AllMagicPowers[j].learned = false;
                                 }
-                                if (this.MagicData.AllMagicPowers[j].TMabilityDefs.Contains(this.customClass.classMageAbilities[i]) && this.MagicData.AllMagicPowers[j].learned)
+                                if (this.MagicData.AllMagicPowers[j].TMabilityDefs.Contains(classAbility) && this.MagicData.AllMagicPowers[j].learned)
                                 {
-                                    if (this.customClass.classMageAbilities[i].shouldInitialize)
+                                    if (classAbility.shouldInitialize)
                                     {
                                         int level = this.MagicData.AllMagicPowers[j].level;
                                         base.AddPawnAbility(this.MagicData.AllMagicPowers[j].TMabilityDefs[level]);
@@ -8491,7 +8284,7 @@ namespace TorannMagic
                                                 base.AddPawnAbility(TorannMagicDefOf.TM_LightSkipGlobal);
                                             }
                                         }
-                                        if(this.customClass.classMageAbilities[i] == TorannMagicDefOf.TM_Hex && this.HexedPawns.Count > 0)
+                                        if (classAbility == TorannMagicDefOf.TM_Hex && this.HexedPawns.Count > 0)
                                         {
                                             RemovePawnAbility(TorannMagicDefOf.TM_Hex_CriticalFail);
                                             RemovePawnAbility(TorannMagicDefOf.TM_Hex_MentalAssault);
@@ -8510,7 +8303,7 @@ namespace TorannMagic
                                                 this.AddPawnAbility(ability.childAbilities[c]);
                                             }
                                         }
-                                    }                                    
+                                    }
                                 }
                             }
                         }
@@ -8925,7 +8718,7 @@ namespace TorannMagic
                                             base.AddPawnAbility(TorannMagicDefOf.TM_CorpseExplosion_III);
                                         }
                                     }
-                                    if (abilityUser.story.traits.HasTrait(TorannMagicDefOf.Lich) && (current10.learned == true && (current10.abilityDef == TorannMagicDefOf.TM_DeathBolt || current10.abilityDef == TorannMagicDefOf.TM_DeathBolt_I || current10.abilityDef == TorannMagicDefOf.TM_DeathBolt_II || current10.abilityDef == TorannMagicDefOf.TM_DeathBolt_III)))
+                                    if (abilityUser.story.traits.HasTrait(TorannMagicDefOf.Lich) && current10.learned == true && (current10.abilityDef == TorannMagicDefOf.TM_DeathBolt || current10.abilityDef == TorannMagicDefOf.TM_DeathBolt_I || current10.abilityDef == TorannMagicDefOf.TM_DeathBolt_II || current10.abilityDef == TorannMagicDefOf.TM_DeathBolt_III))
                                     {
                                         if (current10.level == 0)
                                         {
@@ -9642,9 +9435,7 @@ namespace TorannMagic
                         {
                             this.AddPawnAbility(TorannMagicDefOf.TM_ChaosTradition);
                             this.chaosPowers = new List<TM_ChaosPowers>();
-                            this.chaosPowers.Clear();
                             List<MagicPower> learnedList = new List<MagicPower>();
-                            learnedList.Clear();
                             for (int i = 0; i < this.MagicData.AllMagicPowersForChaosMage.Count; i++)
                             {
                                 MagicPower mp = this.MagicData.AllMagicPowersForChaosMage[i];
@@ -9659,21 +9450,21 @@ namespace TorannMagic
                                 if (i < count)
                                 {
                                     this.chaosPowers.Add(new TM_ChaosPowers((TMAbilityDef)learnedList[i].GetAbilityDef(0), TM_ClassUtility.GetAssociatedMagicPowerSkill(this, learnedList[i])));
-                                    foreach(MagicPower mp in learnedList)
+                                    foreach (MagicPower mp in learnedList)
                                     {
                                         for (int j = 0; j < mp.TMabilityDefs.Count; j++)
                                         {
                                             TMAbilityDef tmad = mp.TMabilityDefs[j] as TMAbilityDef;
-                                            if(tmad.shouldInitialize)
+                                            if (tmad.shouldInitialize)
                                             {
                                                 RemovePawnAbility(tmad);
                                                 AddPawnAbility(tmad);
                                             }
-                                            if(tmad.childAbilities != null && tmad.childAbilities.Count > 0)
+                                            if (tmad.childAbilities != null && tmad.childAbilities.Count > 0)
                                             {
-                                                foreach(TMAbilityDef ad in tmad.childAbilities)
+                                                foreach (TMAbilityDef ad in tmad.childAbilities)
                                                 {
-                                                    if(ad.shouldInitialize)
+                                                    if (ad.shouldInitialize)
                                                     {
                                                         RemovePawnAbility(ad);
                                                         AddPawnAbility(ad);
@@ -9699,7 +9490,7 @@ namespace TorannMagic
 
         public void UpdateAutocastDef()
         {
-            IEnumerable<TM_CustomPowerDef> mpDefs = TM_Data.CustomMagePowerDefs();
+            IEnumerable<TM_CustomPowerDef> mpDefs = TM_Data.CustomMagePowerDefs;
             if (this.IsMagicUser && this.MagicData != null && this.MagicData.MagicPowersCustom != null)
             {
                 foreach (MagicPower mp in this.MagicData.MagicPowersCustom)
@@ -9719,9 +9510,10 @@ namespace TorannMagic
         }
 
         private Dictionary<string, Command> gizmoCommands = new Dictionary<string, Command>();
+
         public Command GetGizmoCommands(string key)
         {
-            if (!gizmoCommands.ContainsKey(key))
+            if (!gizmoCommands.TryGetValue(key, out var value))
             {
                 Pawn p = this.Pawn;
                 if (key == "wanderer")
@@ -9738,8 +9530,9 @@ namespace TorannMagic
                         icon = ContentFinder<Texture2D>.Get("UI/wanderer", true),
                     };
                     gizmoCommands.Add(key, itemWanderer);
+                    value = itemWanderer;
                 }
-                if(key == "technoBit")
+                else if (key == "technoBit")
                 {
                     String toggle = "bit_c";
                     String label = "TM_TechnoBitEnabled".Translate();
@@ -9762,8 +9555,9 @@ namespace TorannMagic
                         icon = ContentFinder<Texture2D>.Get("UI/" + toggle, true)
                     };
                     gizmoCommands.Add(key, item);
+                    value = item;
                 }
-                if(key == "technoRepair")
+                else if (key == "technoRepair")
                 {
                     String toggle_repair = "bit_repairon";
                     String label_repair = "TM_TechnoBitRepair".Translate();
@@ -9785,8 +9579,9 @@ namespace TorannMagic
                         icon = ContentFinder<Texture2D>.Get("UI/" + toggle_repair, true)
                     };
                     gizmoCommands.Add(key, item_repair);
+                    value = item_repair;
                 }
-                if(key == "elementalShot")
+                else if (key == "elementalShot")
                 {
                     String toggle = "elementalshot";
                     String label = "TM_TechnoWeapon_ver".Translate();
@@ -9808,16 +9603,16 @@ namespace TorannMagic
                         icon = ContentFinder<Texture2D>.Get("UI/" + toggle, true)
                     };
                     gizmoCommands.Add(key, item);
+
+                    value = item;
+                }
+                else
+                {
+                    value = null;
                 }
             }
-            if (gizmoCommands.ContainsKey(key))
-            {
-                return gizmoCommands[key];
-            }
-            else
-            {
-                return null;
-            }
+
+            return value;
         }
     }
 }

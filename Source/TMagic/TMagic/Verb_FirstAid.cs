@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using RimWorld;
 using AbilityUser;
 using Verse;
-using UnityEngine;
 
 
 namespace TorannMagic
@@ -36,7 +34,7 @@ namespace TorannMagic
                         IEnumerable<Hediff_Injury> arg_BB_0 = caster.health.hediffSet.GetHediffs<Hediff_Injury>();
                         Func<Hediff_Injury, bool> arg_BB_1;
 
-                        arg_BB_1 = ((Hediff_Injury injury) => injury.Part == rec);
+                        arg_BB_1 = (Hediff_Injury injury) => injury.Part == rec;
 
                         if (num > 0)
                         {
@@ -48,7 +46,7 @@ namespace TorannMagic
                                     bool flag5 = current.CanHealNaturally() && !current.IsPermanent() && current.TendableNow();
                                     if (flag5)
                                     {
-                                        current.Tended(Rand.Range(0,0.4f) + (.1f * verVal));
+                                        current.Tended(Rand.Range(0, 0.4f) + (.1f * verVal));
                                         num--;
                                         num2--;
                                     }

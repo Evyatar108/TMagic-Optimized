@@ -64,10 +64,10 @@ namespace TorannMagic
                     verVal = 3;
                 }
             }
-            else if(pawn.def == TorannMagicDefOf.TM_SkeletonLichR)
+            else if (pawn.def == TorannMagicDefOf.TM_SkeletonLichR)
             {
-                pwrVal = Rand.RangeInclusive(0,3);
-                verVal = Rand.RangeInclusive(0,3);
+                pwrVal = Rand.RangeInclusive(0, 3);
+                verVal = Rand.RangeInclusive(0, 3);
             }
 
             if (!this.initialized)
@@ -76,10 +76,10 @@ namespace TorannMagic
                 this.duration = this.duration + (180 * verVal);
                 this.strikeDelay = this.strikeDelay - (18 * verVal);
 
-                fog.gas.expireSeconds.min = this.duration/60;
-                fog.gas.expireSeconds.max = this.duration/60;
+                fog.gas.expireSeconds.min = this.duration / 60;
+                fog.gas.expireSeconds.max = this.duration / 60;
                 GenExplosion.DoExplosion(base.Position, map, this.def.projectile.explosionRadius + verVal, TMDamageDefOf.DamageDefOf.TM_Torment, this.launcher, 0, 0, this.def.projectile.soundExplode, def, this.equipmentDef, null, fog, 1f, 1, false, null, 0f, 0, 0.0f, false);
-                
+
                 this.initialized = true;
             }
 
@@ -87,16 +87,16 @@ namespace TorannMagic
             {
                 IntVec3 curCell;
                 IEnumerable<IntVec3> targets = GenRadial.RadialCellsAround(base.Position, this.def.projectile.explosionRadius + verVal, true);
-                for (int i = 0; i < targets.Count(); i++)
+                foreach (var cell in targets)
                 {
-                    curCell = targets.ToArray<IntVec3>()[i];
+                    curCell = cell;
 
                     if (curCell.InBounds(map) && curCell.IsValid)
                     {
                         victim = curCell.GetFirstPawn(map);
-                        if(victim != null && !victim.Dead && victim.RaceProps.IsFlesh)
+                        if (victim != null && !victim.Dead && victim.RaceProps.IsFlesh)
                         {
-                            if(TM_Calc.IsUndead(victim) || victim.needs.food == null)
+                            if (TM_Calc.IsUndead(victim) || victim.needs.food == null)
                             {
                                 //heals undead
                                 int num = 1;
@@ -113,7 +113,7 @@ namespace TorannMagic
                                             IEnumerable<Hediff_Injury> arg_BB_0 = victim.health.hediffSet.GetHediffs<Hediff_Injury>();
                                             Func<Hediff_Injury, bool> arg_BB_1;
 
-                                            arg_BB_1 = ((Hediff_Injury injury) => injury.Part == rec);
+                                            arg_BB_1 = (Hediff_Injury injury) => injury.Part == rec;
 
                                             foreach (Hediff_Injury current in arg_BB_0.Where(arg_BB_1))
                                             {
@@ -146,7 +146,7 @@ namespace TorannMagic
                 }
                 this.lastStrike = this.age;
             }
-        }            
+        }
 
         public override void ExposeData()
         {
@@ -168,16 +168,16 @@ namespace TorannMagic
             if (this.launcher != null && this.launcher is Pawn)
             {
                 Pawn caster = this.launcher as Pawn;
-                dinfo = new DamageInfo(type, amt, 0, (float)-1, caster, null, null, DamageInfo.SourceCategory.ThingOrUnknown);                
+                dinfo = new DamageInfo(type, amt, 0, (float)-1, caster, null, null, DamageInfo.SourceCategory.ThingOrUnknown);
             }
             bool flag = e != null;
             if (flag)
             {
                 e.TakeDamage(dinfo);
             }
-            
+
         }
-    }    
+    }
 }
 
 

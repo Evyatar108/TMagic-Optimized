@@ -1,5 +1,4 @@
 ﻿using RimWorld;
-using System;
 using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
@@ -47,9 +46,6 @@ namespace TorannMagic
         public int weaponDmg = 0;
 
         Pawn pawn;
-
-        //local variables
-        float targetCellRadius = 4;
         float circleFlightSpeed = 10;
         float circleRadius = 10;
         int attackFrequencyLow = 10;
@@ -81,8 +77,8 @@ namespace TorannMagic
         {
             get
             {
-                Vector3 b = (this.destination - this.origin) * (1f - (float)this.ticksToImpact / (float)this.StartingTicksToImpact);
-                return this.origin + b + Vector3.up * this.def.Altitude;
+                Vector3 b = (this.destination - this.origin) * (1f - ((float)this.ticksToImpact / (float)this.StartingTicksToImpact));
+                return this.origin + b + (Vector3.up * this.def.Altitude);
             }
         }
 
@@ -131,9 +127,7 @@ namespace TorannMagic
                 MoteMaker.MakeStaticMote(pawn.TrueCenter(), pawn.Map, ThingDefOf.Mote_ExplosionFlash, 12f);
                 MoteMaker.ThrowDustPuff(pawn.Position, pawn.Map, Rand.Range(1.2f, 1.8f));
                 this.curvePoints = new List<Vector3>();
-                this.curvePoints.Clear();
                 this.targetCells = new List<IntVec3>();
-                this.targetCells.Clear();
                 this.targetCells = GenRadial.RadialCellsAround(this.targetCenter.ToIntVec3(), 4, true).ToList();
                 this.verVal = pawn.GetComp<CompAbilityUserMight>().MightData.MightPowerSkill_PsionicStorm.FirstOrDefault((MightPowerSkill x) => x.label == "TM_PsionicStorm_ver").level;
             }
@@ -183,11 +177,9 @@ namespace TorannMagic
         public void CalculateCurvePoints(Vector3 start, Vector3 end, float variance)
         {
             this.destinationCurvePoint = 0;
-            this.curvePoints.Clear();
             int variancePoints = 20;
             Vector3 initialVector = GetVector(start, end);
             initialVector.y = 0;
-            float initialAngle = (initialVector).ToAngleFlat(); //Quaternion.AngleAxis(90, Vector3.up) *
             if (this.curveAngle == 0)
             {
                 if (Rand.Chance(.5f))
@@ -207,14 +199,14 @@ namespace TorannMagic
             //calculate extra distance bolt travels around the ellipse
             float a = .5f * Vector3.Distance(start, end);
             float b = a * Mathf.Sin(.5f * Mathf.Deg2Rad * Mathf.Abs(this.curveAngle));
-            float p = .5f * Mathf.PI * (3 * (a + b) - (Mathf.Sqrt((3 * a + b) * (a + 3 * b))));
+            float p = .5f * Mathf.PI * ((3 * (a + b)) - Mathf.Sqrt(((3 * a) + b) * (a + (3 * b))));
 
             float incrementalDistance = p / variancePoints;
-            float incrementalAngle = (variance / variancePoints) * 2;
+            float incrementalAngle = variance / variancePoints * 2;
             this.curvePoints.Add(start);
             for (int i = 1; i < variancePoints; i++)
             {
-                this.curvePoints.Add(this.curvePoints[i - 1] + ((Quaternion.AngleAxis(variance, Vector3.up) * initialVector) * incrementalDistance)); //(Quaternion.AngleAxis(curveAngle, Vector3.up) *
+                this.curvePoints.Add(this.curvePoints[i - 1] + (Quaternion.AngleAxis(variance, Vector3.up) * initialVector * incrementalDistance)); //(Quaternion.AngleAxis(curveAngle, Vector3.up) *
                 variance -= incrementalAngle;
             }
         }
@@ -232,7 +224,7 @@ namespace TorannMagic
                 TM_MoteMaker.ThrowGenericMote(ThingDef.Named("Mote_PsiBlastStart"), drawPos, base.Map, Rand.Range(.4f, .6f), Rand.Range(.0f, .05f), 0f, .1f, 0, 0, 0, angle); //throw psi blast start
                 TM_MoteMaker.ThrowGenericMote(ThingDef.Named("Mote_PsiBlastEnd"), drawPos, base.Map, Rand.Range(.4f, .8f), Rand.Range(.0f, .1f), .2f, .3f, 0, Rand.Range(1f, 1.5f), angle, angle); //throw psi blast end 
                 this.TryLaunchProjectile(ThingDef.Named("TM_Projectile_PsionicBlast"), targetVariation);
-                this.nextAttackTick = Find.TickManager.TicksGame + Mathf.RoundToInt(Rand.Range(attackFrequencyLow, attackFrequencyHigh) * (1 - .1f * this.verVal));
+                this.nextAttackTick = Find.TickManager.TicksGame + Mathf.RoundToInt(Rand.Range(attackFrequencyLow, attackFrequencyHigh) * (1 - (.1f * this.verVal)));
             }
             if (flag)
             {
@@ -264,10 +256,10 @@ namespace TorannMagic
                         this.destination = this.curvePoints[this.destinationCurvePoint];
                         this.speed = this.circleFlightSpeed;
                         this.ticksToImpact = this.StartingTicksToImpact;
-                        this.nextAttackTick = Find.TickManager.TicksGame + Mathf.RoundToInt(Rand.Range(attackFrequencyLow, attackFrequencyHigh) * (1 - .1f * this.verVal));
-                        this.stage = 1;                        
+                        this.nextAttackTick = Find.TickManager.TicksGame + Mathf.RoundToInt(Rand.Range(attackFrequencyLow, attackFrequencyHigh) * (1 - (.1f * this.verVal)));
+                        this.stage = 1;
                     }
-                    else if(this.stage == 1)
+                    else if (this.stage == 1)
                     {
                         if ((this.curvePoints.Count() - 1) > this.destinationCurvePoint)
                         {
@@ -286,7 +278,7 @@ namespace TorannMagic
                             this.stage = 2;
                         }
                     }
-                    else if(this.stage == 2)
+                    else if (this.stage == 2)
                     {
                         if ((this.curvePoints.Count() - 1) > this.destinationCurvePoint)
                         {
@@ -310,7 +302,7 @@ namespace TorannMagic
                         this.origin = this.nearApex;
                         this.destination = this.trueOrigin;
                         this.ticksToImpact = this.StartingTicksToImpact;
-                        this.stage = 4;                        
+                        this.stage = 4;
                     }
                     else
                     {
@@ -322,10 +314,10 @@ namespace TorannMagic
                         this.ImpactSomething();
                     }
                 }
-                
+
             }
         }
-               
+
         public override void Draw()
         {
             bool flag = this.flyingThing != null;
@@ -352,7 +344,6 @@ namespace TorannMagic
                 bool flag2 = this.flyingThing is Pawn;
                 if (flag2)
                 {
-                    Vector3 arg_2B_0 = this.DrawPos;
                     bool flag3 = false;
                     if (flag3)
                     {
@@ -376,15 +367,15 @@ namespace TorannMagic
 
         private void TryLaunchProjectile(ThingDef projectileDef, LocalTargetInfo launchTarget)
         {
-                Vector3 drawPos = this.ExactPosition; 
-                Projectile_AbilityBase projectile_AbilityBase = (Projectile_AbilityBase)GenSpawn.Spawn(projectileDef, this.ExactPosition.ToIntVec3(), this.Map);
-                //ShotReport shotReport = ShotReport.HitReportFor(this.pawn, this.verb, launchTarget);
-                SoundDef expr_C8 = TorannMagicDefOf.TM_AirWoosh;
-                if (expr_C8 != null)
-                {
-                    SoundStarter.PlayOneShot(expr_C8, new TargetInfo(this.ExactPosition.ToIntVec3(), this.Map, false));
-                }
-                projectile_AbilityBase.Launch(this.pawn, TorannMagicDefOf.TM_PsionicBlast, drawPos, launchTarget, ProjectileHitFlags.All, null, null, null, null);
+            Vector3 drawPos = this.ExactPosition;
+            Projectile_AbilityBase projectile_AbilityBase = (Projectile_AbilityBase)GenSpawn.Spawn(projectileDef, this.ExactPosition.ToIntVec3(), this.Map);
+            //ShotReport shotReport = ShotReport.HitReportFor(this.pawn, this.verb, launchTarget);
+            SoundDef expr_C8 = TorannMagicDefOf.TM_AirWoosh;
+            if (expr_C8 != null)
+            {
+                SoundStarter.PlayOneShot(expr_C8, new TargetInfo(this.ExactPosition.ToIntVec3(), this.Map, false));
+            }
+            projectile_AbilityBase.Launch(this.pawn, TorannMagicDefOf.TM_PsionicBlast, drawPos, launchTarget, ProjectileHitFlags.All, null, null, null, null);
         }
 
         private void ImpactSomething()
@@ -415,7 +406,7 @@ namespace TorannMagic
             if (flag)
             {
                 Pawn pawn;
-                bool flag2 = (pawn = (base.Position.GetThingList(base.Map).FirstOrDefault((Thing x) => x == this.assignedTarget) as Pawn)) != null;
+                bool flag2 = (pawn = base.Position.GetThingList(base.Map).FirstOrDefault((Thing x) => x == this.assignedTarget) as Pawn) != null;
                 if (flag2)
                 {
                     hitThing = pawn;
@@ -445,7 +436,7 @@ namespace TorannMagic
             GenSpawn.Spawn(this.flyingThing, base.Position, base.Map);
             ModOptions.Constants.SetPawnInFlight(false);
             Pawn p = this.flyingThing as Pawn;
-            if(p.IsColonist)
+            if (p.IsColonist)
             {
                 p.drafter.Drafted = true;
                 CameraJumper.TryJumpAndSelect(p);
@@ -455,7 +446,7 @@ namespace TorannMagic
 
         public Vector3 GetVector(Vector3 center, Vector3 objectPos)
         {
-            Vector3 heading = (objectPos - center);
+            Vector3 heading = objectPos - center;
             float distance = heading.magnitude;
             Vector3 direction = heading / distance;
             return direction;

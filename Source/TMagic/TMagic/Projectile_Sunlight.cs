@@ -1,7 +1,6 @@
 ﻿using RimWorld;
 using AbilityUser;
 using Verse;
-using System.Linq;
 
 namespace TorannMagic
 {
@@ -13,10 +12,7 @@ namespace TorannMagic
 
         protected override void Impact(Thing hitThing)
         {
-            Map map = base.Map;            
-            ThingDef def = this.def;
-            Pawn victim = hitThing as Pawn;
-            Thing item = hitThing as Thing;
+            Map map = base.Map;
             IntVec3 arg_pos_1;
 
             Pawn pawn = this.launcher as Pawn;
@@ -29,12 +25,12 @@ namespace TorannMagic
             if (!this.primed)
             {
                 arg_pos_1 = centerCell;
-                if ((arg_pos_1.IsValid && arg_pos_1.Standable(map)))
+                if (arg_pos_1.IsValid && arg_pos_1.Standable(map))
                 {
                     AbilityUser.SpawnThings tempPod = new SpawnThings();
                     IntVec3 shiftPos = centerCell;
                     centerCell.x++;
-                    tempPod.def = ThingDef.Named("TM_Sunlight");                    
+                    tempPod.def = ThingDef.Named("TM_Sunlight");
                     tempPod.spawnCount = 1;
                     try
                     {

@@ -1,5 +1,4 @@
 ﻿using RimWorld;
-using System;
 using System.Collections.Generic;
 using Verse;
 using UnityEngine;
@@ -19,7 +18,7 @@ namespace TorannMagic.Thoughts
             CompAbilityUserMagic compRec = recipient.GetComp<CompAbilityUserMagic>();
             //base.Interacted(initiator, recipient, extraSentencePacks);
             int num = compInit.MagicUserLevel - compRec.MagicUserLevel;
-            int num2 = Mathf.RoundToInt(Mathf.Clamp((int)(25f + Rand.Range(5f, 75f) + num),0, 200) * compRec.xpGain);
+            int num2 = Mathf.RoundToInt(Mathf.Clamp((int)(25f + Rand.Range(5f, 75f) + num), 0, 200) * compRec.xpGain);
             compRec.MagicUserXP += num2;
             MoteMaker.ThrowText(recipient.DrawPos, recipient.MapHeld, "XP +" + num2, -1f);
         }
@@ -34,7 +33,7 @@ namespace TorannMagic.Thoughts
             {
                 result = 0f;
             }
-            else if(compInit != null && compRec != null)
+            else if (compInit != null && compRec != null)
             {
                 bool flag2 = !compInit.IsMagicUser;
                 if (flag2)
@@ -70,7 +69,7 @@ namespace TorannMagic.Thoughts
                                 }
                                 else
                                 {
-                                    bool flag5 = (initiator.relations !=  null && initiator.relations.OpinionOf(recipient) > 0) || (recipient.relations != null && recipient.relations.OpinionOf(initiator) > 0);
+                                    bool flag5 = (initiator.relations != null && initiator.relations.OpinionOf(recipient) > 0) || (recipient.relations != null && recipient.relations.OpinionOf(initiator) > 0);
                                     if (flag5)
                                     {
                                         result = Rand.Range(0.6f, 0.8f);

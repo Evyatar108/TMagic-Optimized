@@ -29,8 +29,7 @@ namespace TorannMagic
             {
                 if ((root - targ.Cell).LengthHorizontal < this.verbProps.range)
                 {
-                    ShootLine shootLine;
-                    validTarg = this.TryFindShootLineFromTo(root, targ, out shootLine);
+                    validTarg = this.TryFindShootLineFromTo(root, targ, out _);
                 }
                 else
                 {
@@ -53,12 +52,12 @@ namespace TorannMagic
             float weaponDPS = weaponComp.GetStatValue(StatDefOf.MeleeWeapon_AverageDPS, false) * .7f;
             float dmgMultiplier = weaponComp.GetStatValue(StatDefOf.MeleeWeapon_DamageMultiplier, false);
             float pawnDPS = pawn.GetStatValue(StatDefOf.MeleeDPS, false);
-            float skillMultiplier = (.6f ) * comp.mightPwr;
+            float skillMultiplier = .6f * comp.mightPwr;
             return dmgNum = Mathf.RoundToInt(skillMultiplier * dmgMultiplier * (pawnDPS + weaponDPS));
         }
 
         protected override bool TryCastShot()
-        {            
+        {
             if (this.CasterPawn.equipment.Primary != null && !this.CasterPawn.equipment.Primary.def.IsRangedWeapon)
             {
                 CompAbilityUserMight comp = this.CasterPawn.GetComp<CompAbilityUserMight>();
@@ -78,18 +77,15 @@ namespace TorannMagic
                 CellRect cellRect = CellRect.CenteredOn(base.CasterPawn.Position, 1);
                 Map map = base.CasterPawn.Map;
                 cellRect.ClipInsideMap(map);
-
-                IntVec3 centerCell = cellRect.CenterCell;                
                 TMAbilityDef ad = (TMAbilityDef)this.Ability.Def;
                 int dmgNum = Mathf.RoundToInt(comp.weaponDamage * ad.weaponDamageFactor);
                 ModOptions.SettingsRef settingsRef = new ModOptions.SettingsRef();
                 if (!this.CasterPawn.IsColonist && settingsRef.AIHardMode)
                 {
-                    dmgNum += 10;
                 }
 
-                SearchForTargets(base.CasterPawn.Position, (2f + (float)(.5f * verVal)), map);
-                TM_MoteMaker.ThrowGenericMote(ThingDef.Named("Mote_BladeSweep"), this.CasterPawn.DrawPos, this.CasterPawn.Map, 1.6f + .4f * verVal, .04f, 0f, .18f, 1000, 0, 0, Rand.Range(0, 360));
+                SearchForTargets(base.CasterPawn.Position, 2f + (float)(.5f * verVal), map);
+                TM_MoteMaker.ThrowGenericMote(ThingDef.Named("Mote_BladeSweep"), this.CasterPawn.DrawPos, this.CasterPawn.Map, 1.6f + (.4f * verVal), .04f, 0f, .18f, 1000, 0, 0, Rand.Range(0, 360));
             }
             else
             {
@@ -108,12 +104,12 @@ namespace TorannMagic
         public void SearchForTargets(IntVec3 center, float radius, Map map)
         {
             Pawn victim = null;
-            IntVec3 curCell;            
-            DrawBlade(base.CasterPawn.Position.ToVector3Shifted(), 4f + (float)(verVal));
+            IntVec3 curCell;
+            DrawBlade(base.CasterPawn.Position.ToVector3Shifted(), 4f + (float)verVal);
             IEnumerable<IntVec3> targets = GenRadial.RadialCellsAround(center, radius, true);
-            for (int i = 0; i < targets.Count(); i++)
+            foreach (var cell in targets)
             {
-                curCell = targets.ToArray<IntVec3>()[i];
+                curCell = cell;
                 if (curCell.InBounds(base.CasterPawn.Map) && curCell.IsValid)
                 {
                     victim = curCell.GetFirstPawn(map);
@@ -121,10 +117,10 @@ namespace TorannMagic
 
                 if (victim != null && victim != base.CasterPawn && victim.Faction != base.CasterPawn.Faction)
                 {
-                    for (int j = 0; j < 2+pwrVal; j++)
+                    for (int j = 0; j < 2 + pwrVal; j++)
                     {
                         bool newTarg = false;
-                        if (Rand.Chance(.5f + .04f*(pwrVal+verVal)))
+                        if (Rand.Chance(.5f + (.04f * (pwrVal + verVal))))
                         {
                             newTarg = true;
                         }
@@ -133,9 +129,8 @@ namespace TorannMagic
                             DrawStrike(center, victim.Position.ToVector3(), map);
                             damageEntities(victim, null, GetWeaponDmg(this.CasterPawn), DamageDefOf.Cut);
                         }
-                    }                    
+                    }
                 }
-                targets.GetEnumerator().MoveNext();
             }
         }
 
@@ -150,7 +145,7 @@ namespace TorannMagic
 
             Vector3 vector = center;
             vector.y = Altitudes.AltitudeFor(AltitudeLayer.MoteOverhead);
-            Vector3 s = new Vector3(magnitude, magnitude, (1.5f * magnitude));
+            Vector3 s = new Vector3(magnitude, magnitude, 1.5f * magnitude);
             Matrix4x4 matrix = default(Matrix4x4);
 
             for (int i = 0; i < 6; i++)
@@ -165,7 +160,7 @@ namespace TorannMagic
         {
             DamageInfo dinfo;
             amt = (int)((float)amt * Rand.Range(.7f, 1.3f));
-            dinfo = new DamageInfo(type, amt, 0, (float)-1, this.CasterPawn, hitPart, null, DamageInfo.SourceCategory.ThingOrUnknown);            
+            dinfo = new DamageInfo(type, amt, 0, (float)-1, this.CasterPawn, hitPart, null, DamageInfo.SourceCategory.ThingOrUnknown);
             dinfo.SetAllowDamagePropagation(false);
             victim.TakeDamage(dinfo);
         }

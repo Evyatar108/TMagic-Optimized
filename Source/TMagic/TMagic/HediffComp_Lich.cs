@@ -31,7 +31,7 @@ namespace TorannMagic
             bool spawned = base.Pawn.Spawned;
             if (spawned)
             {
-                
+
             }
         }
 
@@ -68,11 +68,11 @@ namespace TorannMagic
                 List<Need> needs = base.Pawn.needs.AllNeeds;
                 for (int i = 0; i < needs.Count; i++)
                 {
-                    if(needs[i].def.defName != "Joy" && needs[i].def.defName != "Mood" && needs[i].def.defName != "TM_Mana" && needs[i].def.defName != "TM_Stamina" && needs[i].def.defName != "ROMV_Blood")
-                    { 
+                    if (needs[i].def.defName != "Joy" && needs[i].def.defName != "Mood" && needs[i].def.defName != "TM_Mana" && needs[i].def.defName != "TM_Stamina" && needs[i].def.defName != "ROMV_Blood")
+                    {
                         needs[i].CurLevel = needs[i].MaxLevel;
                     }
-                    
+
                 }
                 Pawn pawn = base.Pawn;
                 int num = 1;
@@ -89,7 +89,7 @@ namespace TorannMagic
                             IEnumerable<Hediff_Injury> arg_BB_0 = pawn.health.hediffSet.GetHediffs<Hediff_Injury>();
                             Func<Hediff_Injury, bool> arg_BB_1;
 
-                            arg_BB_1 = ((Hediff_Injury injury) => injury.Part == rec);
+                            arg_BB_1 = (Hediff_Injury injury) => injury.Part == rec;
 
                             foreach (Hediff_Injury current in arg_BB_0.Where(arg_BB_1))
                             {
@@ -138,15 +138,15 @@ namespace TorannMagic
                             {
                                 pawn.health.RemoveHediff(rec);
                             }
-                            if ((rec.def.defName == "Blindness" || rec.def.defName.Contains("Asthma") || rec.def.defName == "Cirrhosis" || rec.def.defName == "ChemicalDamageModerate"))
+                            if (rec.def.defName == "Blindness" || rec.def.defName.Contains("Asthma") || rec.def.defName == "Cirrhosis" || rec.def.defName == "ChemicalDamageModerate")
                             {
                                 pawn.health.RemoveHediff(rec);
                             }
-                            if ((rec.def.defName == "Frail" || rec.def.defName == "BadBack" || rec.def.defName.Contains("Carcinoma") || rec.def.defName == "ChemicalDamageSevere"))
+                            if (rec.def.defName == "Frail" || rec.def.defName == "BadBack" || rec.def.defName.Contains("Carcinoma") || rec.def.defName == "ChemicalDamageSevere")
                             {
                                 pawn.health.RemoveHediff(rec);
                             }
-                            if ((rec.def.defName.Contains("Alzheimers") || rec.def.defName == "Dementia" || rec.def.defName.Contains("HeartArteryBlockage") || rec.def.defName == "CatatonicBreakdown"))
+                            if (rec.def.defName.Contains("Alzheimers") || rec.def.defName == "Dementia" || rec.def.defName.Contains("HeartArteryBlockage") || rec.def.defName == "CatatonicBreakdown")
                             {
                                 pawn.health.RemoveHediff(rec);
                             }
@@ -156,7 +156,7 @@ namespace TorannMagic
                             pawn.health.RemoveHediff(rec);
                         }
                     }
-                }                
+                }
             }
         }
     }

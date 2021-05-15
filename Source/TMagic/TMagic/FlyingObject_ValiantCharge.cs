@@ -1,10 +1,8 @@
 ﻿using RimWorld;
-using System;
 using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using Verse;
-using AbilityUser;
 
 namespace TorannMagic
 {
@@ -89,8 +87,8 @@ namespace TorannMagic
         {
             get
             {
-                Vector3 b = (this.destination - this.origin) * (1f - (float)this.ticksToImpact / (float)this.StartingTicksToImpact);
-                return this.origin + b + Vector3.up * this.def.Altitude;
+                Vector3 b = (this.destination - this.origin) * (1f - ((float)this.ticksToImpact / (float)this.StartingTicksToImpact));
+                return this.origin + b + (Vector3.up * this.def.Altitude);
             }
         }
 
@@ -179,7 +177,7 @@ namespace TorannMagic
                 verVal = 3;
             }
             if (spawned)
-            {               
+            {
                 flyingThing.DeSpawn();
             }
             //
@@ -201,7 +199,6 @@ namespace TorannMagic
         public override void Tick()
         {
             //base.Tick();
-            Vector3 exactPosition = this.ExactPosition;
             this.ticksToImpact--;
             bool flag = !this.ExactPosition.InBounds(base.Map);
             if (flag)
@@ -224,7 +221,7 @@ namespace TorannMagic
                     }
                     this.ImpactSomething();
                 }
-                
+
             }
         }
 
@@ -236,7 +233,6 @@ namespace TorannMagic
                 bool flag2 = this.flyingThing is Pawn;
                 if (flag2)
                 {
-                    Vector3 arg_2B_0 = this.DrawPos;
                     bool flag3 = false;
                     if (flag3)
                     {
@@ -261,7 +257,7 @@ namespace TorannMagic
                             wingDelay = 0;
                             wingDisplay = false;
 
-                        }                        
+                        }
                     }
                     else
                     {
@@ -289,10 +285,8 @@ namespace TorannMagic
             bool flag = !pawn.Dead && !pawn.Downed;
             if (flag)
             {
-                float num = Mathf.Lerp(1.2f, 1.55f, magnitude);
                 Vector3 vector = pawnVec;
                 vector.y = Altitudes.AltitudeFor(AltitudeLayer.MoteOverhead);
-                float angle = (float)Rand.Range(0, 360);
                 Vector3 s = new Vector3(3f, 3f, 3f);
                 Matrix4x4 matrix = default(Matrix4x4);
                 matrix.SetTRS(vector, Quaternion.AngleAxis(0f, Vector3.up), s);
@@ -339,7 +333,7 @@ namespace TorannMagic
             if (flag)
             {
                 Pawn pawn;
-                bool flag2 = (pawn = (base.Position.GetThingList(base.Map).FirstOrDefault((Thing x) => x == this.assignedTarget) as Pawn)) != null;
+                bool flag2 = (pawn = base.Position.GetThingList(base.Map).FirstOrDefault((Thing x) => x == this.assignedTarget) as Pawn) != null;
                 if (flag2)
                 {
                     hitThing = pawn;
@@ -369,12 +363,12 @@ namespace TorannMagic
             try
             {
                 SoundDefOf.Ambient_AltitudeWind.sustainFadeoutTime.Equals(30.0f);
-                this.FireExplosion(pwrVal, verVal, base.Position, base.Map, (1.2f + (float)(verVal * .8f)));
+                this.FireExplosion(pwrVal, verVal, base.Position, base.Map, 1.2f + (float)(verVal * .8f));
                 if (!pawn.IsColonist)
                 {
-                    this.FireExplosion(3, 3, base.Position, base.Map, (1.2f + (float)(3 * .8f)));
+                    this.FireExplosion(3, 3, base.Position, base.Map, 1.2f + (float)(3 * .8f));
                 }
-                MoteMaker.ThrowSmoke(pawn.Position.ToVector3(), base.Map, (0.8f + (float)(verVal * .8f)));
+                MoteMaker.ThrowSmoke(pawn.Position.ToVector3(), base.Map, 0.8f + (float)(verVal * .8f));
 
                 for (int i = 0; i < (2 + verVal); i++)
                 {
@@ -385,11 +379,11 @@ namespace TorannMagic
                 }
                 for (int i = 0; i < (4 + (3 * verVal)); i++)
                 {
-                    CellRect cellRect = CellRect.CenteredOn(expCell1, (1 + verVal));
+                    CellRect cellRect = CellRect.CenteredOn(expCell1, 1 + verVal);
                     cellRect.ClipInsideMap(base.Map);
                     IntVec3 randomCell = cellRect.RandomCell;
                     this.FireExplosion(pwrVal, verVal, randomCell, base.Map, .4f);
-                    cellRect = CellRect.CenteredOn(expCell2, (1 + verVal));
+                    cellRect = CellRect.CenteredOn(expCell2, 1 + verVal);
                     randomCell = cellRect.RandomCell;
                     this.FireExplosion(pwrVal, verVal, randomCell, base.Map, .4f);
                 }
@@ -436,14 +430,14 @@ namespace TorannMagic
                     Explosion(pwr, pos, map, radius, DamageDefOf.Stun, this.pawn, null, def, ThingDefOf.Explosion, ThingDefOf.Mote_ExplosionFlash, 0.3f, 1, false, null, 0f, 1);
                 }
             }
-            
+
         }
 
         public void Explosion(int pwr, IntVec3 center, Map map, float radius, DamageDef damType, Thing instigator, SoundDef explosionSound = null, ThingDef projectile = null, ThingDef source = null, ThingDef postExplosionSpawnThingDef = null, float postExplosionSpawnChance = 0f, int postExplosionSpawnThingCount = 1, bool applyDamageToExplosionCellsNeighbors = false, ThingDef preExplosionSpawnThingDef = null, float preExplosionSpawnChance = 0f, int preExplosionSpawnThingCount = 1)
         {
 
             System.Random rnd = new System.Random();
-            int modDamAmountRand = GenMath.RoundRandom(rnd.Next(8 + pwr, 15 + (4*pwr)));
+            int modDamAmountRand = GenMath.RoundRandom(rnd.Next(8 + pwr, 15 + (4 * pwr)));
             modDamAmountRand = Mathf.RoundToInt(modDamAmountRand * this.arcaneDmg);
             if (map == null)
             {
@@ -457,7 +451,7 @@ namespace TorannMagic
             explosion.radius = radius;
             explosion.damType = damType;
             explosion.instigator = instigator;
-            explosion.damAmount = ((projectile == null) ? GenMath.RoundRandom((float)damType.defaultDamage) : modDamAmountRand);
+            explosion.damAmount = (projectile == null) ? GenMath.RoundRandom((float)damType.defaultDamage) : modDamAmountRand;
             explosion.weapon = source;
             explosion.preExplosionSpawnThingDef = preExplosionSpawnThingDef;
             explosion.preExplosionSpawnChance = preExplosionSpawnChance;
@@ -471,7 +465,7 @@ namespace TorannMagic
 
         private void XProb(IntVec3 target, Vector3 origin)
         {
-            hyp = Mathf.Sqrt((Mathf.Pow(origin.x - target.x, 2)) + (Mathf.Pow(origin.z - target.z, 2)));
+            hyp = Mathf.Sqrt(Mathf.Pow(origin.x - target.x, 2) + Mathf.Pow(origin.z - target.z, 2));
             angleRad = Mathf.Asin(Mathf.Abs(origin.x - target.x) / hyp);
             angleDeg = Mathf.Rad2Deg * angleRad;
             xProb = angleDeg / 90;
@@ -485,8 +479,8 @@ namespace TorannMagic
 
             if (halfway)
             {
-                xvar = (-1 * xvar);
-                zvar = (-1 * zvar);
+                xvar = -1 * xvar;
+                zvar = -1 * zvar;
             }
 
             if (xdir && zdir)
@@ -572,7 +566,7 @@ namespace TorannMagic
                 else
                 {
                     HediffSet expr_26 = expr_1A.hediffSet;
-                    arg_32_1 = ((expr_26 != null) ? expr_26.hediffs : null);
+                    arg_32_1 = (expr_26 != null) ? expr_26.hediffs : null;
                 }
             }
             arg_32_0.AddRange(arg_32_1);
@@ -592,7 +586,7 @@ namespace TorannMagic
                 else
                 {
                     HediffSet expr_66 = expr_52.hediffSet;
-                    arg_84_0 = ((expr_66 != null) ? new int?(expr_66.hediffs.Count<Hediff>()) : null);
+                    arg_84_0 = (expr_66 != null) ? new int?(expr_66.hediffs.Count<Hediff>()) : null;
                 }
             }
             bool flag = (arg_84_0 ?? 0) > 0;
@@ -611,8 +605,6 @@ namespace TorannMagic
                     }
                 }
             }
-            list.Clear();
-            list = null;
         }
     }
 }

@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using Verse;
-using RimWorld;
-using Verse.Sound;
 
 namespace TorannMagic
 {
@@ -18,7 +13,6 @@ namespace TorannMagic
         private int fadeInTicks = 10;
 
         private float angle = 0;
-        private int boltMaxCount = 25;
         private float meshContortionMagnitude = 12f;
 
         private Vector2 shadowVector; //currently unused
@@ -85,17 +79,17 @@ namespace TorannMagic
                 Mesh result;
                 //if (TM_MapMesh.boltMeshes.Count < this.boltMaxCount)
                 //{
-                    Mesh mesh;
-                    if (this.meshStart.IsValid)
-                    {
-                        mesh = TM_MeshMaker.NewBoltMesh(Vector3.Distance(this.meshStart.ToVector3ShiftedWithAltitude(this.altitudeLayer), this.meshEnd.ToVector3ShiftedWithAltitude(this.altitudeLayer)), this.meshContortionMagnitude);
-                    }
-                    else
-                    {
-                        mesh = TM_MeshMaker.NewBoltMesh(200, this.meshContortionMagnitude);
-                    }
-                    TM_MapMesh.boltMeshes.Add(mesh);
-                    result = mesh;
+                Mesh mesh;
+                if (this.meshStart.IsValid)
+                {
+                    mesh = TM_MeshMaker.NewBoltMesh(Vector3.Distance(this.meshStart.ToVector3ShiftedWithAltitude(this.altitudeLayer), this.meshEnd.ToVector3ShiftedWithAltitude(this.altitudeLayer)), this.meshContortionMagnitude);
+                }
+                else
+                {
+                    mesh = TM_MeshMaker.NewBoltMesh(200, this.meshContortionMagnitude);
+                }
+                TM_MapMesh.boltMeshes.Add(mesh);
+                result = mesh;
                 //}
                 //else
                 //{
@@ -120,7 +114,7 @@ namespace TorannMagic
                 }
                 else
                 {
-                    result = 1f - (float)(this.age - this.durationSolid) / (float)this.fadeOutTicks;
+                    result = 1f - ((float)(this.age - this.durationSolid) / (float)this.fadeOutTicks);
                 }
                 return result;
             }
@@ -128,7 +122,7 @@ namespace TorannMagic
 
         public Vector3 GetVector(Vector3 start, Vector3 end)
         {
-            Vector3 heading = (end - start);
+            Vector3 heading = end - start;
             float distance = heading.magnitude;
             Vector3 direction = heading / distance;
             this.angle = (Quaternion.AngleAxis(90, Vector3.up) * direction).ToAngleFlat();

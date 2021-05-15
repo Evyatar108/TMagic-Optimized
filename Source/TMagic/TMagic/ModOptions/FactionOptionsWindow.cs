@@ -1,9 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using UnityEngine;
 using Verse;
-using RimWorld;
 
 namespace TorannMagic.ModOptions
 {
@@ -15,8 +12,6 @@ namespace TorannMagic.ModOptions
         public static float TextSize = 22f;
 
         private bool reset = false;
-        private bool challenge = false;
-
         public Vector2 scrollPosition = Vector2.zero;
 
         FactionDictionary fDic = new FactionDictionary();
@@ -32,12 +27,12 @@ namespace TorannMagic.ModOptions
 
         public override void DoWindowContents(Rect inRect)
         {
-            List<string> factions = Settings.Instance.FactionFighterSettings.Keys.ToList();
+            Dictionary<string, float>.KeyCollection factions = Settings.Instance.FactionFighterSettings.Keys;
             int num = 0;
             float rowHeight = 28f;
             //GUI.BeginGroup(inRect);
             int scrollCount = 256;
-            if(factions.Count > 8)
+            if (factions.Count > 8)
             {
                 scrollCount = factions.Count * 40;
             }
@@ -46,36 +41,32 @@ namespace TorannMagic.ModOptions
 
             Text.Font = GameFont.Medium;
             float x = Text.CalcSize("TM_FactionOptions".Translate()).x;
-            Rect headerRect = new Rect(inRect.width / 2f - (x / 2), inRect.y, inRect.width, EventOptionsWindow.HeaderSize);
+            Rect headerRect = new Rect((inRect.width / 2f) - (x / 2), inRect.y, inRect.width, EventOptionsWindow.HeaderSize);
             Widgets.Label(headerRect, "TM_FactionOptions".Translate());
             Text.Font = GameFont.Small;
             GUI.color = Color.white;
             Rect rect1 = new Rect(inRect);
             rect1.width /= 2.2f;
-            num+=2;            
+            num += 2;
             Rect labelRect;
             Rect factionRowRect;
             Rect factionRowRect_ShiftRight;
-            float mage = 1f;
-            float fighter = 1f;
-            for (int i = 0; i < factions.Count; i++)
+            foreach (var faction in factions)
             {
                 labelRect = Controller.UIHelper.GetRowRect(rect1, rowHeight, num);
-                Widgets.Label(labelRect, factions[i]);
-                mage = Settings.Instance.FactionMageSettings[factions[i]];
-                fighter = Settings.Instance.FactionFighterSettings[factions[i]];
+                Widgets.Label(labelRect, faction);
                 num++;
                 GUI.color = Color.magenta;
                 factionRowRect = Controller.UIHelper.GetRowRect(labelRect, rowHeight, num);
-                mage = Widgets.HorizontalSlider(factionRowRect, Settings.Instance.FactionMageSettings[factions[i]], 0f, 5f, false, "Mages: " + Settings.Instance.FactionMageSettings[factions[i]].ToString("P0"), "0", "5", .1f);
+                float mage = Widgets.HorizontalSlider(factionRowRect, Settings.Instance.FactionMageSettings[faction], 0f, 5f, false, "Mages: " + Settings.Instance.FactionMageSettings[faction].ToString("P0"), "0", "5", .1f);
                 factionRowRect_ShiftRight = Controller.UIHelper.GetRowRect(factionRowRect, rowHeight, num);
                 factionRowRect_ShiftRight.x += rect1.width + 20f;
                 GUI.color = Color.green;
-                fighter = Widgets.HorizontalSlider(factionRowRect_ShiftRight, Settings.Instance.FactionFighterSettings[factions[i]], 0f, 5f, false, "Fighters: " + Settings.Instance.FactionFighterSettings[factions[i]].ToString("P0"), "0", "5", .1f);
-                fDic.SetFactionSettings(factions[i], fighter, mage);
+                float fighter = Widgets.HorizontalSlider(factionRowRect_ShiftRight, Settings.Instance.FactionFighterSettings[faction], 0f, 5f, false, "Fighters: " + Settings.Instance.FactionFighterSettings[faction].ToString("P0"), "0", "5", .1f);
+                fDic.SetFactionSettings(faction, fighter, mage);
                 GUI.color = Color.white;
                 Widgets.DrawLineHorizontal(inRect.x - 10f, factionRowRect.yMax, inRect.width - 15f);
-                num++;                
+                num++;
             }
             num++;
             Rect rowRect99 = UIHelper.GetRowRect(rect1, rowHeight, num);
@@ -98,6 +89,6 @@ namespace TorannMagic.ModOptions
                 return result;
             }
         }
-    }   
+    }
 
 }

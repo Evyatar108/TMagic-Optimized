@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using RimWorld;
+﻿using RimWorld;
 using AbilityUser;
 using Verse;
-using UnityEngine;
 
 
 namespace TorannMagic
@@ -15,17 +10,16 @@ namespace TorannMagic
 
         public override bool CanHitTargetFrom(IntVec3 root, LocalTargetInfo targ)
         {
-            bool validTarg = false;
             if (targ.Thing != null && targ.Thing == this.caster)
             {
                 return this.verbProps.targetParams.canTargetSelf;
             }
+            bool validTarg;
             if (targ.IsValid && targ.CenterVector3.InBounds(base.CasterPawn.Map) && !targ.Cell.Fogged(base.CasterPawn.Map) && targ.Cell.Walkable(base.CasterPawn.Map))
             {
                 if ((root - targ.Cell).LengthHorizontal < this.verbProps.range)
                 {
-                    ShootLine shootLine;
-                    validTarg = this.TryFindShootLineFromTo(root, targ, out shootLine);
+                    validTarg = this.TryFindShootLineFromTo(root, targ, out _);
                 }
                 else
                 {
@@ -47,9 +41,7 @@ namespace TorannMagic
             IntVec3 centerCell = cellRect.CenterCell;
             Map map = this.CasterPawn.Map;
 
-            Pawn caster = base.CasterPawn;
-
-            if ((centerCell.IsValid && centerCell.Standable(map)))
+            if (centerCell.IsValid && centerCell.Standable(map))
             {
                 AbilityUser.SpawnThings tempThing = new SpawnThings();
                 tempThing.def = ThingDef.Named("SeedofRegrowth");

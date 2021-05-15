@@ -3,7 +3,6 @@ using AbilityUser;
 using UnityEngine;
 using System.Linq;
 using System.Collections.Generic;
-using System;
 
 namespace TorannMagic
 {
@@ -51,9 +50,9 @@ namespace TorannMagic
         }
 
         protected override void Impact(Thing hitThing)
-        {            
+        {
             base.Impact(hitThing);
-           
+
             ThingDef def = this.def;
             Pawn victim = null;
 
@@ -89,7 +88,7 @@ namespace TorannMagic
                 hediffCellList = hediffCells.ToList<IntVec3>();
                 IEnumerable<IntVec3> targets = GenRadial.RadialCellsAround(base.Position, this.radius, false).Except(hediffCells);
                 cellList = targets.ToList<IntVec3>();
-                for(int i = 0; i < cellList.Count(); i ++)
+                for (int i = 0; i < cellList.Count(); i++)
                 {
                     if (cellList[i].IsValid && cellList[i].InBounds(pawn.Map))
                     {
@@ -113,13 +112,13 @@ namespace TorannMagic
                     AttractionEffect.Trigger(new TargetInfo(base.Position, this.Map, false), new TargetInfo(base.Position, this.Map, false));
                     AttractionEffect.Cleanup();
                 }
-                else if(this.pwrVal ==1)
+                else if (this.pwrVal == 1)
                 {
                     Effecter AttractionEffect = TorannMagicDefOf.TM_AttractionEffecter_I.Spawn();
                     AttractionEffect.Trigger(new TargetInfo(base.Position, this.Map, false), new TargetInfo(base.Position, this.Map, false));
                     AttractionEffect.Cleanup();
                 }
-                else if(this.pwrVal == 2)
+                else if (this.pwrVal == 2)
                 {
                     Effecter AttractionEffect = TorannMagicDefOf.TM_AttractionEffecter_II.Spawn();
                     AttractionEffect.Trigger(new TargetInfo(base.Position, this.Map, false), new TargetInfo(base.Position, this.Map, false));
@@ -138,11 +137,11 @@ namespace TorannMagic
                     {
                         victim = curCell.GetFirstPawn(base.Map);
                         if (victim != null && !victim.Dead && victim.RaceProps.IsFlesh && victim != this.pawn)
-                        {                            
+                        {
                             if (Rand.Chance(TM_Calc.GetSpellSuccessChance(this.pawn, victim) - .4f))
                             {
                                 Vector3 launchVector = GetVector(base.Position, victim.Position);
-                                HealthUtility.AdjustSeverity(victim, TorannMagicDefOf.TM_GravitySlowHD, (.4f + (.1f * verVal)));
+                                HealthUtility.AdjustSeverity(victim, TorannMagicDefOf.TM_GravitySlowHD, .4f + (.1f * verVal));
                                 LaunchFlyingObect(victim.Position + (2f * (1 + (.4f * pwrVal)) * launchVector).ToIntVec3(), victim);
                             }
                         }
@@ -152,7 +151,7 @@ namespace TorannMagic
                         //}
                     }
                 }
-                for(int i =0; i < hediffCellList.Count(); i++)
+                for (int i = 0; i < hediffCellList.Count(); i++)
                 {
                     curCell = hediffCellList[i];
                     if (curCell.IsValid && curCell.InBounds(base.Map))
@@ -166,7 +165,7 @@ namespace TorannMagic
                             }
                         }
                     }
-                }   
+                }
             }
         }
 
@@ -205,5 +204,5 @@ namespace TorannMagic
                 e.TakeDamage(dinfo);
             }
         }
-    }    
+    }
 }

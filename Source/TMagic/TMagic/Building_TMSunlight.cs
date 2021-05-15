@@ -15,23 +15,23 @@ namespace TorannMagic
         private float matMagnitude = 1;
 
         private bool initialized = false;
-                
+
         public override void Tick()
         {
-            if(!initialized)
+            if (!initialized)
             {
                 initialized = true;
             }
-            if(Find.TickManager.TicksGame % 16 == 0)
+            if (Find.TickManager.TicksGame % 16 == 0)
             {
                 this.matRng++;
-                if(this.matRng >= 4)
+                if (this.matRng >= 4)
                 {
                     matRng = 0;
                 }
             }
             base.Tick();
-        }        
+        }
 
         public override void Draw()
         {

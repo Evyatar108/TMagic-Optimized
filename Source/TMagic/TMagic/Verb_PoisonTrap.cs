@@ -1,5 +1,4 @@
-﻿using System;
-using Verse;
+﻿using Verse;
 using Verse.AI;
 using AbilityUser;
 
@@ -21,8 +20,7 @@ namespace TorannMagic
             {
                 if ((root - targ.Cell).LengthHorizontal < this.verbProps.range)
                 {
-                    ShootLine shootLine;
-                    validTarg = this.TryFindShootLineFromTo(root, targ, out shootLine);
+                    validTarg = this.TryFindShootLineFromTo(root, targ, out _);
                 }
                 else
                 {
@@ -45,7 +43,7 @@ namespace TorannMagic
             cellRect.ClipInsideMap(map);
             IntVec3 centerCell = cellRect.CenterCell;
 
-            if ((centerCell.IsValid && centerCell.Standable(map)))
+            if (centerCell.IsValid && centerCell.Standable(map))
             {
                 Job job = new Job(TorannMagicDefOf.PlacePoisonTrap, currentTarget);
                 pawn.jobs.TryTakeOrderedJob(job, JobTag.Misc);

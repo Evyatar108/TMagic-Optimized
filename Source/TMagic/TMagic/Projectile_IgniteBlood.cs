@@ -1,7 +1,6 @@
 ﻿using AbilityUser;
 using RimWorld;
 using Verse;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -11,7 +10,7 @@ namespace TorannMagic
     public struct BloodFire : IExposable
     {
         public IntVec3 position;
-        public int pulseCount;        
+        public int pulseCount;
 
         public BloodFire(IntVec3 pos, int pulse)
         {
@@ -27,7 +26,7 @@ namespace TorannMagic
     }
 
     public class Projectile_IgniteBlood : Projectile_AbilityBase
-	{
+    {
         private int verVal;
         private int pwrVal;
 
@@ -37,13 +36,13 @@ namespace TorannMagic
 
         private bool initialized = false;
         int duration = 500;
-        public List<ThingDef> bloodTypes = new List<ThingDef>();
+        public HashSet<ThingDef> bloodTypes = new HashSet<ThingDef>();
         private ThingDef pawnBloodDef = null;
 
-        List<BloodFire> BF = new List<BloodFire>();       
+        List<BloodFire> BF = new List<BloodFire>();
 
         Vector3 direction = default(Vector3);
-        
+
 
         public override void ExposeData()
         {
@@ -77,7 +76,7 @@ namespace TorannMagic
         }
 
         protected override void Impact(Thing hitThing)
-		{
+        {
             if (!this.initialized)
             {
                 base.Impact(hitThing);
@@ -100,26 +99,25 @@ namespace TorannMagic
                     verVal = mver.level;
                 }
                 this.arcaneDmg = comp.arcaneDmg;
-                this.arcaneDmg *= (1 + (.1f * bpwr.level));
+                this.arcaneDmg *= 1 + (.1f * bpwr.level);
                 this.spreadRate -= 2 * verVal;
                 if (settingsRef.AIHardMode && !pawn.IsColonist)
                 {
                     pwrVal = 3;
                     verVal = 3;
                 }
-                this.bloodTypes = new List<ThingDef>();
-                this.bloodTypes.Clear();
+                this.bloodTypes = new HashSet<ThingDef>();
                 if (settingsRef.unrestrictedBloodTypes)
                 {
                     this.pawnBloodDef = pawn.RaceProps.BloodDef;
-                    this.bloodTypes = TM_Calc.GetAllRaceBloodTypes();
+                    this.bloodTypes = TM_Calc.AllRaceBloodTypes.ToHashSet();
                 }
                 else
                 {
                     this.pawnBloodDef = ThingDefOf.Filth_Blood;
                     this.bloodTypes.Add(this.pawnBloodDef);
                 }
-                
+
                 List<IntVec3> cellList = GenRadial.RadialCellsAround(base.Position, this.def.projectile.explosionRadius, true).ToList();
 
                 Filth filth = (Filth)ThingMaker.MakeThing(this.pawnBloodDef);
@@ -139,13 +137,13 @@ namespace TorannMagic
                 this.BF.Add(new BloodFire(base.Position, 0));
             }
 
-            if(this.age > 0 && Find.TickManager.TicksGame % this.spreadRate == 0)
+            if (this.age > 0 && Find.TickManager.TicksGame % this.spreadRate == 0)
             {
                 BurnBloodAtCell();
                 FindNearbyBloodCells();
             }
 
-            if(this.BF.Count <= 0)
+            if (this.BF.Count <= 0)
             {
                 this.age = this.duration;
             }
@@ -169,25 +167,25 @@ namespace TorannMagic
                     }
                 }
                 this.BF[i] = new BloodFire(this.BF[i].position, this.BF[i].pulseCount + 1);
-                GenExplosion.DoExplosion(this.BF[i].position, this.Map, .2f + (.4f * BF[i].pulseCount), TMDamageDefOf.DamageDefOf.TM_BloodBurn, this.launcher, Mathf.RoundToInt((Rand.Range(2.8f, 4.5f) * (1 + (.12f * pwrVal))) * this.arcaneDmg), .5f, TorannMagicDefOf.TM_FireWooshSD, null, null, null, null, 0f, 1, false, null, 0f, 1, 0.0f, false);
-                if(this.BF[i].pulseCount >= 3)
-                {                    
+                GenExplosion.DoExplosion(this.BF[i].position, this.Map, .2f + (.4f * BF[i].pulseCount), TMDamageDefOf.DamageDefOf.TM_BloodBurn, this.launcher, Mathf.RoundToInt(Rand.Range(2.8f, 4.5f) * (1 + (.12f * pwrVal)) * this.arcaneDmg), .5f, TorannMagicDefOf.TM_FireWooshSD, null, null, null, null, 0f, 1, false, null, 0f, 1, 0.0f, false);
+                if (this.BF[i].pulseCount >= 3)
+                {
                     this.BF.Remove(this.BF[i]);
-                }                
+                }
             }
         }
 
         public void FindNearbyBloodCells()
         {
             int BFCount = this.BF.Count;
-            for(int i =0; i < BFCount; i++)
+            for (int i = 0; i < BFCount; i++)
             {
-                List<IntVec3> cellList = GenRadial.RadialCellsAround(this.BF[i].position, .4f + this.BF[i].pulseCount, false).ToList();
-                for (int j = 0; j < cellList.Count; j++)
+                IEnumerable<IntVec3> cellList = GenRadial.RadialCellsAround(this.BF[i].position, .4f + this.BF[i].pulseCount, false);
+                foreach (var cell in cellList)
                 {
-                    if (cellList[j].IsValid && cellList[j].InBounds(this.Map))
+                    if (cell.IsValid && cell.InBounds(this.Map))
                     {
-                        List<Thing> thingList = cellList[j].GetThingList(this.Map);
+                        List<Thing> thingList = cell.GetThingList(this.Map);
                         for (int k = 0; k < thingList.Count; k++)
                         {
                             if (thingList[k] != null && this.bloodTypes.Contains(thingList[k].def))
@@ -195,14 +193,14 @@ namespace TorannMagic
                                 bool flag = false;
                                 for (int z = 0; z < this.BF.Count; z++)
                                 {
-                                    if(BF[z].position == cellList[j])
+                                    if (BF[z].position == cell)
                                     {
                                         flag = true; //already exists as an active blood flame position
                                     }
                                 }
                                 if (!flag)
                                 {
-                                    this.BF.Add(new BloodFire(cellList[j], 0));
+                                    this.BF.Add(new BloodFire(cell, 0));
                                 }
                             }
                         }
@@ -210,7 +208,7 @@ namespace TorannMagic
                 }
             }
         }
-        
+
 
         public override void Tick()
         {
@@ -223,16 +221,16 @@ namespace TorannMagic
                 Vector3 rndPos = this.DrawPos;
                 rndPos.x += Rand.Range(-.4f, .4f);
                 rndPos.z += Rand.Range(-.4f, .4f);
-                TM_MoteMaker.ThrowGenericMote(TorannMagicDefOf.Mote_BloodSquirt, rndPos, this.Map, Rand.Range(.9f, 1.2f), .05f, 0f, .25f, Rand.Range(-300, 300), Rand.Range(8f, 12f), (Quaternion.AngleAxis(Rand.Range(60,120), Vector3.up) * this.direction).ToAngleFlat(), Rand.Range(0, 360));
+                TM_MoteMaker.ThrowGenericMote(TorannMagicDefOf.Mote_BloodSquirt, rndPos, this.Map, Rand.Range(.9f, 1.2f), .05f, 0f, .25f, Rand.Range(-300, 300), Rand.Range(8f, 12f), (Quaternion.AngleAxis(Rand.Range(60, 120), Vector3.up) * this.direction).ToAngleFlat(), Rand.Range(0, 360));
             }
             else
             {
                 age++;
             }
-            base.Tick();            
+            base.Tick();
         }
 
-    }	
+    }
 }
 
 

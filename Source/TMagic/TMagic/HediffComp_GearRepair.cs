@@ -50,7 +50,7 @@ namespace TorannMagic
                     this.Initialize();
                 }
             }
-            if(Find.TickManager.TicksGame % 1200 == 0)
+            if (Find.TickManager.TicksGame % 1200 == 0)
             {
                 TickAction();
             }
@@ -59,9 +59,9 @@ namespace TorannMagic
         public void TickAction()
         {
             List<Apparel> gear = this.Pawn.apparel.WornApparel;
-            for(int i = 0; i < gear.Count; i++)
+            for (int i = 0; i < gear.Count; i++)
             {
-                if(Rand.Chance(.2f) && gear[i].HitPoints < gear[i].MaxHitPoints)
+                if (Rand.Chance(.2f) && gear[i].HitPoints < gear[i].MaxHitPoints)
                 {
                     gear[i].HitPoints++;
                 }
@@ -78,7 +78,7 @@ namespace TorannMagic
             Thing weapon = this.Pawn.equipment.Primary;
             if (weapon != null && (weapon.def.IsRangedWeapon || weapon.def.IsMeleeWeapon))
             {
-                if(Rand.Chance(.2f) && weapon.HitPoints < weapon.MaxHitPoints)
+                if (Rand.Chance(.2f) && weapon.HitPoints < weapon.MaxHitPoints)
                 {
                     weapon.HitPoints++;
                 }

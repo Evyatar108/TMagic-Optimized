@@ -1,24 +1,14 @@
-﻿using System;
-using RimWorld;
+﻿using RimWorld;
 using Verse;
 using Verse.Sound;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
-using Verse.AI;
-using Verse.AI.Group;
 
 namespace TorannMagic
 {
     public class Building_ExplosiveProximityTrap : Building_Trap
     {
-        public List<Pawn> touchingPawns = new List<Pawn>();
-
-        private const float KnowerSpringChance = 0.004f;
-        private const ushort KnowerPathFindCost = 800;
-        private const ushort KnowerPathWalkCost = 30;
-        private const float AnimalSpringChanceFactor = 0.1f;
-
+        public HashSet<Pawn> touchingPawns = new HashSet<Pawn>();
         private int trapSpringDelay = 30;
         private bool trapSprung = false;
 
@@ -67,14 +57,7 @@ namespace TorannMagic
                     IntVec3 intVec = this.Position + GenAdj.AdjacentCells[j];
                     CheckPawn(intVec);
                 }
-                for (int j = 0; j < this.touchingPawns.Count; j++)
-                {
-                    Pawn pawn2 = this.touchingPawns[j];
-                    if (!pawn2.Spawned || pawn2.Position != base.Position)
-                    {
-                        this.touchingPawns.Remove(pawn2);
-                    }
-                }
+                this.touchingPawns.RemoveWhere(pawn2 => !pawn2.Spawned || pawn2.Position != base.Position);
             }
             else
             {

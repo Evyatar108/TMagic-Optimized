@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using Verse;
-using RimWorld;
-using SimpleSidearms;
+﻿using Verse;
 using SimpleSidearms.rimworld;
 
 namespace TorannMagic.ModCheck
@@ -16,7 +10,7 @@ namespace TorannMagic.ModCheck
             CompSidearmMemory csm = p.TryGetComp<CompSidearmMemory>();
             if (csm != null && csm.rememberedWeapons != null && csm.RememberedWeapons.Count > 0 && p.equipment != null)
             {
-                while(csm.RememberedWeapons.Count > 0)
+                while (csm.RememberedWeapons.Count > 0)
                 {
                     csm.ForgetSidearmMemory(csm.RememberedWeapons[0]);
                 }

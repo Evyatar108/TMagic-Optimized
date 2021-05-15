@@ -1,5 +1,4 @@
 ﻿using RimWorld;
-using System;
 using Verse;
 
 namespace TorannMagic
@@ -17,7 +16,7 @@ namespace TorannMagic
                 {
                     result = ThoughtState.ActiveAtStage(0);
                 }
-            }            
+            }
             return result;
         }
     }

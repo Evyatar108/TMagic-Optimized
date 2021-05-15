@@ -1,5 +1,4 @@
 ﻿using RimWorld;
-using System;
 using Verse;
 using AbilityUser;
 using UnityEngine;
@@ -8,7 +7,7 @@ using System.Linq;
 
 namespace TorannMagic
 {
-    public class Verb_BloodGift : Verb_UseAbility  
+    public class Verb_BloodGift : Verb_UseAbility
     {
         protected override bool TryCastShot()
         {
@@ -23,38 +22,37 @@ namespace TorannMagic
             List<BodyPartRecord> bodyparts = new List<BodyPartRecord>();
             bodyparts.Clear();
             bodyparts = this.CasterPawn.def.race.body.AllParts;
-            List<ThingDef> bloodDefs = TM_Calc.GetAllRaceBloodTypes();
+            HashSet<ThingDef> bloodDefs = TM_Calc.AllRaceBloodTypes;
             ModOptions.SettingsRef settingsRef = new ModOptions.SettingsRef();
             if (pawn != null && !pawn.Downed && bodyparts != null && bloodDefs != null)
             {
                 if (verVal > 0)
                 {
-                    List <IntVec3> cellList = GenRadial.RadialCellsAround(this.CasterPawn.Position, (2*verVal)-1, true).ToList();
-                    for (int i = 0; i < cellList.Count; i++)
+                    IEnumerable<IntVec3> cellList = GenRadial.RadialCellsAround(this.CasterPawn.Position, (2 * verVal) - 1, true);
+                    foreach (var curCell in cellList)
                     {
-                        IntVec3 curcell = cellList[i];
-                        List<Thing> thingList = curcell.GetThingList(this.CasterPawn.Map);
+                        List<Thing> thingList = curCell.GetThingList(this.CasterPawn.Map);
                         for (int j = 0; j < thingList.Count; j++)
                         {
-                            if(thingList[j].def == ThingDefOf.Filth_Blood || (settingsRef.unrestrictedBloodTypes && bloodDefs.Contains(thingList[j].def)))
-                            {                                
+                            if (thingList[j].def == ThingDefOf.Filth_Blood || (settingsRef.unrestrictedBloodTypes && bloodDefs.Contains(thingList[j].def)))
+                            {
                                 bloodGain += thingList[j].stackCount;
-                                thingList[j].Destroy(DestroyMode.Vanish);                                
+                                thingList[j].Destroy(DestroyMode.Vanish);
                             }
-                        }                        
+                        }
                     }
                 }
 
                 List<BodyPartRecord> validParts = new List<BodyPartRecord>();
-                validParts.Clear();
-                for(int i = 0; i < bodyparts.Count; i++)
+                for (int i = 0; i < bodyparts.Count; i++)
                 {
-                    if(bodyparts[i].def.bleedRate != 0 && bodyparts[i].depth == BodyPartDepth.Outside && bodyparts[i].coverageAbs > 0)
+                    if (bodyparts[i].def.bleedRate != 0 && bodyparts[i].depth == BodyPartDepth.Outside && bodyparts[i].coverageAbs > 0)
                     {
                         validParts.Add(bodyparts[i]);
-                    }                    
+                    }
                 }
-                if(validParts.Count > 0)
+
+                if (validParts.Count > 0)
                 {
                     if (this.CasterPawn.RaceProps.BloodDef != null && (this.CasterPawn.RaceProps.BloodDef == ThingDefOf.Filth_Blood || settingsRef.unrestrictedBloodTypes))
                     {
@@ -100,7 +98,7 @@ namespace TorannMagic
             bool flag = arg_40_0;
             if (flag)
             {
-                
+
             }
             else
             {

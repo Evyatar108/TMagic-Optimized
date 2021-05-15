@@ -50,14 +50,6 @@ namespace TorannMagic
             Scribe_References.Look<Pawn>(ref this.caster, "caster", false);
         }
 
-        private int TicksLeft
-        {
-            get
-            {
-                return this.duration - this.age;
-            }
-        }
-
         protected override void Impact(Thing hitThing)
         {
             Map map = base.Map;
@@ -65,7 +57,7 @@ namespace TorannMagic
             ThingDef def = this.def;
             this.caster = this.launcher as Pawn;
 
-            if(!this.initialized)
+            if (!this.initialized)
             {
                 CompAbilityUserMagic comp = caster.GetComp<CompAbilityUserMagic>();
                 MagicPowerSkill pwr = caster.GetComp<CompAbilityUserMagic>().MagicData.MagicPowerSkill_HealingCircle.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_HealingCircle_pwr");
@@ -102,30 +94,30 @@ namespace TorannMagic
                         case 0:
                             this.innerRing = 0;
                             this.outerRing = this.radius * ((ringFrac + .1f) / 5f);
-                            TM_MoteMaker.MakePowerBeamMote(base.Position, base.Map, this.radius * 6f, 1.2f, this.waveDelay / 60f, (this.healDelay * 3f) / 60f, (this.healDelay * 2f) / 60f);
+                            TM_MoteMaker.MakePowerBeamMote(base.Position, base.Map, this.radius * 6f, 1.2f, this.waveDelay / 60f, this.healDelay * 3f / 60f, this.healDelay * 2f / 60f);
                             break;
                         case 1:
                             this.innerRing = this.outerRing;
-                            this.outerRing = this.radius * ((ringFrac) / 5f);                            
+                            this.outerRing = this.radius * (ringFrac / 5f);
                             break;
                         case 2:
                             this.innerRing = this.outerRing;
-                            this.outerRing = this.radius * ((ringFrac) / 5f);
+                            this.outerRing = this.radius * (ringFrac / 5f);
                             break;
                         case 3:
                             this.innerRing = this.outerRing;
-                            this.outerRing = this.radius * ((ringFrac) / 5f);
+                            this.outerRing = this.radius * (ringFrac / 5f);
                             break;
                         case 4:
                             this.innerRing = this.outerRing;
-                            this.outerRing = this.radius * ((ringFrac) / 5f);
+                            this.outerRing = this.radius * (ringFrac / 5f);
                             break;
                         case 5:
                             this.innerRing = this.outerRing;
                             this.outerRing = this.radius;
                             this.lastWave = this.age + this.waveDelay;
                             break;
-                    }                    
+                    }
                     ringFrac++;
                     this.lastHeal = this.age;
                     Search(map);
@@ -134,20 +126,19 @@ namespace TorannMagic
                 {
                     ringFrac = 0;
                 }
-            }       
+            }
         }
 
         public void Search(Map map)
         {
-            IntVec3 curCell;
-            IEnumerable<IntVec3> targets = GenRadial.RadialCellsAround(base.Position, this.radius, true);
-            IEnumerable<IntVec3> innerCircle = GenRadial.RadialCellsAround(base.Position, this.innerRing, true);
-            IEnumerable<IntVec3> outerCircle = GenRadial.RadialCellsAround(base.Position, this.outerRing, true);
+            int innerCircleSize = GenRadial.RadialCellsAround(base.Position, this.innerRing, true).Count();
+            int outerCircleSize = GenRadial.RadialCellsAround(base.Position, this.outerRing, true).Count();
+            IEnumerable<IntVec3> targets = GenRadial.RadialCellsAround(base.Position, this.radius, true).Skip(innerCircleSize).Take(outerCircleSize - innerCircleSize);
 
-            for (int i = innerCircle.Count(); i < outerCircle.Count(); i++)
-            {                
-                Pawn pawn = null;                
-                curCell = targets.ToArray<IntVec3>()[i];
+            foreach (var curCell in targets)
+            for (int i = innerCircleSize; i < outerCircleSize; i++)
+            {
+                Pawn pawn = null;
                 if (curCell.InBounds(map) && curCell.IsValid)
                 {
                     pawn = curCell.GetFirstPawn(map);
@@ -156,9 +147,9 @@ namespace TorannMagic
                 {
                     Heal(pawn);
                 }
-                if(pawn != null && TM_Calc.IsUndead(pawn))
+                if (pawn != null && TM_Calc.IsUndead(pawn))
                 {
-                    TM_Action.DamageUndead(pawn, (10.0f + (float)pwrVal * 3f) * this.arcaneDmg, this.launcher);
+                    TM_Action.DamageUndead(pawn, (10.0f + ((float)pwrVal * 3f)) * this.arcaneDmg, this.launcher);
                 }
             }
         }
@@ -169,13 +160,13 @@ namespace TorannMagic
             if (flag)
             {
                 int num = 1 + verVal;
-                
+
                 using (IEnumerator<BodyPartRecord> enumerator = pawn.health.hediffSet.GetInjuredParts().GetEnumerator())
                 {
                     while (enumerator.MoveNext())
                     {
                         BodyPartRecord rec = enumerator.Current;
-                        bool flag2 = num > 0;                        
+                        bool flag2 = num > 0;
 
                         if (flag2)
                         {
@@ -183,7 +174,7 @@ namespace TorannMagic
                             IEnumerable<Hediff_Injury> arg_BB_0 = pawn.health.hediffSet.GetHediffs<Hediff_Injury>();
                             Func<Hediff_Injury, bool> arg_BB_1;
 
-                            arg_BB_1 = ((Hediff_Injury injury) => injury.Part == rec);
+                            arg_BB_1 = (Hediff_Injury injury) => injury.Part == rec;
 
                             foreach (Hediff_Injury current in arg_BB_0.Where(arg_BB_1))
                             {
@@ -196,7 +187,7 @@ namespace TorannMagic
                                         //current.Heal((float)((int)current.Severity + 1));
                                         if (Rand.Chance(.8f))
                                         {
-                                            current.Heal((10.0f + (float)pwrVal * 2f) * this.arcaneDmg); // power affects how much to heal
+                                            current.Heal((10.0f + ((float)pwrVal * 2f)) * this.arcaneDmg); // power affects how much to heal
                                             TM_MoteMaker.ThrowRegenMote(pawn.Position.ToVector3Shifted(), pawn.Map, 1.2f);
                                         }
                                         num--;
@@ -208,7 +199,7 @@ namespace TorannMagic
                     }
                 }
             }
-        }        
+        }
 
         public override void Tick()
         {

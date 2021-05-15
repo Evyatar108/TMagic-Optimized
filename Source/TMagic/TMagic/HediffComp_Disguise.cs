@@ -71,9 +71,9 @@ namespace TorannMagic
                 Vector3 drawOverhead = base.Pawn.DrawPos;
                 drawOverhead.z += .9f;
                 drawOverhead.x += .2f;
-                if(this.hasPossess)
+                if (this.hasPossess)
                 {
-                    if(this.possessFlag)
+                    if (this.possessFlag)
                     {
                         TM_MoteMaker.ThrowTextMote(drawOverhead, base.Pawn.Map, Mathf.RoundToInt(this.parent.Severity).ToString(), Color.white, 1f / 66f, -1f);
                     }
@@ -81,14 +81,14 @@ namespace TorannMagic
                 else
                 {
                     TM_MoteMaker.ThrowTextMote(drawOverhead, base.Pawn.Map, Mathf.RoundToInt(this.parent.Severity).ToString(), Color.white, 1f / 66f, -1f);
-                }                
+                }
 
-                if (this.age <=0)
+                if (this.age <= 0)
                 {
                     severityAdjustment--;
-                    this.age = 60;                    
+                    this.age = 60;
                 }
-                this.age--;                
+                this.age--;
             }
         }
 

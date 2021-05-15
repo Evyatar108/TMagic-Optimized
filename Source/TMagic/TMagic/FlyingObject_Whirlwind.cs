@@ -1,9 +1,7 @@
 ﻿using RimWorld;
-using System;
 using System.Linq;
 using UnityEngine;
 using Verse;
-using AbilityUser;
 
 namespace TorannMagic
 {
@@ -67,8 +65,8 @@ namespace TorannMagic
         {
             get
             {
-                Vector3 b = (this.destination - this.origin) * (1f - (float)this.ticksToImpact / (float)this.StartingTicksToImpact);
-                return this.origin + b + Vector3.up * this.def.Altitude;
+                Vector3 b = (this.destination - this.origin) * (1f - ((float)this.ticksToImpact / (float)this.StartingTicksToImpact));
+                return this.origin + b + (Vector3.up * this.def.Altitude);
             }
         }
 
@@ -160,7 +158,6 @@ namespace TorannMagic
         public override void Tick()
         {
             //base.Tick();
-            Vector3 exactPosition = this.ExactPosition;
             this.ticksToImpact--;
             bool flag = !this.ExactPosition.InBounds(base.Map);
             if (flag)
@@ -187,7 +184,7 @@ namespace TorannMagic
                     }
                     this.ImpactSomething();
                 }
-                
+
             }
         }
 
@@ -213,15 +210,13 @@ namespace TorannMagic
                 bool flag2 = dinfo.Instigator != null;
                 if (flag2)
                 {
-                    int num2 = Mathf.RoundToInt(dinfo.Amount);
                     bool flag3 = pawn != null && base.Position != default(IntVec3);
                     if (flag3)
                     {
                         for (int i = 0; i < 8; i++)
                         {
                             IntVec3 intVec = base.Position + GenAdj.AdjacentCells[i];
-                            Pawn cleaveVictim = new Pawn();
-                            cleaveVictim = intVec.GetFirstPawn(base.Map);
+                            Pawn cleaveVictim = intVec.GetFirstPawn(base.Map);
                             if (cleaveVictim != null && cleaveVictim.Faction != pawn.Faction)
                             {
                                 cleaveVictim.TakeDamage(dinfo);
@@ -252,7 +247,7 @@ namespace TorannMagic
 
         public static int GetWeaponDmg(Pawn caster)
         {
-            
+
             CompAbilityUserMight comp = caster.GetComp<CompAbilityUserMight>();
             //MightPowerSkill pwr = comp.MightData.MightPowerSkill_Whirlwind.FirstOrDefault((MightPowerSkill x) => x.label == "TM_Whirlwind_pwr");
             pwrVal = TM_Calc.GetMightSkillLevel(caster, comp.MightData.MightPowerSkill_Whirlwind, "TM_Whirlwind", "_pwr", true);
@@ -276,7 +271,6 @@ namespace TorannMagic
                 bool flag2 = this.flyingThing is Pawn;
                 if (flag2)
                 {
-                    Vector3 arg_2B_0 = this.DrawPos;
                     bool flag3 = false;
                     if (flag3)
                     {
@@ -342,7 +336,7 @@ namespace TorannMagic
             if (flag)
             {
                 Pawn pawn;
-                bool flag2 = (pawn = (base.Position.GetThingList(base.Map).FirstOrDefault((Thing x) => x == this.assignedTarget) as Pawn)) != null;
+                bool flag2 = (pawn = base.Position.GetThingList(base.Map).FirstOrDefault((Thing x) => x == this.assignedTarget) as Pawn) != null;
                 if (flag2)
                 {
                     hitThing = pawn;
@@ -372,7 +366,7 @@ namespace TorannMagic
             GenSpawn.Spawn(this.flyingThing, base.Position, base.Map);
             ModOptions.Constants.SetPawnInFlight(false);
             Pawn p = this.flyingThing as Pawn;
-            if(p.IsColonist)
+            if (p.IsColonist)
             {
                 p.drafter.Drafted = true;
                 CameraJumper.TryJumpAndSelect(p);

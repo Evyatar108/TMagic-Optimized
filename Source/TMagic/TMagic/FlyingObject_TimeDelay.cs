@@ -1,10 +1,6 @@
 ﻿using RimWorld;
-using System;
-using System.Linq;
-using System.Collections.Generic;
 using UnityEngine;
 using Verse;
-using AbilityUser;
 using Verse.Sound;
 
 namespace TorannMagic
@@ -39,11 +35,6 @@ namespace TorannMagic
 
         public float force = 1f;
         public int duration = 600;
-
-        private bool earlyImpact = false;
-        private float impactForce = 0;
-        private int variationShiftTick = 100;
-
         public DamageInfo? impactDamage;
 
         public bool damageLaunched = true;
@@ -53,7 +44,6 @@ namespace TorannMagic
         public int weaponDmg = 0;
 
         Pawn pawn;
-        CompAbilityUserMagic comp;
         TMPawnSummoned newPawn = new TMPawnSummoned();
 
         protected new int StartingTicksToImpact
@@ -84,7 +74,7 @@ namespace TorannMagic
             {
                 //Vector3 b = (this.destination - this.origin) * (1f - (float)this.ticksToImpact / (float)this.StartingTicksToImpact);
                 //return this.origin + b + Vector3.up * this.def.Altitude;
-                return this.origin + Vector3.up * this.def.Altitude;
+                return this.origin + (Vector3.up * this.def.Altitude);
             }
         }
 
@@ -158,7 +148,7 @@ namespace TorannMagic
         {
             this.destroyPctAtEnd = destroy;
             this.moteDef = mote;
-            this.moteFrequency = moteFreq; 
+            this.moteFrequency = moteFreq;
             this.xVariation = _xVariation;
             this.zVariation = _zVariation;
             this.spinRate = _spinRate;
@@ -166,8 +156,8 @@ namespace TorannMagic
         }
 
         public void Launch(Thing launcher, Vector3 origin, LocalTargetInfo targ, Thing flyingThing, DamageInfo? newDamageInfo = null)
-        {            
-            bool spawned = flyingThing.Spawned;            
+        {
+            bool spawned = flyingThing.Spawned;
             pawn = launcher as Pawn;
             if (pawn != null && pawn.Drafted)
             {
@@ -193,14 +183,14 @@ namespace TorannMagic
             this.variationDestination = this.DrawPos;
             this.drawPosition = this.DrawPos;
             this.Initialize();
-        }        
+        }
 
         public override void Tick()
         {
             this.duration--;
             base.Position = this.origin.ToIntVec3();
             bool flag2 = this.duration <= 0;
-            if(this.moteDef != null && this.Map != null && Find.TickManager.TicksGame % this.moteFrequency == 0)
+            if (this.moteDef != null && this.Map != null && Find.TickManager.TicksGame % this.moteFrequency == 0)
             {
                 TM_MoteMaker.ThrowGenericMote(this.moteDef, this.ExactPosition, this.Map, Rand.Range(this.moteScale * .75f, this.moteScale * 1.25f), this.solidTime, this.fadeInTime, this.fadeOutTime, Rand.Range(200, 400), 0, 0, Rand.Range(0, 360));
             }
@@ -218,10 +208,10 @@ namespace TorannMagic
             {
                 if (this.spinRate > 0)
                 {
-                    if(Find.TickManager.TicksGame % this.spinRate ==0)
+                    if (Find.TickManager.TicksGame % this.spinRate == 0)
                     {
                         this.rotation++;
-                        if(this.rotation >= 4)
+                        if (this.rotation >= 4)
                         {
                             this.rotation = 0;
                         }
@@ -247,7 +237,6 @@ namespace TorannMagic
                 bool flag2 = this.flyingThing is Pawn;
                 if (flag2 && zVariation == 0 && xVariation == 0)
                 {
-                    Vector3 arg_2B_0 = this.DrawPos;
                     bool flag4 = !this.DrawPos.ToIntVec3().IsValid;
                     if (flag4)
                     {
@@ -264,7 +253,7 @@ namespace TorannMagic
                     Graphics.DrawMesh(MeshPool.plane10, matrix, bubble, 0, null);
                     //Graphics.DrawMesh(MeshPool.plane10, vec3, this.ExactRotation, bubble, 0);
                 }
-                else if(zVariation != 0 || xVariation != 0)
+                else if (zVariation != 0 || xVariation != 0)
                 {
                     this.drawPosition = VariationPosition(this.drawPosition);
                     //bool flag4 = !this.DrawPos.ToIntVec3().IsValid;
@@ -287,12 +276,12 @@ namespace TorannMagic
         private Vector3 VariationPosition(Vector3 currentDrawPos)
         {
             Vector3 startPos = currentDrawPos;
-            float variance = (xVariation / 100f);
+            float variance = xVariation / 100f;
             if ((startPos.x - variationDestination.x) < -variance)
             {
                 startPos.x += variance;
             }
-            else if((startPos.x - variationDestination.x) > variance)
+            else if ((startPos.x - variationDestination.x) > variance)
             {
                 startPos.x += -variance;
             }
@@ -300,7 +289,7 @@ namespace TorannMagic
             {
                 variationDestination.x = this.DrawPos.x + Rand.Range(-xVariation, xVariation);
             }
-            variance = (zVariation / 100f);
+            variance = zVariation / 100f;
             if ((startPos.z - variationDestination.z) < -variance)
             {
                 startPos.z += variance;
@@ -320,7 +309,7 @@ namespace TorannMagic
 
         private void ImpactSomething()
         {
-            this.Impact(null);            
+            this.Impact(null);
         }
 
         protected new void Impact(Thing hitThing)

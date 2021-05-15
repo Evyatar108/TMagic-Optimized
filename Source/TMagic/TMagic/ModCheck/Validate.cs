@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using Verse;
-using RimWorld;
+﻿using Verse;
 
 namespace TorannMagic.ModCheck
 {
@@ -15,7 +10,7 @@ namespace TorannMagic.ModCheck
             {
                 bool initialized = false;
                 foreach (ModContentPack p in LoadedModManager.RunningMods)
-                {                    
+                {
                     if (p.Name == "Prison Labor")
                     {
                         initialized = true;
@@ -29,7 +24,7 @@ namespace TorannMagic.ModCheck
         {
             public static bool IsInitialized()
             {
-                bool initialized = false;                
+                bool initialized = false;
                 foreach (ModContentPack p in LoadedModManager.RunningMods)
                 {
                     if (p.Name == "Prison Labor 0.9 (Outdated)")
@@ -63,7 +58,7 @@ namespace TorannMagic.ModCheck
             {
                 bool initialized = false;
                 foreach (ModContentPack p in LoadedModManager.RunningMods)
-                {                    
+                {
                     if (p.Name == "Children, school and learning")
                     {
                         initialized = true;

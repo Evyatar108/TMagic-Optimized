@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using RimWorld;
 using AbilityUser;
 using Verse;
@@ -55,13 +53,13 @@ namespace TorannMagic
                 }
                 TM_MoteMaker.ThrowTwinkle(hitPawn.DrawPos, map, 1f);
 
-                if(compCaster != null && hitPawn.health.hediffSet.HasHediff(HediffDef.Named("SpellMendingHD"), false) && compCaster.MagicData.MagicPowerSkill_Cantrips.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_Cantrips_pwr").level >= 8)
+                if (compCaster != null && hitPawn.health.hediffSet.HasHediff(HediffDef.Named("SpellMendingHD"), false) && compCaster.MagicData.MagicPowerSkill_Cantrips.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_Cantrips_pwr").level >= 8)
                 {
                     Hediff hd = hitPawn.health.hediffSet.GetFirstHediffOfDef(HediffDef.Named("SpellMendingHD"));
-                    if(hd != null)
+                    if (hd != null)
                     {
                         HediffComp_SpellMending hdComp = hd.TryGetComp<HediffComp_SpellMending>();
-                        if(hdComp != null)
+                        if (hdComp != null)
                         {
                             hdComp.mendTickTimer = 60;
                         }

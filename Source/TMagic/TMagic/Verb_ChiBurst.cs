@@ -2,13 +2,12 @@
 using AbilityUser;
 using UnityEngine;
 using System.Linq;
-using System;
 using System.Collections.Generic;
 using RimWorld;
 
 namespace TorannMagic
 {
-    class Verb_ChiBurst : Verb_UseAbility  
+    class Verb_ChiBurst : Verb_UseAbility
     {
 
         bool validTarg;
@@ -24,8 +23,7 @@ namespace TorannMagic
             {
                 if ((root - targ.Cell).LengthHorizontal < this.verbProps.range)
                 {
-                    ShootLine shootLine;
-                    validTarg = this.TryFindShootLineFromTo(root, targ, out shootLine);
+                    validTarg = this.TryFindShootLineFromTo(root, targ, out _);
                 }
                 else
                 {
@@ -56,11 +54,11 @@ namespace TorannMagic
             SabotageEffect.Cleanup();
 
             List<Pawn> classPawns = GetMapClassPawnsAround(caster.Map, this.currentTarget.Cell, this.UseAbilityProps.TargetAoEProperties.range);
-            if(classPawns != null && classPawns.Count > 0)
+            if (classPawns != null && classPawns.Count > 0)
             {
-                for(int i =0; i < classPawns.Count; i++)
+                for (int i = 0; i < classPawns.Count; i++)
                 {
-                    if(classPawns[i] != caster)
+                    if (classPawns[i] != caster)
                     {
                         if (classPawns[i].health != null && classPawns[i].Faction != null && classPawns[i].health.hediffSet != null && classPawns[i].story != null && !classPawns[i].NonHumanlikeOrWildMan())
                         {
@@ -73,11 +71,11 @@ namespace TorannMagic
                             {
                                 MoteMaker.ThrowText(classPawns[i].DrawPos, classPawns[i].Map, "TM_ResistedSpell".Translate(), -1);
                             }
-                        }                        
+                        }
                     }
                 }
             }
-         
+
             return result;
         }
 
@@ -88,22 +86,22 @@ namespace TorannMagic
             List<Pawn> classPawns = new List<Pawn>();
             classPawns.Clear();
             mapPawns = map.mapPawns.AllPawnsSpawned;
-            for(int i =0; i < mapPawns.Count; i++)
+            for (int i = 0; i < mapPawns.Count; i++)
             {
-                if((mapPawns[i].Position - centerPos).LengthHorizontal <= radius)
+                if ((mapPawns[i].Position - centerPos).LengthHorizontal <= radius)
                 {
-                    if(TM_Calc.IsMagicUser(mapPawns[i]) || TM_Calc.IsMightUser(mapPawns[i]))
+                    if (TM_Calc.IsMagicUser(mapPawns[i]) || TM_Calc.IsMightUser(mapPawns[i]))
                     {
                         classPawns.Add(mapPawns[i]);
                     }
-                    else if(!mapPawns[i].DestroyedOrNull())
+                    else if (!mapPawns[i].DestroyedOrNull())
                     {
                         DisruptMentalState_NonClass(mapPawns[i]);
                     }
                 }
             }
             return classPawns;
-            
+
         }
 
         private void DisruptClassPawn(Pawn pawn)
@@ -113,12 +111,10 @@ namespace TorannMagic
             if (TM_Calc.IsMightUser(pawn))
             {
                 CompAbilityUserMight mightComp = pawn.GetComp<CompAbilityUserMight>();
-                classHediff = pawn.health.hediffSet.GetFirstHediffOfDef(TorannMagicDefOf.TM_PsionicHD);
-                classHediff = pawn.health.hediffSet.GetFirstHediffOfDef(TorannMagicDefOf.TM_HateHD);
                 classHediff = pawn.health.hediffSet.GetFirstHediffOfDef(TorannMagicDefOf.TM_ChiHD);
-                if(mightComp != null && mightComp.Stamina != null)
+                if (mightComp != null && mightComp.Stamina != null)
                 {
-                    energyBurn = Mathf.Clamp(mightComp.Stamina.CurLevel, 0, (.5f * (1f + (.20f * pwrVal))));
+                    energyBurn = Mathf.Clamp(mightComp.Stamina.CurLevel, 0, .5f * (1f + (.20f * pwrVal)));
                     TM_Action.DamageEntities(pawn, null, Mathf.RoundToInt(Rand.Range(30f, 50f) * energyBurn), TMDamageDefOf.DamageDefOf.TM_ChiBurn, this.CasterPawn);
                     mightComp.Stamina.CurLevel -= energyBurn;
                 }
@@ -129,7 +125,7 @@ namespace TorannMagic
                 classHediff = pawn.health.hediffSet.GetFirstHediffOfDef(TorannMagicDefOf.TM_BloodHD);
                 if (magicComp != null && magicComp.Mana != null)
                 {
-                    energyBurn = Mathf.Clamp(magicComp.Mana.CurLevel, 0, (.5f * (1f + (.20f * pwrVal))));
+                    energyBurn = Mathf.Clamp(magicComp.Mana.CurLevel, 0, .5f * (1f + (.20f * pwrVal)));
                     TM_Action.DamageEntities(pawn, null, Mathf.RoundToInt(Rand.Range(30f, 50f) * energyBurn), TMDamageDefOf.DamageDefOf.TM_ChiBurn, this.CasterPawn);
                     magicComp.Mana.CurLevel -= energyBurn;
                 }
@@ -137,14 +133,13 @@ namespace TorannMagic
             TM_Action.DamageEntities(pawn, null, Mathf.RoundToInt(Rand.Range(20f, 30f) * energyBurn), DamageDefOf.Stun, this.CasterPawn);
             if (classHediff != null)
             {
-                energyBurn = Mathf.Clamp(classHediff.Severity, 0, (.5f * (1f + (.20f * pwrVal))) * 100);
+                energyBurn = Mathf.Clamp(classHediff.Severity, 0, .5f * (1f + (.20f * pwrVal)) * 100);
                 classHediff.Severity -= energyBurn;
             }
         }
 
         private void DisruptMentalState_NonClass(Pawn pawn)
         {
-            float successChance = TM_Calc.GetSpellSuccessChance(this.CasterPawn, pawn, false);
             if (Rand.Chance(TM_Calc.GetSpellSuccessChance(this.CasterPawn, pawn, true)))
             {
                 if (pawn.RaceProps.Humanlike && Rand.Chance(.08f))

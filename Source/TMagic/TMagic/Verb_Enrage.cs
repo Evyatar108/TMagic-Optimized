@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using RimWorld;
+﻿using RimWorld;
 using AbilityUser;
 using Verse;
-using Verse.AI;
 
 
 namespace TorannMagic
@@ -50,11 +46,11 @@ namespace TorannMagic
                 arcaneDmg = comp.arcaneDmg;
             }
 
-            if(hitPawn != null && hitPawn.RaceProps != null && hitPawn.RaceProps.Humanlike && !TM_Calc.IsUndead(hitPawn))
+            if (hitPawn != null && hitPawn.RaceProps != null && hitPawn.RaceProps.Humanlike && !TM_Calc.IsUndead(hitPawn))
             {
-                if(hitPawn.Faction != caster.Faction && hitPawn.mindState != null && hitPawn.mindState.mentalStateHandler != null)
+                if (hitPawn.Faction != caster.Faction && hitPawn.mindState != null && hitPawn.mindState.mentalStateHandler != null)
                 {
-                    if(Rand.Chance(TM_Calc.GetSpellSuccessChance(caster, hitPawn, true)))
+                    if (Rand.Chance(TM_Calc.GetSpellSuccessChance(caster, hitPawn, true)))
                     {
                         try
                         {
@@ -71,15 +67,15 @@ namespace TorannMagic
                         return false;
                     }
                 }
-                HealthUtility.AdjustSeverity(hitPawn, TorannMagicDefOf.TM_EnrageHD, (.25f + (.05f+pwrVal)) * (.5f*arcaneDmg));
+                HealthUtility.AdjustSeverity(hitPawn, TorannMagicDefOf.TM_EnrageHD, (.25f + (.05f + pwrVal)) * (.5f * arcaneDmg));
 
                 HediffComp_Enrage hdc = hitPawn.health.hediffSet.GetFirstHediffOfDef(TorannMagicDefOf.TM_EnrageHD).TryGetComp<HediffComp_Enrage>();
-                hdc.reductionFactor = (1f - (.1f * verVal));
-                if(verVal >= 4)
+                hdc.reductionFactor = 1f - (.1f * verVal);
+                if (verVal >= 4)
                 {
                     hdc.consumeJoy = true;
                 }
-                
+
             }
             else
             {
@@ -88,6 +84,6 @@ namespace TorannMagic
 
             this.PostCastShot(flag, out flag);
             return flag;
-        }        
+        }
     }
 }

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using Verse;
 using UnityEngine;
 using RimWorld;
@@ -14,7 +11,7 @@ namespace TorannMagic
         {
             CompAbilityUserMagic comp = diffSet.pawn.GetComp<CompAbilityUserMagic>();
             float num = 0;
-            if(comp != null && comp.IsMagicUser && !comp.Pawn.story.traits.HasTrait(TorannMagicDefOf.Faceless))
+            if (comp != null && comp.IsMagicUser && !comp.Pawn.story.traits.HasTrait(TorannMagicDefOf.Faceless))
             {
                 num = 1;
             }

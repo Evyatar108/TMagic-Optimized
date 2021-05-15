@@ -82,18 +82,18 @@ namespace TorannMagic.Enchantment
                     actor.jobs.EndCurrentJob(JobCondition.Incompletable, true);
                     Log.Message("Failed to initialize enchanting - invalid item type.");
                 }
-                else if(thing.def.defName.Contains("TM_Artifact"))
+                else if (thing.def.defName.Contains("TM_Artifact"))
                 {
                     Messages.Message("TM_CannotEnchantArtifact".Translate(
                         actor.LabelShort,
                         thing.LabelShort
                     ), MessageTypeDefOf.RejectInput);
-                    actor.jobs.EndCurrentJob(JobCondition.Incompletable, true);                    
+                    actor.jobs.EndCurrentJob(JobCondition.Incompletable, true);
                 }
             };
             enchanting.tickAction = delegate
             {
-                if(thing.Position != thingLoc || thing.Destroyed)
+                if (thing.Position != thingLoc || thing.Destroyed)
                 {
                     actor.jobs.EndCurrentJob(JobCondition.Incompletable, true);
                     Log.Message("Failed to complete enchanting - item being enchanted not at enchanting location or destroyed");
@@ -109,14 +109,14 @@ namespace TorannMagic.Enchantment
                 {
                     return 1f;
                 }
-                return 1f - (float)enchanting.actor.jobs.curDriver.ticksLeftThisToil / 240;
+                return 1f - ((float)enchanting.actor.jobs.curDriver.ticksLeftThisToil / 240);
 
             }, false, 0f);
             enchanting.defaultCompleteMode = ToilCompleteMode.Delay;
             enchanting.defaultDuration = 240;
             enchanting.AddFinishAction(delegate
             {
-                CompEnchantedItem enchantment = thing.TryGetComp<CompEnchantedItem>();            
+                CompEnchantedItem enchantment = thing.TryGetComp<CompEnchantedItem>();
                 CompEnchant enchantingItem = actor.TryGetComp<CompEnchant>();
                 CompAbilityUserMagic pawnComp = actor.TryGetComp<CompAbilityUserMagic>();
                 if (enchantment != null && enchantingItem != null && enchanting.actor.jobs.curDriver.ticksLeftThisToil < 1)
@@ -135,7 +135,7 @@ namespace TorannMagic.Enchantment
                     {
                         Messages.Message("TM_NothingEnchanted".Translate(actor.LabelShort, thing.LabelShort, enchantingItem.enchantingContainer[0].LabelShort), MessageTypeDefOf.RejectInput);
                     }
-                    
+
                     //DestroyEnchantingStone(enchantingItem.innerContainer[0]);
                 }
                 else
@@ -457,11 +457,6 @@ namespace TorannMagic.Enchantment
                     break;
             }
             return enchantmentsApplied > 0;
-        }
-
-        private void DestroyEnchantingStone(Thing enchantingStone)
-        {
-
         }
     }
 }

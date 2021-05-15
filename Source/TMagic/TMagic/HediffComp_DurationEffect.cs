@@ -1,6 +1,4 @@
-﻿using RimWorld;
-using Verse;
-using UnityEngine;
+﻿using Verse;
 
 namespace TorannMagic
 {
@@ -63,7 +61,7 @@ namespace TorannMagic
             bool spawned = base.Pawn.Spawned;
             if (spawned)
             {
-                if(this.parent.def == TorannMagicDefOf.TM_GravitySlowHD)
+                if (this.parent.def == TorannMagicDefOf.TM_GravitySlowHD)
                 {
                     this.effectFrequency = 120;
                     this.severityReduction = .2f;
@@ -91,11 +89,11 @@ namespace TorannMagic
                     initialized = true;
                     this.Initialize();
                 }
-                if(this.ticksTillEffect <=0)
+                if (this.ticksTillEffect <= 0)
                 {
                     severityAdjustment -= this.severityReduction;
                     this.ticksTillEffect = this.effectFrequency;
-                    TM_MoteMaker.ThrowGenericMote(this.moteDef, this.Pawn.DrawPos, this.Pawn.Map, Rand.Range(.75f*this.scaleAvg, 1.25f*this.scaleAvg), this.solidTime, this.fadeIn, this.fadeOut, this.rotationRate, this.velocity, this.velocityAngle, this.lookAngle);
+                    TM_MoteMaker.ThrowGenericMote(this.moteDef, this.Pawn.DrawPos, this.Pawn.Map, Rand.Range(.75f * this.scaleAvg, 1.25f * this.scaleAvg), this.solidTime, this.fadeIn, this.fadeOut, this.rotationRate, this.velocity, this.velocityAngle, this.lookAngle);
                 }
                 this.ticksTillEffect--;
             }

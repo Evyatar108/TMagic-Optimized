@@ -1,7 +1,6 @@
 ﻿using RimWorld;
 using Verse;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace TorannMagic
 {
@@ -16,8 +15,6 @@ namespace TorannMagic
                 List<TraitDef> restrictedTraits = null;
                 if (this.parent.def.HasModExtension<DefModExtension_LearnAbilityRequiredTraits>())
                 {
-                    restrictedTraits = new List<TraitDef>();
-                    restrictedTraits.Clear();
                     restrictedTraits = this.parent.def.GetModExtension<DefModExtension_LearnAbilityRequiredTraits>().traits;
                 }
                 bool hasRequiredTrait = true;
@@ -37,9 +34,9 @@ namespace TorannMagic
                     bool itemUsed = false;
                     for (int i = 0; i < comp.MightData.AllMightPowers.Count; i++)
                     {
-                        TMAbilityDef ad = (TMAbilityDef)comp.MightData.AllMightPowers[i].abilityDef;                        
+                        TMAbilityDef ad = (TMAbilityDef)comp.MightData.AllMightPowers[i].abilityDef;
                         if (ad.learnItem == parent.def)
-                        {                            
+                        {
                             if (!TM_Data.RestrictedAbilities.Contains(parent.def) && !comp.MightData.AllMightPowers[i].learned && hasRequiredTrait)
                             {
                                 itemUsed = true;
@@ -47,9 +44,9 @@ namespace TorannMagic
                                 comp.InitializeSkill();
                                 this.parent.SplitOff(1).Destroy(DestroyMode.Vanish);
                             }
-                            else if((TM_Data.RestrictedAbilities.Contains(parent.def) || hasRequiredTrait) && !comp.MightData.AllMightPowers[i].learned)
+                            else if ((TM_Data.RestrictedAbilities.Contains(parent.def) || hasRequiredTrait) && !comp.MightData.AllMightPowers[i].learned)
                             {
-                                if(comp.customClass.learnableSkills.Contains(parent.def))
+                                if (comp.customClass.learnableSkills.Contains(parent.def))
                                 {
                                     itemUsed = true;
                                     comp.MightData.AllMightPowers[i].learned = true;
@@ -81,15 +78,15 @@ namespace TorannMagic
                     {
                         Messages.Message("CannotLearnSkill".Translate(), MessageTypeDefOf.RejectInput);
                         return;
-                    }                    
+                    }
                 }
                 else
                 {
                     TMAbilityDef customSkill = null;
-                    for(int i = 0; i < comp.MightData.MightPowersCustom.Count; i++)
+                    for (int i = 0; i < comp.MightData.MightPowersCustom.Count; i++)
                     {
                         TMAbilityDef tempSkill = (TMAbilityDef)comp.MightData.MightPowersCustom[i].abilityDef;
-                        if(tempSkill.learnItem != null && tempSkill.learnItem == parent.def)
+                        if (tempSkill.learnItem != null && tempSkill.learnItem == parent.def)
                         {
                             if (!comp.MightData.MightPowersCustom[i].learned)
                             {

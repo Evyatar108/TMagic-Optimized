@@ -40,19 +40,19 @@ namespace TorannMagic
                 verVal = 3;
             }
 
-            if(victim == null && this.intendedTarget != null && this.intendedTarget.Thing != null && this.intendedTarget.Thing is Pawn)
+            if (victim == null && this.intendedTarget != null && this.intendedTarget.Thing != null && this.intendedTarget.Thing is Pawn)
             {
                 victim = this.intendedTarget.Thing as Pawn;
             }
-            
+
             if (victim != null)
             {
-                TM_Action.DamageEntities(victim, null, this.def.projectile.GetDamageAmount(1, null) * (1+ .1f * pwrVal) * this.arcaneDmg, this.def.projectile.damageDef, this.launcher);
+                TM_Action.DamageEntities(victim, null, this.def.projectile.GetDamageAmount(1, null) * (1 + (.1f * pwrVal)) * this.arcaneDmg, this.def.projectile.damageDef, this.launcher);
                 if (Rand.Chance(.15f * verVal))
                 {
-                    int dmg = Mathf.RoundToInt(((this.def.projectile.GetDamageAmount(1, null) / 3)) * this.arcaneDmg);  //projectile = 15
+                    int dmg = Mathf.RoundToInt(this.def.projectile.GetDamageAmount(1, null) / 3 * this.arcaneDmg);  //projectile = 15
                     TM_Action.DamageEntities(victim, null, dmg, DamageDefOf.Stun, this.launcher);
-                }                
+                }
             }
         }
 
@@ -63,7 +63,7 @@ namespace TorannMagic
             base.Tick();
         }
 
-    }    
+    }
 }
 
 

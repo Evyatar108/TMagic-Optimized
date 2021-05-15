@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Verse;
+﻿using Verse;
 using RimWorld;
 
 namespace TorannMagic.Thoughts
@@ -13,7 +8,7 @@ namespace TorannMagic.Thoughts
         public override void PostStart()
         {
             base.PostStart();
-            if(this.def == TorannMagicDefOf.ID_Enlightened && base.pawn != null && base.pawn.health != null && base.pawn.health.hediffSet != null)
+            if (this.def == TorannMagicDefOf.ID_Enlightened && base.pawn != null && base.pawn.health != null && base.pawn.health.hediffSet != null)
             {
                 HealthUtility.AdjustSeverity(base.pawn, TorannMagicDefOf.TM_EnlightenedHD, 1f);
             }

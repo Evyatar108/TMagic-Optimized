@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using Verse;
+﻿using Verse;
 using RimWorld;
 using UnityEngine;
 using System.Collections.Generic;
@@ -15,7 +13,7 @@ namespace TorannMagic.Conditions
             bool tempAllow = false;
             Map map = (Map)parms.target;
             MagicMapComponent mmc = map.GetComponent<MagicMapComponent>();
-            if(mmc != null && mmc.allowAllIncidents)
+            if (mmc != null && mmc.allowAllIncidents)
             {
                 tempAllow = true;
             }
@@ -23,15 +21,15 @@ namespace TorannMagic.Conditions
             if (settingsRef.demonAssaultChallenge > 0 || tempAllow)
             {
                 string str = "";
-                
+
                 int duration = Mathf.RoundToInt(this.def.durationDays.RandomInRange * 60000f);
-                List<Faction> lichFaction = Find.FactionManager.AllFactions.ToList();
+                IEnumerable<Faction> lichFaction = Find.FactionManager.AllFactions;
                 bool factionFlag = false;
-                for (int i = 0; i < lichFaction.Count; i++)
+                foreach (var faction in lichFaction)
                 {
-                    if (lichFaction[i].def.defName == "TM_SkeletalFaction")
+                    if (faction.def.defName == "TM_SkeletalFaction")
                     {
-                        Faction.OfPlayer.TrySetRelationKind(lichFaction[i], FactionRelationKind.Hostile, false, null, null);
+                        Faction.OfPlayer.TrySetRelationKind(faction, FactionRelationKind.Hostile, false, null, null);
                         factionFlag = true;
                     }
                 }
@@ -48,7 +46,7 @@ namespace TorannMagic.Conditions
             }
             else
             {
-                return false; 
+                return false;
             }
         }
     }

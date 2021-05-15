@@ -27,8 +27,7 @@ namespace TorannMagic
             {
                 if ((root - targ.Cell).LengthHorizontal < this.verbProps.range)
                 {
-                    ShootLine shootLine;
-                    validTarg = this.TryFindShootLineFromTo(root, targ, out shootLine);
+                    validTarg = this.TryFindShootLineFromTo(root, targ, out _);
                 }
                 else
                 {
@@ -48,7 +47,7 @@ namespace TorannMagic
             Pawn pawn = this.currentTarget.Thing as Pawn;
             CompAbilityUserMagic comp = caster.GetComp<CompAbilityUserMagic>();
             if (comp != null && !caster.story.traits.HasTrait(TorannMagicDefOf.Faceless))
-            {                
+            {
                 MagicPowerSkill pwr = comp.MagicData.MagicPowerSkill_Purify.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_Purify_pwr");
                 MagicPowerSkill ver = comp.MagicData.MagicPowerSkill_Purify.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_Purify_ver");
                 pwrVal = pwr.level;
@@ -81,7 +80,7 @@ namespace TorannMagic
                             IEnumerable<Hediff_Injury> arg_BB_0 = pawn.health.hediffSet.GetHediffs<Hediff_Injury>();
                             Func<Hediff_Injury, bool> arg_BB_1;
 
-                            arg_BB_1 = ((Hediff_Injury injury) => injury.Part == rec);
+                            arg_BB_1 = (Hediff_Injury injury) => injury.Part == rec;
 
                             foreach (Hediff_Injury current in arg_BB_0.Where(arg_BB_1))
                             {
@@ -102,14 +101,14 @@ namespace TorannMagic
                                         }
                                         else
                                         {
-                                            current.Heal((2f + pwrVal * 2) * arcaneDmg);
+                                            current.Heal((2f + (pwrVal * 2)) * arcaneDmg);
                                             //current.Heal(5.0f + (float)pwrVal * 3f); // power affects how much to heal
                                             num--;
                                             num2--;
                                         }
                                         TM_MoteMaker.ThrowRegenMote(pawn.Position.ToVector3Shifted(), pawn.Map, .6f);
                                         TM_MoteMaker.ThrowRegenMote(pawn.Position.ToVector3Shifted(), pawn.Map, .4f);
-                                        
+
                                     }
                                 }
                             }
@@ -126,12 +125,12 @@ namespace TorannMagic
                         bool flag2 = num > 0;
                         if (flag2)
                         {
-                            if (TM_Data.AilmentList().Contains(rec.def))
+                            if (TM_Data.AilmentList.Contains(rec.def))
                             {
                                 List<TMDefs.TM_CategoryHediff> ailmentList = HediffCategoryList.Named("TM_Category_Hediffs").ailments;
-                                foreach(TMDefs.TM_CategoryHediff chd in ailmentList)
+                                foreach (TMDefs.TM_CategoryHediff chd in ailmentList)
                                 {
-                                    if(chd.hediffDefname.Contains(rec.def.defName))
+                                    if (chd.hediffDefname.Contains(rec.def.defName))
                                     {
                                         pwrVal = comp.MagicData.AllMagicPowerSkills.FirstOrDefault((MagicPowerSkill x) => x.label == chd.powerSkillName).level;
                                         verVal = comp.MagicData.AllMagicPowerSkills.FirstOrDefault((MagicPowerSkill x) => x.label == chd.requiredSkillName).level;
@@ -156,7 +155,7 @@ namespace TorannMagic
                                             }
                                             else
                                             {
-                                                if ((rec.Severity - (chd.severityReduction + (chd.powerSkillAdjustment * pwrVal)) * arcaneDmg) <= 0 && chd.replacementHediffDefname != "")
+                                                if ((rec.Severity - ((chd.severityReduction + (chd.powerSkillAdjustment * pwrVal)) * arcaneDmg)) <= 0 && chd.replacementHediffDefname != "")
                                                 {
                                                     HealthUtility.AdjustSeverity(pawn, HediffDef.Named(chd.replacementHediffDefname), chd.replacementHediffSeverity);
                                                 }
@@ -165,18 +164,18 @@ namespace TorannMagic
                                             }
                                         }
                                     }
-                                }                                
+                                }
                             }
                             else
                             {
                                 if (rec.def.defName == "Cataract" || rec.def.defName == "HearingLoss" || rec.def.defName.Contains("ToxicBuildup"))
                                 {
-                                    rec.Heal(.4f + .3f * pwrVal);
+                                    rec.Heal(.4f + (.3f * pwrVal));
                                     num--;
                                 }
                                 if ((rec.def.defName == "Blindness" || rec.def.defName.Contains("Asthma") || rec.def.defName == "Cirrhosis" || rec.def.defName == "ChemicalDamageModerate") && verVal >= 1)
                                 {
-                                    rec.Heal(.3f + .2f * pwrVal);
+                                    rec.Heal(.3f + (.2f * pwrVal));
                                     if (rec.def.defName.Contains("Asthma"))
                                     {
                                         pawn.health.RemoveHediff(rec);
@@ -185,12 +184,12 @@ namespace TorannMagic
                                 }
                                 if ((rec.def.defName == "Frail" || rec.def.defName == "BadBack" || rec.def.defName.Contains("Carcinoma") || rec.def.defName == "ChemicalDamageSevere") && verVal >= 2)
                                 {
-                                    rec.Heal(.25f + .2f * pwrVal);
+                                    rec.Heal(.25f + (.2f * pwrVal));
                                     num--;
                                 }
                                 if ((rec.def.defName.Contains("Alzheimers") || rec.def.defName == "Dementia" || rec.def.defName.Contains("HeartArteryBlockage") || rec.def.defName == "PsychicShock" || rec.def.defName == "CatatonicBreakdown") && verVal >= 3)
                                 {
-                                    rec.Heal(.15f + .15f * pwrVal);
+                                    rec.Heal(.15f + (.15f * pwrVal));
                                     num--;
                                 }
                                 if (rec.def.defName.Contains("Abasia") && verVal >= 3)
@@ -220,7 +219,7 @@ namespace TorannMagic
                         bool flag2 = num > 0;
                         if (flag2)
                         {
-                            if (TM_Data.AddictionList().Contains(rec.def))
+                            if (TM_Data.AddictionList.Contains(rec.def))
                             {
                                 List<TMDefs.TM_CategoryHediff> addictionList = HediffCategoryList.Named("TM_Category_Hediffs").addictions;
                                 foreach (TMDefs.TM_CategoryHediff chd in addictionList)
@@ -250,12 +249,12 @@ namespace TorannMagic
                                             }
                                             else
                                             {
-                                                if (rec.Chemical.defName == "Luciferium" && ((rec.Severity - (chd.severityReduction + (chd.powerSkillAdjustment * pwrVal)) * arcaneDmg <= 0)))
+                                                if (rec.Chemical.defName == "Luciferium" && rec.Severity - ((chd.severityReduction + (chd.powerSkillAdjustment * pwrVal)) * arcaneDmg) <= 0)
                                                 {
                                                     Hediff luciHigh = pawn.health.hediffSet.GetFirstHediffOfDef(HediffDef.Named("LuciferiumHigh"), false);
                                                     pawn.health.RemoveHediff(luciHigh);
                                                 }
-                                                rec.Severity -= ((chd.severityReduction + (chd.powerSkillAdjustment * pwrVal)) * arcaneDmg);
+                                                rec.Severity -= (chd.severityReduction + (chd.powerSkillAdjustment * pwrVal)) * arcaneDmg;
                                                 num--;
                                             }
                                         }
@@ -266,27 +265,27 @@ namespace TorannMagic
                             {
                                 if (rec.Chemical.defName == "Alcohol" || rec.Chemical.defName == "Smokeleaf")
                                 {
-                                    rec.Severity -= ((.3f + .3f * pwrVal) * arcaneDmg);
+                                    rec.Severity -= (.3f + (.3f * pwrVal)) * arcaneDmg;
                                     num--;
                                 }
                                 if ((rec.Chemical.defName == "GoJuice" || rec.Chemical.defName == "WakeUp") && verVal >= 1)
                                 {
-                                    rec.Severity -= ((.25f + .25f * pwrVal) * arcaneDmg);
+                                    rec.Severity -= (.25f + (.25f * pwrVal)) * arcaneDmg;
                                     num--;
                                 }
                                 if (rec.Chemical.defName == "Psychite" && verVal >= 2)
                                 {
-                                    rec.Severity -= ((.25f + .25f * pwrVal) * arcaneDmg);
+                                    rec.Severity -= (.25f + (.25f * pwrVal)) * arcaneDmg;
                                     num--;
                                 }
                                 if (verVal >= 3)
                                 {
-                                    if (rec.Chemical.defName == "Luciferium" && (rec.Severity - ((.15f + .15f * pwrVal) * arcaneDmg) < 0))
+                                    if (rec.Chemical.defName == "Luciferium" && (rec.Severity - ((.15f + (.15f * pwrVal)) * arcaneDmg) < 0))
                                     {
                                         Hediff luciHigh = pawn.health.hediffSet.GetFirstHediffOfDef(HediffDef.Named("LuciferiumHigh"), false);
                                         pawn.health.RemoveHediff(luciHigh);
                                     }
-                                    rec.Severity -= ((.15f + .15f * pwrVal) * arcaneDmg);
+                                    rec.Severity -= (.15f + (.15f * pwrVal)) * arcaneDmg;
                                     num--;
                                 }
                             }

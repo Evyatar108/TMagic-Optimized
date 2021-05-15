@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using UnityEngine;
 using Verse;
 using RimWorld;
@@ -27,11 +26,11 @@ namespace TorannMagic.Conditions
 
         public override void GameConditionTick()
         {
-            base.GameConditionTick();            
-            if(Find.TickManager.TicksGame % 60 == 0)
+            base.GameConditionTick();
+            if (Find.TickManager.TicksGame % 60 == 0)
             {
                 //Log.Message("wandering lich duration pct: " + (float)((float)this.TicksPassed / (float)this.Duration) + "  duration ticks: " + this.Duration);
-                if(this.thing.DestroyedOrNull())
+                if (this.thing.DestroyedOrNull())
                 {
                     this.End();
                 }
@@ -39,14 +38,14 @@ namespace TorannMagic.Conditions
                 CompSkeletonLichController comp = thing.TryGetComp<CompSkeletonLichController>();
                 if (this.nextEventTick <= Find.TickManager.TicksGame)
                 {
-                    if(comp != null && comp.tauntTarget == null)
+                    if (comp != null && comp.tauntTarget == null)
                     {
                         this.nextEventTick = Find.TickManager.TicksGame + this.ticksBetweenEvents;
                         comp.raiseRadius = this.areaRadius;
                         comp.tauntTarget = TM_Calc.TryFindSafeCell(comp.ParentPawn, comp.ParentPawn.Position, 30, 1, 10);
-                        if(comp.tauntTarget == null || comp.tauntTarget == default(IntVec3))
+                        if (comp.tauntTarget == null || comp.tauntTarget == default(IntVec3))
                         {
-                            FindGoodCenterLocation();                            
+                            FindGoodCenterLocation();
                             comp.tauntTarget = this.centerLocation.ToIntVec3;
                         }
                         comp.geChance = this.geChance;
@@ -87,7 +86,7 @@ namespace TorannMagic.Conditions
             {
                 tempAllow = true;
             }
-            ModOptions.SettingsRef settingsRef = new ModOptions.SettingsRef();            
+            ModOptions.SettingsRef settingsRef = new ModOptions.SettingsRef();
             if (settingsRef.wanderingLichChallenge > 0 || tempAllow)
             {
                 base.Init();
@@ -95,11 +94,11 @@ namespace TorannMagic.Conditions
                 this.FindGoodEdgeLocation();
                 this.SpawnWanderingLich();
                 this.SetEventParameters();
-                if(settingsRef.wanderingLichChallenge >= 2)
+                if (settingsRef.wanderingLichChallenge >= 2)
                 {
                     InitializeDeathSkies();
                 }
-                if(settingsRef.wanderingLichChallenge >= 3)
+                if (settingsRef.wanderingLichChallenge >= 3)
                 {
                     InitializeSolarFlare();
                 }
@@ -161,35 +160,35 @@ namespace TorannMagic.Conditions
             Lord assaultLord = null;
             Lord defendLord = null;
             List<Lord> allLords = this.SingleMap.lordManager.lords;
-            for(int i = 0; i < allLords.Count; i++)
+            for (int i = 0; i < allLords.Count; i++)
             {
                 Lord lord = allLords[i];
-                if(lord.faction != null && lord.faction == faction)
+                if (lord.faction != null && lord.faction == faction)
                 {
-                    if(lord.CurLordToil != null && lord.CurLordToil is LordToil_DefendPoint)
+                    if (lord.CurLordToil != null && lord.CurLordToil is LordToil_DefendPoint)
                     {
                         defendLord = lord;
                         LordToil_DefendPoint lordToil = defendLord.CurLordToil as LordToil_DefendPoint;
                         lordToil.SetDefendPoint(this.centerLocation.ToIntVec3);
                     }
-                    else if(lord.CurLordToil != null && lord.CurLordToil is LordToil_AssaultColony)
+                    else if (lord.CurLordToil != null && lord.CurLordToil is LordToil_AssaultColony)
                     {
                         assaultLord = lord;
                     }
                 }
             }
-            if(assaultLord == null)
+            if (assaultLord == null)
             {
                 LordJob_AssaultColony lordJob = new LordJob_AssaultColony(faction, false, false, false, false, false);
                 Traverse.Create(root: lordJob).Field(name: "canTimeoutOrFlee").SetValue(false);
                 assaultLord = LordMaker.MakeNewLord(faction, lordJob, this.SingleMap, null);
             }
-            if(defendLord == null)
+            if (defendLord == null)
             {
                 LordJob_DefendPoint lordJob = new LordJob_DefendPoint(this.centerLocation.ToIntVec3);
                 defendLord = LordMaker.MakeNewLord(faction, lordJob, this.SingleMap, null);
             }
-            
+
             List<Pawn> allPawns = this.SingleMap.mapPawns.AllPawnsSpawned;
             for (int i = 0; i < allPawns.Count; i++)
             {
@@ -247,7 +246,7 @@ namespace TorannMagic.Conditions
             AbilityUser.SpawnThings spawnables = new SpawnThings();
             spawnables.def = TorannMagicDefOf.TM_SkeletonLichR;
             spawnables.kindDef = PawnKindDef.Named("TM_SkeletonLich");
-            spawnables.temporary = false;            
+            spawnables.temporary = false;
             Faction faction = Find.FactionManager.FirstFactionOfDef(TorannMagicDefOf.TM_SkeletalFaction);
             if (faction != null)
             {
@@ -267,20 +266,19 @@ namespace TorannMagic.Conditions
 
         public override void End()
         {
-            CompSkeletonLichController comp = null;
-            if(!thing.DestroyedOrNull())
+            if (!thing.DestroyedOrNull())
             {
-                comp = thing.TryGetComp<CompSkeletonLichController>();
+                CompSkeletonLichController comp = thing.TryGetComp<CompSkeletonLichController>();
                 SendAssaultWave(comp.ParentPawn.Faction, true);
             }
             else
             {
                 List<Pawn> allPawns = this.SingleMap.mapPawns.AllPawnsSpawned;
-                for(int i = 0; i < allPawns.Count; i++)
+                for (int i = 0; i < allPawns.Count; i++)
                 {
-                    if(allPawns[i].def == TorannMagicDefOf.TM_SkeletonR || allPawns[i].def == TorannMagicDefOf.TM_GiantSkeletonR || allPawns[i].def == TorannMagicDefOf.TM_SkeletonLichR)
+                    if (allPawns[i].def == TorannMagicDefOf.TM_SkeletonR || allPawns[i].def == TorannMagicDefOf.TM_GiantSkeletonR || allPawns[i].def == TorannMagicDefOf.TM_SkeletonLichR)
                     {
-                        if(allPawns[i].Faction != Faction.OfPlayer)
+                        if (allPawns[i].Faction != Faction.OfPlayer)
                         {
                             allPawns[i].Kill(null, null);
                             i--;
@@ -288,15 +286,15 @@ namespace TorannMagic.Conditions
                     }
                 }
             }
-            List<GameCondition> gcs = new List<GameCondition>();
-            gcs = this.SingleMap.GameConditionManager.ActiveConditions;
-            for(int i = 0; i < gcs.Count; i++)
+
+            List<GameCondition> gcs = SingleMap.GameConditionManager.ActiveConditions;
+            for (int i = 0; i < gcs.Count; i++)
             {
-                if(gcs[i].def == TorannMagicDefOf.DarkClouds)
+                if (gcs[i].def == TorannMagicDefOf.DarkClouds)
                 {
                     gcs[i].End();
                 }
-                else if(gcs[i].def == GameConditionDefOf.SolarFlare)
+                else if (gcs[i].def == GameConditionDefOf.SolarFlare)
                 {
                     gcs[i].End();
                 }
@@ -319,9 +317,9 @@ namespace TorannMagic.Conditions
             }
             for (int i = 0; i < 20; i++)
             {
-                int xVar = 0;
-                int zVar = 0;
-                if (Rand.Chance(.5f)) 
+                int xVar;
+                int zVar;
+                if (Rand.Chance(.5f))
                 {
                     xVar = Rand.Range(8, base.SingleMap.Size.x - 8);
                     zVar = Rand.Chance(.5f) ? Rand.Range(8, 16) : Rand.Range(base.SingleMap.Size.z - 16, base.SingleMap.Size.z - 8);
@@ -339,7 +337,7 @@ namespace TorannMagic.Conditions
                     break;
                 }
             }
-            if(!centerLocFound)
+            if (!centerLocFound)
             {
                 FindGoodCenterLocation();
             }
@@ -381,8 +379,8 @@ namespace TorannMagic.Conditions
                     break;
                 }
             }
-            
-            return num >= num2 && (IsGoodLocationForSpawn(loc.ToIntVec3));
+
+            return num >= num2 && IsGoodLocationForSpawn(loc.ToIntVec3);
         }
 
         [DebuggerHidden]
@@ -392,7 +390,7 @@ namespace TorannMagic.Conditions
             {
                 for (int z = center.z - this.areaRadius; z <= center.z + this.areaRadius; z++)
                 {
-                    if ((center.x - x) * (center.x - x) + (center.z - z) * (center.z - z) <= this.areaRadius * this.areaRadius)
+                    if (((center.x - x) * (center.x - x)) + ((center.z - z) * (center.z - z)) <= this.areaRadius * this.areaRadius)
                     {
                         yield return new IntVec3(x, 0, z);
                     }
@@ -434,9 +432,9 @@ namespace TorannMagic.Conditions
             IntVec3 curCell;
             Map map = this.SingleMap;
             IEnumerable<IntVec3> targets = GenRadial.RadialCellsAround(center, radius, true);
-            for (int j = 0; j < targets.Count(); j++)
+            foreach (var cell in targets)
             {
-                curCell = targets.ToArray<IntVec3>()[j];
+                curCell = cell;
                 if (curCell.InBounds(map) && curCell.IsValid && curCell.Walkable(map))
                 {
                     SpawnThings skeleton = new SpawnThings();
@@ -449,7 +447,7 @@ namespace TorannMagic.Conditions
                     {
                         skeleton.def = TorannMagicDefOf.TM_SkeletonR;
                         skeleton.kindDef = PawnKindDef.Named("TM_Skeleton");
-                    }                    
+                    }
                     else
                     {
                         skeleton = null;

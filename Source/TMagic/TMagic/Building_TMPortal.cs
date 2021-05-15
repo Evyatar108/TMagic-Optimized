@@ -18,10 +18,6 @@ namespace TorannMagic
         private IntVec3 portalDestinationPosition = IntVec3.Invalid;
         private float arcaneEnergyCur = 0;
         private float arcaneEnergyMax = 1;
-        private float launchDistance;
-        private int maxLaunchDistance = 999;
-        private float portalEnergyCost = .02f;
-
         private static readonly Vector2 BarSize = new Vector2(1.2f, 0.2f);
         private static readonly Material EnergyBarFilledMat = SolidColorMaterials.SimpleSolidColorMaterial(new Color(0.0f, 0.0f, 1f), false);
         private static readonly Material EnergyBarUnfilledMat = SolidColorMaterials.SimpleSolidColorMaterial(new Color(0.4f, 0.4f, 0.4f), false);
@@ -57,12 +53,12 @@ namespace TorannMagic
         //        return null;
         //    }
         //}
-   //     Scribe_Values.Look<sbyte>(ref this.mapIndexOrState, "map", -1, false);
-			//if (Scribe.mode == LoadSaveMode.LoadingVars && (int) this.mapIndexOrState >= 0)
+        //     Scribe_Values.Look<sbyte>(ref this.mapIndexOrState, "map", -1, false);
+        //if (Scribe.mode == LoadSaveMode.LoadingVars && (int) this.mapIndexOrState >= 0)
 
-   //         {
-   //         this.mapIndexOrState = -1;
-   //     }
+        //         {
+        //         this.mapIndexOrState = -1;
+        //     }
 
         public IEnumerable<IntVec3> PortableCells
         {
@@ -99,7 +95,7 @@ namespace TorannMagic
                 portalDestinationMap = value;
             }
         }
-        
+
         public IntVec3 PortalDestinationPosition
         {
             get
@@ -132,21 +128,9 @@ namespace TorannMagic
             }
         }
 
-        public int MaxLaunchDistance
-        {
-            get
-            {
-                return this.maxLaunchDistance;
-            }
-        }
+        public int MaxLaunchDistance { get; } = 999;
 
-        public float PortalEnergyCost
-        {
-            get
-            {
-                return this.portalEnergyCost;
-            }
-        }
+        public float PortalEnergyCost { get; } = .02f;
 
         public override void SpawnSetup(Map map, bool respawningAfterLoad)
         {
@@ -295,9 +279,9 @@ namespace TorannMagic
 
                 IntVec3 curCell;
                 IEnumerable<IntVec3> targets = GenRadial.RadialCellsAround(this.InteractionCell, 3, true);
-                for (int i = 0; i < targets.Count(); i++)
+                foreach (var cell in targets)
                 {
-                    curCell = targets.ToArray<IntVec3>()[i];
+                    curCell = cell;
                     if (curCell.InBounds(this.Map) && curCell.IsValid)
                     {
                         Pawn interactingPawn = curCell.GetFirstPawn(this.Map);
@@ -320,7 +304,7 @@ namespace TorannMagic
                                             ), MessageTypeDefOf.RejectInput);
 
                                     }
-                                    this.IsPaired = false;                                    
+                                    this.IsPaired = false;
                                 }
 
                             }

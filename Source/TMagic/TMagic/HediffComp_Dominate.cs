@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using Verse;
 using RimWorld;
 using UnityEngine;
@@ -114,7 +112,7 @@ namespace TorannMagic
             if (age > (lastInfection + infectionRate) && this.parent.Severity > this.minimumSev)
             {
                 bool infectionFlag = false;
-                HealthUtility.AdjustSeverity(base.Pawn, this.Def, -1 * (this.minimumSev));
+                HealthUtility.AdjustSeverity(base.Pawn, this.Def, -1 * this.minimumSev);
                 this.lastInfection = this.age;
                 Pawn pawn = base.Pawn as Pawn;
                 Map map = pawn.Map;
@@ -123,9 +121,9 @@ namespace TorannMagic
                     IntVec3 curCell;
                     Pawn victim = null;
                     IEnumerable<IntVec3> targets = GenRadial.RadialCellsAround(pawn.Position, this.infectionRadius, true);
-                    for (int i = 0; i < targets.Count(); i++)
+                    foreach (var cell in targets)
                     {
-                        curCell = targets.ToArray<IntVec3>()[i];
+                        curCell = cell;
                         if (curCell.InBounds(map) && curCell.IsValid)
                         {
                             victim = curCell.GetFirstPawn(map);
@@ -158,7 +156,7 @@ namespace TorannMagic
 
         private float GetAngleFromTo(Vector3 from, Vector3 to)
         {
-            Vector3 heading = (to - from);
+            Vector3 heading = to - from;
             float distance = heading.magnitude;
             Vector3 direction = heading / distance;
             float directionAngle = (Quaternion.AngleAxis(90, Vector3.up) * direction).ToAngleFlat();
@@ -185,6 +183,6 @@ namespace TorannMagic
             Scribe_Values.Look<int>(ref this.effVal, "effVal", 0, false);
             Scribe_Values.Look<int>(ref this.verVal, "verVal", 0, false);
         }
-        
+
     }
 }

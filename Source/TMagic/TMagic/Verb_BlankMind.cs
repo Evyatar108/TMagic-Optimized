@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using RimWorld;
 using AbilityUser;
 using UnityEngine;
 using Verse;
-using Verse.AI;
 
 
 namespace TorannMagic
@@ -61,9 +59,9 @@ namespace TorannMagic
                     {
                         List<Thought_Memory> thoughts = pawn.needs.mood.thoughts.memories.Memories;
                         pawn.mindState.mentalStateHandler.TryStartMentalState(TorannMagicDefOf.WanderConfused, null, false, false, null, false);
-                        for(int i =0; i< thoughts.Count; i++)
+                        for (int i = 0; i < thoughts.Count; i++)
                         {
-                            pawn.needs.mood.thoughts.memories.RemoveMemory(thoughts[i]);                            
+                            pawn.needs.mood.thoughts.memories.RemoveMemory(thoughts[i]);
                             i--;
                         }
                         pawn.needs.mood.thoughts.memories.TryGainMemory(TorannMagicDefOf.TM_MemoryWipe, null);
@@ -72,7 +70,7 @@ namespace TorannMagic
                     else
                     {
                         MoteMaker.ThrowText(pawn.DrawPos, pawn.Map, "TM_ResistedSpell".Translate(), -1);
-                    }                    
+                    }
                 }
             }
             else
@@ -92,7 +90,7 @@ namespace TorannMagic
                             MoteMaker.ThrowText(newPawn.DrawPos, newPawn.Map, "TM_ResistedSpell".Translate(), -1);
                         }
                     }
-                }                
+                }
             }
             this.PostCastShot(flag, out flag);
             return flag;

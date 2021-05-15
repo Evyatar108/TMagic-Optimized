@@ -1,15 +1,12 @@
 ﻿using RimWorld;
-using System;
 using Verse;
-using Verse.Sound;
 using AbilityUser;
 using System.Linq;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace TorannMagic
 {
-    public class Verb_Shapeshift : Verb_UseAbility  
+    public class Verb_Shapeshift : Verb_UseAbility
     {
         float arcaneDmg = 1f;
         public int verVal = 0;
@@ -29,11 +26,11 @@ namespace TorannMagic
             verVal = comp.MagicData.MagicPowerSkill_Shapeshift.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_Shapeshift_ver").level;
             pwrVal = comp.MagicData.MagicPowerSkill_Shapeshift.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_Shapeshift_pwr").level;
             effVal = comp.MagicData.MagicPowerSkill_Shapeshift.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_Shapeshift_eff").level;
-            this.duration = Mathf.RoundToInt((this.duration + (360 * effVal))*comp.arcaneDmg);
+            this.duration = Mathf.RoundToInt((this.duration + (360 * effVal)) * comp.arcaneDmg);
             bool flag = caster != null && !caster.Dead;
             if (flag)
             {
-                
+
                 CompPolymorph compPoly = caster.GetComp<CompPolymorph>();
                 if (compPoly != null && compPoly.Original != null && compPoly.TicksLeft > 0)
                 {

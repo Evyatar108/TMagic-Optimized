@@ -1,24 +1,14 @@
-﻿using System;
-using RimWorld;
+﻿using RimWorld;
 using Verse;
 using Verse.Sound;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
-using Verse.AI;
-using Verse.AI.Group;
 
 namespace TorannMagic
 {
     public class Building_LightningTrap : Building_Trap
     {
-        public List<Pawn> touchingPawns = new List<Pawn>();
-
-        private const float KnowerSpringChance = 0.004f;
-        private const ushort KnowerPathFindCost = 800;
-        private const ushort KnowerPathWalkCost = 30;
-        private const float AnimalSpringChanceFactor = 0.1f;
-
+        public HashSet<Pawn> touchingPawns = new HashSet<Pawn>();
         private int trapSpringDelay = 30;
         private bool trapSprung = false;
 
@@ -35,7 +25,7 @@ namespace TorannMagic
         public override void ExposeData()
         {
             base.ExposeData();
-            Scribe_Values.Look<bool>(ref this.extendedTrap, "extendedTrap",false, false);
+            Scribe_Values.Look<bool>(ref this.extendedTrap, "extendedTrap", false, false);
             Scribe_Values.Look<bool>(ref this.iceTrap, "iceTrap", false, false);
         }
 
@@ -71,14 +61,7 @@ namespace TorannMagic
                     IntVec3 intVec = this.Position + GenAdj.AdjacentCells[j];
                     CheckPawn(intVec);
                 }
-                for (int j = 0; j < this.touchingPawns.Count; j++)
-                {
-                    Pawn pawn2 = this.touchingPawns[j];
-                    if (!pawn2.Spawned || pawn2.Position != base.Position)
-                    {
-                        this.touchingPawns.Remove(pawn2);
-                    }
-                }
+                this.touchingPawns.RemoveWhere(pawn2 => !pawn2.Spawned || pawn2.Position != base.Position);
             }
             else
             {
@@ -118,7 +101,7 @@ namespace TorannMagic
             LocalTargetInfo t = targetPos;
             bool flag = t.Cell != default(IntVec3);
             float speed = .8f;
-            if(extendedTrap)
+            if (extendedTrap)
             {
                 speed = .6f;
             }
@@ -129,7 +112,7 @@ namespace TorannMagic
                 FlyingObject_LightningTrap flyingObject = (FlyingObject_LightningTrap)GenSpawn.Spawn(TorannMagicDefOf.FlyingObject_LightningTrap, this.Position, this.Map);
                 flyingObject.Launch(p, this.Position.ToVector3Shifted(), t.Cell, eyeThing, this.Faction, null, speed);
             }
-            if(iceTrap)
+            if (iceTrap)
             {
                 AddSnowRadial(this.Position, this.Map, 6, 1.1f);
             }
@@ -144,7 +127,7 @@ namespace TorannMagic
                 if (intVec.InBounds(map))
                 {
                     float lengthHorizontal = (center - intVec).LengthHorizontal;
-                    float num2 = 1f - lengthHorizontal / radius;
+                    float num2 = 1f - (lengthHorizontal / radius);
                     map.snowGrid.AddDepth(intVec, num2 * depth);
 
                 }

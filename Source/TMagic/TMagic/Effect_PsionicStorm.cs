@@ -1,9 +1,8 @@
 ﻿using Verse;
 using AbilityUser;
-using RimWorld;
 
 namespace TorannMagic
-{    
+{
     public class Effect_PsionicStorm : Verb_UseAbility
     {
         //bool validTarg;
@@ -50,7 +49,7 @@ namespace TorannMagic
                 {
                     FlyingObject_PsionicStorm flyingObject = (FlyingObject_PsionicStorm)GenSpawn.Spawn(ThingDef.Named("FlyingObject_PsionicStorm"), this.CasterPawn.Position, this.CasterPawn.Map);
                     flyingObject.Launch(this.CasterPawn, t.Cell, this.CasterPawn, this);
-                }, "LaunchingFlyer", false, null);                
+                }, "LaunchingFlyer", false, null);
             }
         }
 
@@ -59,9 +58,8 @@ namespace TorannMagic
             if (inResult)
             {
                 this.Effect();
-                outResult = true;
             }
             outResult = inResult;
         }
-    }    
+    }
 }

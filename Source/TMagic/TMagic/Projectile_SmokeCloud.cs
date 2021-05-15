@@ -2,18 +2,17 @@
 using RimWorld;
 using Verse;
 using System.Linq;
-using System;
 using System.Collections.Generic;
 
 namespace TorannMagic
 {
-	public class Projectile_SmokeCloud : Projectile_AbilityBase
-	{
-		protected override void Impact(Thing hitThing)
-		{            
+    public class Projectile_SmokeCloud : Projectile_AbilityBase
+    {
+        protected override void Impact(Thing hitThing)
+        {
             Map map = base.Map;
-			base.Impact(hitThing);
-			ThingDef def = this.def;
+            base.Impact(hitThing);
+            ThingDef def = this.def;
             Pawn p = launcher as Pawn;
             float explosionRadius = this.def.projectile.explosionRadius;
             if (p != null)
@@ -49,10 +48,10 @@ namespace TorannMagic
                 }
             }
 
-            GenExplosion.DoExplosion(base.Position, map, explosionRadius, this.def.projectile.damageDef, this.launcher, this.def.projectile.GetDamageAmount(1,null), 0, SoundDefOf.Artillery_ShellLoaded, def, this.equipmentDef, null, ThingDefOf.Gas_Smoke, 1f, 1, false, null, 0f, 1, 0f, false);
+            GenExplosion.DoExplosion(base.Position, map, explosionRadius, this.def.projectile.damageDef, this.launcher, this.def.projectile.GetDamageAmount(1, null), 0, SoundDefOf.Artillery_ShellLoaded, def, this.equipmentDef, null, ThingDefOf.Gas_Smoke, 1f, 1, false, null, 0f, 1, 0f, false);
 
-		}		
-	}	
+        }
+    }
 }
 
 

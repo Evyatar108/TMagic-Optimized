@@ -1,5 +1,4 @@
-﻿using System;
-using Verse;
+﻿using Verse;
 using RimWorld;
 
 namespace TorannMagic.Thoughts
@@ -20,7 +19,7 @@ namespace TorannMagic.Thoughts
                 }
                 if (pawn.RaceProps.Humanlike && other.RaceProps.Humanlike)
                 {
-                    if ((TM_Calc.IsMightUser(pawn) && !pawn.story.traits.HasTrait(TorannMagicDefOf.TM_BoundlessTD)) && other.story.traits.HasTrait(TorannMagicDefOf.TM_BoundlessTD))
+                    if (TM_Calc.IsMightUser(pawn) && !pawn.story.traits.HasTrait(TorannMagicDefOf.TM_BoundlessTD) && other.story.traits.HasTrait(TorannMagicDefOf.TM_BoundlessTD))
                     {
                         return true;
                     }

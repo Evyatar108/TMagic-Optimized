@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using RimWorld;
-using AbilityUser;
+﻿using AbilityUser;
 using Verse;
-using UnityEngine;
-using Verse.AI;
 
 
 namespace TorannMagic
@@ -17,7 +11,7 @@ namespace TorannMagic
             Pawn caster = base.CasterPawn;
             Thing thing = this.currentTarget.Cell.GetFirstItem(caster.Map);
             TM_Action.DoAction_TechnoWeaponCopy(caster, thing);
-            
+
             this.burstShotsLeft = 0;
             return true;
         }

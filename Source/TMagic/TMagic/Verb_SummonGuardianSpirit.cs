@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using RimWorld;
+﻿using RimWorld;
 using AbilityUser;
-using Verse.AI;
 using Verse;
 using UnityEngine;
 
@@ -24,8 +20,7 @@ namespace TorannMagic
             {
                 if ((root - targ.Cell).LengthHorizontal < this.verbProps.range)
                 {
-                    ShootLine shootLine;
-                    validTarg = this.TryFindShootLineFromTo(root, targ, out shootLine);
+                    validTarg = this.TryFindShootLineFromTo(root, targ, out _);
                 }
                 else
                 {
@@ -54,13 +49,13 @@ namespace TorannMagic
             verVal = TM_Calc.GetMagicSkillLevel(caster, comp.MagicData.MagicPowerSkill_GuardianSpirit, "TM_GuardianSpirit", "_ver", true);
             effVal = TM_Calc.GetMagicSkillLevel(caster, comp.MagicData.MagicPowerSkill_GuardianSpirit, "TM_GuardianSpirit", "_eff", true);
 
-            if (cell != null && (cell.IsValid && cell.Walkable(map)))
+            if (cell != null && cell.IsValid && cell.Walkable(map))
             {
                 AbilityUser.SpawnThings tempPod = new SpawnThings();
                 IntVec3 shiftPos = cell;
 
                 tempPod.def = comp.GuardianSpiritType;
-                if(comp.GuardianSpiritType == TorannMagicDefOf.TM_SpiritBearR)
+                if (comp.GuardianSpiritType == TorannMagicDefOf.TM_SpiritBearR)
                 {
                     tempPod.kindDef = PawnKindDef.Named("TM_SpiritBear");
                 }
@@ -78,13 +73,13 @@ namespace TorannMagic
                 {
                     try
                     {
-                        if(comp.bondedSpirit != null)
+                        if (comp.bondedSpirit != null)
                         {
                             if (comp.bondedSpirit.Map != null)
                             {
                                 MoteMaker.ThrowSmoke(comp.bondedSpirit.DrawPos, comp.bondedSpirit.Map, 1f);
                                 TM_MoteMaker.ThrowGenericMote(TorannMagicDefOf.Mote_Ghost, comp.bondedSpirit.DrawPos, comp.bondedSpirit.Map, 1.3f, .25f, .1f, .45f, 0, Rand.Range(1f, 2f), 0, 0);
-                            }                            
+                            }
                             comp.bondedSpirit.Destroy(DestroyMode.Vanish);
                         }
                         this.spirit = TM_Action.SingleSpawnLoop(caster, tempPod, shiftPos, map, 5, false, false, caster.Faction, false);
@@ -92,13 +87,13 @@ namespace TorannMagic
                         TM_Action.TrainAnimalFull(animal, caster);
                         HealthUtility.AdjustSeverity(animal, TorannMagicDefOf.TM_SpiritBondHD, -4f);
                         HealthUtility.AdjustSeverity(animal, TorannMagicDefOf.TM_SpiritBondHD, .5f + verVal);
-                        if(animal.def == TorannMagicDefOf.TM_SpiritCrowR)
+                        if (animal.def == TorannMagicDefOf.TM_SpiritCrowR)
                         {
                             HealthUtility.AdjustSeverity(animal, TorannMagicDefOf.TM_BirdflightHD, .5f);
                         }
                         comp.bondedSpirit = animal;
                         CompAnimalController animalComp = animal.TryGetComp<CompAnimalController>();
-                        if(animalComp != null)
+                        if (animalComp != null)
                         {
                             animalComp.summonerPawn = caster;
                         }

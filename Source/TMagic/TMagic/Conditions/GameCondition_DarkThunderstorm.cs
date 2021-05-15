@@ -1,6 +1,4 @@
 ﻿using RimWorld;
-using RimWorld.Planet;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -10,7 +8,6 @@ namespace TorannMagic.Conditions
 {
     public class GameCondition_DarkThunderstorm : GameCondition
     {
-        private const int LerpTicks = 500;
         private int nextStrike = 10;
         public List<Pawn> enemyPawns = null;
         public Faction faction = null;
@@ -29,14 +26,13 @@ namespace TorannMagic.Conditions
 
         public override void GameConditionTick()
         {
-            if(Find.TickManager.TicksGame % nextStrike == 0)
+            if (Find.TickManager.TicksGame % nextStrike == 0)
             {
                 this.nextStrike = 1000;
                 List<Pawn> allPawns = this.SingleMap.mapPawns.AllPawnsSpawned;
                 if (allPawns != null && allPawns.Count > 0)
                 {
                     enemyPawns = new List<Pawn>();
-                    enemyPawns.Clear();
                     for (int i = 0; i < allPawns.Count; i++)
                     {
                         Pawn p = allPawns[i];

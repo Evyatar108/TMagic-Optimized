@@ -1,6 +1,5 @@
 ﻿using Verse;
 using AbilityUser;
-using System;
 using Verse.AI;
 
 namespace TorannMagic
@@ -14,7 +13,7 @@ namespace TorannMagic
             if (targ.IsValid && targ.CenterVector3.InBounds(base.CasterPawn.Map) && !targ.Cell.Fogged(base.CasterPawn.Map) && targ.Cell.Walkable(base.CasterPawn.Map))
             {
                 if ((root - targ.Cell).LengthHorizontal < this.verbProps.range)
-                {                    
+                {
                     validTarg = true;
                 }
                 else
@@ -32,7 +31,6 @@ namespace TorannMagic
 
         protected override bool TryCastShot()
         {
-            Map map = base.CasterPawn.Map;
             Pawn pawn = base.CasterPawn;
 
             if (currentTarget != null && currentTarget.Pawn != null)

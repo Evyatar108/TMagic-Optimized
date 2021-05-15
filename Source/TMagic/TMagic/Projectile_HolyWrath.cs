@@ -1,6 +1,5 @@
 ﻿using Verse;
 using Verse.Sound;
-using RimWorld;
 using AbilityUser;
 using System;
 using System.Linq;
@@ -98,12 +97,12 @@ namespace TorannMagic
 
             for (int j = 0; j < smitePos.Count; j++)
             {
-                if (wrathAge[j] == this.timeToSmite/strikeNum)
+                if (wrathAge[j] == this.timeToSmite / strikeNum)
                 {
                     TM_MoteMaker.MakePowerBeamMoteColor(smitePos[j], base.Map, this.radius * 3f, 2f, .5f, .1f, .5f, colorInt.ToColor);
                     this.caster = this.launcher as Pawn;
                     CompAbilityUserMagic comp = caster.GetComp<CompAbilityUserMagic>();
-                    GenExplosion.DoExplosion(smitePos[j], map, 3f, TMDamageDefOf.DamageDefOf.TM_Overwhelm, this.launcher as Pawn, Mathf.RoundToInt((12 + TMDamageDefOf.DamageDefOf.TM_Overwhelm.defaultDamage + 3*pwrVal) * this.arcaneDmg), 0, TorannMagicDefOf.TM_Lightning, def, this.equipmentDef, null, null, 0f, 1, false, null, 0f, 1, 0f, false);
+                    GenExplosion.DoExplosion(smitePos[j], map, 3f, TMDamageDefOf.DamageDefOf.TM_Overwhelm, this.launcher as Pawn, Mathf.RoundToInt((12 + TMDamageDefOf.DamageDefOf.TM_Overwhelm.defaultDamage + (3 * pwrVal)) * this.arcaneDmg), 0, TorannMagicDefOf.TM_Lightning, def, this.equipmentDef, null, null, 0f, 1, false, null, 0f, 1, 0f, false);
                 }
             }
         }
@@ -115,26 +114,24 @@ namespace TorannMagic
             for (int i = 0; i < this.strikeNum; i++)
             {
                 this.smitePos.Add(cellRect.RandomCell);
-                this.wrathAge.Add(Rand.Range(-(i * this.timeToSmite / (2*strikeNum)), -(i * this.timeToSmite / strikeNum)));
+                this.wrathAge.Add(Rand.Range(-(i * this.timeToSmite / (2 * strikeNum)), -(i * this.timeToSmite / strikeNum)));
             }
         }
 
         public void GetAffectedPawns(IntVec3 center, Map map)
         {
             Pawn victim = null;
-            IntVec3 curCell;
             IEnumerable<IntVec3> targets = GenRadial.RadialCellsAround(center, this.def.projectile.explosionRadius, true);
-            for (int i = 0; i < targets.Count(); i++)
+            foreach (var curCell in targets)
             {
-                curCell = targets.ToArray<IntVec3>()[i];
                 if (curCell.InBounds(map) && curCell.IsValid)
                 {
                     victim = curCell.GetFirstPawn(map);
                 }
 
-                if (victim != null &&  victim.Faction == this.caster.Faction && !victim.Dead)
+                if (victim != null && victim.Faction == this.caster.Faction && !victim.Dead)
                 {
-                    if(verVal >= 1)
+                    if (verVal >= 1)
                     {
                         HealthUtility.AdjustSeverity(victim, TorannMagicDefOf.TM_HediffTimedInvulnerable, 1f);
                         Hediff hd = victim.health.hediffSet.GetFirstHediffOfDef(TorannMagicDefOf.TM_HediffTimedInvulnerable);
@@ -165,7 +162,7 @@ namespace TorannMagic
                                         IEnumerable<Hediff_Injury> arg_BB_0 = pawn.health.hediffSet.GetHediffs<Hediff_Injury>();
                                         Func<Hediff_Injury, bool> arg_BB_1;
 
-                                        arg_BB_1 = ((Hediff_Injury injury) => injury.Part == rec);
+                                        arg_BB_1 = (Hediff_Injury injury) => injury.Part == rec;
 
                                         foreach (Hediff_Injury current in arg_BB_0.Where(arg_BB_1))
                                         {
@@ -182,7 +179,7 @@ namespace TorannMagic
                                                     }
                                                     else
                                                     {
-                                                        current.Heal((5.0f * this.arcaneDmg)); // power affects how much to heal
+                                                        current.Heal(5.0f * this.arcaneDmg); // power affects how much to heal
                                                     }
                                                     TM_MoteMaker.ThrowRegenMote(pawn.Position.ToVector3Shifted(), pawn.Map, .6f);
                                                     TM_MoteMaker.ThrowRegenMote(pawn.Position.ToVector3Shifted(), pawn.Map, .4f);
@@ -194,7 +191,7 @@ namespace TorannMagic
                                     }
                                 }
                             }
-                        }                        
+                        }
                     }
                     if (verVal >= 3)
                     {
@@ -202,11 +199,10 @@ namespace TorannMagic
                     }
 
                 }
-                if(victim != null && !victim.Dead && TM_Calc.IsUndead(victim))
+                if (victim != null && !victim.Dead && TM_Calc.IsUndead(victim))
                 {
                     TM_Action.DamageUndead(victim, Rand.Range(5f, 12f) * this.arcaneDmg, this.launcher);
                 }
-                targets.GetEnumerator().MoveNext();
             }
         }
 
@@ -215,7 +211,7 @@ namespace TorannMagic
             base.Draw();
             for (int i = 0; i < smitePos.Count; i++)
             {
-                if (wrathAge[i] >= 0 && wrathAge[i] <= this.timeToSmite/this.strikeNum)
+                if (wrathAge[i] >= 0 && wrathAge[i] <= this.timeToSmite / this.strikeNum)
                 {
                     DrawSmiteBeams(smitePos[i], wrathAge[i]);
                 }
@@ -228,11 +224,11 @@ namespace TorannMagic
             drawPos.z = drawPos.z - 1.5f;
             float num = ((float)base.Map.Size.z - drawPos.z) * 1.4f;
             Vector3 a = Vector3Utility.FromAngleFlat(this.angle - 90f);  //angle of beam
-            Vector3 a2 = drawPos + a * num * 0.5f;                      //
+            Vector3 a2 = drawPos + (a * num * 0.5f);                      //
             a2.y = Altitudes.AltitudeFor(AltitudeLayer.MetaOverlays); //mote depth
             float num2 = Mathf.Min((float)wrathAge / 10f, 1f);          //
             Vector3 b = a * ((1f - num2) * num);
-            float num3 = 0.975f + Mathf.Sin((float)wrathAge * 0.3f) * 0.025f;       //color
+            float num3 = 0.975f + (Mathf.Sin((float)wrathAge * 0.3f) * 0.025f);       //color
             if (this.TicksLeft > (this.timeToSmite * .2f))                          //color
             {
                 num3 *= (float)this.age / (this.timeToSmite * .8f);
@@ -242,19 +238,19 @@ namespace TorannMagic
             color.a *= num3;
             Projectile_HolyWrath.MatPropertyBlock.SetColor(ShaderPropertyIDs.Color, color);
             Matrix4x4 matrix = default(Matrix4x4);
-            matrix.SetTRS(a2 + a * this.radius * 0.5f + b, Quaternion.Euler(0f, this.angle, 0f), new Vector3(this.radius, 1f, num));   //drawer for beam
+            matrix.SetTRS(a2 + (a * this.radius * 0.5f) + b, Quaternion.Euler(0f, this.angle, 0f), new Vector3(this.radius, 1f, num));   //drawer for beam
             Graphics.DrawMesh(MeshPool.plane10, matrix, Projectile_HolyWrath.BeamMat, 0, null, 0, Projectile_HolyWrath.MatPropertyBlock);
             Vector3 vectorPos = drawPos + b;
             vectorPos.y = Altitudes.AltitudeFor(AltitudeLayer.MetaOverlays);
             Matrix4x4 matrix2 = default(Matrix4x4);
             matrix2.SetTRS(vectorPos, Quaternion.Euler(0f, this.angle, 0f), new Vector3(this.radius, 1f, this.radius));                 //drawer for beam end
             Graphics.DrawMesh(MeshPool.plane10, matrix2, Projectile_HolyWrath.BeamEndMat, 0, null, 0, Projectile_HolyWrath.MatPropertyBlock);
-            num = num - (num * ((float)wrathAge/(float)(this.timeToSmite/this.strikeNum)));
+            num = num - (num * ((float)wrathAge / (float)(this.timeToSmite / this.strikeNum)));
             Vector3 a3 = a * num;
             Vector3 vectorOrb = drawPos + a3;
             vectorOrb.y = Altitudes.AltitudeFor(AltitudeLayer.MetaOverlays);
             Matrix4x4 matrix3 = default(Matrix4x4);
-            matrix3.SetTRS(vectorOrb, Quaternion.Euler(0f, this.angle, 0f), new Vector3(this.radius*((5*(float)wrathAge)/((float)this.timeToSmite/this.strikeNum)), 1f, this.radius * ((5 * (float)wrathAge) / ((float)this.timeToSmite/this.strikeNum))));                 //drawer for beam end
+            matrix3.SetTRS(vectorOrb, Quaternion.Euler(0f, this.angle, 0f), new Vector3(this.radius * (5 * (float)wrathAge / ((float)this.timeToSmite / this.strikeNum)), 1f, this.radius * (5 * (float)wrathAge / ((float)this.timeToSmite / this.strikeNum))));                 //drawer for beam end
             Graphics.DrawMesh(MeshPool.plane10, matrix3, Projectile_HolyWrath.BombardMat, 0, null, 0, Projectile_HolyWrath.MatPropertyBlock);
         }
 

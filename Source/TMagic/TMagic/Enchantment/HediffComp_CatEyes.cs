@@ -1,10 +1,5 @@
 ﻿using Verse;
-using Verse.AI;
 using RimWorld;
-using System.Linq;
-using UnityEngine;
-using System;
-using System.Collections.Generic;
 
 namespace TorannMagic.Enchantment
 {
@@ -25,7 +20,7 @@ namespace TorannMagic.Enchantment
                 this.glower = null;
             }
             base.CompExposeData();
-            
+
         }
 
         public override void PostInitialize()

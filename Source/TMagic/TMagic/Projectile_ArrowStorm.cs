@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using System;
+﻿using System;
 using RimWorld;
 using Verse;
 using AbilityUser;
@@ -7,8 +6,8 @@ using UnityEngine;
 
 namespace TorannMagic
 {
-	public class Projectile_ArrowStorm : Projectile_AbilityBase
-	{
+    public class Projectile_ArrowStorm : Projectile_AbilityBase
+    {
 
         private bool initialized = false;
         private static int pwrVal;
@@ -25,7 +24,6 @@ namespace TorannMagic
         {
             Map map = base.Map;
             base.Impact(hitThing);
-            ThingDef def = this.def;
             try
             {
                 Pawn victim = hitThing as Pawn;
@@ -43,7 +41,7 @@ namespace TorannMagic
                     TM_MoteMaker.ThrowBloodSquirt(victim.DrawPos, victim.Map, 1f);
                 }
             }
-            catch(NullReferenceException ex)
+            catch (NullReferenceException)
             {
                 //
             }
@@ -67,7 +65,7 @@ namespace TorannMagic
         public static int GetWeaponDmg(Pawn pawn)
         {
             CompAbilityUserMight comp = pawn.GetComp<CompAbilityUserMight>();
-            pwrVal = TM_Calc.GetMightSkillLevel(pawn, pawn.GetComp<CompAbilityUserMight>().MightData.MightPowerSkill_ArrowStorm, "TM_ArrowStorm", "_pwr", true);            
+            pwrVal = TM_Calc.GetMightSkillLevel(pawn, pawn.GetComp<CompAbilityUserMight>().MightData.MightPowerSkill_ArrowStorm, "TM_ArrowStorm", "_pwr", true);
 
             float dmg = comp.weaponDamage;
             ModOptions.SettingsRef settingsRef = new ModOptions.SettingsRef();
@@ -76,7 +74,7 @@ namespace TorannMagic
                 dmg += 8;
             }
 
-            dmg = Mathf.RoundToInt(dmg * (1f + (.1f * pwrVal)) * TorannMagicDefOf.TM_ArrowStorm.weaponDamageFactor); 
+            dmg = Mathf.RoundToInt(dmg * (1f + (.1f * pwrVal)) * TorannMagicDefOf.TM_ArrowStorm.weaponDamageFactor);
 
             return (int)Mathf.Clamp(dmg, 0, 50);
         }

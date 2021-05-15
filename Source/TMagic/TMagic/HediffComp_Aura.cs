@@ -1,9 +1,6 @@
 ﻿using RimWorld;
 using Verse;
-using UnityEngine;
-using System.Collections.Generic;
 using System.Linq;
-using HarmonyLib;
 
 namespace TorannMagic
 {
@@ -50,7 +47,7 @@ namespace TorannMagic
             {
                 this.Pawn.health.RemoveHediff(this.parent);
             }
-        }        
+        }
 
         public override void CompPostTick(ref float severityAdjustment)
         {
@@ -93,28 +90,28 @@ namespace TorannMagic
                     }
                 }
 
-                if(Find.TickManager.TicksGame % 1200 == 0)
+                if (Find.TickManager.TicksGame % 1200 == 0)
                 {
                     DetermineHediff();
                 }
             }
-        }     
+        }
 
         public void DetermineHediff()
         {
-            MagicPower abilityPower = null;            
+            MagicPower abilityPower = null;
             CompAbilityUserMagic comp = this.Pawn.GetComp<CompAbilityUserMagic>();
             if (parent.def == TorannMagicDefOf.TM_Shadow_AuraHD && comp != null)
             {
-                abilityPower = comp.MagicData.MagicPowersA.FirstOrDefault((MagicPower x) => x.abilityDef == TorannMagicDefOf.TM_Shadow);                
+                abilityPower = comp.MagicData.MagicPowersA.FirstOrDefault((MagicPower x) => x.abilityDef == TorannMagicDefOf.TM_Shadow);
                 if (abilityPower == null)
                 {
-                    abilityPower = comp.MagicData.MagicPowersA.FirstOrDefault((MagicPower x) => x.abilityDef == TorannMagicDefOf.TM_Shadow_I);                    
+                    abilityPower = comp.MagicData.MagicPowersA.FirstOrDefault((MagicPower x) => x.abilityDef == TorannMagicDefOf.TM_Shadow_I);
                     if (abilityPower == null)
                     {
-                        abilityPower = comp.MagicData.MagicPowersA.FirstOrDefault((MagicPower x) => x.abilityDef == TorannMagicDefOf.TM_Shadow_II);                        
+                        abilityPower = comp.MagicData.MagicPowersA.FirstOrDefault((MagicPower x) => x.abilityDef == TorannMagicDefOf.TM_Shadow_II);
                         if (abilityPower == null)
-                        {                            
+                        {
                             abilityPower = comp.MagicData.MagicPowersA.FirstOrDefault((MagicPower x) => x.abilityDef == TorannMagicDefOf.TM_Shadow_III);
                         }
                     }

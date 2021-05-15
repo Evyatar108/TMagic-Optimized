@@ -8,7 +8,7 @@ using Verse.Sound;
 
 namespace TorannMagic
 {
-    class Verb_TempestStrike : Verb_UseAbility  
+    class Verb_TempestStrike : Verb_UseAbility
     {
 
         bool validTarg;
@@ -23,8 +23,7 @@ namespace TorannMagic
             {
                 if ((root - targ.Cell).LengthHorizontal < this.verbProps.range)
                 {
-                    ShootLine shootLine;
-                    validTarg = this.TryFindShootLineFromTo(root, targ, out shootLine);
+                    validTarg = this.TryFindShootLineFromTo(root, targ, out _);
                 }
                 else
                 {
@@ -65,7 +64,7 @@ namespace TorannMagic
                             bool flag = false;
                             SoundInfo info = SoundInfo.InMap(new TargetInfo(this.CasterPawn.Position, this.CasterPawn.Map, false), MaintenanceType.None);
                             SoundDef.Named(wpn.def.Verbs.FirstOrDefault().soundCast.ToString()).PlayOneShot(info);
-                            bool? flag4 = this.TryLaunchProjectile(newProjectile, this.ShotTarget(pawn));                            
+                            bool? flag4 = this.TryLaunchProjectile(newProjectile, this.ShotTarget(pawn));
                             for (int i = 1; i < shots; i++)
                             {
                                 this.TryLaunchProjectile(newProjectile, this.ShotTarget(pawn));
@@ -101,7 +100,7 @@ namespace TorannMagic
                 return false;
             }
 
-            float spCost = (comp.ActualStaminaCost(TorannMagicDefOf.TM_TempestStrike) / 1.5f);
+            float spCost = comp.ActualStaminaCost(TorannMagicDefOf.TM_TempestStrike) / 1.5f;
             if (comp.Stamina.CurLevel >= spCost)
             {
                 if (pawn.story.traits.HasTrait(TorannMagicDefOf.TM_Wayfarer))
@@ -112,22 +111,22 @@ namespace TorannMagic
                     }
                 }
                 comp.Stamina.UseMightPower(spCost);
-                comp.MightUserXP += (int)((spCost * 180) * comp.xpGain);
+                comp.MightUserXP += (int)(spCost * 180 * comp.xpGain);
                 result = true;
             }
-      
+
             return result;
         }
 
         private LocalTargetInfo ShotTarget(Pawn pawn)
         {
-           
+
             LocalTargetInfo currentTarget = this.currentTarget;
             if (!Rand.Chance(HitChance(pawn)))
             {
                 IntVec3 targetVariation = this.currentTarget.Cell;
-                targetVariation.x += Mathf.RoundToInt(Rand.Range(-.1f, .1f) * Vector3.Distance(pawn.DrawPos, this.currentTarget.CenterVector3) + Rand.Range(-1f, 1f));
-                targetVariation.z += Mathf.RoundToInt(Rand.Range(-.1f, .1f) * Vector3.Distance(pawn.DrawPos, this.currentTarget.CenterVector3) + Rand.Range(-1f, 1f));
+                targetVariation.x += Mathf.RoundToInt((Rand.Range(-.1f, .1f) * Vector3.Distance(pawn.DrawPos, this.currentTarget.CenterVector3)) + Rand.Range(-1f, 1f));
+                targetVariation.z += Mathf.RoundToInt((Rand.Range(-.1f, .1f) * Vector3.Distance(pawn.DrawPos, this.currentTarget.CenterVector3)) + Rand.Range(-1f, 1f));
                 currentTarget = targetVariation;
             }
             return currentTarget;
@@ -140,7 +139,7 @@ namespace TorannMagic
             {
                 wpn = pawn.equipment.Primary;
             }
-            float chance = .95f;
+            float chance;
             if (wpn.def.IsRangedWeapon)
             {
                 chance = pawn.equipment.Primary.GetStatValue(StatDefOf.AccuracyLong, true);

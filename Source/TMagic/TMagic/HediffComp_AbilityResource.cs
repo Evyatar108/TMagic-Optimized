@@ -1,8 +1,4 @@
-﻿using RimWorld;
-using Verse;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Verse;
 using UnityEngine;
 
 namespace TorannMagic
@@ -36,9 +32,7 @@ namespace TorannMagic
 
         private HediffCompProperties_AbilityResource Props { get => this.props as HediffCompProperties_AbilityResource; }
 
-        private string maximumCachedUpgradeName;
         private float maximumCached;
-        private string regenPerTickCachedUpgradeName;
         private float regenPerTickCached;
 
         public override string CompLabelInBracketsExtra => string.Concat(this.parent.Severity.ToString("0."), "/", maximumCached.ToString("0."));
@@ -90,7 +84,7 @@ namespace TorannMagic
 
                 if (Find.TickManager.TicksGame % this.eventFrequency == 3)
                 {
-                    float newValue = this.parent.Severity + eventFrequency * regenPerTickCached;
+                    float newValue = this.parent.Severity + (eventFrequency * regenPerTickCached);
                     this.parent.Severity = Mathf.Clamp(newValue, 0f, maximumCached);
                 }
             }

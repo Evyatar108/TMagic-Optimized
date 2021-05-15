@@ -7,7 +7,7 @@ namespace TorannMagic.Weapon
     {
         protected override bool TryCastShot()
         {
-            if(this.CasterPawn.GetComp<CompAbilityUserMagic>().IsMagicUser)
+            if (this.CasterPawn.GetComp<CompAbilityUserMagic>().IsMagicUser)
             {
                 return base.TryCastShot();
             }
@@ -16,7 +16,7 @@ namespace TorannMagic.Weapon
                 MoteMaker.ThrowText(this.CasterPawn.DrawPos, this.CasterPawn.Map, "Failed", -1);
                 return false;
             }
-            
+
         }
     }
 }

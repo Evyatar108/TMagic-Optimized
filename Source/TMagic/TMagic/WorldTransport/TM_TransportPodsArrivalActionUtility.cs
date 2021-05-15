@@ -110,9 +110,9 @@ namespace TorannMagic.WorldTransport
             RemovePawnsFromWorldPawns(dropPods);
             for (int i = 0; i < dropPods.Count; i++)
             {
-                IntVec3 result = default(IntVec3);
+                IntVec3 result;
                 if (!exactCell || !(near.InBounds(map) && near.Walkable(map) && !near.Roofed(map)))
-                {                    
+                {
                     DropCellFinder.TryFindDropSpotNear(near, map, out result, allowFogged: false, canRoofPunch: true);
                 }
                 else

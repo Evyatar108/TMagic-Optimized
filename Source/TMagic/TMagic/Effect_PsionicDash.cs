@@ -1,9 +1,8 @@
 ﻿using Verse;
 using AbilityUser;
-using RimWorld;
 
 namespace TorannMagic
-{    
+{
     public class Effect_PsionicDash : Verb_UseAbility
     {
         bool validTarg;
@@ -18,8 +17,7 @@ namespace TorannMagic
             {
                 if ((root - targ.Cell).LengthHorizontal < this.verbProps.range)
                 {
-                    ShootLine shootLine;
-                    validTarg = this.TryFindShootLineFromTo(root, targ, out shootLine);
+                    validTarg = this.TryFindShootLineFromTo(root, targ, out _);
                 }
                 else
                 {
@@ -50,7 +48,7 @@ namespace TorannMagic
                 {
                     FlyingObject_PsionicDash flyingObject = (FlyingObject_PsionicDash)GenSpawn.Spawn(ThingDef.Named("FlyingObject_PsionicDash"), this.CasterPawn.Position, this.CasterPawn.Map);
                     flyingObject.Launch(this.CasterPawn, t.Cell, this.CasterPawn);
-                }, "LaunchingFlyer", false, null);                
+                }, "LaunchingFlyer", false, null);
             }
         }
 
@@ -59,9 +57,8 @@ namespace TorannMagic
             if (inResult)
             {
                 this.Effect();
-                outResult = true;
             }
             outResult = inResult;
         }
-    }    
+    }
 }

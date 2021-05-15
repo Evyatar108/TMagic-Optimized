@@ -1,9 +1,5 @@
-﻿using RimWorld;
-using Verse;
-using UnityEngine;
+﻿using Verse;
 using System.Collections.Generic;
-using System.Linq;
-using HarmonyLib;
 
 namespace TorannMagic
 {
@@ -13,7 +9,7 @@ namespace TorannMagic
 
         private bool removeNow = false;
 
-        private int eventFrequency = 60;       
+        private int eventFrequency = 60;
 
         public override void CompPostTick(ref float severityAdjustment)
         {
@@ -50,7 +46,7 @@ namespace TorannMagic
                     {
                         this.removeNow = true;
                     }
-                } 
+                }
             }
         }
 
@@ -60,6 +56,6 @@ namespace TorannMagic
             {
                 return this.removeNow || base.CompShouldRemove;
             }
-        }        
+        }
     }
 }

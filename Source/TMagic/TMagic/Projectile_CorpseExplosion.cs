@@ -34,7 +34,7 @@ namespace TorannMagic
 
         public void Initialize()
         {
-            radius = 3f + (.3f * (verVal+pwrVal));
+            radius = 3f + (.3f * (verVal + pwrVal));
             age = age - (60 * verVal);
             this.initialized = true;
         }
@@ -72,7 +72,7 @@ namespace TorannMagic
                     bool flag = undead != null && !undead.Dead;
                     if (flag)
                     {
-                        if(TM_Calc.IsUndead(undead))
+                        if (TM_Calc.IsUndead(undead))
                         {
                             this.targetPawn = undead;
                         }
@@ -92,7 +92,7 @@ namespace TorannMagic
                     {
                         bool validator = corpseThing is Corpse;
                         if (validator)
-                        {                            
+                        {
                             corpse = corpseThing as Corpse;
                             Pawn corpsePawn = corpse.InnerPawn;
                             if (corpsePawn.RaceProps.IsFlesh)
@@ -105,9 +105,9 @@ namespace TorannMagic
                         }
                     }
                 }
-            }     
-            
-            if(this.targetPawn != null && !this.targetPawn.Destroyed)
+            }
+
+            if (this.targetPawn != null && !this.targetPawn.Destroyed)
             {
                 if (this.age == 360)
                 {
@@ -133,7 +133,7 @@ namespace TorannMagic
                 {
                     MoteMaker.ThrowText(this.targetPawn.Position.ToVector3ShiftedWithAltitude(AltitudeLayer.MoteOverhead), map, "1", -.5f);
                 }
-                if(this.age == 1)
+                if (this.age == 1)
                 {
                     //explode
                     TM_MoteMaker.ThrowBloodSquirt(this.targetPawn.Position.ToVector3Shifted(), map, 1.2f);
@@ -196,7 +196,7 @@ namespace TorannMagic
                         corpsePawn.equipment.DropAllEquipment(this.targetCorpse.Position, false);
                         corpsePawn.apparel.DropAll(this.targetCorpse.Position, false);
                     }
-                    GenExplosion.DoExplosion(this.targetCorpse.Position, map, this.radius, TMDamageDefOf.DamageDefOf.TM_CorpseExplosion, this.launcher, Mathf.RoundToInt((Rand.Range(18f, 30f) + (5f * pwrVal))*this.arcaneDmg), 0, this.def.projectile.soundExplode, def, this.equipmentDef, null, null, 0f, 01, false, null, 0f, 0, 0.0f, true);
+                    GenExplosion.DoExplosion(this.targetCorpse.Position, map, this.radius, TMDamageDefOf.DamageDefOf.TM_CorpseExplosion, this.launcher, Mathf.RoundToInt((Rand.Range(18f, 30f) + (5f * pwrVal)) * this.arcaneDmg), 0, this.def.projectile.soundExplode, def, this.equipmentDef, null, null, 0f, 01, false, null, 0f, 0, 0.0f, true);
                     if (!this.targetCorpse.Destroyed)
                     {
                         this.targetCorpse.Destroy();
@@ -216,7 +216,7 @@ namespace TorannMagic
             Scribe_Values.Look<int>(ref this.pwrVal, "pwrVal", 0, false);
         }
 
-    }    
+    }
 }
 
 

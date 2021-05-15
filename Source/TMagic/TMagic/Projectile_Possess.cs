@@ -2,7 +2,6 @@
 using AbilityUser;
 using System.Linq;
 using System.Collections.Generic;
-using UnityEngine;
 using RimWorld;
 using Verse.AI;
 using Verse.AI.Group;
@@ -68,26 +67,25 @@ namespace TorannMagic
                 this.duration += pwrVal * 300;
                 if (hitPawn != null && hitPawn.Faction != null && hitPawn.RaceProps.Humanlike)
                 {
-                    possessedFlag = (hitPawn.health.hediffSet.HasHediff(TorannMagicDefOf.TM_CoOpPossessionHD) || hitPawn.health.hediffSet.HasHediff(TorannMagicDefOf.TM_CoOpPossessionHD_I) || hitPawn.health.hediffSet.HasHediff(TorannMagicDefOf.TM_CoOpPossessionHD_II) || hitPawn.health.hediffSet.HasHediff(TorannMagicDefOf.TM_CoOpPossessionHD_III) ||
-                        hitPawn.health.hediffSet.HasHediff(TorannMagicDefOf.TM_PossessionHD) || hitPawn.health.hediffSet.HasHediff(TorannMagicDefOf.TM_PossessionHD_I) || hitPawn.health.hediffSet.HasHediff(TorannMagicDefOf.TM_PossessionHD_II) || hitPawn.health.hediffSet.HasHediff(TorannMagicDefOf.TM_PossessionHD_III));
+                    possessedFlag = hitPawn.health.hediffSet.HasHediff(TorannMagicDefOf.TM_CoOpPossessionHD) || hitPawn.health.hediffSet.HasHediff(TorannMagicDefOf.TM_CoOpPossessionHD_I) || hitPawn.health.hediffSet.HasHediff(TorannMagicDefOf.TM_CoOpPossessionHD_II) || hitPawn.health.hediffSet.HasHediff(TorannMagicDefOf.TM_CoOpPossessionHD_III) ||
+                        hitPawn.health.hediffSet.HasHediff(TorannMagicDefOf.TM_PossessionHD) || hitPawn.health.hediffSet.HasHediff(TorannMagicDefOf.TM_PossessionHD_I) || hitPawn.health.hediffSet.HasHediff(TorannMagicDefOf.TM_PossessionHD_II) || hitPawn.health.hediffSet.HasHediff(TorannMagicDefOf.TM_PossessionHD_III);
                     if (!hitPawn.Downed && !hitPawn.Dead && !possessedFlag && !hitPawn.IsPrisoner)
                     {
                         this.pFaction = hitPawn.Faction;
                         this.prisoner = hitPawn.IsPrisoner;
-                        if(!caster.IsColonist && hitPawn.IsColonist)
+                        if (!caster.IsColonist && hitPawn.IsColonist)
                         {
-                            List<WorkTypeDef> allWorkTypes = WorkTypeDefsUtility.WorkTypeDefsInPriorityOrder.ToList();
+                            IEnumerable<WorkTypeDef> allWorkTypes = WorkTypeDefsUtility.WorkTypeDefsInPriorityOrder;
                             this.hitPawnWorkSetting = new List<int>();
-                            this.hitPawnWorkSetting.Clear();
-                            for(int i = 0; i < allWorkTypes.Count(); i++)
+                            foreach (var workType in allWorkTypes)
                             {
-                                hitPawnWorkSetting.Add(hitPawn.workSettings.GetPriority(allWorkTypes[i]));
+                                hitPawnWorkSetting.Add(hitPawn.workSettings.GetPriority(workType));
                             }
                         }
-                        
+
                         if (this.pFaction != caster.Faction)
                         {
-                            
+
                             if (Rand.Chance(TM_Calc.GetSpellSuccessChance(caster, hitPawn, true)))
                             {
                                 //possess enemy or neutral
@@ -103,20 +101,20 @@ namespace TorannMagic
                                     ModCheck.GiddyUp.ForceDismount(hitPawn);
                                 }
                                 hitPawn.SetFaction(caster.Faction, null);
-                                HealthUtility.AdjustSeverity(hitPawn, TorannMagicDefOf.TM_DisguiseHD_II, 20f + 5f * pwrVal);
+                                HealthUtility.AdjustSeverity(hitPawn, TorannMagicDefOf.TM_DisguiseHD_II, 20f + (5f * pwrVal));
                                 switch (verVal)
                                 {
                                     case 0:
-                                        HealthUtility.AdjustSeverity(hitPawn, TorannMagicDefOf.TM_PossessionHD, 20f + 5f * pwrVal);
+                                        HealthUtility.AdjustSeverity(hitPawn, TorannMagicDefOf.TM_PossessionHD, 20f + (5f * pwrVal));
                                         break;
                                     case 1:
-                                        HealthUtility.AdjustSeverity(hitPawn, TorannMagicDefOf.TM_PossessionHD_I, 20f + 5f * pwrVal);
+                                        HealthUtility.AdjustSeverity(hitPawn, TorannMagicDefOf.TM_PossessionHD_I, 20f + (5f * pwrVal));
                                         break;
                                     case 2:
-                                        HealthUtility.AdjustSeverity(hitPawn, TorannMagicDefOf.TM_PossessionHD_II, 20f + 5f * pwrVal);
+                                        HealthUtility.AdjustSeverity(hitPawn, TorannMagicDefOf.TM_PossessionHD_II, 20f + (5f * pwrVal));
                                         break;
                                     case 3:
-                                        HealthUtility.AdjustSeverity(hitPawn, TorannMagicDefOf.TM_PossessionHD_III, 20f + 5f * pwrVal);
+                                        HealthUtility.AdjustSeverity(hitPawn, TorannMagicDefOf.TM_PossessionHD_III, 20f + (5f * pwrVal));
                                         break;
                                 }
                                 initialized = true;
@@ -140,7 +138,7 @@ namespace TorannMagic
                                 }
                                 //loadPawn = caster;
                                 //loadPawn.ThingID += Rand.Range(0, 214).ToString();
-                                if(caster.IsColonist)
+                                if (caster.IsColonist)
                                 {
                                     //
                                     ModOptions.Constants.SetPawnInFlight(true);
@@ -151,7 +149,7 @@ namespace TorannMagic
                                     TM_Action.SpellAffectedPlayerWarning(hitPawn);
                                 }
                                 caster.DeSpawn();
-                                
+
                             }
                             else
                             {
@@ -167,20 +165,20 @@ namespace TorannMagic
                             {
                                 ModCheck.GiddyUp.ForceDismount(caster);
                             }
-                            HealthUtility.AdjustSeverity(hitPawn, TorannMagicDefOf.TM_DisguiseHD_II, 20f + 5f * pwrVal);
+                            HealthUtility.AdjustSeverity(hitPawn, TorannMagicDefOf.TM_DisguiseHD_II, 20f + (5f * pwrVal));
                             switch (verVal)
                             {
                                 case 0:
-                                    HealthUtility.AdjustSeverity(hitPawn, TorannMagicDefOf.TM_CoOpPossessionHD, 20f + 5f * pwrVal);
+                                    HealthUtility.AdjustSeverity(hitPawn, TorannMagicDefOf.TM_CoOpPossessionHD, 20f + (5f * pwrVal));
                                     break;
                                 case 1:
-                                    HealthUtility.AdjustSeverity(hitPawn, TorannMagicDefOf.TM_CoOpPossessionHD_I, 20f + 5f * pwrVal);
+                                    HealthUtility.AdjustSeverity(hitPawn, TorannMagicDefOf.TM_CoOpPossessionHD_I, 20f + (5f * pwrVal));
                                     break;
                                 case 2:
-                                    HealthUtility.AdjustSeverity(hitPawn, TorannMagicDefOf.TM_CoOpPossessionHD_II, 20f + 5f * pwrVal);
+                                    HealthUtility.AdjustSeverity(hitPawn, TorannMagicDefOf.TM_CoOpPossessionHD_II, 20f + (5f * pwrVal));
                                     break;
                                 case 3:
-                                    HealthUtility.AdjustSeverity(hitPawn, TorannMagicDefOf.TM_CoOpPossessionHD_III, 20f + 5f * pwrVal);
+                                    HealthUtility.AdjustSeverity(hitPawn, TorannMagicDefOf.TM_CoOpPossessionHD_III, 20f + (5f * pwrVal));
                                     break;
                             }
                             initialized = true;
@@ -206,7 +204,7 @@ namespace TorannMagic
                                 caster.LabelShort,
                                 hitThing.LabelShort
                             ), MessageTypeDefOf.RejectInput);
-                    this.age = this.duration;                    
+                    this.age = this.duration;
                     this.Destroy(DestroyMode.Vanish);
                 }
             }
@@ -219,7 +217,7 @@ namespace TorannMagic
                 }
             }
 
-            if(hitPawn != null && (hitPawn.Downed || hitPawn.Dead))
+            if (hitPawn != null && (hitPawn.Downed || hitPawn.Dead))
             {
                 this.age = this.duration;
             }
@@ -234,7 +232,7 @@ namespace TorannMagic
         public override void Destroy(DestroyMode mode = DestroyMode.Vanish)
         {
             bool flag = this.age >= duration;
-            
+
             if (flag)
             {
                 try
@@ -256,7 +254,7 @@ namespace TorannMagic
                                 //
                             }
                         }
-                        if(!caster.Spawned)
+                        if (!caster.Spawned)
                         {
                             GenSpawn.Spawn(this.launcher, this.oldPosition, this.Map, WipeMode.Vanish);
                             if (caster.IsColonist)
@@ -269,7 +267,7 @@ namespace TorannMagic
                         bool flag3 = hitPawn.Faction != pFaction;
                         if (flag3)
                         {
-                            if(prisoner)
+                            if (prisoner)
                             {
                                 hitPawn.guest.SetGuestStatus(this.caster.Faction, true);
                             }
@@ -296,15 +294,17 @@ namespace TorannMagic
                         {
                             //hitPawn.jobs.EndCurrentJob(JobCondition.InterruptForced, false);
                         }
-                        if(!caster.IsColonist && hitPawn.IsColonist)
+                        if (!caster.IsColonist && hitPawn.IsColonist)
                         {
-                            List<WorkTypeDef> allWorkTypes = WorkTypeDefsUtility.WorkTypeDefsInPriorityOrder.ToList();
-                            for (int i = 0; i < hitPawnWorkSetting.Count(); i++)
+                            IEnumerable<WorkTypeDef> allWorkTypes = WorkTypeDefsUtility.WorkTypeDefsInPriorityOrder;
+                            int i = 0;
+                            foreach (var workType in allWorkTypes)
                             {
-                                hitPawn.workSettings.SetPriority(allWorkTypes[i], hitPawnWorkSetting[i]);
+                                hitPawn.workSettings.SetPriority(workType, hitPawnWorkSetting[i]);
+                                i++;
                             }
                             CompAbilityUserMagic comp = hitPawn.GetComp<CompAbilityUserMagic>();
-                            if(comp != null && comp.IsMagicUser)
+                            if (comp != null && comp.IsMagicUser)
                             {
                                 comp.magicPowersInitializedForColonist = true;
                             }
@@ -313,12 +313,12 @@ namespace TorannMagic
                     }
                     base.Destroy(mode);
                 }
-                catch(NullReferenceException ex)
+                catch (NullReferenceException)
                 {
                     base.Destroy(mode);
                 }
             }
-            
+
         }
 
         public void RemoveHediffs()
@@ -345,11 +345,11 @@ namespace TorannMagic
                     }
                 }
             }
-            if(disguiseHD != null)
+            if (disguiseHD != null)
             {
                 this.hitPawn.health.RemoveHediff(disguiseHD);
             }
-            if(possessHD != null)
+            if (possessHD != null)
             {
                 this.hitPawn.health.RemoveHediff(possessHD);
             }
@@ -357,7 +357,7 @@ namespace TorannMagic
             {
                 this.hitPawn.health.RemoveHediff(possessCHD);
             }
-            
+
         }
     }
 }

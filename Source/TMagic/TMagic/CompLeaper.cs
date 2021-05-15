@@ -1,5 +1,4 @@
-﻿using System;
-using Verse;
+﻿using Verse;
 using RimWorld;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,7 +30,7 @@ namespace TorannMagic
         {
             base.CompTick();
             if (this.Pawn.Spawned)
-            {                
+            {
                 if (Find.TickManager.TicksGame % nextLeap == 0 && !Pawn.Downed && !Pawn.Dead)
                 {
                     LocalTargetInfo lti = null;
@@ -78,7 +77,6 @@ namespace TorannMagic
                                 }
 
                                 List<Pawn> list = new List<Pawn>();
-                                list.Clear();
                                 list = (from x in this.Pawn.Map.mapPawns.AllPawnsSpawned
                                         where x.Position.InHorDistOf(this.Pawn.Position, (float)this.Props.leapRangeMax) && x.Faction == targetFaction && !x.DestroyedOrNull() && !x.Downed
                                         select x).ToList<Pawn>();
@@ -158,7 +156,7 @@ namespace TorannMagic
         }
 
         public void LeapAttack(LocalTargetInfo target)
-        {                
+        {
             bool flag = target != null && target.Cell != default(IntVec3);
             if (flag)
             {
@@ -168,14 +166,13 @@ namespace TorannMagic
                     FlyingObject_Leap flyingObject = (FlyingObject_Leap)GenSpawn.Spawn(ThingDef.Named("FlyingObject_Leap"), this.Pawn.Position, this.Pawn.Map);
                     flyingObject.Launch(this.Pawn, target.Cell, this.Pawn);
                 }
-            }            
+            }
         }
 
         public override void Initialize(CompProperties props)
         {
             base.Initialize(props);
             this.initialized = true;
-            Pawn pawn = this.parent as Pawn;
             this.nextLeap = Mathf.RoundToInt(Rand.Range(Props.ticksBetweenLeapChance * .75f, 1.25f * Props.ticksBetweenLeapChance));
             this.explosionRadius = this.Props.explodingLeaperRadius * Rand.Range(.8f, 1.25f);
         }
@@ -196,17 +193,16 @@ namespace TorannMagic
 
         private bool CanHitTargetFrom(IntVec3 pawn, LocalTargetInfo target)
         {
-            bool result = false;
+            bool result;
             if (target.IsValid && target.CenterVector3.InBounds(this.Pawn.Map) && !target.Cell.Fogged(this.Pawn.Map) && target.Cell.Walkable(this.Pawn.Map))
             {
-                ShootLine shootLine;
-                result = this.TryFindShootLineFromTo(pawn, target, out shootLine);                
+                result = this.TryFindShootLineFromTo(pawn, target, out _);
             }
             else
             {
                 result = false;
             }
-            
+
             return result;
         }
 

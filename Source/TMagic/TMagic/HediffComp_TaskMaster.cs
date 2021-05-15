@@ -1,9 +1,4 @@
-﻿using RimWorld;
-using Verse;
-using System;
-using System.Collections.Generic;
-using HarmonyLib;
-using System.Linq;
+﻿using Verse;
 
 namespace TorannMagic
 {
@@ -62,9 +57,9 @@ namespace TorannMagic
                     this.Initialize();
                 }
             }
-            if(Find.TickManager.TicksGame >= this.nextTickAction)
+            if (Find.TickManager.TicksGame >= this.nextTickAction)
             {
-                this.duration--;                
+                this.duration--;
                 this.nextTickAction = Find.TickManager.TicksGame + Rand.Range(600, 700);
                 if (this.duration <= 0)
                 {

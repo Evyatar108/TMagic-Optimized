@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using UnityEngine;
+﻿using UnityEngine;
 using Verse;
-using Verse.Sound;
 using RimWorld;
 
 namespace TorannMagic
@@ -301,7 +297,7 @@ namespace TorannMagic
             ticksToImpact = Mathf.Max(ticksToImpact, 0);
             Vector3 pos = center;
             pos.y = Altitudes.AltitudeFor(AltitudeLayer.Shadows);
-            float num = 1f + (float)ticksToImpact / 100f;
+            float num = 1f + ((float)ticksToImpact / 100f);
             Vector3 s = new Vector3(num * shadowSize.x, 1f, num * shadowSize.y);
             Color white = Color.white;
             if (ticksToImpact > 150)

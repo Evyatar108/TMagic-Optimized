@@ -1,8 +1,6 @@
 ﻿using RimWorld;
 using Verse;
 using System.Collections.Generic;
-using UnityEngine;
-using TorannMagic.TMDefs;
 
 namespace TorannMagic.SihvRMagicScrollScribe
 {
@@ -15,9 +13,9 @@ namespace TorannMagic.SihvRMagicScrollScribe
             IntVec3 currentPos = parent.PositionHeld;
             Map map = parent.Map;
             List<TMDefs.TM_CustomClass> cFighters = TM_ClassUtility.CustomFighterClasses;
-            
+
             CompAbilityUserMight comp = user.TryGetComp<CompAbilityUserMight>();
-            if(parent.def != null && comp != null && comp.customClass != null)
+            if (parent.def != null && comp != null && comp.customClass != null)
             {
                 tempPod = comp.customClass.fullScript;
                 this.parent.SplitOff(1).Destroy(DestroyMode.Vanish);
@@ -71,7 +69,7 @@ namespace TorannMagic.SihvRMagicScrollScribe
             {
                 int attempt = 0;
                 ModOptions.SettingsRef settingsRef = new ModOptions.SettingsRef();
-                RetryWrite:;
+            RetryWrite:;
                 if (attempt < 20)
                 {
                     float rnd = Rand.Range(0, 9 + cFighters.Count);
@@ -89,7 +87,7 @@ namespace TorannMagic.SihvRMagicScrollScribe
                     }
                     else if (rnd < 2)
                     {
-                        
+
                         if (settingsRef.Sniper)
                         {
                             tempPod = ThingDef.Named("BookOfSniper");
@@ -101,7 +99,7 @@ namespace TorannMagic.SihvRMagicScrollScribe
                         }
                     }
                     else if (rnd < 3)
-                    {                       
+                    {
                         if (settingsRef.Bladedancer)
                         {
                             tempPod = ThingDef.Named("BookOfBladedancer");
@@ -113,7 +111,7 @@ namespace TorannMagic.SihvRMagicScrollScribe
                         }
                     }
                     else if (rnd < 4)
-                    {                        
+                    {
                         if (settingsRef.Ranger)
                         {
                             tempPod = ThingDef.Named("BookOfRanger");
@@ -125,7 +123,7 @@ namespace TorannMagic.SihvRMagicScrollScribe
                         }
                     }
                     else if (rnd < 5)
-                    {                        
+                    {
                         if (settingsRef.Psionic)
                         {
                             tempPod = ThingDef.Named("BookOfPsionic");
@@ -172,8 +170,8 @@ namespace TorannMagic.SihvRMagicScrollScribe
                             goto RetryWrite;
                         }
                     }
-                    else if(rnd < 9)
-                    {                        
+                    else if (rnd < 9)
+                    {
                         if (settingsRef.Faceless)
                         {
                             tempPod = ThingDef.Named("BookOfFaceless");

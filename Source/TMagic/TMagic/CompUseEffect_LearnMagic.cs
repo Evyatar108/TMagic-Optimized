@@ -2,19 +2,19 @@
 using Verse;
 using System.Collections.Generic;
 using UnityEngine;
-
+using System.Linq;
 
 namespace TorannMagic
 {
-	public class CompUseEffect_LearnMagic : CompUseEffect
-	{
+    public class CompUseEffect_LearnMagic : CompUseEffect
+    {
 
-		public override void DoEffect(Pawn user)
-		{
+        public override void DoEffect(Pawn user)
+        {
             if (parent.def != null)
             {
                 bool customClass = false;
-                for(int i = 0; i < TM_ClassUtility.CustomClasses().Count; i++)
+                for (int i = 0; i < TM_ClassUtility.CustomClasses().Count; i++)
                 {
                     if ((TM_ClassUtility.CustomClasses()[i].isMage && user.story.traits.HasTrait(TorannMagicDefOf.TM_Gifted)) || (TM_ClassUtility.CustomClasses()[i].isMage && TM_ClassUtility.CustomClasses()[i].isFighter && (user.story.traits.HasTrait(TorannMagicDefOf.TM_Gifted) || user.story.traits.HasTrait(TorannMagicDefOf.PhysicalProdigy))))
                     {
@@ -27,7 +27,7 @@ namespace TorannMagic
                             }
 
                             ApplyTrait(user, TM_ClassUtility.CustomClasses()[i].classTrait, TM_ClassUtility.CustomClasses()[i].traitDegree);
-                            
+
                             //Unique actions hook
                             ApplyTraitAdjustments(user, TM_ClassUtility.CustomClasses()[i].classTrait);
                             //
@@ -261,11 +261,11 @@ namespace TorannMagic
                         int attempts = 0;
                         ModOptions.SettingsRef settingsRef = new ModOptions.SettingsRef();
                         FixTrait(user, user.story.traits.allTraits);
-                        RetryBookOfQuestion:;
+                    RetryBookOfQuestion:;
                         if (attempts < 50)
                         {
                             int baseClassCount = 17;
-                            int customClassCount = TM_ClassUtility.CustomMageClasses.Count;
+                            int customClassCount = TM_ClassUtility.CustomMageClasses.Count();
                             int rnd = Mathf.RoundToInt(Rand.RangeInclusive(0, baseClassCount + customClassCount));
                             switch (rnd)
                             {
@@ -508,7 +508,7 @@ namespace TorannMagic
                         Messages.Message("NotArcaneBook".Translate(), MessageTypeDefOf.RejectInput);
                     }
                 }
-                else if(!customClass && !user.story.traits.HasTrait(TorannMagicDefOf.TM_Gifted))
+                else if (!customClass && !user.story.traits.HasTrait(TorannMagicDefOf.TM_Gifted))
                 {
                     Messages.Message("NotGiftedPawn".Translate(
                             user.LabelShort
@@ -522,11 +522,11 @@ namespace TorannMagic
                     ), MessageTypeDefOf.RejectInput);
             }
 
-		}
+        }
 
         private void FixTrait(Pawn pawn, List<Trait> traits)
         {
-            TraitStart:;
+        TraitStart:;
             for (int i = 0; i < traits.Count; i++)
             {
                 if (traits[i].def == TorannMagicDefOf.TM_Gifted)
@@ -534,7 +534,7 @@ namespace TorannMagic
                     traits.Remove(traits[i]);
                     goto TraitStart;
                 }
-                if(traits[i].def == TorannMagicDefOf.PhysicalProdigy)
+                if (traits[i].def == TorannMagicDefOf.PhysicalProdigy)
                 {
                     traits.Remove(traits[i]);
                     goto TraitStart;
@@ -551,7 +551,7 @@ namespace TorannMagic
             skill.passion = Passion.None;
             pawn.workSettings.SetPriority(WorkTypeDefOf.Hunting, 0);
             skill = pawn.skills.GetSkill(SkillDefOf.Medicine);
-            if(skill.passion == Passion.None)
+            if (skill.passion == Passion.None)
             {
                 skill.passion = Passion.Minor;
             }
@@ -564,7 +564,7 @@ namespace TorannMagic
             pawn.workSettings.SetPriority(TorannMagicDefOf.Hauling, 0);
             pawn.workSettings.SetPriority(TorannMagicDefOf.PlantCutting, 0);
             skill = pawn.skills.GetSkill(SkillDefOf.Social);
-            if(skill.passion == Passion.Minor)
+            if (skill.passion == Passion.Minor)
             {
                 skill.passion = Passion.Major;
             }
@@ -577,7 +577,7 @@ namespace TorannMagic
         public void ApplyTrait(Pawn user, TraitDef trait, int degree)
         {
             FixTrait(user, user.story.traits.allTraits);
-            if(trait == TorannMagicDefOf.Warlock || trait == TorannMagicDefOf.Succubus)
+            if (trait == TorannMagicDefOf.Warlock || trait == TorannMagicDefOf.Succubus)
             {
                 if (user.gender == Gender.Male)
                 {
@@ -609,7 +609,7 @@ namespace TorannMagic
             {
                 FixPriestSkills(pawn);
             }
-            if(trait == TorannMagicDefOf.TM_Bard)
+            if (trait == TorannMagicDefOf.TM_Bard)
             {
                 FixBardSkills(pawn);
             }

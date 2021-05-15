@@ -12,7 +12,6 @@ namespace TorannMagic
     public class Projectile_BloodMoon : Projectile_AbilityBase
     {
         private bool initialized = false;
-        private bool validTarget = false;
         private int verVal = 0;
         private int pwrVal = 0;
         private int effVal = 0;
@@ -23,7 +22,7 @@ namespace TorannMagic
         private float attackFrequency = 30;
         List<IntVec3> bloodCircleCells = new List<IntVec3>();
         List<IntVec3> bloodCircleOuterCells = new List<IntVec3>();
-        
+
         Pawn caster;
         List<Pawn> victims = new List<Pawn>();
         List<int> victimHitTick = new List<int>();
@@ -94,34 +93,33 @@ namespace TorannMagic
                 verVal = caster.GetComp<CompAbilityUserMagic>().MagicData.MagicPowerSkill_BloodMoon.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_BloodMoon_ver").level;
                 effVal = caster.GetComp<CompAbilityUserMagic>().MagicData.MagicPowerSkill_BloodMoon.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_BloodMoon_eff").level;
                 this.arcaneDmg = comp.arcaneDmg;
-                this.arcaneDmg *= (1f + (.1f * bpwr.level));
-                this.attackFrequency *= (1 - (.05f * effVal));
+                this.arcaneDmg *= 1f + (.1f * bpwr.level);
+                this.attackFrequency *= 1 - (.05f * effVal);
                 this.duration = Mathf.RoundToInt(this.duration + (this.duration * .1f * verVal));
 
                 this.angle = Rand.Range(-2f, 2f);
                 this.radius = this.def.projectile.explosionRadius;
-                
+
                 IntVec3 curCell = base.Position;
 
                 this.CheckSpawnSustainer();
 
                 if (curCell.InBounds(map) && curCell.IsValid)
                 {
-                    List<IntVec3> cellList = GenRadial.RadialCellsAround(base.Position, this.radius, true).ToList();
-                    for (int i = 0; i < cellList.Count; i++)
+                    IEnumerable<IntVec3> cellList = GenRadial.RadialCellsAround(base.Position, this.radius, true);
+                    foreach (var cell in cellList)
                     {
-                        curCell = cellList[i];
+                        curCell = cell;
                         if (curCell.InBounds(map) && curCell.IsValid)
                         {
                             this.bloodCircleCells.Add(curCell);
                         }
                     }
-                    cellList.Clear();
-                    cellList = GenRadial.RadialCellsAround(base.Position, this.radius+1, true).ToList();
+                    cellList = GenRadial.RadialCellsAround(base.Position, this.radius + 1, true);
                     List<IntVec3> outerRing = new List<IntVec3>();
-                    for (int i = 0; i < cellList.Count; i++)
+                    foreach (var cell in cellList)
                     {
-                        curCell = cellList[i];
+                        curCell = cell;
                         if (curCell.InBounds(map) && curCell.IsValid)
                         {
                             outerRing.Add(curCell);
@@ -130,12 +128,12 @@ namespace TorannMagic
                     this.bloodCircleOuterCells = outerRing.Except(this.bloodCircleCells).ToList();
                 }
 
-                TM_MoteMaker.ThrowGenericMote(ThingDef.Named("Mote_BloodCircle"), base.Position.ToVector3Shifted(), caster.Map, this.radius + 2, (this.duration/60) *.9f, (this.duration / 60) * .06f, (this.duration / 60) * .08f, Rand.Range(-50, -50), 0, 0, Rand.Range(0, 360));
-                TM_MoteMaker.ThrowGenericMote(ThingDef.Named("Mote_BloodCircle"), base.Position.ToVector3Shifted(), caster.Map, this.radius + 2, (this.duration / 60) * .9f, (this.duration / 60) * .06f, (this.duration / 60) * .08f, Rand.Range(50, 50), 0, 0, Rand.Range(0, 360));
-                TM_MoteMaker.ThrowGenericMote(ThingDef.Named("Mote_BloodCircle"), base.Position.ToVector3Shifted(), caster.Map, this.radius + 2, (this.duration / 60) * .9f, (this.duration / 60) * .06f, (this.duration / 60) * .08f, Rand.Range(-50,50), 0, 0, Rand.Range(0, 360));
+                TM_MoteMaker.ThrowGenericMote(ThingDef.Named("Mote_BloodCircle"), base.Position.ToVector3Shifted(), caster.Map, this.radius + 2, this.duration / 60 * .9f, this.duration / 60 * .06f, this.duration / 60 * .08f, Rand.Range(-50, -50), 0, 0, Rand.Range(0, 360));
+                TM_MoteMaker.ThrowGenericMote(ThingDef.Named("Mote_BloodCircle"), base.Position.ToVector3Shifted(), caster.Map, this.radius + 2, this.duration / 60 * .9f, this.duration / 60 * .06f, this.duration / 60 * .08f, Rand.Range(50, 50), 0, 0, Rand.Range(0, 360));
+                TM_MoteMaker.ThrowGenericMote(ThingDef.Named("Mote_BloodCircle"), base.Position.ToVector3Shifted(), caster.Map, this.radius + 2, this.duration / 60 * .9f, this.duration / 60 * .06f, this.duration / 60 * .08f, Rand.Range(-50, 50), 0, 0, Rand.Range(0, 360));
                 caster.Map.weatherManager.eventHandler.AddEvent(new TM_WeatherEvent_BloodMoon(caster.Map, this.duration, 2f - (this.pwrVal * .1f)));
                 this.initialized = true;
-            }            
+            }
 
             if (this.initialized && this.Map != null && this.age > 15)
             {
@@ -145,7 +143,7 @@ namespace TorannMagic
                     {
                         if (this.victimHitTick[i] < this.age)
                         {
-                            TM_Action.DamageEntities(victims[i], null, Mathf.RoundToInt((Rand.Range(5, 8) * this.wolfDmg[i])*this.arcaneDmg), DamageDefOf.Bite, this.launcher);
+                            TM_Action.DamageEntities(victims[i], null, Mathf.RoundToInt(Rand.Range(5, 8) * this.wolfDmg[i] * this.arcaneDmg), DamageDefOf.Bite, this.launcher);
                             TM_MoteMaker.ThrowBloodSquirt(victims[i].DrawPos, victims[i].Map, Rand.Range(.6f, 1f));
                             this.victims.Remove(this.victims[i]);
                             this.victimHitTick.Remove(this.victimHitTick[i]);
@@ -160,7 +158,7 @@ namespace TorannMagic
                     GenSpawn.Spawn(filth, this.bloodCircleOuterCells.RandomElement(), this.Map);
                 }
 
-                if(this.nextAttack < this.age && !this.caster.DestroyedOrNull() && !this.caster.Dead)
+                if (this.nextAttack < this.age && !this.caster.DestroyedOrNull() && !this.caster.Dead)
                 {
 
                     Pawn victim = TM_Calc.FindNearbyEnemy(base.Position, this.Map, this.caster.Faction, this.radius, 0);
@@ -177,11 +175,11 @@ namespace TorannMagic
                         float fadeIn = .1f;
                         float fadeOut = .25f;
                         float solidTime = .10f;
-                        float drawSize = Rand.Range(.7f, 1.2f)+(this.pwrVal *.1f);
+                        float drawSize = Rand.Range(.7f, 1.2f) + (this.pwrVal * .1f);
                         float velocity = (victim.DrawPos - wolf).MagnitudeHorizontal();
                         if (angle >= -135 && angle < -45) //north
                         {
-                            TM_MoteMaker.ThrowGenericMote(ThingDef.Named("Mote_BloodWolfNorth"), wolf, this.Map, drawSize, solidTime, fadeIn, fadeOut, 0, 2*velocity, (Quaternion.AngleAxis(90, Vector3.up) * direction).ToAngleFlat(), 0);
+                            TM_MoteMaker.ThrowGenericMote(ThingDef.Named("Mote_BloodWolfNorth"), wolf, this.Map, drawSize, solidTime, fadeIn, fadeOut, 0, 2 * velocity, (Quaternion.AngleAxis(90, Vector3.up) * direction).ToAngleFlat(), 0);
                         }
                         else if (angle >= 45 && angle < 135) //south
                         {
@@ -227,19 +225,19 @@ namespace TorannMagic
         {
             float beamSize = 8f;
             Vector3 drawPos = base.Position.ToVector3Shifted(); // this.parent.DrawPos;
-            drawPos.z = drawPos.z - ((.5f * beamSize)*this.radius);
+            drawPos.z = drawPos.z - (.5f * beamSize * this.radius);
             float num = ((float)base.Map.Size.z - drawPos.z) * 1.4f;
             Vector3 a = Vector3Utility.FromAngleFlat(this.angle - 90f);  //angle of beam
-            Vector3 a2 = drawPos + a * num * 0.5f;                      //
+            Vector3 a2 = drawPos + (a * num * 0.5f);                      //
             a2.y = Altitudes.AltitudeFor(AltitudeLayer.MetaOverlays); //mote depth
             float num2 = Mathf.Min((float)this.age / 10f, 1f);          //
             Vector3 b = a * ((1f - num2) * num);
-            float num3 = 0.975f + (.15f) * 0.025f;       //color
+            float num3 = 0.975f + (.15f * 0.025f);       //color
             if (this.age < (this.duration * .1f))                          //color
             {
-                num3 *= (float)(this.age) / (this.duration * .1f);
+                num3 *= (float)this.age / (this.duration * .1f);
             }
-            if(this.age > (.9f * this.duration))
+            if (this.age > (.9f * this.duration))
             {
                 num3 *= (float)(this.duration - this.age) / (this.duration * .1f);
             }
@@ -248,7 +246,7 @@ namespace TorannMagic
             color.a *= num3;
             Projectile_BloodMoon.MatPropertyBlock.SetColor(ShaderPropertyIDs.Color, color);
             Matrix4x4 matrix = default(Matrix4x4);
-            matrix.SetTRS(a2 + a * (this.radius*beamSize) * 0.5f + b, Quaternion.Euler(0f, this.angle, 0f), new Vector3(this.radius*beamSize, 1f, num));   //drawer for beam
+            matrix.SetTRS(a2 + (a * (this.radius * beamSize) * 0.5f) + b, Quaternion.Euler(0f, this.angle, 0f), new Vector3(this.radius * beamSize, 1f, num));   //drawer for beam
             Graphics.DrawMesh(MeshPool.plane10, matrix, Projectile_BloodMoon.BeamMat, 0, null, 0, Projectile_BloodMoon.MatPropertyBlock);
             Vector3 vectorPos = drawPos;
             //vectorPos.z -= (this.radius * (.5f * beamSize));
@@ -261,7 +259,7 @@ namespace TorannMagic
         public override void Tick()
         {
             base.Tick();
-            this.age++;            
+            this.age++;
         }
 
         public override void Destroy(DestroyMode mode = DestroyMode.Vanish)

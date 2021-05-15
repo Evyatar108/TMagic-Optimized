@@ -9,8 +9,6 @@ using RimWorld;
 using System;
 using AbilityUser;
 using HarmonyLib;
-using TorannMagic.Enchantment;
-using TorannMagic.TMDefs;
 
 namespace TorannMagic
 {
@@ -119,8 +117,7 @@ namespace TorannMagic
                 Pawn shooterPawn = instigator as Pawn;
                 if (dinfo.Weapon != null && !dinfo.Weapon.IsMeleeWeapon && dinfo.WeaponBodyPartGroup == null)
                 {
-                    Pawn randomTarget = null;
-                    randomTarget = TM_Calc.FindNearbyEnemy(reflectingPawn, (int)maxRange);
+                    Pawn randomTarget = TM_Calc.FindNearbyEnemy(reflectingPawn, (int)maxRange);
                     if (randomTarget != null)
                     {
                         TM_CopyAndLaunchProjectile.CopyAndLaunchThing(shooterPawn.equipment.PrimaryEq.PrimaryVerb.verbProps.defaultProjectile, reflectingPawn, randomTarget, randomTarget, ProjectileHitFlags.All, null);
@@ -146,7 +143,7 @@ namespace TorannMagic
 
                 if (projectile != null)
                 {
-                    Thing target = null;
+                    Thing target;
                     if ((turret.Position - reflectingPawn.Position).LengthHorizontal <= maxRange)
                     {
                         target = turret;
@@ -200,10 +197,10 @@ namespace TorannMagic
                 else
                 {
                     int highNum = 0;
-                    List<Pawn> mapPawns = caster.Map.mapPawns.AllPawns.ToList();
-                    for (int i = 0; i < mapPawns.Count; i++)
+                    IEnumerable<Pawn> mapPawns = caster.Map.mapPawns.AllPawns;
+                    foreach (var mapPawn in mapPawns)
                     {
-                        if (!mapPawns[i].DestroyedOrNull() && mapPawns[i].RaceProps.Humanlike)
+                        if (!mapPawn.DestroyedOrNull() && mapPawn.RaceProps.Humanlike)
                         {
                             if (comp.IsMagicUser)
                             {
@@ -231,17 +228,17 @@ namespace TorannMagic
                 newThingDef.soundInteract = thing.def.soundInteract;
 
                 newThingDef.SetStatBaseValue(StatDefOf.RangedWeapon_DamageMultiplier, 1f + (.02f * pwrVal));
-                newThingDef.SetStatBaseValue(StatDefOf.RangedWeapon_Cooldown, thing.GetStatValue(StatDefOf.RangedWeapon_Cooldown) * (1 - .02f * pwrVal));
-                newThingDef.SetStatBaseValue(StatDefOf.AccuracyTouch, thing.GetStatValue(StatDefOf.AccuracyTouch) * (1 + .01f * pwrVal));
-                newThingDef.SetStatBaseValue(StatDefOf.AccuracyShort, thing.GetStatValue(StatDefOf.AccuracyShort) * (1 + .01f * pwrVal));
-                newThingDef.SetStatBaseValue(StatDefOf.AccuracyMedium, thing.GetStatValue(StatDefOf.AccuracyMedium) * (1 + .01f * pwrVal));
-                newThingDef.SetStatBaseValue(StatDefOf.AccuracyLong, thing.GetStatValue(StatDefOf.AccuracyLong) * (1 + .01f * pwrVal));
+                newThingDef.SetStatBaseValue(StatDefOf.RangedWeapon_Cooldown, thing.GetStatValue(StatDefOf.RangedWeapon_Cooldown) * (1 - (.02f * pwrVal)));
+                newThingDef.SetStatBaseValue(StatDefOf.AccuracyTouch, thing.GetStatValue(StatDefOf.AccuracyTouch) * (1 + (.01f * pwrVal)));
+                newThingDef.SetStatBaseValue(StatDefOf.AccuracyShort, thing.GetStatValue(StatDefOf.AccuracyShort) * (1 + (.01f * pwrVal)));
+                newThingDef.SetStatBaseValue(StatDefOf.AccuracyMedium, thing.GetStatValue(StatDefOf.AccuracyMedium) * (1 + (.01f * pwrVal)));
+                newThingDef.SetStatBaseValue(StatDefOf.AccuracyLong, thing.GetStatValue(StatDefOf.AccuracyLong) * (1 + (.01f * pwrVal)));
 
                 newThingDef.Verbs.FirstOrDefault().defaultProjectile = thing.def.Verbs.FirstOrDefault().defaultProjectile;
-                newThingDef.Verbs.FirstOrDefault().range = thing.def.Verbs.FirstOrDefault().range * (1f + .02f * pwrVal);
-                newThingDef.Verbs.FirstOrDefault().warmupTime = thing.def.Verbs.FirstOrDefault().warmupTime * (1f - .02f * pwrVal);
-                newThingDef.Verbs.FirstOrDefault().burstShotCount = Mathf.RoundToInt(thing.def.Verbs.FirstOrDefault().burstShotCount * (1f + .02f * pwrVal));
-                newThingDef.Verbs.FirstOrDefault().ticksBetweenBurstShots = Mathf.RoundToInt(thing.def.Verbs.FirstOrDefault().ticksBetweenBurstShots * (1f - .02f * pwrVal));
+                newThingDef.Verbs.FirstOrDefault().range = thing.def.Verbs.FirstOrDefault().range * (1f + (.02f * pwrVal));
+                newThingDef.Verbs.FirstOrDefault().warmupTime = thing.def.Verbs.FirstOrDefault().warmupTime * (1f - (.02f * pwrVal));
+                newThingDef.Verbs.FirstOrDefault().burstShotCount = Mathf.RoundToInt(thing.def.Verbs.FirstOrDefault().burstShotCount * (1f + (.02f * pwrVal)));
+                newThingDef.Verbs.FirstOrDefault().ticksBetweenBurstShots = Mathf.RoundToInt(thing.def.Verbs.FirstOrDefault().ticksBetweenBurstShots * (1f - (.02f * pwrVal)));
                 newThingDef.Verbs.FirstOrDefault().soundCast = thing.def.Verbs.FirstOrDefault().soundCast;
                 Thing technoWeapon = ThingMaker.MakeThing(newThingDef, null);
 
@@ -251,7 +248,7 @@ namespace TorannMagic
                     QualityCategory qc = thing.TryGetComp<CompQuality>().Quality;
                     twcq.SetQuality(qc, ArtGenerationContext.Colony);
                 }
-                catch (NullReferenceException ex)
+                catch (NullReferenceException)
                 {
                     //ignore
                 }
@@ -307,17 +304,17 @@ namespace TorannMagic
                 newThingDef.equippedAngleOffset = thing.def.equippedAngleOffset;
 
                 newThingDef.SetStatBaseValue(StatDefOf.RangedWeapon_DamageMultiplier, thing.GetStatValue(StatDefOf.RangedWeapon_DamageMultiplier) * (1f + (.03f * pwrVal)));
-                newThingDef.SetStatBaseValue(StatDefOf.RangedWeapon_Cooldown, thing.GetStatValue(StatDefOf.RangedWeapon_Cooldown) * (1 - .025f * pwrVal));
+                newThingDef.SetStatBaseValue(StatDefOf.RangedWeapon_Cooldown, thing.GetStatValue(StatDefOf.RangedWeapon_Cooldown) * (1 - (.025f * pwrVal)));
                 newThingDef.SetStatBaseValue(StatDefOf.AccuracyTouch, thing.GetStatValue(StatDefOf.AccuracyTouch));
-                newThingDef.SetStatBaseValue(StatDefOf.AccuracyShort, thing.GetStatValue(StatDefOf.AccuracyShort) * (1 + .015f * pwrVal));
-                newThingDef.SetStatBaseValue(StatDefOf.AccuracyMedium, thing.GetStatValue(StatDefOf.AccuracyMedium) * (1 + .005f * pwrVal));
+                newThingDef.SetStatBaseValue(StatDefOf.AccuracyShort, thing.GetStatValue(StatDefOf.AccuracyShort) * (1 + (.015f * pwrVal)));
+                newThingDef.SetStatBaseValue(StatDefOf.AccuracyMedium, thing.GetStatValue(StatDefOf.AccuracyMedium) * (1 + (.005f * pwrVal)));
                 newThingDef.SetStatBaseValue(StatDefOf.AccuracyLong, thing.GetStatValue(StatDefOf.AccuracyLong));
 
                 newThingDef.Verbs.FirstOrDefault().defaultProjectile = thing.def.Verbs.FirstOrDefault().defaultProjectile;
-                newThingDef.Verbs.FirstOrDefault().range = thing.def.Verbs.FirstOrDefault().range * (1f + .01f * pwrVal);
-                newThingDef.Verbs.FirstOrDefault().warmupTime = thing.def.Verbs.FirstOrDefault().warmupTime * (1f - .025f * pwrVal);
-                newThingDef.Verbs.FirstOrDefault().burstShotCount = Mathf.RoundToInt(thing.def.Verbs.FirstOrDefault().burstShotCount * (1f + .02f * pwrVal));
-                newThingDef.Verbs.FirstOrDefault().ticksBetweenBurstShots = Mathf.RoundToInt(thing.def.Verbs.FirstOrDefault().ticksBetweenBurstShots * (1f - .03f * pwrVal));
+                newThingDef.Verbs.FirstOrDefault().range = thing.def.Verbs.FirstOrDefault().range * (1f + (.01f * pwrVal));
+                newThingDef.Verbs.FirstOrDefault().warmupTime = thing.def.Verbs.FirstOrDefault().warmupTime * (1f - (.025f * pwrVal));
+                newThingDef.Verbs.FirstOrDefault().burstShotCount = Mathf.RoundToInt(thing.def.Verbs.FirstOrDefault().burstShotCount * (1f + (.02f * pwrVal)));
+                newThingDef.Verbs.FirstOrDefault().ticksBetweenBurstShots = Mathf.RoundToInt(thing.def.Verbs.FirstOrDefault().ticksBetweenBurstShots * (1f - (.03f * pwrVal)));
                 newThingDef.Verbs.FirstOrDefault().soundCast = thing.def.Verbs.FirstOrDefault().soundCast;
                 ThingWithComps specWeapon = (ThingWithComps)ThingMaker.MakeThing(newThingDef, null);
 
@@ -327,7 +324,7 @@ namespace TorannMagic
                     QualityCategory qc = thing.TryGetComp<CompQuality>().Quality;
                     twcq.SetQuality(qc, ArtGenerationContext.Colony);
                 }
-                catch (NullReferenceException ex)
+                catch (NullReferenceException)
                 {
                     //ignore
                 }
@@ -349,7 +346,7 @@ namespace TorannMagic
                         }
                     }
                 }
-                catch (NullReferenceException ex)
+                catch (NullReferenceException)
                 {
                     //ignore
                 }
@@ -408,17 +405,17 @@ namespace TorannMagic
                 newThingDef.equippedAngleOffset = thing.def.equippedAngleOffset;
 
                 newThingDef.SetStatBaseValue(StatDefOf.RangedWeapon_DamageMultiplier, thing.GetStatValue(StatDefOf.RangedWeapon_DamageMultiplier) * (1f + (.02f * pwrVal)));
-                newThingDef.SetStatBaseValue(StatDefOf.RangedWeapon_Cooldown, thing.GetStatValue(StatDefOf.RangedWeapon_Cooldown) * (1 - .01f * pwrVal));
+                newThingDef.SetStatBaseValue(StatDefOf.RangedWeapon_Cooldown, thing.GetStatValue(StatDefOf.RangedWeapon_Cooldown) * (1 - (.01f * pwrVal)));
                 newThingDef.SetStatBaseValue(StatDefOf.AccuracyTouch, thing.GetStatValue(StatDefOf.AccuracyTouch));
-                newThingDef.SetStatBaseValue(StatDefOf.AccuracyShort, thing.GetStatValue(StatDefOf.AccuracyShort) * (1 + .01f * pwrVal));
-                newThingDef.SetStatBaseValue(StatDefOf.AccuracyMedium, thing.GetStatValue(StatDefOf.AccuracyMedium) * (1 + .01f * pwrVal));
-                newThingDef.SetStatBaseValue(StatDefOf.AccuracyLong, thing.GetStatValue(StatDefOf.AccuracyLong) * (1 + .01f * pwrVal));
+                newThingDef.SetStatBaseValue(StatDefOf.AccuracyShort, thing.GetStatValue(StatDefOf.AccuracyShort) * (1 + (.01f * pwrVal)));
+                newThingDef.SetStatBaseValue(StatDefOf.AccuracyMedium, thing.GetStatValue(StatDefOf.AccuracyMedium) * (1 + (.01f * pwrVal)));
+                newThingDef.SetStatBaseValue(StatDefOf.AccuracyLong, thing.GetStatValue(StatDefOf.AccuracyLong) * (1 + (.01f * pwrVal)));
 
                 newThingDef.Verbs.FirstOrDefault().defaultProjectile = thing.def.Verbs.FirstOrDefault().defaultProjectile;
-                newThingDef.Verbs.FirstOrDefault().range = thing.def.Verbs.FirstOrDefault().range * (1f + .02f * pwrVal);
-                newThingDef.Verbs.FirstOrDefault().warmupTime = thing.def.Verbs.FirstOrDefault().warmupTime * (1f - .01f * pwrVal);
-                newThingDef.Verbs.FirstOrDefault().burstShotCount = Mathf.RoundToInt(thing.def.Verbs.FirstOrDefault().burstShotCount * (1f + .03f * pwrVal));
-                newThingDef.Verbs.FirstOrDefault().ticksBetweenBurstShots = Mathf.RoundToInt(thing.def.Verbs.FirstOrDefault().ticksBetweenBurstShots * (1f - .02f * pwrVal));
+                newThingDef.Verbs.FirstOrDefault().range = thing.def.Verbs.FirstOrDefault().range * (1f + (.02f * pwrVal));
+                newThingDef.Verbs.FirstOrDefault().warmupTime = thing.def.Verbs.FirstOrDefault().warmupTime * (1f - (.01f * pwrVal));
+                newThingDef.Verbs.FirstOrDefault().burstShotCount = Mathf.RoundToInt(thing.def.Verbs.FirstOrDefault().burstShotCount * (1f + (.03f * pwrVal)));
+                newThingDef.Verbs.FirstOrDefault().ticksBetweenBurstShots = Mathf.RoundToInt(thing.def.Verbs.FirstOrDefault().ticksBetweenBurstShots * (1f - (.02f * pwrVal)));
                 newThingDef.Verbs.FirstOrDefault().soundCast = thing.def.Verbs.FirstOrDefault().soundCast;
                 ThingWithComps specWeapon = (ThingWithComps)ThingMaker.MakeThing(newThingDef, null);
 
@@ -428,7 +425,7 @@ namespace TorannMagic
                     QualityCategory qc = thing.TryGetComp<CompQuality>().Quality;
                     twcq.SetQuality(qc, ArtGenerationContext.Colony);
                 }
-                catch (NullReferenceException ex)
+                catch (NullReferenceException)
                 {
                     //ignore
                 }
@@ -450,7 +447,7 @@ namespace TorannMagic
                         }
                     }
                 }
-                catch (NullReferenceException ex)
+                catch (NullReferenceException)
                 {
                     //ignore
                 }
@@ -517,17 +514,17 @@ namespace TorannMagic
                 newThingDef.equippedAngleOffset = thing.def.equippedAngleOffset;
 
                 newThingDef.SetStatBaseValue(StatDefOf.RangedWeapon_DamageMultiplier, thing.GetStatValue(StatDefOf.RangedWeapon_DamageMultiplier) * (1f + (.02f * pwrVal)));
-                newThingDef.SetStatBaseValue(StatDefOf.RangedWeapon_Cooldown, thing.GetStatValue(StatDefOf.RangedWeapon_Cooldown) * (1 - .03f * pwrVal));
-                newThingDef.SetStatBaseValue(StatDefOf.AccuracyTouch, thing.GetStatValue(StatDefOf.AccuracyTouch) * (1 + .01f * pwrVal));
-                newThingDef.SetStatBaseValue(StatDefOf.AccuracyShort, thing.GetStatValue(StatDefOf.AccuracyShort) * (1 + .015f * pwrVal));
-                newThingDef.SetStatBaseValue(StatDefOf.AccuracyMedium, thing.GetStatValue(StatDefOf.AccuracyMedium) * (1 + .005f * pwrVal));
+                newThingDef.SetStatBaseValue(StatDefOf.RangedWeapon_Cooldown, thing.GetStatValue(StatDefOf.RangedWeapon_Cooldown) * (1 - (.03f * pwrVal)));
+                newThingDef.SetStatBaseValue(StatDefOf.AccuracyTouch, thing.GetStatValue(StatDefOf.AccuracyTouch) * (1 + (.01f * pwrVal)));
+                newThingDef.SetStatBaseValue(StatDefOf.AccuracyShort, thing.GetStatValue(StatDefOf.AccuracyShort) * (1 + (.015f * pwrVal)));
+                newThingDef.SetStatBaseValue(StatDefOf.AccuracyMedium, thing.GetStatValue(StatDefOf.AccuracyMedium) * (1 + (.005f * pwrVal)));
                 newThingDef.SetStatBaseValue(StatDefOf.AccuracyLong, thing.GetStatValue(StatDefOf.AccuracyLong));
 
                 newThingDef.Verbs.FirstOrDefault().defaultProjectile = thing.def.Verbs.FirstOrDefault().defaultProjectile;
-                newThingDef.Verbs.FirstOrDefault().range = thing.def.Verbs.FirstOrDefault().range * (1f + .01f * pwrVal);
-                newThingDef.Verbs.FirstOrDefault().warmupTime = thing.def.Verbs.FirstOrDefault().warmupTime * (1f - .03f * pwrVal);
+                newThingDef.Verbs.FirstOrDefault().range = thing.def.Verbs.FirstOrDefault().range * (1f + (.01f * pwrVal));
+                newThingDef.Verbs.FirstOrDefault().warmupTime = thing.def.Verbs.FirstOrDefault().warmupTime * (1f - (.03f * pwrVal));
                 newThingDef.Verbs.FirstOrDefault().burstShotCount = Mathf.RoundToInt(thing.def.Verbs.FirstOrDefault().burstShotCount);
-                newThingDef.Verbs.FirstOrDefault().ticksBetweenBurstShots = Mathf.RoundToInt(thing.def.Verbs.FirstOrDefault().ticksBetweenBurstShots * (1f - .02f * pwrVal));
+                newThingDef.Verbs.FirstOrDefault().ticksBetweenBurstShots = Mathf.RoundToInt(thing.def.Verbs.FirstOrDefault().ticksBetweenBurstShots * (1f - (.02f * pwrVal)));
                 newThingDef.Verbs.FirstOrDefault().soundCast = thing.def.Verbs.FirstOrDefault().soundCast;
                 ThingWithComps specWeapon = (ThingWithComps)ThingMaker.MakeThing(newThingDef, null);
 
@@ -537,7 +534,7 @@ namespace TorannMagic
                     QualityCategory qc = thing.TryGetComp<CompQuality>().Quality;
                     twcq.SetQuality(qc, ArtGenerationContext.Colony);
                 }
-                catch (NullReferenceException ex)
+                catch (NullReferenceException)
                 {
                     //ignore
                 }
@@ -559,7 +556,7 @@ namespace TorannMagic
                         }
                     }
                 }
-                catch (NullReferenceException ex)
+                catch (NullReferenceException)
                 {
                     //ignore
                 }
@@ -587,7 +584,7 @@ namespace TorannMagic
             CompAbilityUserMight comp = caster.GetComp<CompAbilityUserMight>();
             MightPowerSkill eff = comp.MightData.MightPowerSkill_DragonStrike.FirstOrDefault((MightPowerSkill x) => x.label == "TM_DragonStrike_eff");
             MightPowerSkill globalSkill = comp.MightData.MightPowerSkill_global_seff.FirstOrDefault((MightPowerSkill x) => x.label == "TM_global_seff_pwr");
-            float actualStaminaCost = .1f * (1 - (.1f * eff.level) * (1 - (.03f * globalSkill.level)));
+            float actualStaminaCost = .1f * (1 - (.1f * eff.level * (1 - (.03f * globalSkill.level))));
             if (flag && comp != null && comp.Stamina.CurLevel >= actualStaminaCost)
             {
                 bool flag2 = dinfo.Instigator != null;
@@ -688,7 +685,7 @@ namespace TorannMagic
                         IEnumerable<Hediff_Injury> injury_hediff = pawn.health.hediffSet.GetHediffs<Hediff_Injury>();
                         Func<Hediff_Injury, bool> partInjured;
 
-                        partInjured = ((Hediff_Injury injury) => injury.Part == rec);
+                        partInjured = (Hediff_Injury injury) => injury.Part == rec;
                         bool healedBleeding = false;
 
                         foreach (Hediff_Injury current in injury_hediff.Where(partInjured))
@@ -776,7 +773,7 @@ namespace TorannMagic
                         {
                             thing.SetFaction(faction, null);
                         }
-                        else if(faction != null)
+                        else if (faction != null)
                         {
                             thing.SetFaction(faction, null);
                         }
@@ -796,14 +793,12 @@ namespace TorannMagic
         public static Faction ResolveFaction(Pawn caster, SpawnThings spawnables, Faction spawnAbleFaction, bool hostile = false)
         {
             FactionDef val = FactionDefOf.PlayerColony;
-            Faction obj = null;
-
             if (!hostile)
             {
                 return spawnAbleFaction;
             }
 
-            obj = ((caster != null) ? caster.Faction : null);
+            Faction obj = caster != null ? caster.Faction : null;
             Faction val2 = obj;
             if (hostile)
             {
@@ -1005,7 +1000,7 @@ namespace TorannMagic
                             {
                                 lord.AddPawn(newPawn);
                             }
-                            catch (NullReferenceException ex)
+                            catch (NullReferenceException)
                             {
                                 if (lord != null)
                                 {
@@ -1027,8 +1022,7 @@ namespace TorannMagic
 
         public static void TransferSoulBond(Pawn bondedPawn, Pawn polymorphedPawn)
         {
-            Hediff bondHediff = null;
-            bondHediff = bondedPawn.health.hediffSet.GetFirstHediffOfDef(HediffDef.Named("TM_SoulBondPhysicalHD"), false);
+            Hediff bondHediff = bondedPawn.health.hediffSet.GetFirstHediffOfDef(HediffDef.Named("TM_SoulBondPhysicalHD"), false);
             if (bondHediff != null)
             {
                 HediffComp_SoulBondHost comp = bondHediff.TryGetComp<HediffComp_SoulBondHost>();
@@ -1037,7 +1031,6 @@ namespace TorannMagic
                     comp.polyHost = polymorphedPawn;
                 }
             }
-            bondHediff = null;
 
             bondHediff = bondedPawn.health.hediffSet.GetFirstHediffOfDef(HediffDef.Named("TM_SoulBondMentalHD"), false);
             if (bondHediff != null)
@@ -1053,7 +1046,7 @@ namespace TorannMagic
         public static SpawnThings AssignRandomCreatureDef(SpawnThings spawnthing, int combatPowerMin, int combatPowerMax)
         {
             IEnumerable<PawnKindDef> enumerable = from def in DefDatabase<PawnKindDef>.AllDefs
-                                                  where (def.combatPower >= combatPowerMin && def.combatPower <= combatPowerMax && def.race != null && def.race.race != null && def.race.race.thinkTreeMain.ToString() == "Animal")
+                                                  where def.combatPower >= combatPowerMin && def.combatPower <= combatPowerMax && def.race != null && def.race.race != null && def.race.race.thinkTreeMain.ToString() == "Animal"
                                                   select def;
 
             foreach (PawnKindDef current in enumerable)
@@ -1091,7 +1084,7 @@ namespace TorannMagic
             {
                 if (undead != null && !undead.Destroyed && !undead.Dead)
                 {
-                    TM_MoteMaker.ThrowGenericMote(ThingDef.Named("Mote_Holy"), undead.DrawPos, undead.Map, Rand.Range(.5f, .8f), .1f, (.1f * i), .5f - (.1f * i), Rand.Range(-400, 400), Rand.Range(.5f, 1f), Rand.Range(0, 360), Rand.Range(0, 360));
+                    TM_MoteMaker.ThrowGenericMote(ThingDef.Named("Mote_Holy"), undead.DrawPos, undead.Map, Rand.Range(.5f, .8f), .1f, .1f * i, .5f - (.1f * i), Rand.Range(-400, 400), Rand.Range(.5f, 1f), Rand.Range(0, 360), Rand.Range(0, 360));
                 }
             }
             SoundInfo info = SoundInfo.InMap(new TargetInfo(undead.Position, undead.Map, false), MaintenanceType.None);
@@ -1183,10 +1176,10 @@ namespace TorannMagic
                     Hediff hd = pawn.health.hediffSet.GetFirstHediffOfDef(hdwc.def);
                     hd.Severity = comp.recallHediffDefSeverityList[i];
                     //Log.Message("verifying hd severity is " + hd.Severity);
-                    if(comp.recallHediffDefTicksRemainingList[i] > 0)
+                    if (comp.recallHediffDefTicksRemainingList[i] > 0)
                     {
                         HediffComp_Disappears hdc_d = hd.TryGetComp<HediffComp_Disappears>();
-                        if(hdc_d != null)
+                        if (hdc_d != null)
                         {
                             //Log.Message("hediff has disappears comp, loading disappear tick of " + comp.recallHediffDefTicksRemainingList[i]);
                             hdc_d.ticksToDisappear = comp.recallHediffDefTicksRemainingList[i];
@@ -1271,7 +1264,7 @@ namespace TorannMagic
                 ModOptions.SettingsRef settingsRef = new ModOptions.SettingsRef();
                 if (comp != null && comp.Mana != null)
                 {
-                    int xpNum = (int)((mp * 300) * comp.xpGain * settingsRef.xpMultiplier * xpMultiplier);
+                    int xpNum = (int)(mp * 300 * comp.xpGain * settingsRef.xpMultiplier * xpMultiplier);
                     comp.MagicUserXP += xpNum;
                     MoteMaker.ThrowText(p.DrawPos, p.MapHeld, "XP +" + xpNum, -1f);
                     mp *= comp.mpCost;
@@ -1299,15 +1292,15 @@ namespace TorannMagic
             {
                 if (allDefs == fDef)
                 {
-                    List<Faction> allFactions = Find.FactionManager.AllFactions.ToList();
+                    IEnumerable<Faction> allFactions = Find.FactionManager.AllFactions;
                     bool flagList = false;
                     bool flagRelation = false;
-                    for (int i = 0; i < allFactions.Count; i++)
+                    foreach (var faction in allFactions)
                     {
-                        if (allFactions[i].def.defName == fDef.defName)
+                        if (faction.def.defName == fDef.defName)
                         {
                             flagList = true;
-                            if (allFactions[i].RelationWith(Faction.OfPlayer, true) != null)
+                            if (faction.RelationWith(Faction.OfPlayer, true) != null)
                             {
                                 flagRelation = true;
                             }
@@ -1401,9 +1394,9 @@ namespace TorannMagic
             bool completeJob = false;
 
             float rnd = Rand.Range(0f, 1f);
-            float pwrVal = (comp.MagicData.MagicPowerSkill_ChaosTradition.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_ChaosTradition_pwr").level * .1f);
+            float pwrVal = comp.MagicData.MagicPowerSkill_ChaosTradition.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_ChaosTradition_pwr").level * .1f;
             float good = .2f + pwrVal;
-            float bad = (.5f - pwrVal) + good;
+            float bad = .5f - pwrVal + good;
             string surgeText = "";
             if (rnd < good)
             {
@@ -1474,14 +1467,12 @@ namespace TorannMagic
                         surgeText = "Muted";
                         break;
                     case 3:
-                        List<IntVec3> cellList = new List<IntVec3>();
-                        cellList.Clear();
-                        cellList = GenRadial.RadialCellsAround(p.Position, 6, true).ToList();
-                        for (int i = 0; i < cellList.Count; i++)
+                        IEnumerable<IntVec3> cellList = GenRadial.RadialCellsAround(p.Position, 6, true);
+                        foreach (var cell in cellList)
                         {
-                            if (cellList[i].IsValid && cellList[i].InBounds(p.Map))
+                            if (cell.IsValid && cell.InBounds(p.Map))
                             {
-                                List<Thing> thingList = cellList[i].GetThingList(p.Map);
+                                List<Thing> thingList = cell.GetThingList(p.Map);
                                 if (thingList != null && thingList.Count > 0)
                                 {
                                     for (int j = 0; j < thingList.Count; j++)
@@ -1653,8 +1644,8 @@ namespace TorannMagic
             Vector3 impactAngleVect;
             SoundDefOf.EnergyShield_AbsorbDamage.PlayOneShot(new TargetInfo(shieldedPawn.Position, shieldedPawn.Map, false));
             impactAngleVect = Vector3Utility.HorizontalVectorFromAngle(angle);
-            Vector3 loc = shieldedPawn.TrueCenter() + impactAngleVect.RotatedBy(180f) * 0.5f;
-            float num = Mathf.Min(10f, 2f + amount / 10f);
+            Vector3 loc = shieldedPawn.TrueCenter() + (impactAngleVect.RotatedBy(180f) * 0.5f);
+            float num = Mathf.Min(10f, 2f + (amount / 10f));
             MoteMaker.MakeStaticMote(loc, shieldedPawn.Map, ThingDefOf.Mote_ExplosionFlash, num);
             int num2 = (int)num;
             for (int i = 0; i < num2; i++)
@@ -1669,7 +1660,6 @@ namespace TorannMagic
             bool flag = !shieldedPawn.Dead && !shieldedPawn.Downed;
             if (flag)
             {
-                float num = Mathf.Lerp(1.2f, 1.55f, magnitude);
                 Vector3 vector = shieldedPawn.Drawer.DrawPos;
                 vector.y = Altitudes.AltitudeFor(AltitudeLayer.MoteOverhead);
 
@@ -1702,7 +1692,7 @@ namespace TorannMagic
             if (flagNoStuffItem)
             {
                 CompQuality compQual = transmutateThing.TryGetComp<CompQuality>();
-                float wornRatio = ((float)transmutateThing.HitPoints / (float)transmutateThing.MaxHitPoints);
+                float wornRatio = (float)transmutateThing.HitPoints / (float)transmutateThing.MaxHitPoints;
                 Thing thing = transmutateThing;
 
                 if (compQual != null && caster.Inspired && caster.InspirationDef == InspirationDefOf.Inspired_Creativity && compQual.Quality != QualityCategory.Legendary)
@@ -1715,7 +1705,7 @@ namespace TorannMagic
                     }
                 }
                 thing.HitPoints = Mathf.RoundToInt((wornRatio * thing.MaxHitPoints) - ((.2f - (.1f * pwrVal)) * thing.MaxHitPoints));
-                if ((wornRatio != 1 && thing.HitPoints > thing.MaxHitPoints))
+                if (wornRatio != 1 && thing.HitPoints > thing.MaxHitPoints)
                 {
                     thing.HitPoints = thing.MaxHitPoints;
                     thing.SetForbidden(true, false);
@@ -1753,7 +1743,7 @@ namespace TorannMagic
                 int transStackValue = Mathf.RoundToInt(transStackCount * transmutateThing.def.BaseMarketValue);
                 float newMatCount = 0;
                 IEnumerable<ThingDef> enumerable = from def in DefDatabase<ThingDef>.AllDefs
-                                                   where (def.BaseMarketValue > .1f && def.BaseMarketValue <= 100 && def != transmutateThing.def && ((def.stuffProps != null && def.stuffProps.categories != null && def.stuffProps.categories.Count > 0) || def.defName == "RawMagicyte") || def.IsWithinCategory(ThingCategoryDefOf.ResourcesRaw) || def.IsWithinCategory(ThingCategoryDefOf.Leathers))
+                                                   where (def.BaseMarketValue > .1f && def.BaseMarketValue <= 100 && def != transmutateThing.def && ((def.stuffProps != null && def.stuffProps.categories != null && def.stuffProps.categories.Count > 0) || def.defName == "RawMagicyte")) || def.IsWithinCategory(ThingCategoryDefOf.ResourcesRaw) || def.IsWithinCategory(ThingCategoryDefOf.Leathers)
                                                    select def;
 
                 foreach (ThingDef current in enumerable)
@@ -1793,7 +1783,7 @@ namespace TorannMagic
                 //Log.Message("" + transmutateThing.LabelShort + " is made from " + transmutateThing.Stuff.label);
                 float transValue = transmutateThing.MarketValue;
                 IEnumerable<ThingDef> enumerable = from def in DefDatabase<ThingDef>.AllDefs
-                                                   where (def.stuffProps != null && def.stuffProps.categories != null && def.stuffProps.categories.Contains(transmutateThing.Stuff.stuffProps.categories.RandomElement()))
+                                                   where def.stuffProps != null && def.stuffProps.categories != null && def.stuffProps.categories.Contains(transmutateThing.Stuff.stuffProps.categories.RandomElement())
                                                    select def;
 
                 //foreach (ThingDef current in enumerable)
@@ -1805,7 +1795,7 @@ namespace TorannMagic
                 //}
 
                 CompQuality compQual = transmutateThing.TryGetComp<CompQuality>();
-                float wornRatio = ((float)transmutateThing.HitPoints / (float)transmutateThing.MaxHitPoints);
+                float wornRatio = (float)transmutateThing.HitPoints / (float)transmutateThing.MaxHitPoints;
                 Thing thing = new Thing();
                 ThingDef newThingDef = enumerable.RandomElement();
                 thing = ThingMaker.MakeThing(transmutateThing.def, newThingDef);
@@ -1860,7 +1850,7 @@ namespace TorannMagic
                 ThingDef newThingDef = null;
                 //Log.Message("" + transmutateThing.LabelShort + " has a nutrition value of " + transmutateThing.GetStatValue(StatDefOf.Nutrition) + " and stack count of " + transmutateThing.stackCount + " for a total nutrition value of " + transNutritionTotal);
                 IEnumerable<ThingDef> enumerable = from def in DefDatabase<ThingDef>.AllDefs
-                                                   where (def.defName == "Pemmican" || def.defName == "MealNutrientPaste")
+                                                   where def.defName == "Pemmican" || def.defName == "MealNutrientPaste"
                                                    select def;
 
                 newThingDef = enumerable.RandomElement();
@@ -1896,19 +1886,19 @@ namespace TorannMagic
                 {
                     if (transCorpse.ButcherProducts(caster, 1f) != null && transCorpse.ButcherProducts(caster, 1f).Count() > 0)
                     {
-                        List<Thing> butcherProducts = transCorpse.ButcherProducts(caster, 1f).ToList();
-                        for (int j = 0; j < butcherProducts.Count; j++)
+                        IEnumerable<Thing> butcherProducts = transCorpse.ButcherProducts(caster, 1f);
+                        foreach (var product in butcherProducts)
                         {
-                            if (butcherProducts[j].GetStatValue(StatDefOf.Nutrition) > 0)
+                            if (product.GetStatValue(StatDefOf.Nutrition) > 0)
                             {
-                                corpseNutritionValue = (butcherProducts[j].GetStatValue(StatDefOf.Nutrition) * butcherProducts[j].stackCount);
+                                corpseNutritionValue = product.GetStatValue(StatDefOf.Nutrition) * product.stackCount;
                             }
                         }
 
                         if (corpseNutritionValue > 0)
                         {
                             IEnumerable<ThingDef> enumerable = from def in DefDatabase<ThingDef>.AllDefs
-                                                               where (def.defName == "MealNutrientPaste")
+                                                               where def.defName == "MealNutrientPaste"
                                                                select def;
 
                             if (enumerable != null && enumerable.Count() > 0)
@@ -1937,11 +1927,11 @@ namespace TorannMagic
                         else
                         {
                             transCorpse.Destroy(DestroyMode.Vanish);
-                            for (int j = 0; j < butcherProducts.Count; j++)
+                            foreach (var product in butcherProducts)
                             {
                                 Thing thing = null;
-                                thing = ThingMaker.MakeThing(butcherProducts[j].def);
-                                thing.stackCount = butcherProducts[j].stackCount;
+                                thing = ThingMaker.MakeThing(product.def);
+                                thing.stackCount = product.stackCount;
                                 if (thing != null)
                                 {
                                     GenPlace.TryPlaceThing(thing, transmutateThing.Position, caster.Map, ThingPlaceMode.Near, null);
@@ -1965,9 +1955,8 @@ namespace TorannMagic
         public static void CreateMagicDeathEffect(Pawn pawn, IntVec3 pos)
         {
             ModOptions.SettingsRef settingsRef = new ModOptions.SettingsRef();
-            List<IntVec3> targets = new List<IntVec3>();
-            List<Pawn> pawns = new List<Pawn>();
             int rnd = Rand.RangeInclusive(0, 6);
+            List<Pawn> pawns;
             switch (rnd)
             {
                 case 0: //Death explosion
@@ -1987,17 +1976,16 @@ namespace TorannMagic
                     }
 
                     Faction faction = pawn.Faction;
-                    Pawn p = new Pawn();
-                    p = pawn;
+                    Pawn p = pawn;
                     Map map = p.Map;
                     GenExplosion.DoExplosion(p.Position, p.Map, 0f, DamageDefOf.Burn, p as Thing, 0, 0, SoundDefOf.Thunder_OnMap, null, null, null, null, 0f, 0, false, null, 0f, 0, 0.0f, false);
                     Effecter deathEffect = TorannMagicDefOf.TM_DeathExplosion.Spawn();
                     deathEffect.Trigger(new TargetInfo(p.Position, p.Map, false), new TargetInfo(p.Position, p.Map, false));
                     deathEffect.Cleanup();
-                    targets = GenRadial.RadialCellsAround(p.Position, radius, true).ToList();
-                    for (int i = 0; i < targets.Count; i++)
+                    IEnumerable<IntVec3> targets = GenRadial.RadialCellsAround(p.Position, radius, true);
+                    foreach (var cell in targets)
                     {
-                        curCell = targets.ToArray<IntVec3>()[i];
+                        curCell = cell;
                         if (curCell.InBounds(map) && curCell.IsValid)
                         {
                             victim = curCell.GetFirstPawn(map);
@@ -2354,21 +2342,21 @@ namespace TorannMagic
 
         public static void InvulnerableAoEFor(IntVec3 center, Map map, float radius, int durationTicks, Faction forFaction = null)
         {
-            if(map != null && center != default(IntVec3))
+            if (map != null && center != default(IntVec3))
             {
                 List<Pawn> pawnList = map.mapPawns.AllPawnsSpawned;
-                if(pawnList != null)
+                if (pawnList != null)
                 {
-                    foreach(Pawn p in pawnList)
+                    foreach (Pawn p in pawnList)
                     {
-                        if((forFaction == null || (p.Faction == forFaction)) && (p.Position - center).LengthHorizontal <= radius)
+                        if ((forFaction == null || (p.Faction == forFaction)) && (p.Position - center).LengthHorizontal <= radius)
                         {
-                            if(p.health != null && p.health.hediffSet != null)
+                            if (p.health != null && p.health.hediffSet != null)
                             {
                                 HealthUtility.AdjustSeverity(p, TorannMagicDefOf.TM_HediffTimedInvulnerable, 1f);
                                 Hediff hd = p.health.hediffSet.GetFirstHediffOfDef(TorannMagicDefOf.TM_HediffTimedInvulnerable);
                                 HediffComp_Disappears hdc = hd.TryGetComp<HediffComp_Disappears>();
-                                if(hdc != null)
+                                if (hdc != null)
                                 {
                                     hdc.ticksToDisappear += durationTicks;
                                 }
@@ -2543,7 +2531,7 @@ namespace TorannMagic
                         {
                             magicPower.AutoCast = !magicPower.AutoCast;
                             return new GizmoResult(GizmoState.Mouseover, null);
-                            
+
                         }
                     }
                     if (com.pawnAbility.Def == TorannMagicDefOf.TM_Firebolt)
@@ -2554,7 +2542,7 @@ namespace TorannMagic
                         {
                             magicPower.AutoCast = !magicPower.AutoCast;
                             return new GizmoResult(GizmoState.Mouseover, null);
-                            
+
                         }
                     }
                     if (com.pawnAbility.Def == TorannMagicDefOf.TM_Icebolt)
@@ -2565,7 +2553,7 @@ namespace TorannMagic
                         {
                             magicPower.AutoCast = !magicPower.AutoCast;
                             return new GizmoResult(GizmoState.Mouseover, null);
-                            
+
                         }
                     }
                     if (com.pawnAbility.Def == TorannMagicDefOf.TM_LightningBolt)
@@ -2576,7 +2564,7 @@ namespace TorannMagic
                         {
                             magicPower.AutoCast = !magicPower.AutoCast;
                             return new GizmoResult(GizmoState.Mouseover, null);
-                            
+
                         }
                     }
                     if (com.pawnAbility.Def == TorannMagicDefOf.TM_FrostRay || com.pawnAbility.Def == TorannMagicDefOf.TM_FrostRay_I || com.pawnAbility.Def == TorannMagicDefOf.TM_FrostRay_II || com.pawnAbility.Def == TorannMagicDefOf.TM_FrostRay_III)
@@ -2587,7 +2575,7 @@ namespace TorannMagic
                         {
                             magicPower.AutoCast = !magicPower.AutoCast;
                             return new GizmoResult(GizmoState.Mouseover, null);
-                            
+
                         }
                     }
                     if (com.pawnAbility.Def == TorannMagicDefOf.TM_MagicMissile || com.pawnAbility.Def == TorannMagicDefOf.TM_MagicMissile_I || com.pawnAbility.Def == TorannMagicDefOf.TM_MagicMissile_II || com.pawnAbility.Def == TorannMagicDefOf.TM_MagicMissile_III)
@@ -2598,7 +2586,7 @@ namespace TorannMagic
                         {
                             magicPower.AutoCast = !magicPower.AutoCast;
                             return new GizmoResult(GizmoState.Mouseover, null);
-                            
+
                         }
                     }
                     if (com.pawnAbility.Def == TorannMagicDefOf.TM_Entertain)
@@ -2641,7 +2629,7 @@ namespace TorannMagic
                         {
                             magicPower.AutoCast = !magicPower.AutoCast;
                             return new GizmoResult(GizmoState.Mouseover, null);
-                            
+
                         }
                     }
                     if (com.pawnAbility.Def == TorannMagicDefOf.TM_Regenerate)
@@ -2652,7 +2640,7 @@ namespace TorannMagic
                         {
                             magicPower.AutoCast = !magicPower.AutoCast;
                             return new GizmoResult(GizmoState.Mouseover, null);
-                            
+
                         }
                     }
                     if (com.pawnAbility.Def == TorannMagicDefOf.TM_CureDisease)
@@ -2663,7 +2651,7 @@ namespace TorannMagic
                         {
                             magicPower.AutoCast = !magicPower.AutoCast;
                             return new GizmoResult(GizmoState.Mouseover, null);
-                            
+
                         }
                     }
                     if (com.pawnAbility.Def == TorannMagicDefOf.TM_Heal)
@@ -2674,7 +2662,7 @@ namespace TorannMagic
                         {
                             magicPower.AutoCast = !magicPower.AutoCast;
                             return new GizmoResult(GizmoState.Mouseover, null);
-                            
+
                         }
                     }
                     if (com.pawnAbility.Def == TorannMagicDefOf.TM_Shield || com.pawnAbility.Def == TorannMagicDefOf.TM_Shield_I | com.pawnAbility.Def == TorannMagicDefOf.TM_Shield_II || com.pawnAbility.Def == TorannMagicDefOf.TM_Shield_III)
@@ -2685,7 +2673,7 @@ namespace TorannMagic
                         {
                             magicPower.AutoCast = !magicPower.AutoCast;
                             return new GizmoResult(GizmoState.Mouseover, null);
-                            
+
                         }
                     }
                     if (com.pawnAbility.Def == TorannMagicDefOf.TM_AdvancedHeal)
@@ -2696,7 +2684,7 @@ namespace TorannMagic
                         {
                             magicPower.AutoCast = !magicPower.AutoCast;
                             return new GizmoResult(GizmoState.Mouseover, null);
-                            
+
                         }
                     }
                     if (com.pawnAbility.Def == TorannMagicDefOf.TM_TransferMana)
@@ -2707,7 +2695,7 @@ namespace TorannMagic
                         {
                             magicPower.AutoCast = !magicPower.AutoCast;
                             return new GizmoResult(GizmoState.Mouseover, null);
-                            
+
                         }
                     }
                     if (com.pawnAbility.Def == TorannMagicDefOf.TM_SiphonMana)
@@ -2718,7 +2706,7 @@ namespace TorannMagic
                         {
                             magicPower.AutoCast = !magicPower.AutoCast;
                             return new GizmoResult(GizmoState.Mouseover, null);
-                            
+
                         }
                     }
                     if (com.pawnAbility.Def == TorannMagicDefOf.TM_CauterizeWound)
@@ -2729,7 +2717,7 @@ namespace TorannMagic
                         {
                             magicPower.AutoCast = !magicPower.AutoCast;
                             return new GizmoResult(GizmoState.Mouseover, null);
-                            
+
                         }
                     }
                     if (com.pawnAbility.Def == TorannMagicDefOf.TM_SpellMending)
@@ -2740,7 +2728,7 @@ namespace TorannMagic
                         {
                             magicPower.AutoCast = !magicPower.AutoCast;
                             return new GizmoResult(GizmoState.Mouseover, null);
-                            
+
                         }
                     }
                     if (com.pawnAbility.Def == TorannMagicDefOf.TM_TeachMagic)
@@ -2751,7 +2739,7 @@ namespace TorannMagic
                         {
                             magicPower.AutoCast = !magicPower.AutoCast;
                             return new GizmoResult(GizmoState.Mouseover, null);
-                            
+
                         }
                     }
                     if (com.pawnAbility.Def == TorannMagicDefOf.TM_ShadowBolt || com.pawnAbility.Def == TorannMagicDefOf.TM_ShadowBolt_I || com.pawnAbility.Def == TorannMagicDefOf.TM_ShadowBolt_II || com.pawnAbility.Def == TorannMagicDefOf.TM_ShadowBolt_III)
@@ -2769,7 +2757,7 @@ namespace TorannMagic
                         {
                             magicPower.AutoCast = !magicPower.AutoCast;
                             return new GizmoResult(GizmoState.Mouseover, null);
-                            
+
                         }
                     }
                     if (com.pawnAbility.Def == TorannMagicDefOf.TM_Purify)
@@ -2780,7 +2768,7 @@ namespace TorannMagic
                         {
                             magicPower.AutoCast = !magicPower.AutoCast;
                             return new GizmoResult(GizmoState.Mouseover, null);
-                            
+
                         }
                     }
                     if (com.pawnAbility.Def == TorannMagicDefOf.TM_SummonMinion)
@@ -2791,7 +2779,7 @@ namespace TorannMagic
                         {
                             magicPower.AutoCast = !magicPower.AutoCast;
                             return new GizmoResult(GizmoState.Mouseover, null);
-                            
+
                         }
                     }
                     if (com.pawnAbility.Def == TorannMagicDefOf.TM_MechaniteReprogramming)
@@ -2802,7 +2790,7 @@ namespace TorannMagic
                         {
                             magicPower.AutoCast = !magicPower.AutoCast;
                             return new GizmoResult(GizmoState.Mouseover, null);
-                            
+
                         }
                     }
                     if (com.pawnAbility.Def == TorannMagicDefOf.TM_DirtDevil)
@@ -2813,7 +2801,7 @@ namespace TorannMagic
                         {
                             magicPower.AutoCast = !magicPower.AutoCast;
                             return new GizmoResult(GizmoState.Mouseover, null);
-                            
+
                         }
                     }
                     if (com.pawnAbility.Def == TorannMagicDefOf.TM_ArcaneBolt)
@@ -2824,7 +2812,7 @@ namespace TorannMagic
                         {
                             magicPower.AutoCast = !magicPower.AutoCast;
                             return new GizmoResult(GizmoState.Mouseover, null);
-                            
+
                         }
                     }
                     if (com.pawnAbility.Def == TorannMagicDefOf.TM_TimeMark)
@@ -2835,7 +2823,7 @@ namespace TorannMagic
                         {
                             magicPower.AutoCast = !magicPower.AutoCast;
                             return new GizmoResult(GizmoState.Mouseover, null);
-                            
+
                         }
                     }
                     if (com.pawnAbility.Def == TorannMagicDefOf.TM_Transmutate)
@@ -2846,7 +2834,7 @@ namespace TorannMagic
                         {
                             magicPower.AutoCast = !magicPower.AutoCast;
                             return new GizmoResult(GizmoState.Mouseover, null);
-                            
+
                         }
                     }
                     if (com.pawnAbility.Def == TorannMagicDefOf.TM_RegrowLimb)
@@ -2857,7 +2845,7 @@ namespace TorannMagic
                         {
                             magicPower.AutoCast = !magicPower.AutoCast;
                             return new GizmoResult(GizmoState.Mouseover, null);
-                            
+
                         }
                     }
                     if (comp.MagicData.MagicPowersCustom != null)
@@ -2873,7 +2861,7 @@ namespace TorannMagic
                                     {
                                         magicPower.AutoCast = !magicPower.AutoCast;
                                         return new GizmoResult(GizmoState.Mouseover, null);
-                                        
+
                                     }
                                 }
                             }
@@ -2896,7 +2884,7 @@ namespace TorannMagic
                                     {
                                         mightPower.AutoCast = !mightPower.AutoCast;
                                         return new GizmoResult(GizmoState.Mouseover, null);
-                                        
+
                                     }
                                 }
                             }
@@ -2910,7 +2898,7 @@ namespace TorannMagic
                         {
                             mightPower.AutoCast = !mightPower.AutoCast;
                             return new GizmoResult(GizmoState.Mouseover, null);
-                            
+
                         }
                     }
                     if (com.pawnAbility.Def == TorannMagicDefOf.TM_BladeSpin)
@@ -2921,7 +2909,7 @@ namespace TorannMagic
                         {
                             mightPower.AutoCast = !mightPower.AutoCast;
                             return new GizmoResult(GizmoState.Mouseover, null);
-                            
+
                         }
                     }
                     if (com.pawnAbility.Def == TorannMagicDefOf.TM_PhaseStrike || com.pawnAbility.Def == TorannMagicDefOf.TM_PhaseStrike_I || com.pawnAbility.Def == TorannMagicDefOf.TM_PhaseStrike_II || com.pawnAbility.Def == TorannMagicDefOf.TM_PhaseStrike_III)
@@ -2932,7 +2920,7 @@ namespace TorannMagic
                         {
                             mightPower.AutoCast = !mightPower.AutoCast;
                             return new GizmoResult(GizmoState.Mouseover, null);
-                            
+
                         }
                     }
                     if (com.pawnAbility.Def == TorannMagicDefOf.TM_ArrowStorm || com.pawnAbility.Def == TorannMagicDefOf.TM_ArrowStorm_I || com.pawnAbility.Def == TorannMagicDefOf.TM_ArrowStorm_II || com.pawnAbility.Def == TorannMagicDefOf.TM_ArrowStorm_III)
@@ -2943,7 +2931,7 @@ namespace TorannMagic
                         {
                             mightPower.AutoCast = !mightPower.AutoCast;
                             return new GizmoResult(GizmoState.Mouseover, null);
-                            
+
                         }
                     }
                     if (com.pawnAbility.Def == TorannMagicDefOf.TM_DisablingShot || com.pawnAbility.Def == TorannMagicDefOf.TM_DisablingShot_I || com.pawnAbility.Def == TorannMagicDefOf.TM_DisablingShot_II || com.pawnAbility.Def == TorannMagicDefOf.TM_DisablingShot_III)
@@ -2954,7 +2942,7 @@ namespace TorannMagic
                         {
                             mightPower.AutoCast = !mightPower.AutoCast;
                             return new GizmoResult(GizmoState.Mouseover, null);
-                            
+
                         }
                     }
                     if (com.pawnAbility.Def == TorannMagicDefOf.TM_Spite || com.pawnAbility.Def == TorannMagicDefOf.TM_Spite_I || com.pawnAbility.Def == TorannMagicDefOf.TM_Spite_II || com.pawnAbility.Def == TorannMagicDefOf.TM_Spite_III)
@@ -2965,7 +2953,7 @@ namespace TorannMagic
                         {
                             mightPower.AutoCast = !mightPower.AutoCast;
                             return new GizmoResult(GizmoState.Mouseover, null);
-                            
+
                         }
                     }
                     if (com.pawnAbility.Def == TorannMagicDefOf.TM_Headshot)
@@ -2976,7 +2964,7 @@ namespace TorannMagic
                         {
                             mightPower.AutoCast = !mightPower.AutoCast;
                             return new GizmoResult(GizmoState.Mouseover, null);
-                            
+
                         }
                     }
                     if (com.pawnAbility.Def == TorannMagicDefOf.TM_AntiArmor)
@@ -2987,7 +2975,7 @@ namespace TorannMagic
                         {
                             mightPower.AutoCast = !mightPower.AutoCast;
                             return new GizmoResult(GizmoState.Mouseover, null);
-                            
+
                         }
                     }
                     if (com.pawnAbility.Def == TorannMagicDefOf.TM_ThrowingKnife)
@@ -2998,7 +2986,7 @@ namespace TorannMagic
                         {
                             mightPower.AutoCast = !mightPower.AutoCast;
                             return new GizmoResult(GizmoState.Mouseover, null);
-                            
+
                         }
                     }
                     if (com.pawnAbility.Def == TorannMagicDefOf.TM_PommelStrike)
@@ -3009,7 +2997,7 @@ namespace TorannMagic
                         {
                             mightPower.AutoCast = !mightPower.AutoCast;
                             return new GizmoResult(GizmoState.Mouseover, null);
-                            
+
                         }
                     }
                     if (com.pawnAbility.Def == TorannMagicDefOf.TM_TempestStrike)
@@ -3020,7 +3008,7 @@ namespace TorannMagic
                         {
                             mightPower.AutoCast = !mightPower.AutoCast;
                             return new GizmoResult(GizmoState.Mouseover, null);
-                            
+
                         }
                     }
                     if (com.pawnAbility.Def == TorannMagicDefOf.TM_TigerStrike)
@@ -3031,7 +3019,7 @@ namespace TorannMagic
                         {
                             mightPower.AutoCast = !mightPower.AutoCast;
                             return new GizmoResult(GizmoState.Mouseover, null);
-                            
+
                         }
                     }
                     if (com.pawnAbility.Def == TorannMagicDefOf.TM_ThunderStrike)
@@ -3042,7 +3030,7 @@ namespace TorannMagic
                         {
                             mightPower.AutoCast = !mightPower.AutoCast;
                             return new GizmoResult(GizmoState.Mouseover, null);
-                            
+
                         }
                     }
                     if (com.pawnAbility.Def == TorannMagicDefOf.TM_ProvisionerAura)
@@ -3065,7 +3053,7 @@ namespace TorannMagic
                         {
                             mightPower.AutoCast = !mightPower.AutoCast;
                             return new GizmoResult(GizmoState.Mouseover, null);
-                            
+
                         }
                     }
                     if (com.pawnAbility.Def == TorannMagicDefOf.TM_SuppressingFire)
@@ -3076,7 +3064,7 @@ namespace TorannMagic
                         {
                             mightPower.AutoCast = !mightPower.AutoCast;
                             return new GizmoResult(GizmoState.Mouseover, null);
-                            
+
                         }
                     }
                     if (com.pawnAbility.Def == TorannMagicDefOf.TM_Buckshot)
@@ -3087,7 +3075,7 @@ namespace TorannMagic
                         {
                             mightPower.AutoCast = !mightPower.AutoCast;
                             return new GizmoResult(GizmoState.Mouseover, null);
-                            
+
                         }
                     }
                     if (com.pawnAbility.Def == TorannMagicDefOf.TM_FirstAid)
@@ -3098,7 +3086,7 @@ namespace TorannMagic
                         {
                             mightPower.AutoCast = !mightPower.AutoCast;
                             return new GizmoResult(GizmoState.Mouseover, null);
-                            
+
                         }
                     }
                     if (com.pawnAbility.Def == TorannMagicDefOf.TM_Meditate)
@@ -3109,7 +3097,7 @@ namespace TorannMagic
                         {
                             mightPower.AutoCast = !mightPower.AutoCast;
                             return new GizmoResult(GizmoState.Mouseover, null);
-                            
+
                         }
                     }
                     if (com.pawnAbility.Def == TorannMagicDefOf.TM_Nightshade)
@@ -3124,7 +3112,7 @@ namespace TorannMagic
                         {
                             mightPower.AutoCast = !mightPower.AutoCast;
                             return new GizmoResult(GizmoState.Mouseover, null);
-                            
+
                         }
                     }
                 }
@@ -3159,24 +3147,24 @@ namespace TorannMagic
                             Messages.Message(com.disabledReason, MessageTypeDefOf.RejectInput);
                         }
                         return new GizmoResult(GizmoState.Mouseover, null);
-                        
+
                     }
                     if (!TutorSystem.AllowAction(com.TutorTagSelect))
                     {
                         return new GizmoResult(GizmoState.Mouseover, null);
-                        
+
                     }
                     return new GizmoResult(GizmoState.Interacted, Event.current);
-                    
+
                 }
 
                 if (flag)
                 {
                     return new GizmoResult(GizmoState.Mouseover, null);
-                    
+
                 }
                 return new GizmoResult(GizmoState.Clear, null);
-                
+
             }
             return oldResult;
         }
@@ -3189,23 +3177,20 @@ namespace TorannMagic
                 if (p != null && p.health != null && p.health.hediffSet != null)
                 {
                     List<Hediff> recList = new List<Hediff>();
-                    recList.Clear();
-                    List<Hediff> hds = p.health.hediffSet.GetHediffs<Hediff>().ToList();
-                    if (hds != null && hds.Count > 0)
+                    IEnumerable<Hediff> hds = p.health.hediffSet.GetHediffs<Hediff>();
+                    foreach (var hediff in hds)
                     {
-                        for (int i = 0; i < hds.Count; i++)
+                        if (hediff.def == TorannMagicDefOf.TM_RayOfHope_AuraHD || hediff.def == TorannMagicDefOf.TM_SoothingBreeze_AuraHD || hediff.def == TorannMagicDefOf.TM_Shadow_AuraHD || hediff.def == TorannMagicDefOf.TM_InnerFire_AuraHD ||
+                            hediff.def == TorannMagicDefOf.TM_TechnoBitHD || hediff.def == TorannMagicDefOf.TM_EnchantedAuraHD || hediff.def == TorannMagicDefOf.TM_EnchantedBodyHD ||
+                            hediff.def == TorannMagicDefOf.TM_PredictionHD || hediff.def == TorannMagicDefOf.TM_SDSoulBondPhysicalHD || hediff.def == TorannMagicDefOf.TM_WDSoulBondMentalHD)
                         {
-                            if (hds[i].def == TorannMagicDefOf.TM_RayOfHope_AuraHD || hds[i].def == TorannMagicDefOf.TM_SoothingBreeze_AuraHD || hds[i].def == TorannMagicDefOf.TM_Shadow_AuraHD || hds[i].def == TorannMagicDefOf.TM_InnerFire_AuraHD ||
-                                hds[i].def == TorannMagicDefOf.TM_TechnoBitHD || hds[i].def == TorannMagicDefOf.TM_EnchantedAuraHD || hds[i].def == TorannMagicDefOf.TM_EnchantedBodyHD ||
-                                hds[i].def == TorannMagicDefOf.TM_PredictionHD || hds[i].def == TorannMagicDefOf.TM_SDSoulBondPhysicalHD || hds[i].def == TorannMagicDefOf.TM_WDSoulBondMentalHD)
-                            {
-                                recList.Add(hds[i]);
-                            }
+                            recList.Add(hediff);
                         }
-                        for (int i = 0; i < recList.Count; i++)
-                        {
-                            p.health.RemoveHediff(recList[i]);
-                        }
+                    }
+
+                    for (int i = 0; i < recList.Count; i++)
+                    {
+                        p.health.RemoveHediff(recList[i]);
                     }
                 }
             }

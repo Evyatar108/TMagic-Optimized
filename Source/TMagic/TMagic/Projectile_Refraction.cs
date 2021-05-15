@@ -1,12 +1,9 @@
 ﻿using Verse;
-using Verse.Sound;
 using RimWorld;
 using AbilityUser;
 using System;
-using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
-using Verse.AI;
 using HarmonyLib;
 
 namespace TorannMagic
@@ -22,7 +19,7 @@ namespace TorannMagic
         Vector3 wallStart = default(Vector3);
         Vector3 wallDir = default(Vector3);
         Vector3 wallEnd = default(Vector3);
-        List<IntVec3> wallPositions = new List<IntVec3>();
+        HashSet<IntVec3> wallPositions = new HashSet<IntVec3>();
         LocalTargetInfo secondTarget = null;
         Pawn caster;
         public static readonly MaterialPropertyBlock MatPropertyBlock = new MaterialPropertyBlock();
@@ -72,13 +69,12 @@ namespace TorannMagic
 
         private void GetWallCells()
         {
-            wallPositions = new List<IntVec3>();
+            wallPositions = new HashSet<IntVec3>();
             wallPositions.Clear();
             wallLength = Mathf.RoundToInt(Mathf.Clamp(wallLength, 1, wallLengthMax));
-            IntVec3 cell = default(IntVec3);
-            for(int i = 0; i < wallLength; i++)
+            for (int i = 0; i < wallLength; i++)
             {
-                cell = (wallStart + (wallDir * i)).ToIntVec3();
+                IntVec3 cell = (wallStart + (wallDir * i)).ToIntVec3();
                 if (!wallPositions.Contains(cell))
                 {
                     wallPositions.Add(cell);
@@ -104,9 +100,7 @@ namespace TorannMagic
 
         protected override void Impact(Thing hitThing)
         {
-            Map map = base.Map;
             base.Impact(hitThing);
-            ThingDef def = this.def;
             if (!this.initialized)
             {
                 caster = this.launcher as Pawn;
@@ -158,9 +152,10 @@ namespace TorannMagic
         {
             float eMissVar = .1f + (.015f * pwrVal);
             float fMissVar = .05f - (.01f * pwrVal);
+            foreach (var wallPosition in this.wallPositions)
             for (int k = 0; k < this.wallPositions.Count; k++)
             {
-                List<Thing> cellList = this.wallPositions[k].GetThingList(this.Map);
+                List<Thing> cellList = wallPosition.GetThingList(this.Map);
                 for (int i = 0; i < cellList.Count; i++)
                 {
                     Thing t = cellList[i];
@@ -173,22 +168,21 @@ namespace TorannMagic
                         {
                             if (proj.Launcher.Faction != this.caster.Faction)
                             {
-                                Vector3 displayEffect = this.wallPositions[k].ToVector3Shifted();
+                                Vector3 displayEffect = wallPosition.ToVector3Shifted();
                                 displayEffect.x += Rand.Range(-.2f, .2f);
                                 displayEffect.z += Rand.Range(-.2f, .2f);
                                 TM_MoteMaker.ThrowGenericMote(TorannMagicDefOf.Mote_LightBarrier, displayEffect, this.Map, .4f, .2f, .05f, .2f, 0, 0, 0, 0);
                                 IntVec3 targetVec = Traverse.Create(root: proj).Field(name: "destination").GetValue<Vector3>().ToIntVec3();
                                 float targetRange = (this.Position - targetVec).LengthHorizontal;
-                                LocalTargetInfo initialTarget = proj.intendedTarget;
                                 targetVec.x += Mathf.RoundToInt(Rand.Range(-eMissVar, eMissVar) * targetRange);
                                 targetVec.z += Mathf.RoundToInt(Rand.Range(-eMissVar, eMissVar) * targetRange);
-                                TM_CopyAndLaunchProjectile.CopyAndLaunchThingFromPosition(proj.def, proj.Launcher, wallPositions[k], this.Map, targetVec, intendedTarget, ProjectileHitFlags.All, null);
+                                TM_CopyAndLaunchProjectile.CopyAndLaunchThingFromPosition(proj.def, proj.Launcher, wallPosition, this.Map, targetVec, intendedTarget, ProjectileHitFlags.All, null);
                                 proj.Destroy(DestroyMode.Vanish);
                                 this.wallEnergy -= proj.def.projectile.GetDamageAmount(1f);
                             }
                             else
                             {
-                                Vector3 displayEffect = this.wallPositions[k].ToVector3Shifted();
+                                Vector3 displayEffect = wallPosition.ToVector3Shifted();
                                 displayEffect.x += Rand.Range(-.2f, .2f);
                                 displayEffect.z += Rand.Range(-.2f, .2f);
                                 TM_MoteMaker.ThrowGenericMote(TorannMagicDefOf.Mote_LightBarrier, displayEffect, this.Map, .4f, .2f, .05f, .2f, 0, 0, 0, 0);
@@ -197,7 +191,7 @@ namespace TorannMagic
                                 LocalTargetInfo initialTarget = proj.intendedTarget;
                                 targetCell.x += Mathf.RoundToInt(Rand.Range(-fMissVar, fMissVar) * targetRange);
                                 targetCell.z += Mathf.RoundToInt(Rand.Range(-fMissVar, fMissVar) * targetRange);
-                                TM_CopyAndLaunchProjectile.CopyAndLaunchThingFromPosition(proj.def, proj.Launcher, wallPositions[k], this.Map, targetCell, initialTarget, ProjectileHitFlags.All);
+                                TM_CopyAndLaunchProjectile.CopyAndLaunchThingFromPosition(proj.def, proj.Launcher, wallPosition, this.Map, targetCell, initialTarget, ProjectileHitFlags.All);
                                 this.wallEnergy -= proj.def.projectile.GetDamageAmount(1f);
                             }
                         }
@@ -212,7 +206,7 @@ namespace TorannMagic
             if (wallActive)
             {
                 float altitude = Altitudes.AltitudeFor(AltitudeLayer.MetaOverlays);          //graphic depth
-                float wallWidth = Mathf.Clamp(1f * (wallEnergy/1000f), .3f, 2f);
+                float wallWidth = Mathf.Clamp(1f * (wallEnergy / 1000f), .3f, 2f);
                 Vector3 pos = wallStart + (wallDir * wallLength * .5f);
                 pos.y = altitude;
                 float angle = Vector3Utility.AngleFlat(wallDir);
@@ -225,7 +219,7 @@ namespace TorannMagic
                 }
                 Matrix4x4 matrix2 = new Matrix4x4();
                 matrix2.SetTRS(pos, Quaternion.AngleAxis(angle, Vector3.up), new Vector3(wallWidth * 1.3f, altitude, wallLength * .95f));   //drawer for internal pulse
-                Graphics.DrawMesh(MeshPool.plane10, matrix2, TM_MatPool.chiLightning, 0, null, 0, Projectile_Refraction.MatPropertyBlock);         
+                Graphics.DrawMesh(MeshPool.plane10, matrix2, TM_MatPool.chiLightning, 0, null, 0, Projectile_Refraction.MatPropertyBlock);
             }
         }
 

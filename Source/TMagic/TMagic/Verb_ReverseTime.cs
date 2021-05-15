@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using RimWorld;
 using AbilityUser;
 using Verse;
-using Verse.AI;
 using UnityEngine;
 using HarmonyLib;
 
@@ -14,8 +12,8 @@ namespace TorannMagic
     public class Verb_ReverseTime : Verb_UseAbility
     {
 
-        private int verVal =0;
-        private int pwrVal =0;
+        private int verVal = 0;
+        private int pwrVal = 0;
         private float arcaneDmg = 1f;
 
         bool validTarg;
@@ -30,8 +28,7 @@ namespace TorannMagic
             {
                 if ((root - targ.Cell).LengthHorizontal < this.verbProps.range)
                 {
-                    ShootLine shootLine;
-                    validTarg = this.TryFindShootLineFromTo(root, targ, out shootLine);
+                    validTarg = this.TryFindShootLineFromTo(root, targ, out _);
                 }
                 else
                 {
@@ -90,11 +87,11 @@ namespace TorannMagic
             {
                 if (targetPawn.Faction != null && targetPawn.Faction == this.CasterPawn.Faction)
                 {
-                    AgePawn(targetPawn, Mathf.RoundToInt((6 * 2500) * (1 + (.1f * verVal))), false);
+                    AgePawn(targetPawn, Mathf.RoundToInt(6 * 2500 * (1 + (.1f * verVal))), false);
                 }
                 else
                 {
-                    AgePawn(targetPawn, Mathf.RoundToInt((2500) * (1 + (.1f * verVal))), true);
+                    AgePawn(targetPawn, Mathf.RoundToInt(2500 * (1 + (.1f * verVal))), true);
                 }
                 flagPawn = true;
             }
@@ -124,7 +121,7 @@ namespace TorannMagic
                             ageThing = thingList[i];
                             break;
                         }
-                        if ((thingList[i].def.statBases != null && thingList[i].GetStatValue(StatDefOf.Nutrition) > 0) && !(thingList[i] is Corpse))
+                        if (thingList[i].def.statBases != null && thingList[i].GetStatValue(StatDefOf.Nutrition) > 0 && !(thingList[i] is Corpse))
                         {
                             //Log.Message("food item");
                             flagNutrition = true;
@@ -177,15 +174,15 @@ namespace TorannMagic
                 }
                 else
                 {
-                    if (pawn.Faction == this.CasterPawn.Faction || (Rand.Chance((.5f + verVal) * TM_Calc.GetSpellSuccessChance(this.CasterPawn, pawn, false))))
+                    if (pawn.Faction == this.CasterPawn.Faction || Rand.Chance((.5f + verVal) * TM_Calc.GetSpellSuccessChance(this.CasterPawn, pawn, false)))
                     {
-                        if(isBad)
+                        if (isBad)
                         {
                             HealthUtility.AdjustSeverity(pawn, TorannMagicDefOf.TM_ReverseTimeBadHD, .5f + pwrVal);
                             HediffComp_ReverseTime hediffComp = pawn.health.hediffSet.GetFirstHediffOfDef(TorannMagicDefOf.TM_ReverseTimeBadHD, false).TryGetComp<HediffComp_ReverseTime>();
                             if (hediffComp != null)
                             {
-                                hediffComp.durationTicks = (duration);
+                                hediffComp.durationTicks = duration;
                                 hediffComp.isBad = isBad;
                                 if (pawn.IsColonist && !base.CasterPawn.IsColonist)
                                 {
@@ -199,11 +196,11 @@ namespace TorannMagic
                             HediffComp_ReverseTime hediffComp = pawn.health.hediffSet.GetFirstHediffOfDef(TorannMagicDefOf.TM_ReverseTimeHD, false).TryGetComp<HediffComp_ReverseTime>();
                             if (hediffComp != null)
                             {
-                                hediffComp.durationTicks = (duration);
+                                hediffComp.durationTicks = duration;
                                 hediffComp.isBad = isBad;
                             }
-                        }                        
-                        
+                        }
+
                         TimeEffects(pawn, 3);
                     }
                     else
@@ -221,7 +218,7 @@ namespace TorannMagic
             if (thing is Apparel)
             {
                 Apparel apparelThing = thing as Apparel;
-                if(apparelThing.WornByCorpse)
+                if (apparelThing.WornByCorpse)
                 {
                     apparelThing.Notify_PawnResurrected();
                     Traverse.Create(root: apparelThing).Field(name: "wornByCorpseInt").SetValue(false);
@@ -233,7 +230,7 @@ namespace TorannMagic
         private void AgeFood(Thing thing)
         {
             CompRottable compRot = thing.TryGetComp<CompRottable>();
-            if(compRot != null)
+            if (compRot != null)
             {
                 compRot.RotProgress = compRot.RotProgress * (.4f - (.125f * pwrVal));
             }
@@ -244,7 +241,7 @@ namespace TorannMagic
             CompRottable compRot = thing.TryGetComp<CompRottable>();
             if (compRot != null)
             {
-                if(compRot.RotProgress <= (5000 + (5000*pwrVal)))
+                if (compRot.RotProgress <= (5000 + (5000 * pwrVal)))
                 {
                     Corpse corpse = thing as Corpse;
                     if (corpse != null && verVal >= 3)
@@ -252,7 +249,7 @@ namespace TorannMagic
                         TransmutateEffects(corpse.Position, 10);
                         Pawn innerPawn = corpse.InnerPawn;
                         ResurrectionUtility.ResurrectWithSideEffects(innerPawn);
-                        AgePawn(innerPawn, Mathf.RoundToInt((6*2500) * (1 + (.1f * verVal))), false);
+                        AgePawn(innerPawn, Mathf.RoundToInt(6 * 2500 * (1 + (.1f * verVal))), false);
                         HealthUtility.AdjustSeverity(innerPawn, TorannMagicDefOf.TM_DeathReversalHD, 1f);
                         Projectile_Resurrection.ApplyHealthDefects(innerPawn, .25f, .3f);
                         Projectile_Resurrection.ReduceSkillsOfPawn(innerPawn, Rand.Range(.30f, .40f));
@@ -264,7 +261,7 @@ namespace TorannMagic
                 else
                 {
                     compRot.RotProgress = compRot.RotProgress * (.4f - (.125f * pwrVal));
-                    if(compRot.RotProgress <= 20000)
+                    if (compRot.RotProgress <= 20000)
                     {
                         compRot.RotProgress = 20001;
                     }

@@ -1,17 +1,14 @@
 ﻿using RimWorld;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Verse;
-using Verse.Sound;
 using AbilityUser;
 using UnityEngine;
-using Verse.AI.Group;
 
 namespace TorannMagic
 {
-    public class Verb_Overdrive : Verb_UseAbility  
-    {        
+    public class Verb_Overdrive : Verb_UseAbility
+    {
         int pwrVal;
         int verVal;
         CompAbilityUserMagic comp;
@@ -41,7 +38,7 @@ namespace TorannMagic
 
         protected override bool TryCastShot()
         {
-            Pawn caster = base.CasterPawn;           
+            Pawn caster = base.CasterPawn;
 
             comp = caster.GetComp<CompAbilityUserMagic>();
             pwrVal = comp.MagicData.MagicPowerSkill_Overdrive.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_Overdrive_pwr").level;
@@ -58,7 +55,7 @@ namespace TorannMagic
                 verVal = 3;
             }
             Thing targetThing = null;
-            if(this.currentTarget.Thing != null)
+            if (this.currentTarget.Thing != null)
             {
                 targetThing = this.currentTarget.Thing;
             }
@@ -82,29 +79,28 @@ namespace TorannMagic
                 }
 
                 Building bldg = targetThing as Building;
-                if(bldg != null)
-                {                    
+                if (bldg != null)
+                {
                     CompPower compP = bldg.GetComp<CompPower>();
                     CompPowerTrader cpt = bldg.GetComp<CompPowerTrader>();
-                    if(compP != null && compP.Props.basePowerConsumption != 0 && cpt != null && cpt.powerOutputInt != 0)
+                    if (compP != null && compP.Props.basePowerConsumption != 0 && cpt != null && cpt.powerOutputInt != 0)
                     {
                         comp.overdriveBuilding = bldg;
-                        comp.overdrivePowerOutput = Mathf.RoundToInt(cpt.powerOutputInt * (2 + .6f * pwrVal * comp.arcaneDmg));
-                        comp.overdriveDuration = Mathf.RoundToInt((20 + 2*pwrVal) * comp.arcaneDmg);
+                        comp.overdrivePowerOutput = Mathf.RoundToInt(cpt.powerOutputInt * (2 + (.6f * pwrVal * comp.arcaneDmg)));
+                        comp.overdriveDuration = Mathf.RoundToInt((20 + (2 * pwrVal)) * comp.arcaneDmg);
                         //compP.Props.basePowerConsumption *= 2;
                     }
 
                     Building_TurretGun bldgTurret = targetThing as Building_TurretGun;
-                    if(bldgTurret != null && bldgTurret.gun != null)
+                    if (bldgTurret != null && bldgTurret.gun != null)
                     {
                         comp.overdriveBuilding = bldgTurret;
                         comp.overdriveDuration = Mathf.RoundToInt((10 + pwrVal) * comp.arcaneDmg);
                     }
-                    List<Pawn> odPawns = ModOptions.Constants.GetOverdrivePawnList();
-                    if(odPawns != null)
+                    HashSet<Pawn> odPawns = ModOptions.Constants.GetOverdrivePawnList();
+                    if (odPawns != null)
                     {
-                        odPawns.AddDistinct(caster);
-                        ModOptions.Constants.SetOverdrivePawnList(odPawns);
+                        odPawns.Add(caster);
                     }
                 }
             }

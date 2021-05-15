@@ -1,5 +1,4 @@
 ﻿using RimWorld;
-using System;
 using System.Collections.Generic;
 using Verse;
 using AbilityUser;
@@ -7,7 +6,7 @@ using UnityEngine;
 
 namespace TorannMagic.Enchantment
 {
-    public class Verb_OrbTraitor : Verb_UseAbility  
+    public class Verb_OrbTraitor : Verb_UseAbility
     {
 
         bool validTarg;
@@ -39,10 +38,10 @@ namespace TorannMagic.Enchantment
             CompAbilityUserMagic comp = this.CasterPawn.GetComp<CompAbilityUserMagic>();
             if (this.currentTarget != null && base.CasterPawn != null && comp != null)
             {
-                if(this.currentTarget.Thing != null && this.currentTarget.Thing is Pawn)
+                if (this.currentTarget.Thing != null && this.currentTarget.Thing is Pawn)
                 {
                     Pawn traitor = this.currentTarget.Thing as Pawn;
-                    if(traitor.Faction != null && traitor.Faction != this.CasterPawn.Faction && traitor.RaceProps.Humanlike)
+                    if (traitor.Faction != null && traitor.Faction != this.CasterPawn.Faction && traitor.RaceProps.Humanlike)
                     {
                         if (Rand.Chance(TM_Calc.GetSpellSuccessChance(this.CasterPawn, traitor, true)))
                         {
@@ -107,7 +106,7 @@ namespace TorannMagic.Enchantment
 
         public void PostCastShot(bool inResult)
         {
-            if(inResult)
+            if (inResult)
             {
                 List<Apparel> apparel = this.CasterPawn.apparel.WornApparel;
                 if (apparel != null)
@@ -122,7 +121,7 @@ namespace TorannMagic.Enchantment
                     }
                 }
                 CompAbilityUserMagic comp = this.CasterPawn.GetComp<CompAbilityUserMagic>();
-                if(comp != null)
+                if (comp != null)
                 {
                     comp.RemovePawnAbility(TorannMagicDefOf.TM_Artifact_Conviction);
                 }

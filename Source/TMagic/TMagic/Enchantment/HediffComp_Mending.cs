@@ -1,8 +1,5 @@
 ﻿using Verse;
 using RimWorld;
-using System.Linq;
-using UnityEngine;
-using System;
 using System.Collections.Generic;
 
 namespace TorannMagic.Enchantment
@@ -11,7 +8,7 @@ namespace TorannMagic.Enchantment
     {
 
         public override void CompExposeData()
-        {            
+        {
             base.CompExposeData();
         }
 

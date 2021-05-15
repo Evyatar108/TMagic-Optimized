@@ -3,13 +3,11 @@ using RimWorld;
 using Verse;
 using System.Collections.Generic;
 using System.Linq;
-using System;
-using UnityEngine;
 
 namespace TorannMagic
 {
-	public class Projectile_Extinguish : Projectile_AbilityBase
-	{
+    public class Projectile_Extinguish : Projectile_AbilityBase
+    {
         protected override void Impact(Thing hitThing)
         {
             Map map = base.Map;
@@ -30,11 +28,11 @@ namespace TorannMagic
                             for (int i = 0; i < allPawns.Count; i++)
                             {
                                 Pawn ele = allPawns[i];
-                                if(TM_Calc.IsElemental(ele))
+                                if (TM_Calc.IsElemental(ele))
                                 {
                                     TM_Action.DamageEntities(ele, null, Rand.Range(10, 20), DamageDefOf.Burn, p);
                                 }
-                                else if(ele.def == TorannMagicDefOf.TM_DemonR)
+                                else if (ele.def == TorannMagicDefOf.TM_DemonR)
                                 {
                                     TM_Action.DamageEntities(ele, null, Rand.Range(30, 50), DamageDefOf.Burn, p);
                                 }
@@ -44,8 +42,8 @@ namespace TorannMagic
                 }
             }
         }
-		
-	}	
+
+    }
 }
 
 

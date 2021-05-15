@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using RimWorld;
 using AbilityUser;
@@ -48,14 +47,14 @@ namespace TorannMagic
             Thing newThing = null;
             if (thingList != null && thingList.Count > 0)
             {
-                for(int i =0; i < thingList.Count;i++)
+                for (int i = 0; i < thingList.Count; i++)
                 {
                     Thing thing = thingList[i];
                     if (thing != null && thing.def.EverHaulable)
                     {
-                        if(thing.def == ThingDefOf.Silver)
+                        if (thing.def == ThingDefOf.Silver)
                         {
-                            if(thing.stackCount >= 500)
+                            if (thing.stackCount >= 500)
                             {
                                 if (verVal >= 1)
                                 {
@@ -253,7 +252,7 @@ namespace TorannMagic
                                 ), MessageTypeDefOf.RejectInput);
                             }
                         }
-                        else if(thing.def.defName == "ChunkSlate")
+                        else if (thing.def.defName == "ChunkSlate")
                         {
                             thing.Destroy();
                             newThing = ThingMaker.MakeThing(TorannMagicDefOf.TM_Artifact_Slate, null);
@@ -284,7 +283,7 @@ namespace TorannMagic
                             break;
                         }
                     }
-                }               
+                }
             }
             else
             {
@@ -294,12 +293,11 @@ namespace TorannMagic
                 ), MessageTypeDefOf.RejectInput);
             }
 
-            if(newThing != null)
+            if (newThing != null)
             {
-                if(comp.enchanterStones == null)
+                if (comp.enchanterStones == null)
                 {
-                    comp.enchanterStones = new List<Thing>();
-                    comp.enchanterStones.Clear();
+                    comp.enchanterStones = new HashSet<Thing>();
                 }
                 GenPlace.TryPlaceThing(newThing, this.currentTarget.Cell, this.CasterPawn.Map, ThingPlaceMode.Near);
                 comp.enchanterStones.Add(newThing);

@@ -8,7 +8,6 @@ using AbilityUser;
 using AbilityUserAI;
 using Verse.AI;
 using UnityEngine;
-using System.Text;
 using CompDeflector;
 
 namespace TorannMagic
@@ -123,7 +122,7 @@ namespace TorannMagic
         public List<Thing> combatItems = new List<Thing>();
         public int allowMeditateTick = 0;
         public ThingOwner<ThingWithComps> equipmentContainer = new ThingOwner<ThingWithComps>();
-        public int specWpnRegNum = -1;        
+        public int specWpnRegNum = -1;
 
         public Verb_Deflected deflectVerb;
         DamageInfo reversal_dinfo;
@@ -177,7 +176,6 @@ namespace TorannMagic
 
                 if (this.Pawn.health.hediffSet.HasHediff(TorannMagicDefOf.TM_BurningFuryHD, false))
                 {
-                    float num = Mathf.Lerp(1.2f, 1.55f, 1f);
                     Vector3 vector = this.Pawn.Drawer.DrawPos;
                     vector.y = Altitudes.AltitudeFor(AltitudeLayer.MoteOverhead);
 
@@ -193,8 +191,7 @@ namespace TorannMagic
 
                 if (shouldDrawPsionicShield)
                 {
-                    float radius = 2.5f;
-                    radius = 2.5f + (.75f * TM_Calc.GetMightSkillLevel(this.Pawn, this.MightData.MightPowerSkill_PsionicBarrier, "TM_PsionicBarrier", "_ver", true));
+                    float radius = 2.5f + (.75f * TM_Calc.GetMightSkillLevel(this.Pawn, this.MightData.MightPowerSkill_PsionicBarrier, "TM_PsionicBarrier", "_ver", true));
                     float drawRadius = radius * .23f;
                     float num = Mathf.Lerp(drawRadius, 9.5f, drawRadius);
                     Vector3 vector = this.Pawn.CurJob.targetA.CenterVector3;
@@ -209,7 +206,6 @@ namespace TorannMagic
 
         public void DrawFighterMark()
         {
-            float num = Mathf.Lerp(1.2f, 1.55f, 1f);
             Vector3 vector = this.AbilityUser.Drawer.DrawPos;
             vector.x = vector.x + .45f;
             vector.z = vector.z + .45f;
@@ -223,9 +219,9 @@ namespace TorannMagic
             {
                 CompAbilityUserMagic mComp = this.Pawn.TryGetComp<CompAbilityUserMagic>();
                 bool shouldDraw = true;
-                if(mComp != null)
+                if (mComp != null)
                 {
-                    if(mComp.customClass != null)
+                    if (mComp.customClass != null)
                     {
                         shouldDraw = false;
                     }
@@ -243,7 +239,7 @@ namespace TorannMagic
                     }
                     Graphics.DrawMesh(MeshPool.plane10, matrix, mat, 0);
                 }
-            }            
+            }
             else
             {
                 if (this.AbilityUser.story.traits.HasTrait(TorannMagicDefOf.Gladiator))
@@ -301,7 +297,6 @@ namespace TorannMagic
         {
             if (possessed)
             {
-                float num = Mathf.Lerp(1.2f, 1.55f, 1f);
                 Vector3 vector = this.AbilityUser.Drawer.DrawPos;
                 vector.x = vector.x - .25f;
                 vector.z = vector.z + .8f;
@@ -320,7 +315,6 @@ namespace TorannMagic
             }
             else
             {
-                float num = Mathf.Lerp(1.2f, 1.55f, 1f);
                 Vector3 vector = this.AbilityUser.Drawer.DrawPos;
                 vector.x = vector.x - .25f;
                 vector.z = vector.z + .8f;
@@ -333,8 +327,8 @@ namespace TorannMagic
             }
         }
 
-        public static List<TMAbilityDef> MightAbilities = null;    
-        
+        public static List<TMAbilityDef> MightAbilities = null;
+
         public int LevelUpSkill_global_refresh(string skillName)
         {
             int result = 0;
@@ -345,7 +339,7 @@ namespace TorannMagic
                 result = mightPowerSkill.level;
             }
             return result;
-        }        
+        }
         public int LevelUpSkill_global_seff(string skillName)
         {
             int result = 0;
@@ -356,7 +350,7 @@ namespace TorannMagic
                 result = mightPowerSkill.level;
             }
             return result;
-        }        
+        }
         public int LevelUpSkill_global_strength(string skillName)
         {
             int result = 0;
@@ -1015,20 +1009,20 @@ namespace TorannMagic
                         ModOptions.SettingsRef settingsRef = new ModOptions.SettingsRef();
                         if (this.autocastTick < Find.TickManager.TicksGame)  //180 default
                         {
-                            if ( !this.Pawn.Dead && !this.Pawn.Downed && this.Pawn.Map != null && this.Pawn.story != null && this.Pawn.story.traits != null && this.MightData != null && this.AbilityData != null && !this.Pawn.InMentalState)
+                            if (!this.Pawn.Dead && !this.Pawn.Downed && this.Pawn.Map != null && this.Pawn.story != null && this.Pawn.story.traits != null && this.MightData != null && this.AbilityData != null && !this.Pawn.InMentalState)
                             {
                                 if (this.Pawn.IsColonist)
                                 {
                                     this.autocastTick = Find.TickManager.TicksGame + (int)Rand.Range(.8f * settingsRef.autocastEvaluationFrequency, 1.2f * settingsRef.autocastEvaluationFrequency);
                                     ResolveAutoCast();
                                 }
-                                else if(settingsRef.AICasting && (!this.Pawn.IsPrisoner || this.Pawn.IsFighting()))
+                                else if (settingsRef.AICasting && (!this.Pawn.IsPrisoner || this.Pawn.IsFighting()))
                                 {
                                     float tickMult = settingsRef.AIAggressiveCasting ? 1f : 2f;
                                     this.autocastTick = Find.TickManager.TicksGame + (int)(Rand.Range(.8f * settingsRef.autocastEvaluationFrequency, 1.2f * settingsRef.autocastEvaluationFrequency) * tickMult);
                                     ResolveAIAutoCast();
                                 }
-                            }                            
+                            }
                         }
                         if (!this.Pawn.IsColonist && settingsRef.AICasting && settingsRef.AIAggressiveCasting && Find.TickManager.TicksGame > this.nextAICastAttemptTick) //Aggressive AI Casting
                         {
@@ -1097,7 +1091,7 @@ namespace TorannMagic
                                     Pawn targetPawn = this.Pawn.TargetCurrentlyAimingAt.Thing as Pawn;
                                     if (targetPawn.RaceProps.Humanlike)
                                     {
-                                        bool flag7 = (this.Pawn.health.hediffSet.HasHediff(HediffDef.Named("TM_DisguiseHD")) || this.Pawn.health.hediffSet.HasHediff(HediffDef.Named("TM_DisguiseHD_I")) || this.Pawn.health.hediffSet.HasHediff(HediffDef.Named("TM_DisguiseHD_II")) || this.Pawn.health.hediffSet.HasHediff(HediffDef.Named("TM_DisguiseHD_III")));
+                                        bool flag7 = this.Pawn.health.hediffSet.HasHediff(HediffDef.Named("TM_DisguiseHD")) || this.Pawn.health.hediffSet.HasHediff(HediffDef.Named("TM_DisguiseHD_I")) || this.Pawn.health.hediffSet.HasHediff(HediffDef.Named("TM_DisguiseHD_II")) || this.Pawn.health.hediffSet.HasHediff(HediffDef.Named("TM_DisguiseHD_III"));
                                         if (targetPawn.Faction != this.Pawn.Faction && flag7)
                                         {
                                             using (IEnumerator<Hediff> enumerator = this.Pawn.health.hediffSet.GetHediffs<Hediff>().GetEnumerator())
@@ -1124,7 +1118,7 @@ namespace TorannMagic
                         {
                             DoDeathRetaliation();
                         }
-                        if(Find.TickManager.TicksGame % 301 == 0) //cache weapon damage for tooltip and damage calculations
+                        if (Find.TickManager.TicksGame % 301 == 0) //cache weapon damage for tooltip and damage calculations
                         {
                             this.weaponDamage = TM_Calc.GetSkillDamage(this.Pawn);
                         }
@@ -1142,7 +1136,7 @@ namespace TorannMagic
                                 if (AbilityData?.AllPowers != null)
                                 {
                                     AbilityData obj = AbilityData;
-                                    num = ((obj != null && obj.AllPowers.Count > 0) ? 1 : 0);
+                                    num = (obj != null && obj.AllPowers.Count > 0) ? 1 : 0;
                                 }
                                 else
                                 {
@@ -1179,7 +1173,7 @@ namespace TorannMagic
             }
             if (this.canDeathRetaliate && this.deathRetaliating)
             {
-                this.ticksTillRetaliation--;                
+                this.ticksTillRetaliation--;
                 if (this.deathRing == null || this.deathRing.Count < 1)
                 {
                     this.deathRing = TM_Calc.GetOuterRing(this.Pawn.Position, 1f, 2f);
@@ -1234,7 +1228,7 @@ namespace TorannMagic
         public bool IsMightUser
         {
             get
-            {                
+            {
                 bool flag = base.AbilityUser != null;
                 if (flag)
                 {
@@ -1269,7 +1263,7 @@ namespace TorannMagic
                         if (flag4)
                         {
                             return true;
-                        }                        
+                        }
                     }
                 }
                 return false;
@@ -1293,10 +1287,10 @@ namespace TorannMagic
                 {
                     this.MightData.MightAbilityPoints++;
 
-                    bool flag2 = this.MightData.MightUserXP < GetXPForLevel(value-1);
+                    bool flag2 = this.MightData.MightUserXP < GetXPForLevel(value - 1);
                     if (flag2)
                     {
-                        this.MightData.MightUserXP = GetXPForLevel(value-1);
+                        this.MightData.MightUserXP = GetXPForLevel(value - 1);
                     }
                 }
                 this.MightData.MightUserLevel = value;
@@ -1335,9 +1329,9 @@ namespace TorannMagic
                 cacheXPFL.Add(lvl, val);
             }
 
-            if (cacheXPFL.ContainsKey(lvl))
+            if (cacheXPFL.TryGetValue(lvl, out var value))
             {
-                return cacheXPFL[lvl];
+                return value;
             }
             else
             {
@@ -1378,7 +1372,7 @@ namespace TorannMagic
             }
         }
 
-        
+
         public int MightUserXPTillNextLevel
         {
             get
@@ -1408,7 +1402,7 @@ namespace TorannMagic
                                 this.parent.Label
                             ), Pawn, MessageTypeDefOf.PositiveEvent);
                         }
-                    }                    
+                    }
                 }
             }
             else
@@ -1476,7 +1470,7 @@ namespace TorannMagic
                         {
                             this.AddPawnAbility(ability);
                         }
-                        if(ability.childAbilities != null && ability.childAbilities.Count > 0)
+                        if (ability.childAbilities != null && ability.childAbilities.Count > 0)
                         {
                             for (int c = 0; c < ability.childAbilities.Count; c++)
                             {
@@ -1490,7 +1484,7 @@ namespace TorannMagic
                 }
                 //for (int j = 0; j < this.customClass.classFighterAbilities.Count; j++)
                 //{
-                    
+
                 //}
                 if (this.customClass.classHediff != null)
                 {
@@ -1773,8 +1767,8 @@ namespace TorannMagic
                 //        this.RemovePawnAbility(this.MightData.AllMightPowersWithSkills[j].abilityDef);
                 //    }
                 //}
-                for (int j = 0; j< this.MightData.AllMightPowers.Count; j++)
-                {                    
+                for (int j = 0; j < this.MightData.AllMightPowers.Count; j++)
+                {
                     if (this.MightData.AllMightPowers[j].learned && !this.customClass.classFighterAbilities.Contains(this.MightData.AllMightPowers[j].abilityDef))
                     {
                         this.RemovePawnAbility(this.MightData.AllMightPowers[j].abilityDef);
@@ -1962,7 +1956,7 @@ namespace TorannMagic
                                 Log.Message("Ability level not found to fix");
                             }
                         }
-                    }            
+                    }
                 }
             }
             //this.UpdateAbilities();
@@ -1976,16 +1970,14 @@ namespace TorannMagic
 
         public bool TryAddPawnAbility(TMAbilityDef ability)
         {
-            //add check to verify no ability is already added
-            bool result = false;
             base.AddPawnAbility(ability, true, -1f);
-            result = true;
+            //add check to verify no ability is already added
+            bool result = true;
             return result;
         }
 
         public void RemovePowers(bool clearStandalone = false)
         {
-            Pawn abilityUser = base.AbilityUser;
             if (this.mightPowersInitialized == true && MightData != null)
             {
                 bool flag2 = true;
@@ -2025,12 +2017,12 @@ namespace TorannMagic
                     this.skill_ThickSkin = false;
                     this.skill_ThrowingKnife = false;
                 }
-                
+
                 foreach (MightPower current in this.MightData.MightPowersStandalone)
                 {
                     this.RemovePawnAbility(current.abilityDef);
                 }
-                foreach(MightPower current in this.MightData.AllMightPowers)
+                foreach (MightPower current in this.MightData.AllMightPowers)
                 {
                     this.RemovePawnAbility(current.abilityDef);
                 }
@@ -2176,7 +2168,7 @@ namespace TorannMagic
                     this.skill_Buckshot = false;
                     this.RemovePawnAbility(TorannMagicDefOf.TM_BreachingCharge);
                     this.skill_BreachingCharge = false;
-                }                
+                }
             }
         }
 
@@ -2230,10 +2222,9 @@ namespace TorannMagic
 
         public void RemoveTMagicHediffs()
         {
-            List<Hediff> allHediffs = this.Pawn.health.hediffSet.GetHediffs<Hediff>().ToList();
-            for (int i = 0; i < allHediffs.Count(); i++)
+            IEnumerable<Hediff> allHediffs = this.Pawn.health.hediffSet.GetHediffs<Hediff>();
+            foreach (Hediff hediff in allHediffs)
             {
-                Hediff hediff = allHediffs[i];
                 if (hediff.def.defName.Contains("TM_"))
                 {
                     this.Pawn.health.RemoveHediff(hediff);
@@ -2251,13 +2242,6 @@ namespace TorannMagic
             base.IsInitialized = false;
         }
 
-        private void ClearPower(MightPower current)
-        {
-            Log.Message("Removing ability: " + current.abilityDef.defName.ToString());
-            base.RemovePawnAbility(current.abilityDef);
-            base.UpdateAbilities();
-        }
-
         public void RemoveTraits()
         {
             List<Trait> traits = this.AbilityUser.story.traits.allTraits;
@@ -2271,20 +2255,6 @@ namespace TorannMagic
                     traits.Remove(traits[i]);
                     i--;
                 }
-            }
-        }
-
-        private void LoadPowers(Pawn pawn)
-        {
-            if (pawn.story.traits.HasTrait(TorannMagicDefOf.Gladiator))
-            {
-                foreach (MightPower currentG in this.MightData.MightPowersG)
-                {
-                    Log.Message("Removing ability: " + currentG.abilityDef.defName.ToString());
-                    currentG.level = 0;
-                    base.RemovePawnAbility(currentG.abilityDef);
-                }
-                
             }
         }
 
@@ -2599,51 +2569,51 @@ namespace TorannMagic
         public float ActualChiCost(TMAbilityDef mightDef)
         {
             float num = mightDef.chiCost;
-            num *= (1 - .06f * this.MightData.MightPowerSkill_Chi.FirstOrDefault((MightPowerSkill x) => x.label == "TM_Chi_eff").level);          
-            
+            num *= 1 - (.06f * this.MightData.MightPowerSkill_Chi.FirstOrDefault((MightPowerSkill x) => x.label == "TM_Chi_eff").level);
+
             MightPowerSkill mps = this.MightData.GetSkill_Efficiency(mightDef);
             if (mps != null)
             {
-                num *= (1 - (mightDef.efficiencyReductionPercent * mps.level));
+                num *= 1 - (mightDef.efficiencyReductionPercent * mps.level);
             }
-            return num;            
+            return num;
         }
 
         public float ActualStaminaCost(TMAbilityDef mightDef)
         {
             float adjustedStaminaCost = mightDef.staminaCost;
             if (mightDef.efficiencyReductionPercent != 0)
-            {                
-                if(mightDef == TorannMagicDefOf.TM_PistolWhip)
+            {
+                if (mightDef == TorannMagicDefOf.TM_PistolWhip)
                 {
                     adjustedStaminaCost *= 1f - (mightDef.efficiencyReductionPercent * this.MightData.GetSkill_Versatility(TorannMagicDefOf.TM_PistolSpec).level);
                 }
-                else if(mightDef == TorannMagicDefOf.TM_SuppressingFire)
+                else if (mightDef == TorannMagicDefOf.TM_SuppressingFire)
                 {
                     adjustedStaminaCost *= 1f - (mightDef.efficiencyReductionPercent * this.MightData.GetSkill_Efficiency(TorannMagicDefOf.TM_RifleSpec).level);
                 }
-                else if(mightDef == TorannMagicDefOf.TM_Mk203GL)
+                else if (mightDef == TorannMagicDefOf.TM_Mk203GL)
                 {
                     adjustedStaminaCost *= 1f - (mightDef.efficiencyReductionPercent * this.MightData.GetSkill_Versatility(TorannMagicDefOf.TM_RifleSpec).level);
                 }
-                else if(mightDef == TorannMagicDefOf.TM_Buckshot)
+                else if (mightDef == TorannMagicDefOf.TM_Buckshot)
                 {
                     adjustedStaminaCost *= 1f - (mightDef.efficiencyReductionPercent * this.MightData.GetSkill_Efficiency(TorannMagicDefOf.TM_ShotgunSpec).level);
                 }
-                else if(mightDef == TorannMagicDefOf.TM_BreachingCharge)
+                else if (mightDef == TorannMagicDefOf.TM_BreachingCharge)
                 {
                     adjustedStaminaCost *= 1f - (mightDef.efficiencyReductionPercent * this.MightData.GetSkill_Versatility(TorannMagicDefOf.TM_ShotgunSpec).level);
                 }
-                else if(this.Pawn.story.traits.HasTrait(TorannMagicDefOf.Faceless) && (mightDef != TorannMagicDefOf.TM_Possess && mightDef != TorannMagicDefOf.TM_Disguise && mightDef != TorannMagicDefOf.TM_Transpose &&
-                    mightDef != TorannMagicDefOf.TM_Transpose_I && mightDef != TorannMagicDefOf.TM_Transpose_II && mightDef != TorannMagicDefOf.TM_Transpose_III && mightDef != TorannMagicDefOf.TM_Mimic && mightDef != TorannMagicDefOf.TM_Reversal))
+                else if (this.Pawn.story.traits.HasTrait(TorannMagicDefOf.Faceless) && mightDef != TorannMagicDefOf.TM_Possess && mightDef != TorannMagicDefOf.TM_Disguise && mightDef != TorannMagicDefOf.TM_Transpose &&
+                    mightDef != TorannMagicDefOf.TM_Transpose_I && mightDef != TorannMagicDefOf.TM_Transpose_II && mightDef != TorannMagicDefOf.TM_Transpose_III && mightDef != TorannMagicDefOf.TM_Mimic && mightDef != TorannMagicDefOf.TM_Reversal)
                 {
                     adjustedStaminaCost *= 1f - (mightDef.efficiencyReductionPercent * this.mightData.GetSkill_Efficiency(TorannMagicDefOf.TM_Mimic).level);
                 }
-                else if(mightDef == TorannMagicDefOf.TM_AnimalFriend)
+                else if (mightDef == TorannMagicDefOf.TM_AnimalFriend)
                 {
                     return .5f * mightDef.staminaCost;
                 }
-                else if(mightDef == TorannMagicDefOf.TM_ProvisionerAura && this.Pawn.health.hediffSet.HasHediff(TorannMagicDefOf.TM_ProvisionerAuraHD))
+                else if (mightDef == TorannMagicDefOf.TM_ProvisionerAura && this.Pawn.health.hediffSet.HasHediff(TorannMagicDefOf.TM_ProvisionerAuraHD))
                 {
                     return 0f;
                 }
@@ -2668,148 +2638,148 @@ namespace TorannMagic
             {
                 if (mightDef == TorannMagicDefOf.TM_Sprint || mightDef == TorannMagicDefOf.TM_Sprint_I || mightDef == TorannMagicDefOf.TM_Sprint_II || mightDef == TorannMagicDefOf.TM_Sprint_III)
                 {
-                    adjustedStaminaCost = mightDef.staminaCost - mightDef.staminaCost * (this.G_Sprint_eff * (float)this.MightAttributeEffeciencyLevel("TM_Sprint_eff"));
+                    adjustedStaminaCost = mightDef.staminaCost - (mightDef.staminaCost * (this.G_Sprint_eff * (float)this.MightAttributeEffeciencyLevel("TM_Sprint_eff")));
                 }
                 if (mightDef == TorannMagicDefOf.TM_Grapple || mightDef == TorannMagicDefOf.TM_Grapple_I || mightDef == TorannMagicDefOf.TM_Grapple_II || mightDef == TorannMagicDefOf.TM_Grapple_III)
                 {
                     MightPowerSkill mightPowerSkill = this.MightData.MightPowerSkill_Grapple.FirstOrDefault((MightPowerSkill x) => x.label == "TM_Grapple_eff");
-                    adjustedStaminaCost = mightDef.staminaCost - mightDef.staminaCost * (this.G_Grapple_eff * (float)mightPowerSkill.level);
+                    adjustedStaminaCost = mightDef.staminaCost - (mightDef.staminaCost * (this.G_Grapple_eff * (float)mightPowerSkill.level));
                 }
                 if (mightDef == TorannMagicDefOf.TM_Cleave)
                 {
                     MightPowerSkill mightPowerSkill = this.MightData.MightPowerSkill_Cleave.FirstOrDefault((MightPowerSkill x) => x.label == "TM_Cleave_eff");
-                    adjustedStaminaCost = mightDef.staminaCost - mightDef.staminaCost * (this.G_Cleave_eff * (float)mightPowerSkill.level);
+                    adjustedStaminaCost = mightDef.staminaCost - (mightDef.staminaCost * (this.G_Cleave_eff * (float)mightPowerSkill.level));
                 }
                 if (mightDef == TorannMagicDefOf.TM_Whirlwind)
                 {
                     MightPowerSkill mightPowerSkill = this.MightData.MightPowerSkill_Whirlwind.FirstOrDefault((MightPowerSkill x) => x.label == "TM_Whirlwind_eff");
-                    adjustedStaminaCost = mightDef.staminaCost - mightDef.staminaCost * (this.G_Whirlwind_eff * (float)mightPowerSkill.level);
+                    adjustedStaminaCost = mightDef.staminaCost - (mightDef.staminaCost * (this.G_Whirlwind_eff * (float)mightPowerSkill.level));
                 }
                 if (mightDef == TorannMagicDefOf.TM_Headshot)
                 {
                     MightPowerSkill mightPowerSkill = this.MightData.MightPowerSkill_Headshot.FirstOrDefault((MightPowerSkill x) => x.label == "TM_Headshot_eff");
-                    adjustedStaminaCost = mightDef.staminaCost - mightDef.staminaCost * (this.S_Headshot_eff * (float)mightPowerSkill.level);
+                    adjustedStaminaCost = mightDef.staminaCost - (mightDef.staminaCost * (this.S_Headshot_eff * (float)mightPowerSkill.level));
                 }
                 if (mightDef == TorannMagicDefOf.TM_DisablingShot || mightDef == TorannMagicDefOf.TM_DisablingShot_I || mightDef == TorannMagicDefOf.TM_DisablingShot_II || mightDef == TorannMagicDefOf.TM_DisablingShot_III)
                 {
                     MightPowerSkill mightPowerSkill = this.MightData.MightPowerSkill_DisablingShot.FirstOrDefault((MightPowerSkill x) => x.label == "TM_DisablingShot_eff");
-                    adjustedStaminaCost = mightDef.staminaCost - mightDef.staminaCost * (this.S_DisablingShot_eff * (float)mightPowerSkill.level);
+                    adjustedStaminaCost = mightDef.staminaCost - (mightDef.staminaCost * (this.S_DisablingShot_eff * (float)mightPowerSkill.level));
                 }
                 if (mightDef == TorannMagicDefOf.TM_AntiArmor)
                 {
                     MightPowerSkill mightPowerSkill = this.MightData.MightPowerSkill_AntiArmor.FirstOrDefault((MightPowerSkill x) => x.label == "TM_AntiArmor_eff");
-                    adjustedStaminaCost = mightDef.staminaCost - mightDef.staminaCost * (this.S_AntiArmor_eff * (float)mightPowerSkill.level);
+                    adjustedStaminaCost = mightDef.staminaCost - (mightDef.staminaCost * (this.S_AntiArmor_eff * (float)mightPowerSkill.level));
                 }
                 if (mightDef == TorannMagicDefOf.TM_SeismicSlash)
                 {
                     MightPowerSkill mightPowerSkill = this.MightData.MightPowerSkill_SeismicSlash.FirstOrDefault((MightPowerSkill x) => x.label == "TM_SeismicSlash_eff");
-                    adjustedStaminaCost = mightDef.staminaCost - mightDef.staminaCost * (this.B_SeismicSlash_eff * (float)mightPowerSkill.level);
+                    adjustedStaminaCost = mightDef.staminaCost - (mightDef.staminaCost * (this.B_SeismicSlash_eff * (float)mightPowerSkill.level));
                 }
                 if (mightDef == TorannMagicDefOf.TM_BladeSpin)
                 {
                     MightPowerSkill mightPowerSkill = this.MightData.MightPowerSkill_BladeSpin.FirstOrDefault((MightPowerSkill x) => x.label == "TM_BladeSpin_eff");
-                    adjustedStaminaCost = mightDef.staminaCost - mightDef.staminaCost * (this.B_BladeSpin_eff * (float)mightPowerSkill.level);
+                    adjustedStaminaCost = mightDef.staminaCost - (mightDef.staminaCost * (this.B_BladeSpin_eff * (float)mightPowerSkill.level));
                 }
                 if (mightDef == TorannMagicDefOf.TM_PhaseStrike || mightDef == TorannMagicDefOf.TM_PhaseStrike_I || mightDef == TorannMagicDefOf.TM_PhaseStrike_II || mightDef == TorannMagicDefOf.TM_PhaseStrike_III)
                 {
                     MightPowerSkill mightPowerSkill = this.MightData.MightPowerSkill_PhaseStrike.FirstOrDefault((MightPowerSkill x) => x.label == "TM_PhaseStrike_eff");
-                    adjustedStaminaCost = mightDef.staminaCost - mightDef.staminaCost * (this.B_PhaseStrike_eff * (float)mightPowerSkill.level);
+                    adjustedStaminaCost = mightDef.staminaCost - (mightDef.staminaCost * (this.B_PhaseStrike_eff * (float)mightPowerSkill.level));
                 }
                 if (mightDef == TorannMagicDefOf.TM_AnimalFriend)
                 {
                     MightPowerSkill mightPowerSkill = this.MightData.MightPowerSkill_AnimalFriend.FirstOrDefault((MightPowerSkill x) => x.label == "TM_AnimalFriend_eff");
                     if (this.bondedPet != null)
                     {
-                        adjustedStaminaCost = (mightDef.staminaCost - (mightDef.staminaCost * (this.R_AnimalFriend_eff * (float)mightPowerSkill.level)) / 2);
+                        adjustedStaminaCost = mightDef.staminaCost - (mightDef.staminaCost * (this.R_AnimalFriend_eff * (float)mightPowerSkill.level) / 2);
                     }
                     else
                     {
-                        adjustedStaminaCost = mightDef.staminaCost - mightDef.staminaCost * (this.R_AnimalFriend_eff * (float)mightPowerSkill.level);
+                        adjustedStaminaCost = mightDef.staminaCost - (mightDef.staminaCost * (this.R_AnimalFriend_eff * (float)mightPowerSkill.level));
                     }
                 }
                 if (mightDef == TorannMagicDefOf.TM_ArrowStorm || mightDef == TorannMagicDefOf.TM_ArrowStorm_I || mightDef == TorannMagicDefOf.TM_ArrowStorm_II || mightDef == TorannMagicDefOf.TM_ArrowStorm_III)
                 {
                     MightPowerSkill mightPowerSkill = this.MightData.MightPowerSkill_ArrowStorm.FirstOrDefault((MightPowerSkill x) => x.label == "TM_ArrowStorm_eff");
-                    adjustedStaminaCost = mightDef.staminaCost - mightDef.staminaCost * (this.R_ArrowStorm_eff * (float)mightPowerSkill.level);
+                    adjustedStaminaCost = mightDef.staminaCost - (mightDef.staminaCost * (this.R_ArrowStorm_eff * (float)mightPowerSkill.level));
                 }
                 if (mightDef == TorannMagicDefOf.TM_Disguise)
                 {
-                    adjustedStaminaCost = mightDef.staminaCost - mightDef.staminaCost * (this.F_Disguise_eff * (float)this.MightAttributeEffeciencyLevel("TM_Disguise_eff"));
+                    adjustedStaminaCost = mightDef.staminaCost - (mightDef.staminaCost * (this.F_Disguise_eff * (float)this.MightAttributeEffeciencyLevel("TM_Disguise_eff")));
                 }
                 if (mightDef == TorannMagicDefOf.TM_Transpose || mightDef == TorannMagicDefOf.TM_Transpose_I || mightDef == TorannMagicDefOf.TM_Transpose_II || mightDef == TorannMagicDefOf.TM_Transpose_III)
                 {
                     MightPowerSkill mightPowerSkill = this.MightData.MightPowerSkill_Transpose.FirstOrDefault((MightPowerSkill x) => x.label == "TM_Transpose_eff");
-                    adjustedStaminaCost = mightDef.staminaCost - mightDef.staminaCost * (this.F_Transpose_eff * (float)mightPowerSkill.level);
+                    adjustedStaminaCost = mightDef.staminaCost - (mightDef.staminaCost * (this.F_Transpose_eff * (float)mightPowerSkill.level));
                 }
                 if (mightDef == TorannMagicDefOf.TM_Mimic)
                 {
                     MightPowerSkill mightPowerSkill = this.MightData.MightPowerSkill_Mimic.FirstOrDefault((MightPowerSkill x) => x.label == "TM_Mimic_eff");
-                    adjustedStaminaCost = mightDef.staminaCost - mightDef.staminaCost * (this.F_Mimic_eff * (float)mightPowerSkill.level);
+                    adjustedStaminaCost = mightDef.staminaCost - (mightDef.staminaCost * (this.F_Mimic_eff * (float)mightPowerSkill.level));
                 }
                 if (mightDef == TorannMagicDefOf.TM_Reversal)
                 {
                     MightPowerSkill mightPowerSkill = this.MightData.MightPowerSkill_Reversal.FirstOrDefault((MightPowerSkill x) => x.label == "TM_Reversal_eff");
-                    adjustedStaminaCost = mightDef.staminaCost - mightDef.staminaCost * (this.F_Reversal_eff * (float)mightPowerSkill.level);
+                    adjustedStaminaCost = mightDef.staminaCost - (mightDef.staminaCost * (this.F_Reversal_eff * (float)mightPowerSkill.level));
                 }
                 if (mightDef == TorannMagicDefOf.TM_Possess)
                 {
                     MightPowerSkill mightPowerSkill = this.MightData.MightPowerSkill_Possess.FirstOrDefault((MightPowerSkill x) => x.label == "TM_Possess_eff");
-                    adjustedStaminaCost = mightDef.staminaCost - mightDef.staminaCost * (this.F_Possess_eff * (float)mightPowerSkill.level);
+                    adjustedStaminaCost = mightDef.staminaCost - (mightDef.staminaCost * (this.F_Possess_eff * (float)mightPowerSkill.level));
                 }
                 if (mightDef == TorannMagicDefOf.TM_PsionicBarrier || mightDef == TorannMagicDefOf.TM_PsionicBarrier_Projected)
                 {
                     MightPowerSkill mightPowerSkill = this.MightData.MightPowerSkill_PsionicBarrier.FirstOrDefault((MightPowerSkill x) => x.label == "TM_PsionicBarrier_eff");
-                    adjustedStaminaCost = mightDef.staminaCost - mightDef.staminaCost * (this.P_PsionicBarrier_eff * (float)mightPowerSkill.level);
+                    adjustedStaminaCost = mightDef.staminaCost - (mightDef.staminaCost * (this.P_PsionicBarrier_eff * (float)mightPowerSkill.level));
                 }
                 if (mightDef == TorannMagicDefOf.TM_PsionicBlast || mightDef == TorannMagicDefOf.TM_PsionicBlast_I || mightDef == TorannMagicDefOf.TM_PsionicBlast_II || mightDef == TorannMagicDefOf.TM_PsionicBlast_III)
                 {
                     MightPowerSkill mightPowerSkill = this.MightData.MightPowerSkill_PsionicBlast.FirstOrDefault((MightPowerSkill x) => x.label == "TM_PsionicBlast_eff");
-                    adjustedStaminaCost = mightDef.staminaCost - mightDef.staminaCost * (this.P_PsionicBlast_eff * (float)mightPowerSkill.level);
+                    adjustedStaminaCost = mightDef.staminaCost - (mightDef.staminaCost * (this.P_PsionicBlast_eff * (float)mightPowerSkill.level));
                 }
                 if (mightDef == TorannMagicDefOf.TM_PsionicDash)
                 {
                     MightPowerSkill mightPowerSkill = this.MightData.MightPowerSkill_PsionicDash.FirstOrDefault((MightPowerSkill x) => x.label == "TM_PsionicDash_eff");
-                    adjustedStaminaCost = mightDef.staminaCost - mightDef.staminaCost * (this.P_PsionicDash_eff * (float)mightPowerSkill.level);
+                    adjustedStaminaCost = mightDef.staminaCost - (mightDef.staminaCost * (this.P_PsionicDash_eff * (float)mightPowerSkill.level));
                 }
                 if (mightDef == TorannMagicDefOf.TM_PsionicStorm)
                 {
                     MightPowerSkill mightPowerSkill = this.MightData.MightPowerSkill_PsionicStorm.FirstOrDefault((MightPowerSkill x) => x.label == "TM_PsionicStorm_eff");
-                    adjustedStaminaCost = mightDef.staminaCost - mightDef.staminaCost * (this.P_PsionicStorm_eff * (float)mightPowerSkill.level);
+                    adjustedStaminaCost = mightDef.staminaCost - (mightDef.staminaCost * (this.P_PsionicStorm_eff * (float)mightPowerSkill.level));
                 }
                 if (mightDef == TorannMagicDefOf.TM_Spite || mightDef == TorannMagicDefOf.TM_Spite_I || mightDef == TorannMagicDefOf.TM_Spite_II || mightDef == TorannMagicDefOf.TM_Spite_III)
                 {
                     MightPowerSkill mightPowerSkill = this.MightData.MightPowerSkill_Spite.FirstOrDefault((MightPowerSkill x) => x.label == "TM_Spite_eff");
-                    adjustedStaminaCost = mightDef.staminaCost - mightDef.staminaCost * (this.DK_Spite_eff * (float)mightPowerSkill.level);
+                    adjustedStaminaCost = mightDef.staminaCost - (mightDef.staminaCost * (this.DK_Spite_eff * (float)mightPowerSkill.level));
                 }
                 if (mightDef == TorannMagicDefOf.TM_WaveOfFear)
                 {
                     MightPowerSkill mightPowerSkill = this.MightData.MightPowerSkill_WaveOfFear.FirstOrDefault((MightPowerSkill x) => x.label == "TM_WaveOfFear_eff");
-                    adjustedStaminaCost = mightDef.staminaCost - mightDef.staminaCost * (this.DK_WaveOfFear_eff * (float)mightPowerSkill.level);
+                    adjustedStaminaCost = mightDef.staminaCost - (mightDef.staminaCost * (this.DK_WaveOfFear_eff * (float)mightPowerSkill.level));
                 }
                 if (mightDef == TorannMagicDefOf.TM_GraveBlade || mightDef == TorannMagicDefOf.TM_GraveBlade_I || mightDef == TorannMagicDefOf.TM_GraveBlade_II || mightDef == TorannMagicDefOf.TM_GraveBlade_III)
                 {
                     MightPowerSkill mightPowerSkill = this.MightData.MightPowerSkill_GraveBlade.FirstOrDefault((MightPowerSkill x) => x.label == "TM_GraveBlade_eff");
-                    adjustedStaminaCost = mightDef.staminaCost - mightDef.staminaCost * (this.DK_GraveBlade_eff * (float)mightPowerSkill.level);
+                    adjustedStaminaCost = mightDef.staminaCost - (mightDef.staminaCost * (this.DK_GraveBlade_eff * (float)mightPowerSkill.level));
                 }
                 if (mightDef == TorannMagicDefOf.TM_TigerStrike)
                 {
                     MightPowerSkill mightPowerSkill = this.MightData.MightPowerSkill_TigerStrike.FirstOrDefault((MightPowerSkill x) => x.label == "TM_TigerStrike_eff");
-                    adjustedStaminaCost = mightDef.staminaCost - mightDef.staminaCost * (this.M_TigerStrike_eff * (float)mightPowerSkill.level);
+                    adjustedStaminaCost = mightDef.staminaCost - (mightDef.staminaCost * (this.M_TigerStrike_eff * (float)mightPowerSkill.level));
                 }
                 if (mightDef == TorannMagicDefOf.TM_DragonStrike)
                 {
                     MightPowerSkill mightPowerSkill = this.MightData.MightPowerSkill_DragonStrike.FirstOrDefault((MightPowerSkill x) => x.label == "TM_DragonStrike_eff");
-                    adjustedStaminaCost = mightDef.staminaCost - mightDef.staminaCost * (this.M_DragonStrike_eff * (float)mightPowerSkill.level);
+                    adjustedStaminaCost = mightDef.staminaCost - (mightDef.staminaCost * (this.M_DragonStrike_eff * (float)mightPowerSkill.level));
                 }
                 if (mightDef == TorannMagicDefOf.TM_ThunderStrike)
                 {
                     MightPowerSkill mightPowerSkill = this.MightData.MightPowerSkill_ThunderStrike.FirstOrDefault((MightPowerSkill x) => x.label == "TM_ThunderStrike_eff");
-                    adjustedStaminaCost = mightDef.staminaCost - mightDef.staminaCost * (this.M_ThunderStrike_eff * (float)mightPowerSkill.level);
+                    adjustedStaminaCost = mightDef.staminaCost - (mightDef.staminaCost * (this.M_ThunderStrike_eff * (float)mightPowerSkill.level));
                 }
                 if (mightDef == TorannMagicDefOf.TM_ProvisionerAura)
                 {
                     MightPowerSkill mightPowerSkill = this.MightData.MightPowerSkill_ProvisionerAura.FirstOrDefault((MightPowerSkill x) => x.label == "TM_ProvisionerAura_eff");
-                    adjustedStaminaCost = mightDef.staminaCost - mightDef.staminaCost * (this.C_ProvisionerAura_eff * (float)mightPowerSkill.level);
+                    adjustedStaminaCost = mightDef.staminaCost - (mightDef.staminaCost * (this.C_ProvisionerAura_eff * (float)mightPowerSkill.level));
                     if (this.Pawn.health.hediffSet.HasHediff(TorannMagicDefOf.TM_ProvisionerAuraHD))
                     {
                         return 0f;
@@ -2818,7 +2788,7 @@ namespace TorannMagic
                 if (mightDef == TorannMagicDefOf.TM_TaskMasterAura)
                 {
                     MightPowerSkill mightPowerSkill = this.MightData.MightPowerSkill_TaskMasterAura.FirstOrDefault((MightPowerSkill x) => x.label == "TM_TaskMasterAura_eff");
-                    adjustedStaminaCost = mightDef.staminaCost - mightDef.staminaCost * (this.C_TaskMasterAura_eff * (float)mightPowerSkill.level);
+                    adjustedStaminaCost = mightDef.staminaCost - (mightDef.staminaCost * (this.C_TaskMasterAura_eff * (float)mightPowerSkill.level));
                     if (this.Pawn.health.hediffSet.HasHediff(TorannMagicDefOf.TM_TaskMasterAuraHD))
                     {
                         return 0f;
@@ -2827,7 +2797,7 @@ namespace TorannMagic
                 if (mightDef == TorannMagicDefOf.TM_CommanderAura)
                 {
                     MightPowerSkill mightPowerSkill = this.MightData.MightPowerSkill_CommanderAura.FirstOrDefault((MightPowerSkill x) => x.label == "TM_CommanderAura_eff");
-                    adjustedStaminaCost = mightDef.staminaCost - mightDef.staminaCost * (this.C_CommanderAura_eff * (float)mightPowerSkill.level);
+                    adjustedStaminaCost = mightDef.staminaCost - (mightDef.staminaCost * (this.C_CommanderAura_eff * (float)mightPowerSkill.level));
                     if (this.Pawn.health.hediffSet.HasHediff(TorannMagicDefOf.TM_CommanderAuraHD))
                     {
                         return 0f;
@@ -2836,72 +2806,72 @@ namespace TorannMagic
                 if (mightDef == TorannMagicDefOf.TM_StayAlert || mightDef == TorannMagicDefOf.TM_StayAlert_I || mightDef == TorannMagicDefOf.TM_StayAlert_II || mightDef == TorannMagicDefOf.TM_StayAlert_III)
                 {
                     MightPowerSkill mightPowerSkill = this.MightData.MightPowerSkill_StayAlert.FirstOrDefault((MightPowerSkill x) => x.label == "TM_StayAlert_eff");
-                    adjustedStaminaCost = mightDef.staminaCost - mightDef.staminaCost * (this.C_StayAlert_eff * (float)mightPowerSkill.level);
+                    adjustedStaminaCost = mightDef.staminaCost - (mightDef.staminaCost * (this.C_StayAlert_eff * (float)mightPowerSkill.level));
                 }
                 if (mightDef == TorannMagicDefOf.TM_MoveOut || mightDef == TorannMagicDefOf.TM_MoveOut_I || mightDef == TorannMagicDefOf.TM_MoveOut_II || mightDef == TorannMagicDefOf.TM_MoveOut_III)
                 {
                     MightPowerSkill mightPowerSkill = this.MightData.MightPowerSkill_MoveOut.FirstOrDefault((MightPowerSkill x) => x.label == "TM_MoveOut_eff");
-                    adjustedStaminaCost = mightDef.staminaCost - mightDef.staminaCost * (this.C_MoveOut_eff * (float)mightPowerSkill.level);
+                    adjustedStaminaCost = mightDef.staminaCost - (mightDef.staminaCost * (this.C_MoveOut_eff * (float)mightPowerSkill.level));
                 }
                 if (mightDef == TorannMagicDefOf.TM_HoldTheLine || mightDef == TorannMagicDefOf.TM_HoldTheLine_I || mightDef == TorannMagicDefOf.TM_HoldTheLine_II || mightDef == TorannMagicDefOf.TM_HoldTheLine_III)
                 {
                     MightPowerSkill mightPowerSkill = this.MightData.MightPowerSkill_HoldTheLine.FirstOrDefault((MightPowerSkill x) => x.label == "TM_HoldTheLine_eff");
-                    adjustedStaminaCost = mightDef.staminaCost - mightDef.staminaCost * (this.C_HoldTheLine_eff * (float)mightPowerSkill.level);
+                    adjustedStaminaCost = mightDef.staminaCost - (mightDef.staminaCost * (this.C_HoldTheLine_eff * (float)mightPowerSkill.level));
                 }
                 if (mightDef == TorannMagicDefOf.TM_PistolWhip)
                 {
                     MightPowerSkill mightPowerSkill = this.MightData.MightPowerSkill_PistolSpec.FirstOrDefault((MightPowerSkill x) => x.label == "TM_PistolSpec_ver");
-                    adjustedStaminaCost = mightDef.staminaCost - mightDef.staminaCost * (this.SS_PistolWhip_eff * (float)mightPowerSkill.level);
+                    adjustedStaminaCost = mightDef.staminaCost - (mightDef.staminaCost * (this.SS_PistolWhip_eff * (float)mightPowerSkill.level));
                 }
                 if (mightDef == TorannMagicDefOf.TM_SuppressingFire)
                 {
                     MightPowerSkill mightPowerSkill = this.MightData.MightPowerSkill_RifleSpec.FirstOrDefault((MightPowerSkill x) => x.label == "TM_RifleSpec_eff");
-                    adjustedStaminaCost = mightDef.staminaCost - mightDef.staminaCost * (this.SS_SuppressingFire_eff * (float)mightPowerSkill.level);
+                    adjustedStaminaCost = mightDef.staminaCost - (mightDef.staminaCost * (this.SS_SuppressingFire_eff * (float)mightPowerSkill.level));
                 }
                 if (mightDef == TorannMagicDefOf.TM_Mk203GL)
                 {
                     MightPowerSkill mightPowerSkill = this.MightData.MightPowerSkill_RifleSpec.FirstOrDefault((MightPowerSkill x) => x.label == "TM_RifleSpec_ver");
-                    adjustedStaminaCost = mightDef.staminaCost - mightDef.staminaCost * (this.SS_Mk203GL_eff * (float)mightPowerSkill.level);
+                    adjustedStaminaCost = mightDef.staminaCost - (mightDef.staminaCost * (this.SS_Mk203GL_eff * (float)mightPowerSkill.level));
                 }
                 if (mightDef == TorannMagicDefOf.TM_Buckshot)
                 {
                     MightPowerSkill mightPowerSkill = this.MightData.MightPowerSkill_ShotgunSpec.FirstOrDefault((MightPowerSkill x) => x.label == "TM_ShotgunSpec_eff");
-                    adjustedStaminaCost = mightDef.staminaCost - mightDef.staminaCost * (this.SS_Buckshot_eff * (float)mightPowerSkill.level);
+                    adjustedStaminaCost = mightDef.staminaCost - (mightDef.staminaCost * (this.SS_Buckshot_eff * (float)mightPowerSkill.level));
                 }
                 if (mightDef == TorannMagicDefOf.TM_BreachingCharge)
                 {
                     MightPowerSkill mightPowerSkill = this.MightData.MightPowerSkill_ShotgunSpec.FirstOrDefault((MightPowerSkill x) => x.label == "TM_ShotgunSpec_ver");
-                    adjustedStaminaCost = mightDef.staminaCost - mightDef.staminaCost * (this.SS_BreachingCharge_eff * (float)mightPowerSkill.level);
+                    adjustedStaminaCost = mightDef.staminaCost - (mightDef.staminaCost * (this.SS_BreachingCharge_eff * (float)mightPowerSkill.level));
                 }
                 if (mightDef == TorannMagicDefOf.TM_CQC)
                 {
                     MightPowerSkill mightPowerSkill = this.MightData.MightPowerSkill_CQC.FirstOrDefault((MightPowerSkill x) => x.label == "TM_CQC_eff");
-                    adjustedStaminaCost = mightDef.staminaCost - mightDef.staminaCost * (this.SS_CQC_eff * (float)mightPowerSkill.level);
+                    adjustedStaminaCost = mightDef.staminaCost - (mightDef.staminaCost * (this.SS_CQC_eff * (float)mightPowerSkill.level));
                 }
                 if (mightDef == TorannMagicDefOf.TM_FirstAid)
                 {
                     MightPowerSkill mightPowerSkill = this.MightData.MightPowerSkill_FirstAid.FirstOrDefault((MightPowerSkill x) => x.label == "TM_FirstAid_eff");
-                    adjustedStaminaCost = mightDef.staminaCost - mightDef.staminaCost * (this.SS_FirstAid_eff * (float)mightPowerSkill.level);
+                    adjustedStaminaCost = mightDef.staminaCost - (mightDef.staminaCost * (this.SS_FirstAid_eff * (float)mightPowerSkill.level));
                 }
                 if (mightDef == TorannMagicDefOf.TM_60mmMortar)
                 {
                     MightPowerSkill mightPowerSkill = this.MightData.MightPowerSkill_60mmMortar.FirstOrDefault((MightPowerSkill x) => x.label == "TM_60mmMortar_eff");
-                    adjustedStaminaCost = mightDef.staminaCost - mightDef.staminaCost * (this.SS_60mmMortar_eff * (float)mightPowerSkill.level);
+                    adjustedStaminaCost = mightDef.staminaCost - (mightDef.staminaCost * (this.SS_60mmMortar_eff * (float)mightPowerSkill.level));
                 }
             }
-            if (this.spCost != 1f && (mightDef != TorannMagicDefOf.TM_ProvisionerAura && mightDef != TorannMagicDefOf.TM_CommanderAura && mightDef != TorannMagicDefOf.TM_TaskMasterAura))
+            if (this.spCost != 1f && mightDef != TorannMagicDefOf.TM_ProvisionerAura && mightDef != TorannMagicDefOf.TM_CommanderAura && mightDef != TorannMagicDefOf.TM_TaskMasterAura)
             {
                 adjustedStaminaCost = adjustedStaminaCost * this.spCost;
-            }            
-
-            MightPowerSkill globalSkill = this.MightData.MightPowerSkill_global_seff.FirstOrDefault((MightPowerSkill x) => x.label == "TM_global_seff_pwr");
-            if (globalSkill != null && (mightDef != TorannMagicDefOf.TM_ProvisionerAura && mightDef != TorannMagicDefOf.TM_CommanderAura && mightDef != TorannMagicDefOf.TM_TaskMasterAura))
-            {
-                adjustedStaminaCost -= (adjustedStaminaCost * (global_seff * globalSkill.level));
             }
 
-            return Mathf.Max(adjustedStaminaCost, (.5f * mightDef.staminaCost));
-            
+            MightPowerSkill globalSkill = this.MightData.MightPowerSkill_global_seff.FirstOrDefault((MightPowerSkill x) => x.label == "TM_global_seff_pwr");
+            if (globalSkill != null && mightDef != TorannMagicDefOf.TM_ProvisionerAura && mightDef != TorannMagicDefOf.TM_CommanderAura && mightDef != TorannMagicDefOf.TM_TaskMasterAura)
+            {
+                adjustedStaminaCost -= adjustedStaminaCost * (global_seff * globalSkill.level);
+            }
+
+            return Mathf.Max(adjustedStaminaCost, .5f * mightDef.staminaCost);
+
 
         }
 
@@ -2937,7 +2907,7 @@ namespace TorannMagic
                 else
                 {
                     HediffSet expr_26 = expr_1A.hediffSet;
-                    arg_32_1 = ((expr_26 != null) ? expr_26.hediffs : null);
+                    arg_32_1 = (expr_26 != null) ? expr_26.hediffs : null;
                 }
             }
             arg_32_0.AddRange(arg_32_1);
@@ -2957,7 +2927,7 @@ namespace TorannMagic
                 else
                 {
                     HediffSet expr_66 = expr_52.hediffSet;
-                    arg_84_0 = ((expr_66 != null) ? new int?(expr_66.hediffs.Count<Hediff>()) : null);
+                    arg_84_0 = (expr_66 != null) ? new int?(expr_66.hediffs.Count<Hediff>()) : null;
                 }
             }
             bool flag = (arg_84_0 ?? 0) > 0;
@@ -2972,9 +2942,9 @@ namespace TorannMagic
                         dinfo.SetAmount(0);
                         return;
                     }
-                    if(current.def ==  TorannMagicDefOf.TM_PsionicHD)
+                    if (current.def == TorannMagicDefOf.TM_PsionicHD)
                     {
-                        if(dinfo.Def == TMDamageDefOf.DamageDefOf.TM_PsionicInjury)
+                        if (dinfo.Def == TMDamageDefOf.DamageDefOf.TM_PsionicInjury)
                         {
                             absorbed = true;
                             dinfo.SetAmount(0);
@@ -2994,18 +2964,18 @@ namespace TorannMagic
                                     Vector3 drawPos = AbilityUser.DrawPos;
                                     drawPos.x += ((instigator.DrawPos.x - drawPos.x) / 20f) + Rand.Range(-.2f, .2f);
                                     drawPos.z += ((instigator.DrawPos.z - drawPos.z) / 20f) + Rand.Range(-.2f, .2f);
-                                    TM_MoteMaker.ThrowSparkFlashMote(drawPos, this.Pawn.Map, 2f);                                    
+                                    TM_MoteMaker.ThrowSparkFlashMote(drawPos, this.Pawn.Map, 2f);
                                     DoReversal(dinfo);
                                     dinfo.SetAmount(0);
                                     MightPowerSkill ver = this.MightData.MightPowerSkill_Reversal.FirstOrDefault((MightPowerSkill x) => x.label == "TM_Reversal_ver");
-                                    if(ver.level > 0)
+                                    if (ver.level > 0)
                                     {
                                         SiphonReversal(ver.level);
                                     }
                                     return;
                                 }
                             }
-                            else if(instigator.RaceProps.Animal && dinfo.Amount != 0 && (instigator.Position - this.Pawn.Position).LengthHorizontal <= 2)
+                            else if (instigator.RaceProps.Animal && dinfo.Amount != 0 && (instigator.Position - this.Pawn.Position).LengthHorizontal <= 2)
                             {
                                 absorbed = true;
                                 Vector3 drawPos = AbilityUser.DrawPos;
@@ -3023,9 +2993,9 @@ namespace TorannMagic
                             }
                         }
                         Building instigatorBldg = dinfo.Instigator as Building;
-                        if(instigatorBldg != null)
+                        if (instigatorBldg != null)
                         {
-                            if(instigatorBldg.def.Verbs != null)
+                            if (instigatorBldg.def.Verbs != null)
                             {
                                 absorbed = true;
                                 Vector3 drawPos = AbilityUser.DrawPos;
@@ -3066,7 +3036,7 @@ namespace TorannMagic
                             }
                         }
                     }
-                    if (fortitudeMitigationDelay < this.age )
+                    if (fortitudeMitigationDelay < this.age)
                     {
                         if (current.def == TorannMagicDefOf.TM_HediffFortitude)
                         {
@@ -3100,7 +3070,7 @@ namespace TorannMagic
                         {
                             MightPowerSkill ver = this.MightData.MightPowerSkill_MindOverBody.FirstOrDefault((MightPowerSkill x) => x.label == "TM_MindOverBody_ver");
                             absorbed = true;
-                            int mitigationAmt = Mathf.Clamp((7 + (2 * ver.level) - Mathf.RoundToInt(totalApparelWeight/2)), 0, 13);
+                            int mitigationAmt = Mathf.Clamp(7 + (2 * ver.level) - Mathf.RoundToInt(totalApparelWeight / 2), 0, 13);
                             ModOptions.SettingsRef settingsRef = new ModOptions.SettingsRef();
                             if (settingsRef.AIHardMode && !abilityUser.IsColonist)
                             {
@@ -3134,26 +3104,25 @@ namespace TorannMagic
                     }
                 }
             }
-            list.Clear();
             list = null;
             base.PostPreApplyDamage(dinfo, out absorbed);
         }
 
         public void DoMeleeReversal(DamageInfo dinfo)
         {
-            TM_Action.DoMeleeReversal(dinfo, this.Pawn);          
+            TM_Action.DoMeleeReversal(dinfo, this.Pawn);
         }
 
         public void DoReversal(DamageInfo dinfo)
         {
-            TM_Action.DoReversal(dinfo, this.Pawn);       
+            TM_Action.DoReversal(dinfo, this.Pawn);
         }
 
         public void SiphonReversal(int verVal)
         {
             Pawn pawn = this.Pawn;
             CompAbilityUserMight comp = pawn.GetComp<CompAbilityUserMight>();
-            comp.Stamina.CurLevel += (.015f * verVal);         
+            comp.Stamina.CurLevel += .015f * verVal;
             int num = 1 + verVal;
             using (IEnumerator<BodyPartRecord> enumerator = pawn.health.hediffSet.GetInjuredParts().GetEnumerator())
             {
@@ -3171,7 +3140,7 @@ namespace TorannMagic
                         }
                         IEnumerable<Hediff_Injury> arg_BB_0 = pawn.health.hediffSet.GetHediffs<Hediff_Injury>();
                         Func<Hediff_Injury, bool> arg_BB_1;
-                        arg_BB_1 = ((Hediff_Injury injury) => injury.Part == rec);
+                        arg_BB_1 = (Hediff_Injury injury) => injury.Part == rec;
 
                         foreach (Hediff_Injury current in arg_BB_0.Where(arg_BB_1))
                         {
@@ -3183,11 +3152,11 @@ namespace TorannMagic
                                 {
                                     if (!pawn.IsColonist)
                                     {
-                                        current.Heal(20.0f + (float)verVal * 3f); // power affects how much to heal
+                                        current.Heal(20.0f + ((float)verVal * 3f)); // power affects how much to heal
                                     }
                                     else
                                     {
-                                        current.Heal((2.0f + (float)verVal * 1f)); // power affects how much to heal
+                                        current.Heal(2.0f + ((float)verVal * 1f)); // power affects how much to heal
                                     }
                                     TM_MoteMaker.ThrowRegenMote(pawn.Position.ToVector3Shifted(), pawn.Map, .6f);
                                     TM_MoteMaker.ThrowRegenMote(pawn.Position.ToVector3Shifted(), pawn.Map, .4f);
@@ -3199,7 +3168,7 @@ namespace TorannMagic
                     }
                 }
             }
-            
+
         }
 
         public void GiveReversalJob(DamageInfo dinfo)  // buggy AF due to complications with CompDeflector
@@ -3207,11 +3176,11 @@ namespace TorannMagic
             try
             {
                 Pawn pawn;
-                bool flag = (pawn = (dinfo.Instigator as Pawn)) != null && dinfo.Weapon != null;
+                bool flag = (pawn = dinfo.Instigator as Pawn) != null && dinfo.Weapon != null;
                 if (flag)
                 {
                     if (dinfo.Weapon.IsMeleeWeapon || dinfo.WeaponBodyPartGroup != null)
-                    {                        
+                    {
                         reversal_dinfo = new DamageInfo(dinfo.Def, dinfo.Amount, dinfo.ArmorPenetrationInt, dinfo.Angle - 180, this.Pawn, dinfo.HitPart, dinfo.Weapon, DamageInfo.SourceCategory.ThingOrUnknown);
                         reversalTarget = dinfo.Instigator;
                     }
@@ -3258,17 +3227,17 @@ namespace TorannMagic
                 deflectVerb = newVerb as Verb_Deflected;
                 deflectVerb = (Verb_Deflected)Activator.CreateInstance(typeof(Verb_Deflected));
                 deflectVerb.caster = this.Pawn;
-                
+
 
                 //Initialize VerbProperties
                 var newVerbProps = new VerbProperties
                 {
                     //Copy values over to a new verb props
-                    
+
                     hasStandardCommand = newVerb.verbProps.hasStandardCommand,
                     defaultProjectile = newVerb.verbProps.defaultProjectile,
                     range = newVerb.verbProps.range,
-                    muzzleFlashScale = newVerb.verbProps.muzzleFlashScale,                    
+                    muzzleFlashScale = newVerb.verbProps.muzzleFlashScale,
                     warmupTime = 0,
                     defaultCooldownTime = 0,
                     soundCast = SoundDefOf.MetalHitImportant,
@@ -3323,13 +3292,13 @@ namespace TorannMagic
         public void ResolveAutoCast()
         {
             ModOptions.SettingsRef settingsRef = new ModOptions.SettingsRef();
-            if (settingsRef.autocastEnabled && this.Pawn.jobs != null && this.Pawn.CurJob != null && this.Pawn.CurJob.def != TorannMagicDefOf.TMCastAbilityVerb && this.Pawn.CurJob.def != TorannMagicDefOf.TMCastAbilitySelf && 
+            if (settingsRef.autocastEnabled && this.Pawn.jobs != null && this.Pawn.CurJob != null && this.Pawn.CurJob.def != TorannMagicDefOf.TMCastAbilityVerb && this.Pawn.CurJob.def != TorannMagicDefOf.TMCastAbilitySelf &&
                 this.Pawn.CurJob.def != JobDefOf.Ingest && this.Pawn.CurJob.def != JobDefOf.ManTurret && this.Pawn.GetPosture() == PawnPosture.Standing && !this.Pawn.CurJob.playerForced)
             {
                 //Log.Message("pawn " + this.Pawn.LabelShort + " current job is " + this.Pawn.CurJob.def.defName);
                 //non-combat (undrafted) spells    
                 bool castSuccess = false;
-                bool isFaceless = (this.mimicAbility != null);
+                bool isFaceless = this.mimicAbility != null;
                 bool isCustom = this.customIndex >= 0;
                 if (this.Pawn.drafter != null && !this.Pawn.Drafted && this.Stamina != null && this.Stamina.CurLevelPercentage >= settingsRef.autocastMinThreshold)
                 {
@@ -3351,7 +3320,7 @@ namespace TorannMagic
                                 PawnAbility ability = this.AbilityData.Powers.FirstOrDefault((PawnAbility x) => x.Def == tmad);
                                 if (mp.autocasting.type == TMDefs.AutocastType.OnTarget && this.Pawn.CurJob.targetA != null && this.Pawn.CurJob.targetA.Thing != null)
                                 {
-                                    LocalTargetInfo localTarget = TM_Calc.GetAutocastTarget(this.Pawn, mp.autocasting, this.Pawn.CurJob.targetA);                                        
+                                    LocalTargetInfo localTarget = TM_Calc.GetAutocastTarget(this.Pawn, mp.autocasting, this.Pawn.CurJob.targetA);
                                     if (localTarget.IsValid)
                                     {
                                         Thing targetThing = localTarget.Thing;
@@ -3389,8 +3358,8 @@ namespace TorannMagic
                                         AutoCast.CombatAbility_OnTarget.TryExecute(this, tmad, ability, mp, targetThing, mp.autocasting.minRange, out castSuccess);
                                     }
                                 }
-                                if(mp.autocasting.type == TMDefs.AutocastType.OnSelf)
-                                {                                        
+                                if (mp.autocasting.type == TMDefs.AutocastType.OnSelf)
+                                {
                                     LocalTargetInfo localTarget = TM_Calc.GetAutocastTarget(this.Pawn, mp.autocasting, this.Pawn.CurJob.targetA);
                                     if (localTarget.IsValid)
                                     {
@@ -3406,8 +3375,8 @@ namespace TorannMagic
                                         AutoCast.CombatAbility_OnSelf.Evaluate(this, tmad, ability, mp, out castSuccess);
                                     }
                                 }
-                                if(mp.autocasting.type == TMDefs.AutocastType.OnCell && this.Pawn.CurJob.targetA != null)
-                                {                                        
+                                if (mp.autocasting.type == TMDefs.AutocastType.OnCell && this.Pawn.CurJob.targetA != null)
+                                {
                                     LocalTargetInfo localTarget = TM_Calc.GetAutocastTarget(this.Pawn, mp.autocasting, this.Pawn.CurJob.targetA);
                                     if (localTarget.IsValid)
                                     {
@@ -3431,10 +3400,10 @@ namespace TorannMagic
                                         AutoCast.CombatAbility_OnCell.TryExecute(this, tmad, ability, mp, targetThing, mp.autocasting.minRange, out castSuccess);
                                     }
                                 }
-                                if(mp.autocasting.type == TMDefs.AutocastType.OnNearby)
+                                if (mp.autocasting.type == TMDefs.AutocastType.OnNearby)
                                 {
                                     LocalTargetInfo localTarget = TM_Calc.GetAutocastTarget(this.Pawn, mp.autocasting, this.Pawn.CurJob.targetA);
-                                    if(localTarget.IsValid)
+                                    if (localTarget.IsValid)
                                     {
                                         Thing targetThing = localTarget.Thing;
                                         if (!(targetThing.GetType() == mp.autocasting.GetTargetType))
@@ -3482,7 +3451,7 @@ namespace TorannMagic
                     }
                     //Hunting only
                     if (this.Pawn.CurJob.def == JobDefOf.Hunt && this.Pawn.CurJob.targetA != null && this.Pawn.CurJob.targetA.Thing != null && this.Pawn.CurJob.targetA.Thing is Pawn)
-                    {                        
+                    {
                         if ((this.Pawn.story.traits.HasTrait(TorannMagicDefOf.Ranger) || isFaceless || isCustom) && !this.Pawn.story.DisabledWorkTagsBackstoryAndTraits.HasFlag(WorkTags.Violent))
                         {
                             PawnAbility ability = null;
@@ -3492,7 +3461,7 @@ namespace TorannMagic
                                 {
                                     foreach (TMAbilityDef tmad in current.TMabilityDefs)
                                     {
-                                        if ((tmad == TorannMagicDefOf.TM_ArrowStorm || tmad == TorannMagicDefOf.TM_ArrowStorm_I || tmad == TorannMagicDefOf.TM_ArrowStorm_II || tmad == TorannMagicDefOf.TM_ArrowStorm_III))
+                                        if (tmad == TorannMagicDefOf.TM_ArrowStorm || tmad == TorannMagicDefOf.TM_ArrowStorm_I || tmad == TorannMagicDefOf.TM_ArrowStorm_II || tmad == TorannMagicDefOf.TM_ArrowStorm_III)
                                         {
                                             if (this.Pawn.equipment.Primary != null && this.Pawn.equipment.Primary.def.IsRangedWeapon)
                                             {
@@ -3506,7 +3475,7 @@ namespace TorannMagic
                                                         ability = this.AbilityData.Powers.FirstOrDefault((PawnAbility x) => x.Def == tmad);
                                                         AutoCast.CombatAbility_OnTarget_LoS.TryExecute(this, tmad, ability, mightPower, this.Pawn.CurJob.targetA, 4, out castSuccess);
                                                         if (castSuccess) goto AutoCastExit;
-                                                    }                                                    
+                                                    }
                                                 }
                                             }
                                         }
@@ -3571,7 +3540,7 @@ namespace TorannMagic
                                         }
                                     }
                                 }
-                            }                            
+                            }
                         }
                         if ((this.Pawn.story.traits.HasTrait(TorannMagicDefOf.TM_Sniper) || isFaceless || isCustom) && this.Pawn.story.DisabledWorkTagsBackstoryAndTraits != WorkTags.Violent)
                         {
@@ -3591,7 +3560,7 @@ namespace TorannMagic
                                                 AutoCast.CombatAbility_OnTarget_LoS.TryExecute(this, TorannMagicDefOf.TM_Headshot, ability, mightPower, this.Pawn.CurJob.targetA, 4, out castSuccess);
                                                 if (castSuccess) goto AutoCastExit;
                                             }
-                                        }                                        
+                                        }
                                     }
                                 }
                             }
@@ -3605,7 +3574,7 @@ namespace TorannMagic
                                 {
                                     foreach (TMAbilityDef tmad in current.TMabilityDefs)
                                     {
-                                        if ((tmad == TorannMagicDefOf.TM_Spite || tmad == TorannMagicDefOf.TM_Spite_I || tmad == TorannMagicDefOf.TM_Spite_II || tmad == TorannMagicDefOf.TM_Spite_III))
+                                        if (tmad == TorannMagicDefOf.TM_Spite || tmad == TorannMagicDefOf.TM_Spite_I || tmad == TorannMagicDefOf.TM_Spite_II || tmad == TorannMagicDefOf.TM_Spite_III)
                                         {
                                             if (this.Pawn.equipment.Primary != null && this.Pawn.equipment.Primary.def.IsRangedWeapon)
                                             {
@@ -3615,7 +3584,7 @@ namespace TorannMagic
                                                     ability = this.AbilityData.Powers.FirstOrDefault((PawnAbility x) => x.Def == tmad);
                                                     AutoCast.CombatAbility_OnTarget_LoS.TryExecute(this, tmad, ability, mightPower, this.Pawn.CurJob.targetA, 4, out castSuccess);
                                                     if (castSuccess) goto AutoCastExit;
-                                                }                                                
+                                                }
                                             }
                                         }
                                     }
@@ -3629,7 +3598,7 @@ namespace TorannMagic
                             {
                                 PawnAbility ability = this.AbilityData.Powers.FirstOrDefault((PawnAbility x) => x.Def == TorannMagicDefOf.TM_ThrowingKnife);
                                 AutoCast.CombatAbility_OnTarget_LoS.TryExecute(this, TorannMagicDefOf.TM_ThrowingKnife, ability, mightPower, this.Pawn.CurJob.targetA, 4, out castSuccess);
-                                if (castSuccess) goto AutoCastExit;                                
+                                if (castSuccess) goto AutoCastExit;
                             }
                         }
                         if (this.skill_TempestStrike && this.Pawn.story.DisabledWorkTagsBackstoryAndTraits != WorkTags.Violent)
@@ -3642,14 +3611,14 @@ namespace TorannMagic
                                 if (castSuccess) goto AutoCastExit;
                             }
                         }
-                    }                    
+                    }
 
                     if ((this.Pawn.story.traits.HasTrait(TorannMagicDefOf.Bladedancer) || isFaceless || isCustom) && this.Pawn.story.DisabledWorkTagsBackstoryAndTraits != WorkTags.Violent)
                     {
                         PawnAbility ability = null;
                         foreach (MightPower current in this.MightData.MightPowersB)
-                        {                      
-                            if (current.abilityDef != null && ((this.mimicAbility != null && this.mimicAbility.defName.Contains(current.abilityDef.defName)) || (this.Pawn.story.traits.HasTrait(TorannMagicDefOf.Bladedancer) || isCustom))) //current.abilityDef == this.mimicAbility ||
+                        {
+                            if (current.abilityDef != null && ((this.mimicAbility != null && this.mimicAbility.defName.Contains(current.abilityDef.defName)) || this.Pawn.story.traits.HasTrait(TorannMagicDefOf.Bladedancer) || isCustom)) //current.abilityDef == this.mimicAbility ||
                             {
                                 foreach (TMAbilityDef tmad in current.TMabilityDefs)
                                 {
@@ -3662,7 +3631,7 @@ namespace TorannMagic
                                             float minDistance = ActualStaminaCost(tmad) * 100;
                                             AutoCast.Phase.Evaluate(this, tmad, ability, mightPower, minDistance, out castSuccess);
                                             if (castSuccess) goto AutoCastExit;
-                                        }                                        
+                                        }
                                     }
                                 }
                             }
@@ -3674,7 +3643,7 @@ namespace TorannMagic
                         PawnAbility ability = null;
                         foreach (MightPower current in this.MightData.MightPowersSS)
                         {
-                            if (current.abilityDef != null && (current.abilityDef == this.mimicAbility || this.Pawn.story.traits.HasTrait(TorannMagicDefOf.TM_SuperSoldier))) 
+                            if (current.abilityDef != null && (current.abilityDef == this.mimicAbility || this.Pawn.story.traits.HasTrait(TorannMagicDefOf.TM_SuperSoldier)))
                             {
                                 if (current.abilityDef == TorannMagicDefOf.TM_FirstAid && TM_Calc.IsPawnInjured(this.Pawn, .2f))
                                 {
@@ -3869,7 +3838,7 @@ namespace TorannMagic
                                     {
                                         ability = this.AbilityData.Powers.FirstOrDefault((PawnAbility x) => x.Def == TorannMagicDefOf.TM_BladeSpin);
                                         MightPowerSkill ver = this.MightData.MightPowerSkill_BladeSpin.FirstOrDefault((MightPowerSkill x) => x.label == "TM_BladeSpin_ver");
-                                        AutoCast.AoECombat.Evaluate(this, TorannMagicDefOf.TM_BladeSpin, ability, mightPower, 2, Mathf.RoundToInt(2+(.5f*ver.level)), this.Pawn.Position, true, out castSuccess);
+                                        AutoCast.AoECombat.Evaluate(this, TorannMagicDefOf.TM_BladeSpin, ability, mightPower, 2, Mathf.RoundToInt(2 + (.5f * ver.level)), this.Pawn.Position, true, out castSuccess);
                                         if (castSuccess) goto AutoCastExit;
                                     }
                                 }
@@ -3915,7 +3884,7 @@ namespace TorannMagic
                             {
                                 foreach (TMAbilityDef tmad in current.TMabilityDefs)
                                 {
-                                    if ((tmad == TorannMagicDefOf.TM_Grapple || tmad == TorannMagicDefOf.TM_Grapple_I || tmad == TorannMagicDefOf.TM_Grapple_II || tmad == TorannMagicDefOf.TM_Grapple_III))
+                                    if (tmad == TorannMagicDefOf.TM_Grapple || tmad == TorannMagicDefOf.TM_Grapple_I || tmad == TorannMagicDefOf.TM_Grapple_II || tmad == TorannMagicDefOf.TM_Grapple_III)
                                     {
                                         MightPower mightPower = this.MightData.MightPowersG.FirstOrDefault<MightPower>((MightPower x) => x.abilityDef == tmad);
                                         if (mightPower != null && mightPower.learned && mightPower.autocast)
@@ -3923,7 +3892,7 @@ namespace TorannMagic
                                             ability = this.AbilityData.Powers.FirstOrDefault((PawnAbility x) => x.Def == tmad);
                                             AutoCast.CombatAbility.Evaluate(this, tmad, ability, mightPower, out castSuccess);
                                             if (castSuccess) goto AutoCastExit;
-                                        }                                        
+                                        }
                                     }
                                 }
                             }
@@ -3938,7 +3907,7 @@ namespace TorannMagic
                             {
                                 foreach (TMAbilityDef tmad in current.TMabilityDefs)
                                 {
-                                    if ((tmad == TorannMagicDefOf.TM_ArrowStorm || tmad == TorannMagicDefOf.TM_ArrowStorm_I || tmad == TorannMagicDefOf.TM_ArrowStorm_II || tmad == TorannMagicDefOf.TM_ArrowStorm_III))
+                                    if (tmad == TorannMagicDefOf.TM_ArrowStorm || tmad == TorannMagicDefOf.TM_ArrowStorm_I || tmad == TorannMagicDefOf.TM_ArrowStorm_II || tmad == TorannMagicDefOf.TM_ArrowStorm_III)
                                     {
                                         if (this.Pawn.equipment.Primary != null && this.Pawn.equipment.Primary.def.IsRangedWeapon)
                                         {
@@ -3952,7 +3921,7 @@ namespace TorannMagic
                                                     ability = this.AbilityData.Powers.FirstOrDefault((PawnAbility x) => x.Def == tmad);
                                                     AutoCast.CombatAbility.Evaluate(this, tmad, ability, mightPower, out castSuccess);
                                                     if (castSuccess) goto AutoCastExit;
-                                                }                                                
+                                                }
                                             }
                                         }
                                     }
@@ -3969,7 +3938,7 @@ namespace TorannMagic
                             {
                                 foreach (TMAbilityDef tmad in current.TMabilityDefs)
                                 {
-                                    if ((tmad == TorannMagicDefOf.TM_Spite || tmad == TorannMagicDefOf.TM_Spite_I || tmad == TorannMagicDefOf.TM_Spite_II || tmad == TorannMagicDefOf.TM_Spite_III))
+                                    if (tmad == TorannMagicDefOf.TM_Spite || tmad == TorannMagicDefOf.TM_Spite_I || tmad == TorannMagicDefOf.TM_Spite_II || tmad == TorannMagicDefOf.TM_Spite_III)
                                     {
                                         MightPower mightPower = this.MightData.MightPowersDK.FirstOrDefault<MightPower>((MightPower x) => x.abilityDef == tmad);
                                         if (mightPower != null && mightPower.learned && mightPower.autocast)
@@ -3977,7 +3946,7 @@ namespace TorannMagic
                                             ability = this.AbilityData.Powers.FirstOrDefault((PawnAbility x) => x.Def == tmad);
                                             AutoCast.CombatAbility.EvaluateMinRange(this, tmad, ability, mightPower, 4, out castSuccess);
                                             if (castSuccess) goto AutoCastExit;
-                                        }                                        
+                                        }
                                     }
                                 }
                             }
@@ -3988,9 +3957,9 @@ namespace TorannMagic
                         PawnAbility ability = null;
                         foreach (MightPower current in this.MightData.MightPowersS)
                         {
-                            if (current.abilityDef != null && ((this.mimicAbility != null && this.mimicAbility.defName.Contains(current.abilityDef.defName)) || this.Pawn.story.traits.HasTrait(TorannMagicDefOf.TM_Sniper))) 
+                            if (current.abilityDef != null && ((this.mimicAbility != null && this.mimicAbility.defName.Contains(current.abilityDef.defName)) || this.Pawn.story.traits.HasTrait(TorannMagicDefOf.TM_Sniper)))
                             {
-                                if(TM_Calc.IsUsingRanged(this.Pawn))
+                                if (TM_Calc.IsUsingRanged(this.Pawn))
                                 {
                                     foreach (TMAbilityDef tmad in current.TMabilityDefs)
                                     {
@@ -4014,7 +3983,7 @@ namespace TorannMagic
                                                 if (castSuccess) goto AutoCastExit;
                                             }
                                         }
-                                        if ((tmad == TorannMagicDefOf.TM_DisablingShot || tmad == TorannMagicDefOf.TM_DisablingShot_I || tmad == TorannMagicDefOf.TM_DisablingShot_II || tmad == TorannMagicDefOf.TM_DisablingShot_III))
+                                        if (tmad == TorannMagicDefOf.TM_DisablingShot || tmad == TorannMagicDefOf.TM_DisablingShot_I || tmad == TorannMagicDefOf.TM_DisablingShot_II || tmad == TorannMagicDefOf.TM_DisablingShot_III)
                                         {
                                             MightPower mightPower = this.MightData.MightPowersS.FirstOrDefault<MightPower>((MightPower x) => x.abilityDef == tmad);
                                             if (mightPower != null && mightPower.learned && mightPower.autocast)
@@ -4022,7 +3991,7 @@ namespace TorannMagic
                                                 ability = this.AbilityData.Powers.FirstOrDefault((PawnAbility x) => x.Def == tmad);
                                                 AutoCast.CombatAbility.Evaluate(this, tmad, ability, mightPower, out castSuccess);
                                                 if (castSuccess) goto AutoCastExit;
-                                            }                                            
+                                            }
                                         }
                                     }
                                 }
@@ -4046,7 +4015,7 @@ namespace TorannMagic
                                         AutoCast.HealSelf.Evaluate(this, TorannMagicDefOf.TM_FirstAid, ability, mightPower, out castSuccess);
                                         if (castSuccess) goto AutoCastExit;
                                     }
-                                }                                
+                                }
                             }
                         }
                         if (this.Pawn.story.DisabledWorkTagsBackstoryAndTraits != WorkTags.Violent)
@@ -4131,13 +4100,13 @@ namespace TorannMagic
                     }
                     if (this.Pawn.story.DisabledWorkTagsBackstoryAndTraits != WorkTags.Violent)
                     {
-                        MightPower mightPower = this.MightData.MightPowersStandalone.FirstOrDefault<MightPower>((MightPower x) => x.abilityDef == TorannMagicDefOf.TM_PommelStrike);                        
+                        MightPower mightPower = this.MightData.MightPowersStandalone.FirstOrDefault<MightPower>((MightPower x) => x.abilityDef == TorannMagicDefOf.TM_PommelStrike);
                         if (mightPower != null && mightPower.learned && mightPower.autocast && this.Pawn.TargetCurrentlyAimingAt != null && this.Pawn.TargetCurrentlyAimingAt != this.Pawn)
                         {
                             PawnAbility ability = this.AbilityData.Powers.FirstOrDefault((PawnAbility x) => x.Def == TorannMagicDefOf.TM_PommelStrike);
                             Pawn targetPawn = this.Pawn.TargetCurrentlyAimingAt.Thing as Pawn;
                             float minPain = .3f;
-                            if(this.MightData.MightPowerSkill_FieldTraining.FirstOrDefault((MightPowerSkill x) => x.label == "TM_FieldTraining_pwr").level >= 2)
+                            if (this.MightData.MightPowerSkill_FieldTraining.FirstOrDefault((MightPowerSkill x) => x.label == "TM_FieldTraining_pwr").level >= 2)
                             {
                                 minPain = .2f;
                             }
@@ -4149,7 +4118,7 @@ namespace TorannMagic
                         }
                     }
                 }
-                AutoCastExit:;
+            AutoCastExit:;
             }
         }
 
@@ -4211,10 +4180,10 @@ namespace TorannMagic
                                         {
                                             continue;
                                         }
-                                        if(targetThing is Pawn)
+                                        if (targetThing is Pawn)
                                         {
                                             Pawn targetPawn = targetThing as Pawn;
-                                            if(targetPawn.IsPrisoner)
+                                            if (targetPawn.IsPrisoner)
                                             {
                                                 continue;
                                             }
@@ -4325,12 +4294,12 @@ namespace TorannMagic
                         }
                         if (castSuccess) goto AIAutoCastExit;
                     }
-                    AIAutoCastExit:;
+                AIAutoCastExit:;
                 }
             }
         }
 
-        public void ResolveClassSkills()               
+        public void ResolveClassSkills()
         {
             if (this.MightUserLevel >= 20 && (this.skill_Teach == false || !this.MightData.MightPowersStandalone.FirstOrDefault<MightPower>((MightPower x) => x.abilityDef == TorannMagicDefOf.TM_TeachMight).learned))
             {
@@ -4345,7 +4314,7 @@ namespace TorannMagic
             }
 
             if (this.IsMightUser && !this.Pawn.Dead && !this.Pawn.Downed)
-            {                
+            {
                 if (this.Pawn.story.traits.HasTrait(TorannMagicDefOf.Bladedancer))
                 {
                     MightPowerSkill bladefocus_pwr = this.Pawn.GetComp<CompAbilityUserMight>().MightData.MightPowerSkill_BladeFocus.FirstOrDefault((MightPowerSkill x) => x.label == "TM_BladeFocus_pwr");
@@ -4371,7 +4340,7 @@ namespace TorannMagic
                     {
                         HealthUtility.AdjustSeverity(this.Pawn, TorannMagicDefOf.TM_HediffFortitude, -5f);
                         HealthUtility.AdjustSeverity(this.Pawn, TorannMagicDefOf.TM_HediffFortitude, 1f);
-                    }                    
+                    }
                 }
                 if (this.Pawn.health.hediffSet.HasHediff(TorannMagicDefOf.TM_HediffSprint))
                 {
@@ -4379,7 +4348,7 @@ namespace TorannMagic
                     if (rec != null && rec.Severity != (.5f + this.MightData.MightPowerSkill_Sprint.FirstOrDefault((MightPowerSkill x) => x.label == "TM_Sprint_pwr").level))
                     {
                         this.Pawn.health.RemoveHediff(rec);
-                        HealthUtility.AdjustSeverity(this.Pawn, TorannMagicDefOf.TM_HediffSprint, (.5f + this.MightData.MightPowerSkill_Sprint.FirstOrDefault((MightPowerSkill x) => x.label == "TM_Sprint_pwr").level));
+                        HealthUtility.AdjustSeverity(this.Pawn, TorannMagicDefOf.TM_HediffSprint, .5f + this.MightData.MightPowerSkill_Sprint.FirstOrDefault((MightPowerSkill x) => x.label == "TM_Sprint_pwr").level);
                     }
                 }
 
@@ -4435,7 +4404,7 @@ namespace TorannMagic
                     MightPowerSkill bladeart_pwr = this.Pawn.GetComp<CompAbilityUserMight>().MightData.MightPowerSkill_BladeArt.FirstOrDefault((MightPowerSkill x) => x.label == "TM_BladeArt_pwr");
 
                     //HealthUtility.AdjustSeverity(this.Pawn, TorannMagicDefOf.TM_BladeArtHD, -5f);
-                    HealthUtility.AdjustSeverity(this.Pawn, TorannMagicDefOf.TM_BladeArtHD, (.5f) + bladeart_pwr.level);
+                    HealthUtility.AdjustSeverity(this.Pawn, TorannMagicDefOf.TM_BladeArtHD, .5f + bladeart_pwr.level);
                     if (!this.Pawn.IsColonist && settingsRef.AIHardMode)
                     {
                         HealthUtility.AdjustSeverity(this.Pawn, TorannMagicDefOf.TM_BladeArtHD, 4);
@@ -4446,7 +4415,7 @@ namespace TorannMagic
                     MightPowerSkill bowtraining_pwr = this.Pawn.GetComp<CompAbilityUserMight>().MightData.MightPowerSkill_BowTraining.FirstOrDefault((MightPowerSkill x) => x.label == "TM_BowTraining_pwr");
 
                     //HealthUtility.AdjustSeverity(this.Pawn, TorannMagicDefOf.TM_BowTrainingHD, -5f);
-                    HealthUtility.AdjustSeverity(this.Pawn, TorannMagicDefOf.TM_BowTrainingHD, (.5f) + bowtraining_pwr.level);
+                    HealthUtility.AdjustSeverity(this.Pawn, TorannMagicDefOf.TM_BowTrainingHD, .5f + bowtraining_pwr.level);
                     if (!this.Pawn.IsColonist && settingsRef.AIHardMode)
                     {
                         HealthUtility.AdjustSeverity(this.Pawn, TorannMagicDefOf.TM_BowTrainingHD, 4);
@@ -4466,7 +4435,7 @@ namespace TorannMagic
                             if (rec.Severity < (float)(.5f + bladeart_pwr.level) || rec.Severity > (float)(.6f + bladeart_pwr.level))
                             {
                                 HealthUtility.AdjustSeverity(this.Pawn, TorannMagicDefOf.TM_BladeArtHD, -5f);
-                                HealthUtility.AdjustSeverity(this.Pawn, TorannMagicDefOf.TM_BladeArtHD, (.5f) + bladeart_pwr.level);
+                                HealthUtility.AdjustSeverity(this.Pawn, TorannMagicDefOf.TM_BladeArtHD, .5f + bladeart_pwr.level);
                                 MoteMaker.ThrowDustPuff(this.Pawn.Position.ToVector3Shifted(), this.Pawn.Map, .6f);
                                 MoteMaker.ThrowHeatGlow(this.Pawn.Position, this.Pawn.Map, 1.6f);
                             }
@@ -4478,7 +4447,7 @@ namespace TorannMagic
                             if (rec.Severity < (float)(.5f + bowtraining_pwr.level) || rec.Severity > (float)(.6f + bowtraining_pwr.level))
                             {
                                 HealthUtility.AdjustSeverity(this.Pawn, TorannMagicDefOf.TM_BowTrainingHD, -5f);
-                                HealthUtility.AdjustSeverity(this.Pawn, TorannMagicDefOf.TM_BowTrainingHD, (.5f) + bowtraining_pwr.level);
+                                HealthUtility.AdjustSeverity(this.Pawn, TorannMagicDefOf.TM_BowTrainingHD, .5f + bowtraining_pwr.level);
                                 MoteMaker.ThrowDustPuff(this.Pawn.Position.ToVector3Shifted(), this.Pawn.Map, .6f);
                                 MoteMaker.ThrowHeatGlow(this.Pawn.Position, this.Pawn.Map, 1.6f);
                             }
@@ -4657,7 +4626,7 @@ namespace TorannMagic
                                 if (rec.Severity != (.5f + (int)(pwrVal / 3)))
                                 {
                                     this.Pawn.health.RemoveHediff(rec);
-                                    HealthUtility.AdjustSeverity(this.Pawn, TorannMagicDefOf.TM_HediffSprint, (.5f + (int)(pwrVal / 3)));
+                                    HealthUtility.AdjustSeverity(this.Pawn, TorannMagicDefOf.TM_HediffSprint, .5f + (int)(pwrVal / 3));
                                 }
                             }
                         }
@@ -4682,10 +4651,10 @@ namespace TorannMagic
                         {
                             HealthUtility.AdjustSeverity(this.Pawn, TorannMagicDefOf.TM_SS_SerumHD, 2.2f);
                         }
-                    }                    
+                    }
                 }
 
-                if (this.Pawn.health.hediffSet.HasHediff(TorannMagicDefOf.TM_SS_SerumHD) && this.Pawn.Downed && nextSSTend < Find.TickManager.TicksGame && 
+                if (this.Pawn.health.hediffSet.HasHediff(TorannMagicDefOf.TM_SS_SerumHD) && this.Pawn.Downed && nextSSTend < Find.TickManager.TicksGame &&
                     (this.Pawn.story.traits.HasTrait(TorannMagicDefOf.TM_SuperSoldier) || (this.customClass != null && this.customClass.classFighterAbilities.Contains(TorannMagicDefOf.TM_FirstAid))))
                 {
                     Hediff_Injury wound = this.Pawn.health.hediffSet.GetInjuriesTendable().RandomElement();
@@ -4751,16 +4720,16 @@ namespace TorannMagic
                             float enchantmentFactor = 1f;
                             totalApparelWeight += apparel[i].def.GetStatValueAbstract(StatDefOf.Mass, apparel[i].Stuff);
                             if (item.MadeFromEnchantedStuff)
-                            {                                
+                            {
                                 Enchantment.CompProperties_EnchantedStuff compES = apparel[i].Stuff.GetCompProperties<Enchantment.CompProperties_EnchantedStuff>();
-                                enchantmentFactor = compES.enchantmentBonusMultiplier;                                    
+                                enchantmentFactor = compES.enchantmentBonusMultiplier;
 
                                 float arcalleumFactor = compES.arcalleumCooldownPerMass;
                                 if (apparel[i].Stuff.defName == "TM_Arcalleum")
                                 {
                                     _arcaneRes += .05f;
                                 }
-                                _arcalleumCooldown += (totalApparelWeight * (arcalleumFactor / 100));                                
+                                _arcalleumCooldown += totalApparelWeight * (arcalleumFactor / 100);
                             }
 
                             _maxSP += item.maxMP * enchantmentFactor;
@@ -4790,7 +4759,7 @@ namespace TorannMagic
                 {
                     if (item.HasEnchantment)
                     {
-                        float enchantmentFactor = 1f; 
+                        float enchantmentFactor = 1f;
                         if (item.MadeFromEnchantedStuff)
                         {
                             Enchantment.CompProperties_EnchantedStuff compES = Pawn.equipment.Primary.Stuff.GetCompProperties<Enchantment.CompProperties_EnchantedStuff>();
@@ -4801,8 +4770,8 @@ namespace TorannMagic
                             {
                                 _arcaneDmg += .1f;
                             }
-                            _arcalleumCooldown += (this.Pawn.equipment.Primary.def.GetStatValueAbstract(StatDefOf.Mass, this.Pawn.equipment.Primary.Stuff) * (arcalleumFactor / 100f));
-                            
+                            _arcalleumCooldown += this.Pawn.equipment.Primary.def.GetStatValueAbstract(StatDefOf.Mass, this.Pawn.equipment.Primary.Stuff) * (arcalleumFactor / 100f);
+
                         }
 
                         _maxSP += item.maxMP * enchantmentFactor;
@@ -4838,9 +4807,9 @@ namespace TorannMagic
                             level = skill.level;
                         }
 
-                        _maxSPUpkeep += (ability.upkeepEnergyCost * (1f - (ability.upkeepEfficiencyPercent * level)));
-                        _spRegenRateUpkeep += (ability.upkeepRegenCost * (1f - (ability.upkeepEfficiencyPercent * level)));
-                        
+                        _maxSPUpkeep += ability.upkeepEnergyCost * (1f - (ability.upkeepEfficiencyPercent * level));
+                        _spRegenRateUpkeep += ability.upkeepRegenCost * (1f - (ability.upkeepEfficiencyPercent * level));
+
                     }
                     else
                     {
@@ -4950,7 +4919,7 @@ namespace TorannMagic
                         //    }
                         //}
                     }
-                    if(rec.def == TorannMagicDefOf.TM_SS_SerumHD)
+                    if (rec.def == TorannMagicDefOf.TM_SS_SerumHD)
                     {
                         _spRegenRate += (float)(.1f * rec.CurStageIndex);
                         _arcaneRes += (float)(.15f * rec.CurStageIndex);
@@ -4961,7 +4930,7 @@ namespace TorannMagic
             //Bonded animal upkeep
             if (this.bondedPet != null)
             {
-                _maxSPUpkeep += (TorannMagicDefOf.TM_AnimalFriend.upkeepEnergyCost * (1f - (TorannMagicDefOf.TM_AnimalFriend.upkeepEfficiencyPercent * this.MightData.GetSkill_Efficiency(TorannMagicDefOf.TM_AnimalFriend).level)));
+                _maxSPUpkeep += TorannMagicDefOf.TM_AnimalFriend.upkeepEnergyCost * (1f - (TorannMagicDefOf.TM_AnimalFriend.upkeepEfficiencyPercent * this.MightData.GetSkill_Efficiency(TorannMagicDefOf.TM_AnimalFriend).level));
                 if (this.bondedPet.Dead || this.bondedPet.Destroyed)
                 {
                     this.Pawn.needs.mood.thoughts.memories.TryGainMemory(TorannMagicDefOf.RangerPetDied, null);
@@ -4973,14 +4942,14 @@ namespace TorannMagic
                     this.Pawn.needs.mood.thoughts.memories.TryGainMemory(TorannMagicDefOf.RangerSoldBondedPet, null);
                     this.bondedPet = null;
                 }
-                else if(!this.bondedPet.health.hediffSet.HasHediff(TorannMagicDefOf.TM_RangerBondHD))
+                else if (!this.bondedPet.health.hediffSet.HasHediff(TorannMagicDefOf.TM_RangerBondHD))
                 {
                     HealthUtility.AdjustSeverity(this.bondedPet, TorannMagicDefOf.TM_RangerBondHD, .5f);
                 }
             }
-            if(this.Pawn.needs.mood.thoughts.memories.NumMemoriesOfDef(ThoughtDef.Named("RangerSoldBondedPet")) > 0)
+            if (this.Pawn.needs.mood.thoughts.memories.NumMemoriesOfDef(ThoughtDef.Named("RangerSoldBondedPet")) > 0)
             {
-                if(this.animalBondingDisabled == false)
+                if (this.animalBondingDisabled == false)
                 {
                     this.RemovePawnAbility(TorannMagicDefOf.TM_AnimalFriend);
                     this.animalBondingDisabled = true;
@@ -4988,35 +4957,35 @@ namespace TorannMagic
             }
             else
             {
-                if(this.animalBondingDisabled == true)
+                if (this.animalBondingDisabled == true)
                 {
                     this.AddPawnAbility(TorannMagicDefOf.TM_AnimalFriend);
                     this.animalBondingDisabled = false;
                 }
             }
 
-            if(MightData.MightAbilityPoints < 0)
+            if (MightData.MightAbilityPoints < 0)
             {
                 MightData.MightAbilityPoints = 0;
-            }      
+            }
             //Class and global bonuses
 
-            _arcaneDmg += (.01f * this.MightData.MightPowerSkill_WayfarerCraft.FirstOrDefault((MightPowerSkill x) => x.label == "TM_WayfarerCraft_pwr").level);
-            _arcaneRes += (.02f * this.MightData.MightPowerSkill_WayfarerCraft.FirstOrDefault((MightPowerSkill x) => x.label == "TM_WayfarerCraft_pwr").level);
-            _spCost -= (.01f * this.MightData.MightPowerSkill_WayfarerCraft.FirstOrDefault((MightPowerSkill x) => x.label == "TM_WayfarerCraft_eff").level);
-            _xpGain += (.02f * this.MightData.MightPowerSkill_WayfarerCraft.FirstOrDefault((MightPowerSkill x) => x.label == "TM_WayfarerCraft_eff").level);
-            _coolDown -= (.01f * this.MightData.MightPowerSkill_WayfarerCraft.FirstOrDefault((MightPowerSkill x) => x.label == "TM_WayfarerCraft_ver").level);
-            _spRegenRate += (.01f * this.MightData.MightPowerSkill_WayfarerCraft.FirstOrDefault((MightPowerSkill x) => x.label == "TM_WayfarerCraft_ver").level);
-            _maxSP += (.02f * this.MightData.MightPowerSkill_WayfarerCraft.FirstOrDefault((MightPowerSkill x) => x.label == "TM_WayfarerCraft_ver").level);
-            _maxSPUpkeep *= (1f - (.03f * this.MightData.MightPowerSkill_FieldTraining.FirstOrDefault((MightPowerSkill x) => x.label == "TM_FieldTraining_eff").level));
-            _spRegenRateUpkeep *= (1f - (.03f * this.MightData.MightPowerSkill_FieldTraining.FirstOrDefault((MightPowerSkill x) => x.label == "TM_FieldTraining_eff").level));
+            _arcaneDmg += .01f * this.MightData.MightPowerSkill_WayfarerCraft.FirstOrDefault((MightPowerSkill x) => x.label == "TM_WayfarerCraft_pwr").level;
+            _arcaneRes += .02f * this.MightData.MightPowerSkill_WayfarerCraft.FirstOrDefault((MightPowerSkill x) => x.label == "TM_WayfarerCraft_pwr").level;
+            _spCost -= .01f * this.MightData.MightPowerSkill_WayfarerCraft.FirstOrDefault((MightPowerSkill x) => x.label == "TM_WayfarerCraft_eff").level;
+            _xpGain += .02f * this.MightData.MightPowerSkill_WayfarerCraft.FirstOrDefault((MightPowerSkill x) => x.label == "TM_WayfarerCraft_eff").level;
+            _coolDown -= .01f * this.MightData.MightPowerSkill_WayfarerCraft.FirstOrDefault((MightPowerSkill x) => x.label == "TM_WayfarerCraft_ver").level;
+            _spRegenRate += .01f * this.MightData.MightPowerSkill_WayfarerCraft.FirstOrDefault((MightPowerSkill x) => x.label == "TM_WayfarerCraft_ver").level;
+            _maxSP += .02f * this.MightData.MightPowerSkill_WayfarerCraft.FirstOrDefault((MightPowerSkill x) => x.label == "TM_WayfarerCraft_ver").level;
+            _maxSPUpkeep *= 1f - (.03f * this.MightData.MightPowerSkill_FieldTraining.FirstOrDefault((MightPowerSkill x) => x.label == "TM_FieldTraining_eff").level);
+            _spRegenRateUpkeep *= 1f - (.03f * this.MightData.MightPowerSkill_FieldTraining.FirstOrDefault((MightPowerSkill x) => x.label == "TM_FieldTraining_eff").level);
 
-            _maxSP += (.04f * this.MightData.MightPowerSkill_global_endurance.FirstOrDefault((MightPowerSkill x) => x.label == "TM_global_endurance_pwr").level);
-            _spRegenRate += (.05f * this.MightData.MightPowerSkill_global_refresh.FirstOrDefault((MightPowerSkill x) => x.label == "TM_global_refresh_pwr").level);
-            _spCost += (-.025f * this.MightData.MightPowerSkill_global_seff.FirstOrDefault((MightPowerSkill x) => x.label == "TM_global_seff_pwr").level);
-            _arcaneDmg += (.05f * this.MightData.MightPowerSkill_global_strength.FirstOrDefault((MightPowerSkill x) => x.label == "TM_global_strength_pwr").level);
-            _arcaneRes += ((1f - this.Pawn.GetStatValue(StatDefOf.PsychicSensitivity, false)) / 2f);
-            _arcaneDmg += ((this.Pawn.GetStatValue(StatDefOf.PsychicSensitivity, false) - 1f) / 4f);
+            _maxSP += .04f * this.MightData.MightPowerSkill_global_endurance.FirstOrDefault((MightPowerSkill x) => x.label == "TM_global_endurance_pwr").level;
+            _spRegenRate += .05f * this.MightData.MightPowerSkill_global_refresh.FirstOrDefault((MightPowerSkill x) => x.label == "TM_global_refresh_pwr").level;
+            _spCost += -.025f * this.MightData.MightPowerSkill_global_seff.FirstOrDefault((MightPowerSkill x) => x.label == "TM_global_seff_pwr").level;
+            _arcaneDmg += .05f * this.MightData.MightPowerSkill_global_strength.FirstOrDefault((MightPowerSkill x) => x.label == "TM_global_strength_pwr").level;
+            _arcaneRes += (1f - this.Pawn.GetStatValue(StatDefOf.PsychicSensitivity, false)) / 2f;
+            _arcaneDmg += (this.Pawn.GetStatValue(StatDefOf.PsychicSensitivity, false) - 1f) / 4f;
 
             if (this.Pawn.story.traits.HasTrait(TorannMagicDefOf.TM_BoundlessTD))
             {
@@ -5028,8 +4997,8 @@ namespace TorannMagic
             }
 
             //resolve upkeep costs            
-            _maxSP -= (_maxSPUpkeep);
-            _spRegenRate -= (_spRegenRateUpkeep);
+            _maxSP -= _maxSPUpkeep;
+            _spRegenRate -= _spRegenRateUpkeep;
 
             //finalize
             this.maxSP = Mathf.Clamp(1 + _maxSP, 0f, 5f);
@@ -5090,7 +5059,7 @@ namespace TorannMagic
                 {
                     this.Pawn.health.RemoveHediff(this.Pawn.health.hediffSet.GetFirstHediffOfDef(HediffDef.Named("TM_HediffEnchantment_phantomShift")));
                 }
-            }            
+            }
         }
 
         public void ResolveStamina()
@@ -5126,7 +5095,7 @@ namespace TorannMagic
             IEnumerable<InspectTabBase> inspectTabs = base.AbilityUser.GetInspectTabs();
             bool flag = inspectTabs != null && inspectTabs.Count<InspectTabBase>() > 0;
             if (flag)
-            {         
+            {
                 if (inspectTabsx == null)
                 {
                     try
@@ -5197,20 +5166,18 @@ namespace TorannMagic
                         this.customClass = TM_ClassUtility.CustomClasses()[index];
                         this.customIndex = index;
 
-                        for (int i = 0; i < customClass.classFighterAbilities.Count; i++)
+                        foreach (var ability in customClass.classFighterAbilities)
                         {
-                            TMAbilityDef ability = customClass.classFighterAbilities[i];
-                            
                             for (int j = 0; j < this.MightData.AllMightPowers.Count; j++)
                             {
-                                if (this.MightData.AllMightPowers[j].TMabilityDefs.Contains(ability) && this.MightData.AllMightPowers[j].learned)
+                                if (this.MightData.AllMightPowers[j].learned && this.MightData.AllMightPowers[j].TMabilityDefsSet.Contains(ability))
                                 {
                                     if (ability.shouldInitialize)
                                     {
                                         int level = this.MightData.AllMightPowers[j].level;
                                         base.AddPawnAbility(this.MightData.AllMightPowers[j].TMabilityDefs[level]);
                                     }
-                                    if(ability.childAbilities != null && ability.childAbilities.Count > 0)
+                                    if (ability.childAbilities != null && ability.childAbilities.Count > 0)
                                     {
                                         for (int c = 0; c < ability.childAbilities.Count; c++)
                                         {
@@ -5238,7 +5205,7 @@ namespace TorannMagic
                                 bool flag15 = current3.abilityDef != null;
                                 if (flag15)
                                 {
-                                    if ((current3.abilityDef == TorannMagicDefOf.TM_Sprint || current3.abilityDef == TorannMagicDefOf.TM_Sprint_I || current3.abilityDef == TorannMagicDefOf.TM_Sprint_II || current3.abilityDef == TorannMagicDefOf.TM_Sprint_III))
+                                    if (current3.abilityDef == TorannMagicDefOf.TM_Sprint || current3.abilityDef == TorannMagicDefOf.TM_Sprint_I || current3.abilityDef == TorannMagicDefOf.TM_Sprint_II || current3.abilityDef == TorannMagicDefOf.TM_Sprint_III)
                                     {
                                         if (current3.level == 0)
                                         {
@@ -5257,7 +5224,7 @@ namespace TorannMagic
                                             base.AddPawnAbility(TorannMagicDefOf.TM_Sprint_III);
                                         }
                                     }
-                                    if ((current3.abilityDef == TorannMagicDefOf.TM_Grapple || current3.abilityDef == TorannMagicDefOf.TM_Grapple_I || current3.abilityDef == TorannMagicDefOf.TM_Grapple_II || current3.abilityDef == TorannMagicDefOf.TM_Grapple_III))
+                                    if (current3.abilityDef == TorannMagicDefOf.TM_Grapple || current3.abilityDef == TorannMagicDefOf.TM_Grapple_I || current3.abilityDef == TorannMagicDefOf.TM_Grapple_II || current3.abilityDef == TorannMagicDefOf.TM_Grapple_III)
                                     {
                                         if (current3.level == 0)
                                         {
@@ -5298,7 +5265,7 @@ namespace TorannMagic
                                 bool flag18 = current4.abilityDef != null;
                                 if (flag18)
                                 {
-                                    if ((current4.abilityDef == TorannMagicDefOf.TM_DisablingShot || current4.abilityDef == TorannMagicDefOf.TM_DisablingShot_I || current4.abilityDef == TorannMagicDefOf.TM_DisablingShot_II || current4.abilityDef == TorannMagicDefOf.TM_DisablingShot_III))
+                                    if (current4.abilityDef == TorannMagicDefOf.TM_DisablingShot || current4.abilityDef == TorannMagicDefOf.TM_DisablingShot_I || current4.abilityDef == TorannMagicDefOf.TM_DisablingShot_II || current4.abilityDef == TorannMagicDefOf.TM_DisablingShot_III)
                                     {
                                         if (current4.level == 0)
                                         {
@@ -5340,7 +5307,7 @@ namespace TorannMagic
                                 bool flag20 = current5.abilityDef != null;
                                 if (flag20)
                                 {
-                                    if ((current5.abilityDef == TorannMagicDefOf.TM_PhaseStrike || current5.abilityDef == TorannMagicDefOf.TM_PhaseStrike_I || current5.abilityDef == TorannMagicDefOf.TM_PhaseStrike_II || current5.abilityDef == TorannMagicDefOf.TM_PhaseStrike_III))
+                                    if (current5.abilityDef == TorannMagicDefOf.TM_PhaseStrike || current5.abilityDef == TorannMagicDefOf.TM_PhaseStrike_I || current5.abilityDef == TorannMagicDefOf.TM_PhaseStrike_II || current5.abilityDef == TorannMagicDefOf.TM_PhaseStrike_III)
                                     {
                                         if (current5.level == 0)
                                         {
@@ -5382,7 +5349,7 @@ namespace TorannMagic
                                 bool flag22 = current6.abilityDef != null;
                                 if (flag22)
                                 {
-                                    if ((current6.abilityDef == TorannMagicDefOf.TM_ArrowStorm || current6.abilityDef == TorannMagicDefOf.TM_ArrowStorm_I || current6.abilityDef == TorannMagicDefOf.TM_ArrowStorm_II || current6.abilityDef == TorannMagicDefOf.TM_ArrowStorm_III))
+                                    if (current6.abilityDef == TorannMagicDefOf.TM_ArrowStorm || current6.abilityDef == TorannMagicDefOf.TM_ArrowStorm_I || current6.abilityDef == TorannMagicDefOf.TM_ArrowStorm_II || current6.abilityDef == TorannMagicDefOf.TM_ArrowStorm_III)
                                     {
                                         if (current6.level == 0)
                                         {
@@ -5425,7 +5392,7 @@ namespace TorannMagic
                                 bool flag22 = current7.abilityDef != null;
                                 if (flag22)
                                 {
-                                    if ((current7.abilityDef == TorannMagicDefOf.TM_Transpose || current7.abilityDef == TorannMagicDefOf.TM_Transpose_I || current7.abilityDef == TorannMagicDefOf.TM_Transpose_II || current7.abilityDef == TorannMagicDefOf.TM_Transpose_III))
+                                    if (current7.abilityDef == TorannMagicDefOf.TM_Transpose || current7.abilityDef == TorannMagicDefOf.TM_Transpose_I || current7.abilityDef == TorannMagicDefOf.TM_Transpose_II || current7.abilityDef == TorannMagicDefOf.TM_Transpose_III)
                                     {
                                         if (current7.level == 0)
                                         {
@@ -5468,7 +5435,7 @@ namespace TorannMagic
                                 bool flag22 = current8.abilityDef != null;
                                 if (flag22)
                                 {
-                                    if ((current8.abilityDef == TorannMagicDefOf.TM_PsionicBlast || current8.abilityDef == TorannMagicDefOf.TM_PsionicBlast_I || current8.abilityDef == TorannMagicDefOf.TM_PsionicBlast_II || current8.abilityDef == TorannMagicDefOf.TM_PsionicBlast_III))
+                                    if (current8.abilityDef == TorannMagicDefOf.TM_PsionicBlast || current8.abilityDef == TorannMagicDefOf.TM_PsionicBlast_I || current8.abilityDef == TorannMagicDefOf.TM_PsionicBlast_II || current8.abilityDef == TorannMagicDefOf.TM_PsionicBlast_III)
                                     {
                                         if (current8.level == 0)
                                         {
@@ -5487,7 +5454,7 @@ namespace TorannMagic
                                             base.AddPawnAbility(TorannMagicDefOf.TM_PsionicBlast_III);
                                         }
                                     }
-                                    if ((current8.abilityDef == TorannMagicDefOf.TM_PsionicBarrier || current8.abilityDef == TorannMagicDefOf.TM_PsionicBarrier_Projected))
+                                    if (current8.abilityDef == TorannMagicDefOf.TM_PsionicBarrier || current8.abilityDef == TorannMagicDefOf.TM_PsionicBarrier_Projected)
                                     {
                                         if (current8.level == 0)
                                         {
@@ -5521,7 +5488,7 @@ namespace TorannMagic
                                 bool flag22 = current9.abilityDef != null;
                                 if (flag22)
                                 {
-                                    if ((current9.abilityDef == TorannMagicDefOf.TM_Spite || current9.abilityDef == TorannMagicDefOf.TM_Spite_I || current9.abilityDef == TorannMagicDefOf.TM_Spite_II || current9.abilityDef == TorannMagicDefOf.TM_Spite_III))
+                                    if (current9.abilityDef == TorannMagicDefOf.TM_Spite || current9.abilityDef == TorannMagicDefOf.TM_Spite_I || current9.abilityDef == TorannMagicDefOf.TM_Spite_II || current9.abilityDef == TorannMagicDefOf.TM_Spite_III)
                                     {
                                         if (current9.level == 0)
                                         {
@@ -5540,7 +5507,7 @@ namespace TorannMagic
                                             base.AddPawnAbility(TorannMagicDefOf.TM_Spite_III);
                                         }
                                     }
-                                    if ((current9.abilityDef == TorannMagicDefOf.TM_GraveBlade || current9.abilityDef == TorannMagicDefOf.TM_GraveBlade_I || current9.abilityDef == TorannMagicDefOf.TM_GraveBlade_II || current9.abilityDef == TorannMagicDefOf.TM_GraveBlade_III))
+                                    if (current9.abilityDef == TorannMagicDefOf.TM_GraveBlade || current9.abilityDef == TorannMagicDefOf.TM_GraveBlade_I || current9.abilityDef == TorannMagicDefOf.TM_GraveBlade_II || current9.abilityDef == TorannMagicDefOf.TM_GraveBlade_III)
                                     {
                                         if (current9.level == 0)
                                         {
@@ -5600,7 +5567,7 @@ namespace TorannMagic
                                 bool flag15 = current10.abilityDef != null;
                                 if (flag15)
                                 {
-                                    if ((current10.abilityDef == TorannMagicDefOf.TM_StayAlert || current10.abilityDef == TorannMagicDefOf.TM_StayAlert_I || current10.abilityDef == TorannMagicDefOf.TM_StayAlert_II || current10.abilityDef == TorannMagicDefOf.TM_StayAlert_III))
+                                    if (current10.abilityDef == TorannMagicDefOf.TM_StayAlert || current10.abilityDef == TorannMagicDefOf.TM_StayAlert_I || current10.abilityDef == TorannMagicDefOf.TM_StayAlert_II || current10.abilityDef == TorannMagicDefOf.TM_StayAlert_III)
                                     {
                                         if (current10.level == 0)
                                         {
@@ -5619,7 +5586,7 @@ namespace TorannMagic
                                             base.AddPawnAbility(TorannMagicDefOf.TM_StayAlert_III);
                                         }
                                     }
-                                    if ((current10.abilityDef == TorannMagicDefOf.TM_MoveOut || current10.abilityDef == TorannMagicDefOf.TM_MoveOut_I || current10.abilityDef == TorannMagicDefOf.TM_MoveOut_II || current10.abilityDef == TorannMagicDefOf.TM_MoveOut_III))
+                                    if (current10.abilityDef == TorannMagicDefOf.TM_MoveOut || current10.abilityDef == TorannMagicDefOf.TM_MoveOut_I || current10.abilityDef == TorannMagicDefOf.TM_MoveOut_II || current10.abilityDef == TorannMagicDefOf.TM_MoveOut_III)
                                     {
                                         if (current10.level == 0)
                                         {
@@ -5638,7 +5605,7 @@ namespace TorannMagic
                                             base.AddPawnAbility(TorannMagicDefOf.TM_MoveOut_III);
                                         }
                                     }
-                                    if ((current10.abilityDef == TorannMagicDefOf.TM_HoldTheLine || current10.abilityDef == TorannMagicDefOf.TM_HoldTheLine_I || current10.abilityDef == TorannMagicDefOf.TM_HoldTheLine_II || current10.abilityDef == TorannMagicDefOf.TM_HoldTheLine_III))
+                                    if (current10.abilityDef == TorannMagicDefOf.TM_HoldTheLine || current10.abilityDef == TorannMagicDefOf.TM_HoldTheLine_I || current10.abilityDef == TorannMagicDefOf.TM_HoldTheLine_II || current10.abilityDef == TorannMagicDefOf.TM_HoldTheLine_III)
                                     {
                                         if (current10.level == 0)
                                         {
@@ -5668,7 +5635,7 @@ namespace TorannMagic
                         //Log.Message("Loading Super Soldier Abilities");
                         //this.AddPawnAbility(TorannMagicDefOf.TM_CQC);
                         this.AddPawnAbility(TorannMagicDefOf.TM_FirstAid);
-                        this.AddPawnAbility(TorannMagicDefOf.TM_60mmMortar);                        
+                        this.AddPawnAbility(TorannMagicDefOf.TM_60mmMortar);
                     }
                 }
                 if (this.equipmentContainer != null && this.equipmentContainer.Count > 0)
@@ -5686,7 +5653,7 @@ namespace TorannMagic
                                 t.Destroy(DestroyMode.Vanish);
                             }
                         }
-                        if(ModCheck.Validate.SimpleSidearms.IsInitialized())
+                        if (ModCheck.Validate.SimpleSidearms.IsInitialized())
                         {
                             ModCheck.SS.ClearWeaponMemory(this.Pawn);
                         }
@@ -5715,12 +5682,12 @@ namespace TorannMagic
                 this.UpdateAutocastDef();
                 this.InitializeSkill();
                 //base.UpdateAbilities();
-            }            
+            }
         }
 
         public void UpdateAutocastDef()
         {
-            IEnumerable <TM_CustomPowerDef> mpDefs = TM_Data.CustomFighterPowerDefs();
+            IEnumerable<TM_CustomPowerDef> mpDefs = TM_Data.CustomFighterPowerDefs;
             if (this.IsMightUser && this.MightData != null && this.MightData.MightPowersCustom != null)
             {
                 foreach (MightPower mp in this.MightData.MightPowersCustom)
@@ -5761,7 +5728,7 @@ namespace TorannMagic
                     };
                     gizmoCommands.Add(key, itemWayfarer);
                 }
-                if(key == "cleave")
+                if (key == "cleave")
                 {
                     String toggle = "cleave";
                     String label = "TM_CleaveEnabled".Translate();
@@ -5777,7 +5744,7 @@ namespace TorannMagic
                         defaultDesc = desc,
                         order = -90,
                         icon = ContentFinder<Texture2D>.Get("UI/" + toggle, true),
-                        isActive = (() => this.useCleaveToggle),
+                        isActive = () => this.useCleaveToggle,
                         toggleAction = delegate
                         {
                             this.useCleaveToggle = !this.useCleaveToggle;
@@ -5785,7 +5752,7 @@ namespace TorannMagic
                     };
                     gizmoCommands.Add(key, itemCleave);
                 }
-                if(key == "cqc")
+                if (key == "cqc")
                 {
                     String toggle = "cqc";
                     String label = "TM_CQCEnabled".Translate();
@@ -5801,7 +5768,7 @@ namespace TorannMagic
                         defaultDesc = desc,
                         order = -90,
                         icon = ContentFinder<Texture2D>.Get("UI/" + toggle, true),
-                        isActive = (() => this.useCQCToggle),
+                        isActive = () => this.useCQCToggle,
                         toggleAction = delegate
                         {
                             this.useCQCToggle = !this.useCQCToggle;
@@ -5809,7 +5776,7 @@ namespace TorannMagic
                     };
                     gizmoCommands.Add(key, itemCQC);
                 }
-                if(key == "psiAugmentation")
+                if (key == "psiAugmentation")
                 {
                     String toggle = "psionicaugmentation";
                     String label = "TM_AugmentationsEnabled".Translate();
@@ -5825,7 +5792,7 @@ namespace TorannMagic
                         defaultDesc = desc,
                         order = -90,
                         icon = ContentFinder<Texture2D>.Get("UI/" + toggle, true),
-                        isActive = (() => this.usePsionicAugmentationToggle),
+                        isActive = () => this.usePsionicAugmentationToggle,
                         toggleAction = delegate
                         {
                             this.usePsionicAugmentationToggle = !this.usePsionicAugmentationToggle;
@@ -5833,7 +5800,7 @@ namespace TorannMagic
                     };
                     gizmoCommands.Add(key, item);
                 }
-                if(key == "psiMindAttack")
+                if (key == "psiMindAttack")
                 {
 
                     String toggle2 = "psionicmindattack";
@@ -5850,7 +5817,7 @@ namespace TorannMagic
                         defaultDesc = desc2,
                         order = -89,
                         icon = ContentFinder<Texture2D>.Get("UI/" + toggle2, true),
-                        isActive = (() => this.usePsionicMindAttackToggle),
+                        isActive = () => this.usePsionicMindAttackToggle,
                         toggleAction = delegate
                         {
                             this.usePsionicMindAttackToggle = !this.usePsionicMindAttackToggle;
@@ -5859,9 +5826,9 @@ namespace TorannMagic
                     gizmoCommands.Add(key, item2);
                 }
             }
-            if (gizmoCommands.ContainsKey(key))
+            if (gizmoCommands.TryGetValue(key, out var value))
             {
-                return gizmoCommands[key];
+                return value;
             }
             else
             {

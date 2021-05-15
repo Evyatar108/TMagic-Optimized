@@ -6,10 +6,9 @@ using RimWorld;
 
 namespace TorannMagic
 {
-    public class Verb_SuppressingFire : Verb_UseAbility  
+    public class Verb_SuppressingFire : Verb_UseAbility
     {
         private bool initialized = false;
-        private int effVal;
         private int shotcount = 0;
 
         protected override bool TryCastShot()
@@ -18,8 +17,8 @@ namespace TorannMagic
             if (this.currentTarget != null && pawn.equipment != null && pawn.equipment.Primary != null)
             {
                 IntVec3 targetVariation = this.currentTarget.Cell;
-                targetVariation.x += Mathf.RoundToInt(Rand.Range(-.15f, .15f) * Vector3.Distance(pawn.DrawPos, this.currentTarget.CenterVector3) + Rand.Range(-1f, 1f));
-                targetVariation.z += Mathf.RoundToInt(Rand.Range(-.15f, .15f) * Vector3.Distance(pawn.DrawPos, this.currentTarget.CenterVector3) + Rand.Range(-1f, 1f));
+                targetVariation.x += Mathf.RoundToInt((Rand.Range(-.15f, .15f) * Vector3.Distance(pawn.DrawPos, this.currentTarget.CenterVector3)) + Rand.Range(-1f, 1f));
+                targetVariation.z += Mathf.RoundToInt((Rand.Range(-.15f, .15f) * Vector3.Distance(pawn.DrawPos, this.currentTarget.CenterVector3)) + Rand.Range(-1f, 1f));
 
                 if (!initialized)
                 {
@@ -35,7 +34,7 @@ namespace TorannMagic
                 {
                     initialized = false;
                 }
-                return (shotcount > 0);
+                return shotcount > 0;
             }
             else
             {
@@ -46,10 +45,9 @@ namespace TorannMagic
 
         public static int GetShotCount(Pawn pawn)
         {
-            int shots = 0;
             float weaponDamage = pawn.equipment.Primary.def.Verbs.FirstOrDefault().defaultProjectile.projectile.GetDamageAmount(pawn.equipment.Primary, null);
             float burstShots = pawn.equipment.Primary.def.Verbs.FirstOrDefault().burstShotCount;
-            shots = Mathf.RoundToInt(((50f / weaponDamage) + (2 * burstShots)) * (1.2f + .15f * TM_Calc.GetMightSkillLevel(pawn, pawn.GetComp<CompAbilityUserMight>().MightData.MightPowerSkill_RifleSpec, "TM_RifleSpec", "_eff", true)) * pawn.GetComp<CompAbilityUserMight>().mightPwr);
+            int shots = Mathf.RoundToInt(((50f / weaponDamage) + (2 * burstShots)) * (1.2f + (.15f * TM_Calc.GetMightSkillLevel(pawn, pawn.GetComp<CompAbilityUserMight>().MightData.MightPowerSkill_RifleSpec, "TM_RifleSpec", "_eff", true))) * pawn.GetComp<CompAbilityUserMight>().mightPwr);
             return shots;
         }
     }

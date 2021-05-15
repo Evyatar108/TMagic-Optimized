@@ -1,13 +1,9 @@
 ﻿using Verse;
-using Verse.Sound;
 using RimWorld;
 using AbilityUser;
-using System;
 using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
-using Verse.AI;
-using HarmonyLib;
 
 namespace TorannMagic
 {
@@ -104,8 +100,8 @@ namespace TorannMagic
                 {
                     spawnDef = ThingDef.Named("Sandstone"); //400
                 }
-                List<IntVec3> outerCells = GenRadial.RadialCellsAround(base.Position, this.def.projectile.explosionRadius + 1f, true).ToList();
-                List<IntVec3> innerCells = GenRadial.RadialCellsAround(base.Position, this.def.projectile.explosionRadius - 1f, true).ToList();
+                IEnumerable<IntVec3> outerCells = GenRadial.RadialCellsAround(base.Position, this.def.projectile.explosionRadius + 1f, true);
+                IEnumerable<IntVec3> innerCells = GenRadial.RadialCellsAround(base.Position, this.def.projectile.explosionRadius - 1f, true);
                 this.wallPositions = new List<IntVec3>();
                 this.wallPositions.Clear();
                 this.terrainList = new List<TerrainDef>();
@@ -113,20 +109,22 @@ namespace TorannMagic
                 this.wallPositions = outerCells.Except(innerCells).ToList();
                 for (int t = 0; t < wallPositions.Count(); t++)
                 {
-                    Encase temp = new Encase(wallPositions[t], wallPositions[t].GetTerrain(caster.Map));
+                    var wallPosition = wallPositions[t];
+                    Encase temp = new Encase(wallPosition, wallPosition.GetTerrain(caster.Map));
                     wall.Add(temp);
-                    this.terrainList.Add(wallPositions[t].GetTerrain(caster.Map));
+                    this.terrainList.Add(wallPosition.GetTerrain(caster.Map));
                 }
                 float magnitude = (base.Position.ToVector3Shifted() - Find.Camera.transform.position).magnitude;
                 Find.CameraDriver.shaker.DoShake(10 / magnitude);
                 //for (int k = 0; k < wallPositions.Count(); k++)
                 //{
-                for(int k =0; k < wall.Count(); k++)
-                { 
-                    if(wall[k].position.IsValid && wall[k].position.InBounds(caster.Map) && !wall[k].position.Fogged(caster.Map) && !wall[k].position.InNoZoneEdgeArea(caster.Map))
+                for (int k = 0; k < wall.Count; k++)
+                {
+                    var wallElement = wall[k];
+                    if (wallElement.position.IsValid && wallElement.position.InBounds(caster.Map) && !wallElement.position.Fogged(caster.Map) && !wallElement.position.InNoZoneEdgeArea(caster.Map))
                     //if (wallPositions[k].IsValid && wallPositions[k].InBounds(caster.Map) && !wallPositions[k].Fogged(caster.Map) && !wallPositions[k].InNoZoneEdgeArea(caster.Map))
                     {
-                        if (wall[k].terrain.defName == "Marsh" || wall[k].terrain.defName == "WaterShallow" || wall[k].terrain.defName == "WaterMovingShallow" || wall[k].terrain.defName == "WaterOceanShallow" || wall[k].terrain.defName == "WaterMovingChestDeep")
+                        if (wallElement.terrain.defName == "Marsh" || wallElement.terrain.defName == "WaterShallow" || wallElement.terrain.defName == "WaterMovingShallow" || wallElement.terrain.defName == "WaterOceanShallow" || wallElement.terrain.defName == "WaterMovingChestDeep")
                         {
                             MoteSplash moteSplash = (MoteSplash)ThingMaker.MakeThing(ThingDefOf.Mote_WaterSplash, null);
                             moteSplash.Initialize(wallPositions[k].ToVector3Shifted(), 8f, 1f);
@@ -136,18 +134,18 @@ namespace TorannMagic
                         bool hasWall = false;
                         try
                         {
-
-                            cellList = wall[k].position.GetThingList(caster.Map);
-                            for (int i = 0; i < cellList.Count(); i++)
+                            cellList = wallElement.position.GetThingList(caster.Map);
+                            for (int i = 0; i < cellList.Count; i++)
                             {
-                                if (cellList[i].def.designationCategory == DesignationCategoryDefOf.Structure || cellList[i].def.altitudeLayer == AltitudeLayer.Building || cellList[i].def.altitudeLayer == AltitudeLayer.Item || cellList[i].def.altitudeLayer == AltitudeLayer.ItemImportant)
+                                var cell = cellList[i];
+                                if (cell.def.designationCategory == DesignationCategoryDefOf.Structure || cell.def.altitudeLayer == AltitudeLayer.Building || cell.def.altitudeLayer == AltitudeLayer.Item || cell.def.altitudeLayer == AltitudeLayer.ItemImportant)
                                 {
-                                    if (!cellList[i].def.EverHaulable)
+                                    if (!cell.def.EverHaulable)
                                     {
                                         hasWall = true;
                                         //this.terrainList.Remove(this.terrainList[k]);
                                         //this.wallPositions.Remove(this.wallPositions[k]); //don't do anything if a building/wall already exists
-                                        wall.Remove(wall[k]);
+                                        wall.Remove(wallElement);
                                         break;
                                     }
                                 }
@@ -158,29 +156,30 @@ namespace TorannMagic
                             hasWall = true;
                             //this.terrainList.Remove(this.terrainList[k]);
                             //this.wallPositions.Remove(this.wallPositions[k]);
-                            wall.Remove(wall[k]);
+                            wall.Remove(wallElement);
                             continue;
                         }
 
                         if (!hasWall)
                         {
                             bool spawnWall = true;
-                            for (int i = 0; i < cellList.Count(); i++)
+                            for (int i = 0; i < cellList.Count; i++)
                             {
-                                if (!(cellList[i] is Pawn)) //
+                                var cell = cellList[i];
+                                if (!(cell is Pawn)) //
                                 {
-                                    if (cellList[i].def.defName.Contains("Mote"))
+                                    if (cell.def.defName.Contains("Mote"))
                                     {
-                                        //Log.Message("avoided storing " + cellList[i].def.defName);
+                                        //Log.Message("avoided storing " + cell.def.defName);
                                     }
-                                    else if (cellList[i].def.defName == "Fire" || cellList[i].def.defName == "Spark")
+                                    else if (cell.def.defName == "Fire" || cell.def.defName == "Spark")
                                     {
-                                        cellList[i].Destroy(DestroyMode.Vanish);
+                                        cell.Destroy(DestroyMode.Vanish);
                                     }
                                     else
                                     {
-                                        this.despawnedThingList.Add(cellList[i]);
-                                        cellList[i].DeSpawn();
+                                        this.despawnedThingList.Add(cell);
+                                        cell.DeSpawn();
                                     }
                                 }
                             }
@@ -192,11 +191,11 @@ namespace TorannMagic
                                     spawnCount = 1
                                 };
                                 try
-                                {                                 
-                                    SingleSpawnLoop(tempSpawn, wall[k].position, caster.Map);
+                                {
+                                    SingleSpawnLoop(tempSpawn, wallElement.position, caster.Map);
                                     for (int m = 0; m < 4; m++)
                                     {
-                                        TM_MoteMaker.ThrowGenericMote(ThingDef.Named("Mote_ThickDust"), wall[k].position.ToVector3Shifted(), caster.Map, Rand.Range(.6f, .8f), Rand.Range(.2f, .3f), .05f, Rand.Range(.4f, .6f), Rand.Range(-20, 20), Rand.Range(1f, 2f), Rand.Range(0, 360), Rand.Range(0, 360));
+                                        TM_MoteMaker.ThrowGenericMote(ThingDef.Named("Mote_ThickDust"), wallElement.position.ToVector3Shifted(), caster.Map, Rand.Range(.6f, .8f), Rand.Range(.2f, .3f), .05f, Rand.Range(.4f, .6f), Rand.Range(-20, 20), Rand.Range(1f, 2f), Rand.Range(0, 360), Rand.Range(0, 360));
                                     }
                                 }
                                 catch
@@ -208,12 +207,12 @@ namespace TorannMagic
                         }
                     }
                 }
-                this.duration = Mathf.RoundToInt(1800 + (240 * verVal) * comp.arcaneDmg);
+                this.duration = Mathf.RoundToInt(1800 + (240 * verVal * comp.arcaneDmg));
                 this.initialized = true;
                 this.wallActive = true;
             }
-            else if(this.initialized && this.wallActive && !(this.age < this.duration))
-            {                
+            else if (this.initialized && this.wallActive && !(this.age < this.duration))
+            {
                 for (int j = 0; j < wall.Count(); j++)
                 {
                     Building structure = null;
@@ -258,14 +257,13 @@ namespace TorannMagic
             //bool flag2 = position.InBounds(map) && position.IsValid && !position.InNoZoneEdgeArea(map);
             if (flag)
             {
-                Faction faction = this.caster.Faction;
                 ThingDef def = spawnables.def;
                 ThingDef stuff = null;
                 bool madeFromStuff = def.MadeFromStuff;
                 if (madeFromStuff)
-                {                    
-                    stuff = ThingDefOf.BlocksGranite;                   
-                    
+                {
+                    stuff = ThingDefOf.BlocksGranite;
+
                 }
                 Thing thing = ThingMaker.MakeThing(def, stuff);
                 GenSpawn.Spawn(thing, position, map, Rot4.North, WipeMode.Vanish);
@@ -274,7 +272,7 @@ namespace TorannMagic
 
         public Vector3 GetVector(Vector3 casterPos, Vector3 targetPos)
         {
-            Vector3 heading = (targetPos - casterPos);
+            Vector3 heading = targetPos - casterPos;
             float distance = heading.magnitude;
             Vector3 direction = heading / distance;
             return direction;
@@ -290,7 +288,7 @@ namespace TorannMagic
         {
             bool flag = this.age <= this.duration;
             if (!flag)
-            {                
+            {
                 base.Destroy(mode);
             }
         }

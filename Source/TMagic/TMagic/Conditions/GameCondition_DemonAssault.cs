@@ -6,8 +6,6 @@ using UnityEngine;
 using Verse;
 using RimWorld;
 using AbilityUser;
-using Verse.AI.Group;
-using HarmonyLib;
 
 namespace TorannMagic.Conditions
 {
@@ -25,7 +23,6 @@ namespace TorannMagic.Conditions
         public List<Pawn> spawnedThings;
         private int nextEventTick = 0;
         private int ticksBetweenEvents = 4000;
-        IntVec3 rndTarg = default(IntVec3);
         private bool doEventAction = false;
         float wealth = 0;
         float wealthMultiplier = 1f;
@@ -36,28 +33,28 @@ namespace TorannMagic.Conditions
 
         public override void GameConditionTick()
         {
-            base.GameConditionTick();  
-            if(!initialized)
+            base.GameConditionTick();
+            if (!initialized)
             {
                 initialized = true;
                 TM_MoteMaker.ThrowGenericMote(ThingDef.Named("Mote_SummoningCircle"), this.summoningCircle[0].ToVector3Shifted(), this.SingleMap, 3f, 2f, 1f, 2f, 0, 0, 0, Rand.Range(0, 360));
             }
-            if(summoningDuration > 0)
+            if (summoningDuration > 0)
             {
                 summoningDuration--;
                 DoSummoningCircle();
-                if(summoningDuration == 0)
+                if (summoningDuration == 0)
                 {
                     SpawnDemons();
                 }
             }
 
-            if(Find.TickManager.TicksGame % 60 == 0)
+            if (Find.TickManager.TicksGame % 60 == 0)
             {
                 if (spawnedThings != null)
                 {
                     bool anySpawnedThingsRemaining = false;
-                    if (spawnedThings.Any(p => (!p.DestroyedOrNull() && !p.Dead && !p.Downed)))
+                    if (spawnedThings.Any(p => !p.DestroyedOrNull() && !p.Dead && !p.Downed))
                     {
                         anySpawnedThingsRemaining = true;
                     }
@@ -69,11 +66,11 @@ namespace TorannMagic.Conditions
 
                 if (this.nextEventTick <= Find.TickManager.TicksGame)
                 {
-                    this.nextEventTick = Find.TickManager.TicksGame + this.ticksBetweenEvents;                    
+                    this.nextEventTick = Find.TickManager.TicksGame + this.ticksBetweenEvents;
                 }
             }
 
-            if(doEventAction && Find.TickManager.TicksGame % 10 == 0 && Find.TickManager.TicksGame > nextEventTick)
+            if (doEventAction && Find.TickManager.TicksGame % 10 == 0 && Find.TickManager.TicksGame > nextEventTick)
             {
                 nextEventTick = Find.TickManager.TicksGame + ticksBetweenEvents;
                 DoEvent();
@@ -123,16 +120,14 @@ namespace TorannMagic.Conditions
         }
 
         public override void Init()
-        {           
+        {
             base.Init();
             this.disabled = false;
             this.FindGoodEdgeLocation();
             lookTarget = new LookTargets(centerLocation.ToIntVec3, this.SingleMap);
             this.CalculateDifficultyModifiers();
             this.SetEventParameters();
-            this.summoningCircle = new List<IntVec3>();
-            this.summoningCircle.Clear();
-            this.summoningCircle = GenRadial.RadialCellsAround(this.centerLocation.ToIntVec3, 5, false).ToList();                  
+            this.summoningCircle = GenRadial.RadialCellsAround(this.centerLocation.ToIntVec3, 5, false).ToList();
             InitializeVolcanicWinter();
             if (eventDifficulty >= 2)
             {
@@ -158,12 +153,11 @@ namespace TorannMagic.Conditions
 
         private void SetEventParameters()
         {
-            ModOptions.SettingsRef settingsRef = new ModOptions.SettingsRef();
             int pts = (int)(Rand.Range(.7f, .9f) * wealth * wealthMultiplier * storytellerThreat);
             pts += 50000 * eventDifficulty;
             pts = Mathf.Clamp(pts, eventSpawnPoints, 1250000);
             //Log.Message("demon assault has pts: " + pts);
-            if(eventSpawnPoints <= pts)
+            if (eventSpawnPoints <= pts)
             {
                 eventSpawnPoints = pts;
             }
@@ -176,18 +170,18 @@ namespace TorannMagic.Conditions
         }
 
         private void DoSummoningCircle()
-        {                  
-            if(Find.TickManager.TicksGame % 2 ==0)
+        {
+            if (Find.TickManager.TicksGame % 2 == 0)
             {
                 IntVec3 randomCircleCell = this.summoningCircle.RandomElement();
                 TM_MoteMaker.ThrowGenericMote(ThingDef.Named("Mote_Demon_Flame"), randomCircleCell.ToVector3Shifted(), this.SingleMap, Rand.Range(.5f, .9f), Rand.Range(.2f, .3f), .05f, Rand.Range(.2f, .4f), Rand.Range(-400, 400), Rand.Range(.8f, 1.2f) * (randomCircleCell - this.centerLocation.ToIntVec3).LengthHorizontal, (Quaternion.AngleAxis(90, Vector3.up) * TM_Calc.GetVector(randomCircleCell.ToVector3Shifted(), this.centerLocation.ToIntVec3.ToVector3Shifted())).ToAngleFlat(), Rand.Range(0, 359));
             }
 
-            if(this.nextBlackLightning > this.summoningDuration)
+            if (this.nextBlackLightning > this.summoningDuration)
             {
                 DoLightningStrike();
                 this.nextBlackLightning = this.summoningDuration - Rand.Range(25, 50);
-            }            
+            }
         }
 
         public void SpawnDemons()
@@ -197,7 +191,6 @@ namespace TorannMagic.Conditions
             minPointsForSpawn = ptsForLesserDemon;
             float chanceForDemon = (float)(.2f * (float)eventDifficulty);
             this.spawnedThings = new List<Pawn>();
-            spawnedThings.Clear();
 
             Faction faction = Find.FactionManager.FirstFactionOfDef(TorannMagicDefOf.TM_SkeletalFaction);
             if (faction != null)
@@ -215,10 +208,10 @@ namespace TorannMagic.Conditions
             while (eventSpawnPoints >= minPointsForSpawn)
             {
                 AbilityUser.SpawnThings spawnables = new SpawnThings();
-                if(Rand.Chance(chanceForDemon) && eventSpawnPoints >= ptsForDemon)
+                if (Rand.Chance(chanceForDemon) && eventSpawnPoints >= ptsForDemon)
                 {
                     spawnables.def = TorannMagicDefOf.TM_DemonR;
-                    spawnables.kindDef = TorannMagicDefOf.TM_Demon;                                       
+                    spawnables.kindDef = TorannMagicDefOf.TM_Demon;
                 }
                 else
                 {
@@ -246,31 +239,31 @@ namespace TorannMagic.Conditions
                     p.Destroy(DestroyMode.Vanish);
                 }
             }
-            List<GameCondition> gcs = new List<GameCondition>();
+
             GameCondition gcClouds = null;
             GameCondition gcVW = null;
-            gcs = this.SingleMap.GameConditionManager.ActiveConditions;
-            for(int i = 0; i < gcs.Count; i++)
+            List<GameCondition> gcs = SingleMap.GameConditionManager.ActiveConditions;
+            for (int i = 0; i < gcs.Count; i++)
             {
-                if(gcs[i].def == TorannMagicDefOf.DarkClouds)
+                if (gcs[i].def == TorannMagicDefOf.DarkClouds)
                 {
                     gcClouds = gcs[i];
                 }
-                else if(gcs[i].def == GameConditionDefOf.VolcanicWinter)
+                else if (gcs[i].def == GameConditionDefOf.VolcanicWinter)
                 {
                     gcVW = gcs[i];
                 }
             }
-            if(gcClouds != null)
+            if (gcClouds != null)
             {
                 gcClouds.End();
             }
-            if(gcVW != null)
+            if (gcVW != null)
             {
                 gcVW.End();
             }
             MagicMapComponent mmc = this.SingleMap.GetComponent<MagicMapComponent>();
-            if(mmc != null)
+            if (mmc != null)
             {
                 mmc.allowAllIncidents = false;
             }
@@ -279,8 +272,7 @@ namespace TorannMagic.Conditions
 
         private IntVec3 FindEnemyPawnOrBuilding(IntVec3 initialPos)
         {
-            List<Thing> list = new List<Thing>();
-            list.Clear();
+            List<Thing> list;
             list = (from x in this.SingleMap.listerThings.AllThings
                     where x.Spawned && x.Faction != null && x.Faction.HostileTo(spawnedThings.RandomElement().Faction)
                     select x).ToList<Thing>();
@@ -305,9 +297,9 @@ namespace TorannMagic.Conditions
             }
             for (int i = 0; i < 20; i++)
             {
-                int xVar = 0;
-                int zVar = 0;
-                if (Rand.Chance(.5f)) 
+                int xVar;
+                int zVar;
+                if (Rand.Chance(.5f))
                 {
                     xVar = Rand.Range(8, base.SingleMap.Size.x - 8);
                     zVar = Rand.Chance(.5f) ? Rand.Range(8, 16) : Rand.Range(base.SingleMap.Size.z - 16, base.SingleMap.Size.z - 8);
@@ -325,7 +317,7 @@ namespace TorannMagic.Conditions
                     break;
                 }
             }
-            if(!centerLocFound)
+            if (!centerLocFound)
             {
                 FindGoodCenterLocation();
             }
@@ -367,8 +359,8 @@ namespace TorannMagic.Conditions
                     break;
                 }
             }
-            
-            return num >= num2 && (IsGoodLocationForSpawn(loc.ToIntVec3));
+
+            return num >= num2 && IsGoodLocationForSpawn(loc.ToIntVec3);
         }
 
         [DebuggerHidden]
@@ -378,7 +370,7 @@ namespace TorannMagic.Conditions
             {
                 for (int z = center.z - this.areaRadius; z <= center.z + this.areaRadius; z++)
                 {
-                    if ((center.x - x) * (center.x - x) + (center.z - z) * (center.z - z) <= this.areaRadius * this.areaRadius)
+                    if (((center.x - x) * (center.x - x)) + ((center.z - z) * (center.z - z)) <= this.areaRadius * this.areaRadius)
                     {
                         yield return new IntVec3(x, 0, z);
                     }

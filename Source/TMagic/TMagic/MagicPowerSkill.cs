@@ -1,5 +1,4 @@
-﻿using System;
-using Verse;
+﻿using Verse;
 
 namespace TorannMagic
 {
@@ -21,7 +20,7 @@ namespace TorannMagic
             this.desc = newDesc;
             this.level = 0;
 
-            if(this.label == "TM_HolyWrath_ver" || this.label == "TM_HolyWrath_pwr" || this.label.Contains("TM_BardTraining") || this.label == "TM_Sentinel_pwr" || this.label == "TM_EnchanterStone_ver" || 
+            if (this.label == "TM_HolyWrath_ver" || this.label == "TM_HolyWrath_pwr" || this.label.Contains("TM_BardTraining") || this.label == "TM_Sentinel_pwr" || this.label == "TM_EnchanterStone_ver" ||
                 this.label == "TM_Polymorph_ver" || this.label.Contains("TM_Shapeshift") || this.label == "TM_AlterFate_pwr" || this.label == "TM_LightSkip_pwr" || this.label.Contains("TM_ChaosTradition"))
             {
                 costToLevel = 2;

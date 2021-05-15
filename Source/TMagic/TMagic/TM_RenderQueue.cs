@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using UnityEngine;
+﻿using UnityEngine;
 using Verse;
-using RimWorld;
 
 namespace TorannMagic
 {
@@ -24,7 +19,7 @@ namespace TorannMagic
         public static readonly Material mc_north = MaterialPool.MatFrom("Items/magic_circle_north", ShaderDatabase.MoteGlow, Color.white);
         public static readonly Material mc_south = MaterialPool.MatFrom("Items/magic_circle_south", ShaderDatabase.MoteGlow, Color.white);
         public static readonly Material mc_east = MaterialPool.MatFrom("Items/magic_circle_east", ShaderDatabase.MoteGlow, Color.white);
-        public static readonly Material mc_west = MaterialPool.MatFrom("Items/magic_circle_west",ShaderDatabase.MoteGlow, Color.white);
+        public static readonly Material mc_west = MaterialPool.MatFrom("Items/magic_circle_west", ShaderDatabase.MoteGlow, Color.white);
 
         public static readonly Material smc = MaterialPool.MatFrom("Items/small_circle_centered", ShaderDatabase.MoteGlow, Color.white);
 
@@ -77,7 +72,7 @@ namespace TorannMagic
         public static readonly Material bloodmageMarkMat = MaterialPool.MatFrom("Other/MageMark", ShaderDatabase.Transparent, TM_RenderQueue.bloodmageMarkColor);
         public static readonly Color chronomancerMarkColor = new Color(.4f, .65f, 1f);
         public static readonly Material chronomancerMarkMat = MaterialPool.MatFrom("Other/MageMark", ShaderDatabase.Transparent, TM_RenderQueue.chronomancerMarkColor);
-        public static readonly Material chaosMarkMat = MaterialPool.MatFrom("Other/chaosMark");       
+        public static readonly Material chaosMarkMat = MaterialPool.MatFrom("Other/chaosMark");
 
         //Might
         public static readonly Material deceptionEye = MaterialPool.MatFrom("Motes/DeceptionMote");

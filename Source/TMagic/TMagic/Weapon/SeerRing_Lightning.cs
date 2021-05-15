@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using RimWorld;
+﻿using RimWorld;
 using Verse;
 using AbilityUser;
 using Verse.Sound;
@@ -16,13 +13,10 @@ namespace TorannMagic.Weapon
         {
             Map map = base.Map;
             base.Impact_Override(hitThing);
-            Pawn pawn = this.launcher as Pawn;
-
-
             bool flag = hitThing != null;
             if (flag)
             {
-                int DamageAmount = this.def.projectile.GetDamageAmount(1,null);
+                int DamageAmount = this.def.projectile.GetDamageAmount(1, null);
                 DamageInfo dinfo = new DamageInfo(this.def.projectile.damageDef, DamageAmount, .25f, this.ExactRotation.eulerAngles.y, this.launcher, null, this.equipmentDef, DamageInfo.SourceCategory.ThingOrUnknown);
                 hitThing.TakeDamage(dinfo);
 
@@ -32,7 +26,7 @@ namespace TorannMagic.Weapon
                     hitThing.TryAttachFire(0.05f);
                 }
                 Pawn hitTarget;
-                bool flag3 = (hitTarget = (hitThing as Pawn)) != null;
+                bool flag3 = (hitTarget = hitThing as Pawn) != null;
                 if (flag3)
                 {
                     this.PostImpactEffects(this.launcher as Pawn, hitTarget);
@@ -68,8 +62,7 @@ namespace TorannMagic.Weapon
 
         public static void Explosion(IntVec3 center, Map map, float radius, DamageDef damType, Thing instigator, SoundDef explosionSound = null, ThingDef projectile = null, ThingDef source = null, ThingDef postExplosionSpawnThingDef = null, float postExplosionSpawnChance = 0f, int postExplosionSpawnThingCount = 1, bool applyDamageToExplosionCellsNeighbors = true, ThingDef preExplosionSpawnThingDef = null, float preExplosionSpawnChance = 0f, int preExplosionSpawnThingCount = 1)
         {
-            System.Random rnd = new System.Random();
-            int modDamAmountRand = GenMath.RoundRandom(Rand.Range(2, projectile.projectile.GetDamageAmount(1,null) / 2));
+            int modDamAmountRand = GenMath.RoundRandom(Rand.Range(2, projectile.projectile.GetDamageAmount(1, null) / 2));
             if (map == null)
             {
                 Log.Warning("Tried to do explosion in a null map.");
@@ -82,7 +75,7 @@ namespace TorannMagic.Weapon
             explosion.radius = radius;
             explosion.damType = damType;
             explosion.instigator = instigator;
-            explosion.damAmount = ((projectile == null) ? GenMath.RoundRandom((float)damType.defaultDamage) : modDamAmountRand);
+            explosion.damAmount = (projectile == null) ? GenMath.RoundRandom((float)damType.defaultDamage) : modDamAmountRand;
             explosion.armorPenetration = 1.5f;
             explosion.weapon = source;
             explosion.preExplosionSpawnThingDef = preExplosionSpawnThingDef;

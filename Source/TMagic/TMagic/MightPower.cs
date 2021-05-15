@@ -4,11 +4,12 @@ using System.Linq;
 using UnityEngine;
 using Verse;
 
-namespace TorannMagic 
+namespace TorannMagic
 {
     public class MightPower : IExposable
     {
         public List<AbilityDef> TMabilityDefs;
+        public HashSet<AbilityDef> TMabilityDefsSet;
         public TMDefs.TM_Autocast autocasting;
 
         public int ticksUntilNextCast = -1;
@@ -46,7 +47,7 @@ namespace TorannMagic
         public AbilityDef abilityDescDef
         {
             get
-            {                
+            {
                 return this.abilityDef;
             }
         }
@@ -55,7 +56,7 @@ namespace TorannMagic
         {
             get
             {
-                return this.nextLevelAbilityDef;                
+                return this.nextLevelAbilityDef;
             }
         }
 
@@ -64,7 +65,7 @@ namespace TorannMagic
             get
             {
                 SetMaxLevel();
-                return this.TMabilityDefs[level];                
+                return this.TMabilityDefs[level];
             }
         }
 
@@ -80,7 +81,7 @@ namespace TorannMagic
                 else
                 {
                     return this.TMabilityDefs[level + 1];
-                }                
+                }
             }
         }
 
@@ -102,27 +103,6 @@ namespace TorannMagic
             {
                 return this.TMabilityDefs[0];
             }
-            //
-            AbilityDef result = null;
-            bool flag = this.TMabilityDefs != null && this.TMabilityDefs.Count > 0;
-            if (flag)
-            {
-                result = this.TMabilityDefs[0];
-                bool flag2 = index > -1 && index < this.TMabilityDefs.Count;
-                if (flag2)
-                {
-                    result = this.TMabilityDefs[index];
-                }
-                else
-                {
-                    bool flag3 = index >= this.TMabilityDefs.Count;
-                    if (flag3)
-                    {
-                        result = this.TMabilityDefs[this.TMabilityDefs.Count - 1];
-                    }
-                }
-            }
-            return result;
         }
 
         public AbilityDef HasAbilityDef(AbilityDef defToFind)
@@ -138,7 +118,8 @@ namespace TorannMagic
         {
             this.level = 0;
             this.TMabilityDefs = newAbilityDefs;
-            this.maxLevel = newAbilityDefs.Count - 1;            
+            this.TMabilityDefsSet = newAbilityDefs.ToHashSet();
+            this.maxLevel = newAbilityDefs.Count - 1;
 
             if (this.abilityDef == TorannMagicDefOf.TM_PsionicBarrier || this.abilityDef == TorannMagicDefOf.TM_PsionicBarrier_Projected)
             {

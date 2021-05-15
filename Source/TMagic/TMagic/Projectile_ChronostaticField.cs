@@ -3,7 +3,6 @@ using AbilityUser;
 using UnityEngine;
 using System.Linq;
 using System.Collections.Generic;
-using System;
 using RimWorld;
 
 namespace TorannMagic
@@ -21,7 +20,6 @@ namespace TorannMagic
         bool initialized = false;
         List<IntVec3> cellList;
         Pawn casterPawn;
-        IEnumerable<IntVec3> targets;
 
         public override void ExposeData()
         {
@@ -53,8 +51,8 @@ namespace TorannMagic
         }
 
         protected override void Impact(Thing hitThing)
-        {            
-            base.Impact(hitThing);           
+        {
+            base.Impact(hitThing);
             ThingDef def = this.def;
             if (!this.initialized)
             {
@@ -86,14 +84,13 @@ namespace TorannMagic
                 //cellList = targets.ToList<IntVec3>();
             }
 
-            cellList = new List<IntVec3>();
-            cellList.Clear();
             cellList = GenRadial.RadialCellsAround(base.Position, this.radius, true).ToList(); //this.radius instead of 2
             for (int i = 0; i < cellList.Count; i++)
             {
-                if (cellList[i].IsValid && cellList[i].InBounds(this.Map))
+                var cell = cellList[i];
+                if (cell.IsValid && cell.InBounds(this.Map))
                 {
-                    List<Thing> thingList = cellList[i].GetThingList(this.Map);
+                    List<Thing> thingList = cell.GetThingList(this.Map);
                     if (thingList != null && thingList.Count > 0)
                     {
                         for (int j = 0; j < thingList.Count; j++)
@@ -139,15 +136,15 @@ namespace TorannMagic
                 }
             }
         }
-        
+
         private void RemoveFireAt(IntVec3 position)
-        {            
+        {
             List<Thing> thingList = position.GetThingList(this.Map);
             if (thingList != null && thingList.Count > 0)
             {
                 for (int i = 0; i < thingList.Count; i++)
                 {
-                    if(thingList[i].def == ThingDefOf.Fire)
+                    if (thingList[i].def == ThingDefOf.Fire)
                     {
                         //Log.Message("removing fire at " + position);
                         MoteMaker.ThrowHeatGlow(position, this.Map, .6f);
@@ -157,5 +154,5 @@ namespace TorannMagic
                 }
             }
         }
-    }    
+    }
 }

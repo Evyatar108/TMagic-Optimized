@@ -1,14 +1,10 @@
 ﻿using Verse;
 using AbilityUser;
-using UnityEngine;
-using System.Linq;
-using Verse.Sound;
 using RimWorld;
-using System.Collections.Generic;
 
 namespace TorannMagic
 {
-    public class Verb_LightSkip : Verb_UseAbility  
+    public class Verb_LightSkip : Verb_UseAbility
     {
 
         bool validTarg;

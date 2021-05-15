@@ -1,21 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using RimWorld;
 using Verse;
 using UnityEngine;
 
 namespace TorannMagic
 {
-    public class MagicMapComponent: MapComponent
+    public class MagicMapComponent : MapComponent
     {
         public float windSpeed = 0f;
         public int windSpeedEndTick = 0;
         public bool allowAllIncidents = false;
 
-        public MagicMapComponent(Map map): base(map)
+        public MagicMapComponent(Map map) : base(map)
         {
 
         }
@@ -30,22 +26,22 @@ namespace TorannMagic
 
         public void ApplyComponentConditions(string condition, float value = 0f)
         {
-            if(condition == "NameOfTheWind")
+            if (condition == "NameOfTheWind")
             {
                 windSpeed = 2f;
                 windSpeedEndTick = Find.TickManager.TicksGame + Rand.Range(160000, 240000);
             }
-            if(condition == "ArcaneInspiration")
+            if (condition == "ArcaneInspiration")
             {
-                List<Pawn> colonists = this.map.mapPawns.FreeColonistsSpawned.InRandomOrder().ToList();
-                int count = Mathf.Clamp(Rand.RangeInclusive(1, 3), 1, colonists.Count);
-                for(int i =0; i < count; i++)
+                IEnumerable<Pawn> colonists = this.map.mapPawns.FreeColonistsSpawned.InRandomOrder();
+                int count = Mathf.Clamp(Rand.RangeInclusive(1, 3), 1, this.map.mapPawns.FreeColonistsSpawned.Count);
+                foreach (var colonist in colonists)
                 {
-                    InspirationDef id = TM_Calc.GetRandomAvailableInspirationDef(colonists[i]);
-                    colonists[i].mindState.inspirationHandler.TryStartInspiration(id);
+                    InspirationDef id = TM_Calc.GetRandomAvailableInspirationDef(colonist);
+                    colonist.mindState.inspirationHandler.TryStartInspiration_NewTemp(id);
                 }
             }
-            if(condition == "AllowAllIncidents")
+            if (condition == "AllowAllIncidents")
             {
                 this.allowAllIncidents = true;
             }

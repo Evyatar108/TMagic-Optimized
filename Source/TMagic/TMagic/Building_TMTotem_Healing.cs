@@ -1,10 +1,5 @@
 ﻿using Verse;
 using UnityEngine;
-using RimWorld;
-using System.Collections.Generic;
-using System;
-using System.Linq;
-using System.Threading;
 
 namespace TorannMagic
 {
@@ -22,13 +17,13 @@ namespace TorannMagic
 
         public override void Tick()
         {
-            if(!initialized)
+            if (!initialized)
             {
                 this.nextSearch = Find.TickManager.TicksGame + Rand.Range(30, 40);
                 this.range = 20 + pwrVal;
                 initialized = true;
             }
-            else if(Find.TickManager.TicksGame >= this.nextSearch)
+            else if (Find.TickManager.TicksGame >= this.nextSearch)
             {
                 this.nextSearch = Find.TickManager.TicksGame + Rand.Range(60, 70);
 
@@ -44,9 +39,9 @@ namespace TorannMagic
                         Vector3 pos = target.DrawPos;
                         pos.x += Rand.Range(-.3f, .3f);
                         pos.z += Rand.Range(-.25f, .5f);
-                        TM_MoteMaker.ThrowGenericMote(TorannMagicDefOf.Mote_Healing_Small, pos, this.Map, (.2f * (1f + (i*.5f))), Rand.Range(.05f, .15f), Rand.Range(.05f, .25f), Rand.Range(.1f, .3f), 0, 0, 0, 0);
-                    }                    
-                }                               
+                        TM_MoteMaker.ThrowGenericMote(TorannMagicDefOf.Mote_Healing_Small, pos, this.Map, .2f * (1f + (i * .5f)), Rand.Range(.05f, .15f), Rand.Range(.05f, .25f), Rand.Range(.1f, .3f), 0, 0, 0, 0);
+                    }
+                }
             }
             base.Tick();
         }

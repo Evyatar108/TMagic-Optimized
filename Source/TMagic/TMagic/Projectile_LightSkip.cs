@@ -1,9 +1,7 @@
 ﻿using Verse;
 using AbilityUser;
-using UnityEngine;
 using System.Linq;
 using System.Collections.Generic;
-using System;
 using RimWorld;
 using RimWorld.Planet;
 
@@ -18,14 +16,9 @@ namespace TorannMagic
         float arcaneDmg = 1;
         int strikeDelay = 4;
         int strikeNum = 1;
-        float radius = 5;
         bool initialized = false;
-        float angle = 0;
         List<IntVec3> cellList;
         Pawn pawn;
-        IEnumerable<IntVec3> targets;
-        Skyfaller skyfaller2;
-        Skyfaller skyfaller;
         Map map;
         IntVec3 safePos = default(IntVec3);
 
@@ -63,7 +56,7 @@ namespace TorannMagic
         }
 
         protected override void Impact(Thing hitThing)
-        {            
+        {
             ThingDef def = this.def;
             if (!this.initialized)
             {
@@ -91,7 +84,7 @@ namespace TorannMagic
                 if (ModCheck.Validate.GiddyUp.Core_IsInitialized())
                 {
                     mount = ModCheck.GiddyUp.GetMount(this.pawn);
-                    ModCheck.GiddyUp.ForceDismount(pawn);                    
+                    ModCheck.GiddyUp.ForceDismount(pawn);
                 }
                 Thing pod = ThingMaker.MakeThing(TorannMagicDefOf.TM_LightPod, null);
                 CompLaunchable podL = pod.TryGetComp<CompLaunchable>();
@@ -99,17 +92,17 @@ namespace TorannMagic
                 GenSpawn.Spawn(pod, pawnToSkip.Position, pawnToSkip.Map, WipeMode.Vanish);
                 podT.groupID = 11;
                 pawnToSkip.DeSpawn();
-                if(mount != null)
+                if (mount != null)
                 {
                     mount.DeSpawn();
                     podT.innerContainer.TryAddOrTransfer(mount);
                 }
-                podT.innerContainer.TryAddOrTransfer(pawnToSkip);                
+                podT.innerContainer.TryAddOrTransfer(pawnToSkip);
                 GlobalTargetInfo gti = new GlobalTargetInfo(base.Position, base.Map, false);
                 LaunchLightPod(pod, podT, gti.Tile, gti.Cell);
                 launchedFlag = true;
             }
-            
+
             if (launchedFlag)
             {
                 this.age++;
@@ -130,11 +123,11 @@ namespace TorannMagic
             obj.destinationTile = destinationTile;
             obj.arrivalAction = null;
             obj.arrivalCell = destinationCell;
-            obj.draftFlag = this.draftFlag;           
+            obj.draftFlag = this.draftFlag;
             compTransporter.CleanUpLoadingVars(map);
             compTransporter.parent.Destroy();
             GenSpawn.Spawn(obj, compTransporter.parent.Position, map);
         }
 
-    }    
+    }
 }

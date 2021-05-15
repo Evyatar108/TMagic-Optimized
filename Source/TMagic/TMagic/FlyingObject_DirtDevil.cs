@@ -1,5 +1,4 @@
 ﻿using RimWorld;
-using System;
 using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
@@ -64,8 +63,8 @@ namespace TorannMagic
         {
             get
             {
-                Vector3 b = (this.destination - this.origin) * (1f - (float)this.ticksToImpact / (float)this.StartingTicksToImpact);
-                return this.origin + b + Vector3.up * this.def.Altitude;
+                Vector3 b = (this.destination - this.origin) * (1f - ((float)this.ticksToImpact / (float)this.StartingTicksToImpact));
+                return this.origin + b + (Vector3.up * this.def.Altitude);
             }
         }
 
@@ -83,7 +82,7 @@ namespace TorannMagic
             {
                 return this.ExactPosition;
             }
-        }       
+        }
 
         public override void ExposeData()
         {
@@ -164,7 +163,6 @@ namespace TorannMagic
 
         public Vector3 FindNearestFilth(Vector3 origin)
         {
-            Vector3 destination = default(Vector3);
             List<Thing> filthList = this.Map.listerFilthInHomeArea.FilthInHomeArea;
             Thing closestDirt = null;
             float dirtPos = 0;
@@ -186,6 +184,7 @@ namespace TorannMagic
                 }
             }
 
+            Vector3 destination;
             if (closestDirt != null)
             {
                 destination = closestDirt.DrawPos;
@@ -202,32 +201,32 @@ namespace TorannMagic
         {
             List<Thing> allThings = new List<Thing>();
             List<Thing> allFilth = new List<Thing>();
-            allThings.Clear();
-            allFilth.Clear();
-            List<IntVec3> cellsAround = GenRadial.RadialCellsAround(this.Position, 1.4f, true).ToList();
-            for(int i =0; i < cellsAround.Count; i++)
+            IEnumerable<IntVec3> cellsAround = GenRadial.RadialCellsAround(this.Position, 1.4f, true);
+            foreach (var currCell in cellsAround)
             {
-                allThings = cellsAround[i].GetThingList(this.Map);
-                for(int j = 0; j < allThings.Count; j++)
+                allThings = currCell.GetThingList(this.Map);
+                for (int j = 0; j < allThings.Count; j++)
                 {
-                    if(allThings[j].def.category == ThingCategory.Filth || allThings[j].def.IsFilth)
+                    var thing = allThings[j];
+                    if (thing.def.category == ThingCategory.Filth || thing.def.IsFilth)
                     {
-                        allFilth.Add(allThings[j]);
+                        allFilth.Add(thing);
                     }
                 }
             }
-            for(int i = 0; i < allFilth.Count; i++)
+            for (int i = 0; i < allFilth.Count; i++)
             {
-                CleanGraphics(allFilth[i]);
-                allFilth[i].Destroy(DestroyMode.Vanish);
+                var filth = allFilth[i];
+                CleanGraphics(filth);
+                filth.Destroy(DestroyMode.Vanish);
             }
         }
 
         public void CleanGraphics(Thing filth)
         {
-            TM_MoteMaker.ThrowGenericMote(ThingDefOf.Mote_MicroSparks, this.ExactPosition, this.Map, Rand.Range(.3f, .5f), .6f, .2f, .4f, Rand.Range(-400, -100), .3f, Rand.Range(0,360), Rand.Range(0, 360));
+            TM_MoteMaker.ThrowGenericMote(ThingDefOf.Mote_MicroSparks, this.ExactPosition, this.Map, Rand.Range(.3f, .5f), .6f, .2f, .4f, Rand.Range(-400, -100), .3f, Rand.Range(0, 360), Rand.Range(0, 360));
             Vector3 angle = TM_Calc.GetVector(filth.DrawPos, this.ExactPosition);
-            TM_MoteMaker.ThrowGenericMote(TorannMagicDefOf.Mote_ThickDust, filth.DrawPos, this.Map, Rand.Range(.4f, .6f), .1f, .05f, .25f, -200, 2, (Quaternion.AngleAxis(90, Vector3.up) * angle).ToAngleFlat(), Rand.Range(0,360));
+            TM_MoteMaker.ThrowGenericMote(TorannMagicDefOf.Mote_ThickDust, filth.DrawPos, this.Map, Rand.Range(.4f, .6f), .1f, .05f, .25f, -200, 2, (Quaternion.AngleAxis(90, Vector3.up) * angle).ToAngleFlat(), Rand.Range(0, 360));
         }
 
         public override void Tick()
@@ -236,7 +235,6 @@ namespace TorannMagic
 
             age++;
             this.searchDelay--;
-            Vector3 exactPosition = this.ExactPosition;
             this.ticksToImpact--;
             bool flag = !this.ExactPosition.InBounds(base.Map);
             if (flag)
@@ -275,15 +273,15 @@ namespace TorannMagic
                     Vector3 angle = TM_Calc.GetVector(rndVec, this.ExactPosition);
                     TM_MoteMaker.ThrowGenericMote(ThingDefOf.Mote_Smoke, rndVec, this.Map, Rand.Range(.8f, 1.5f), .1f, .05f, .15f, -300, 2, (Quaternion.AngleAxis(90, Vector3.up) * angle).ToAngleFlat(), Rand.Range(0, 360));
                 }
-                if(this.searchDelay < 0)
+                if (this.searchDelay < 0)
                 {
-                    if(this.destination != default(Vector3))
+                    if (this.destination != default(Vector3))
                     {
                         this.searchDelay = Rand.Range(10, 20);
                         CleanFilth();
                     }
-                }                
-                
+                }
+
             }
         }
 
@@ -316,7 +314,7 @@ namespace TorannMagic
             if (flag)
             {
                 Pawn hitPawn;
-                bool flag2 = (hitPawn = (base.Position.GetThingList(base.Map).FirstOrDefault((Thing x) => x == this.assignedTarget) as Pawn)) != null;
+                bool flag2 = (hitPawn = base.Position.GetThingList(base.Map).FirstOrDefault((Thing x) => x == this.assignedTarget) as Pawn) != null;
                 if (flag2)
                 {
                     hitThing = hitPawn;
@@ -345,6 +343,6 @@ namespace TorannMagic
             }
 
             this.Destroy(DestroyMode.Vanish);
-        }        
+        }
     }
 }

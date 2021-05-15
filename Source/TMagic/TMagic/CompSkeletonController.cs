@@ -6,19 +6,18 @@ using RimWorld;
 using UnityEngine;
 using Verse.AI;
 using Verse.Sound;
-using AbilityUser;
 
 namespace TorannMagic
 {
     [Serializable]
     public class CompSkeletonController : ThingComp
-	{
+    {
         private bool initialized = false;
 
         List<Pawn> threatList = new List<Pawn>();
         List<Pawn> closeThreats = new List<Pawn>();
         List<Pawn> farThreats = new List<Pawn>();
-        public List<Building> buildingThreats = new List<Building>();
+        public HashSet<Building> buildingThreats = new HashSet<Building>();
 
         public int nextRangedAttack = 0;
         public int nextAoEAttack = 0;
@@ -52,7 +51,7 @@ namespace TorannMagic
                     vector.y = Altitudes.AltitudeFor(AltitudeLayer.MoteOverhead);
                     Vector3 s = new Vector3(matMagnitude, 1, matMagnitude);
                     Matrix4x4 matrix = default(Matrix4x4);
-                    float angle = 0;
+                    float angle;
                     if (this.Pawn.Rotation == Rot4.North || this.Pawn.Rotation == Rot4.South)
                     {
                         angle = Rand.Range(0, 360);
@@ -78,17 +77,17 @@ namespace TorannMagic
             get
             {
                 Vector3 drawpos = this.Pawn.DrawPos;
-                if(this.Pawn.Rotation == Rot4.North)
+                if (this.Pawn.Rotation == Rot4.North)
                 {
                     drawpos.x += 1.05f;
                     drawpos.z += .49f;
                 }
-                else if(this.Pawn.Rotation == Rot4.East)
+                else if (this.Pawn.Rotation == Rot4.East)
                 {
                     drawpos.x -= .23f;
                     drawpos.z += 1.03f;
                 }
-                else if(this.Pawn.Rotation == Rot4.West)
+                else if (this.Pawn.Rotation == Rot4.West)
                 {
                     drawpos.x += .23f;
                     drawpos.z += 1.03f;
@@ -117,7 +116,7 @@ namespace TorannMagic
         {
             get
             {
-                if(this.Props.rangedCooldownTicks > 0)
+                if (this.Props.rangedCooldownTicks > 0)
                 {
                     return this.nextRangedAttack;
                 }
@@ -153,7 +152,7 @@ namespace TorannMagic
         }
 
         private void DoRangedAttack(LocalTargetInfo target)
-        {            
+        {
             bool flag = target.Cell != default(IntVec3);
             if (flag)
             {
@@ -188,7 +187,7 @@ namespace TorannMagic
                     flyingObject.force = 1.4f;
                     flyingObject.Launch(this.Pawn, destination, null, Rand.Range(120, 150));
                 }
-            }            
+            }
         }
 
         private int NextAoEAttack
@@ -209,13 +208,11 @@ namespace TorannMagic
         private void DoAoEAttack(IntVec3 center, bool isExplosion, float radius, DamageDef damageType, int damageAmount, ThingDef moteDef = null)
         {
             this.nextAoEAttack = (int)(this.Props.aoeCooldownTicks * Rand.Range(.9f, 1.1f)) + Find.TickManager.TicksGame;
-            List<IntVec3> targetCells = GenRadial.RadialCellsAround(center, radius, false).ToList();
-            IntVec3 curCell = default(IntVec3);
             if (damageAmount > 0)
             {
-                for (int i = 0; i < targetCells.Count(); i++)
+                IEnumerable<IntVec3> targetCells = GenRadial.RadialCellsAround(center, radius, false);
+                foreach (IntVec3 curCell in targetCells)
                 {
-                    curCell = targetCells[i];
                     if (curCell.IsValid && curCell.InBounds(this.Pawn.Map))
                     {
                         if (isExplosion)
@@ -233,56 +230,9 @@ namespace TorannMagic
                     }
                 }
             }
-            if(moteDef != null)
+            if (moteDef != null)
             {
                 TM_MoteMaker.ThrowGenericMote(moteDef, this.Pawn.Position.ToVector3Shifted(), this.Pawn.Map, radius + 2, .25f, .25f, 1.75f, 0, 0, 0, Rand.Range(0, 360));
-            }
-        }
-
-        private int NextKnockbackAttack
-        {
-            get
-            {
-                if (this.Props.knockbackCooldownTicks > 0)
-                {
-                    return this.nextKnockbackAttack;
-                }
-                else
-                {
-                    return Find.TickManager.TicksGame;
-                }
-            }
-        }
-
-        private void DoKnockbackAttack(IntVec3 center, IntVec3 target, float radius, float force)
-        {
-            this.nextKnockbackAttack = this.Props.knockbackCooldownTicks + Find.TickManager.TicksGame;
-            List<IntVec3> targetCells = GenRadial.RadialCellsAround(target, radius, true).ToList();
-            IntVec3 curCell = default(IntVec3);
-            for (int i = 0; i < targetCells.Count(); i++)
-            {
-                curCell = targetCells[i];
-                if (curCell.IsValid && curCell.InBounds(this.Pawn.Map))
-                {
-                    Vector3 launchVector = TM_Calc.GetVector(this.Pawn.Position, curCell);
-                    Pawn knockbackPawn = curCell.GetFirstPawn(this.Pawn.Map);
-                    TM_MoteMaker.ThrowGenericMote(ThingDef.Named("Mote_Smoke"), this.Pawn.DrawPos, this.Pawn.Map, Rand.Range(.6f, 1f), .01f, .01f, 1f, Rand.Range(50, 100), Rand.Range(5, 7), launchVector.ToAngleFlat(), Rand.Range(0, 360));
-                    TM_MoteMaker.ThrowGenericMote(ThingDef.Named("Mote_Smoke"), curCell.ToVector3Shifted(), this.Pawn.Map, Rand.Range(.6f, 1f), .01f, .01f, 1f, Rand.Range(50, 100), Rand.Range(5, 7), launchVector.ToAngleFlat(), Rand.Range(0, 360));
-                    if (knockbackPawn != null && knockbackPawn != this.Pawn)
-                    {
-                        IntVec3 targetCell = knockbackPawn.Position + (force * force * launchVector).ToIntVec3();
-                        bool flag = targetCell != null && targetCell != default(IntVec3);
-                        if (flag)
-                        {
-                            if (knockbackPawn.Spawned && knockbackPawn.Map != null && !knockbackPawn.Dead)
-                            {
-                               FlyingObject_Spinning flyingObject = (FlyingObject_Spinning)GenSpawn.Spawn(ThingDef.Named("FlyingObject_Spinning"), knockbackPawn.Position, knockbackPawn.Map, WipeMode.Vanish);
-                                flyingObject.speed = 15 + (2*force);
-                                flyingObject.Launch(this.Pawn, targetCell, knockbackPawn);
-                            }
-                        }
-                    }
-                }
             }
         }
 
@@ -303,7 +253,7 @@ namespace TorannMagic
 
         private void DoChargeAttack(LocalTargetInfo t)
         {
-            if(t == null)
+            if (t == null)
             {
                 t = this.rangedTarget;
             }
@@ -315,8 +265,8 @@ namespace TorannMagic
                 for (int i = 0; i < 3; i++)
                 {
                     Vector3 moteDirection = TM_Calc.GetVector(this.Pawn.Position, t.Cell);
-                    TM_MoteMaker.ThrowGenericMote(TorannMagicDefOf.Mote_GrappleHook, this.Pawn.DrawPos, this.Pawn.Map, Rand.Range(1.1f, 1.4f), 0.15f, .02f + (.08f * i), .3f - (.04f * i), Rand.Range(-10, 10), magnitude + magnitude * i, (Quaternion.AngleAxis(90, Vector3.up) * moteDirection).ToAngleFlat(), Rand.Chance(.5f) ? (Quaternion.AngleAxis(90, Vector3.up) * moteDirection).ToAngleFlat() : (Quaternion.AngleAxis(-90, Vector3.up) * moteDirection).ToAngleFlat());
-                    TM_MoteMaker.ThrowGenericMote(TorannMagicDefOf.Mote_GrappleHook, t.Thing.DrawPos, this.Pawn.Map, Rand.Range(1.1f, 1.4f), 0.15f, .02f + (.08f * i), .3f - (.04f * i), Rand.Range(-10, 10), magnitude + magnitude * i, (Quaternion.AngleAxis(-90, Vector3.up) * moteDirection).ToAngleFlat(), Rand.Chance(.5f) ? (Quaternion.AngleAxis(-90, Vector3.up) * moteDirection).ToAngleFlat() : (Quaternion.AngleAxis(90, Vector3.up) * moteDirection).ToAngleFlat());
+                    TM_MoteMaker.ThrowGenericMote(TorannMagicDefOf.Mote_GrappleHook, this.Pawn.DrawPos, this.Pawn.Map, Rand.Range(1.1f, 1.4f), 0.15f, .02f + (.08f * i), .3f - (.04f * i), Rand.Range(-10, 10), magnitude + (magnitude * i), (Quaternion.AngleAxis(90, Vector3.up) * moteDirection).ToAngleFlat(), Rand.Chance(.5f) ? (Quaternion.AngleAxis(90, Vector3.up) * moteDirection).ToAngleFlat() : (Quaternion.AngleAxis(-90, Vector3.up) * moteDirection).ToAngleFlat());
+                    TM_MoteMaker.ThrowGenericMote(TorannMagicDefOf.Mote_GrappleHook, t.Thing.DrawPos, this.Pawn.Map, Rand.Range(1.1f, 1.4f), 0.15f, .02f + (.08f * i), .3f - (.04f * i), Rand.Range(-10, 10), magnitude + (magnitude * i), (Quaternion.AngleAxis(-90, Vector3.up) * moteDirection).ToAngleFlat(), Rand.Chance(.5f) ? (Quaternion.AngleAxis(-90, Vector3.up) * moteDirection).ToAngleFlat() : (Quaternion.AngleAxis(90, Vector3.up) * moteDirection).ToAngleFlat());
                 }
                 PullObject(t.Thing);
                 TM_Action.PawnActionDelay(this.Pawn, 60, this.rangedTarget, this.Pawn.meleeVerbs.TryGetMeleeVerb(this.rangedTarget.Thing));
@@ -340,7 +290,7 @@ namespace TorannMagic
 
         private void DoTaunt(Map map)
         {
-            this.nextTaunt = (int)(this.Props.tauntCooldownTicks*Rand.Range(.9f, 1.1f)) + Find.TickManager.TicksGame;
+            this.nextTaunt = (int)(this.Props.tauntCooldownTicks * Rand.Range(.9f, 1.1f)) + Find.TickManager.TicksGame;
             if (map != null)
             {
                 List<Pawn> threatPawns = map.mapPawns.AllPawnsSpawned;
@@ -357,7 +307,7 @@ namespace TorannMagic
                                 if (Rand.Chance(this.Props.tauntChance) && (threatPawns[i].Position - this.Pawn.Position).LengthHorizontal < 60)
                                 {
                                     //Log.Message("taunting " + threatPawns[i].LabelShort + " doing job " + threatPawns[i].CurJobDef.defName + " with follow radius of " + threatPawns[i].CurJob.followRadius);
-                                    if(threatPawns[i].CurJobDef == JobDefOf.Follow || threatPawns[i].CurJobDef == JobDefOf.FollowClose)
+                                    if (threatPawns[i].CurJobDef == JobDefOf.Follow || threatPawns[i].CurJobDef == JobDefOf.FollowClose)
                                     {
                                         Job job = new Job(JobDefOf.AttackMelee, this.Pawn);
                                         threatPawns[i].jobs.TryTakeOrderedJob(job, JobTag.Misc);
@@ -366,8 +316,8 @@ namespace TorannMagic
                                     {
                                         Job job = new Job(threatPawns[i].CurJobDef, this.Pawn);
                                         threatPawns[i].jobs.TryTakeOrderedJob(job, JobTag.Misc);
-                                    }                                        
-                                    anyPawnsTaunted = true;                                    
+                                    }
+                                    anyPawnsTaunted = true;
                                     //Log.Message("taunting " + threatPawns[i].LabelShort);
                                 }
                             }
@@ -393,14 +343,6 @@ namespace TorannMagic
                     Log.Error("pawn is null");
                 }
                 return pawn;
-            }
-        }
-
-        private List<Pawn> PawnThreatList
-        {
-            get
-            {
-                return closeThreats.Union(farThreats).ToList();
             }
         }
 
@@ -455,7 +397,7 @@ namespace TorannMagic
                                     StartRangedAttack();
                                 }
                             }
-                            
+
                             if (this.Pawn.CurJob != null && this.Pawn.CurJob.targetA != null && this.Pawn.CurJob.targetA.Thing != null && this.Pawn.TargetCurrentlyAimingAt == null)
                             {
                                 Thing currentTargetThing = this.Pawn.CurJob.targetA.Thing;
@@ -505,7 +447,6 @@ namespace TorannMagic
 
                             if (this.farThreats.Count() > 2 * this.closeThreats.Count() && Rand.Chance(.3f))
                             {
-                                Pawn randomRangedPawn = this.farThreats.RandomElement();
                                 if (this.NextChargeAttack < Find.TickManager.TicksGame)
                                 {
                                     Thing tempTarget = this.farThreats.RandomElement();
@@ -533,7 +474,7 @@ namespace TorannMagic
 
                             if (this.Pawn.CurJob != null)
                             {
-                                if (this.Pawn.CurJob.targetA == null  || this.Pawn.CurJob.targetA == this.Pawn)
+                                if (this.Pawn.CurJob.targetA == null || this.Pawn.CurJob.targetA == this.Pawn)
                                 {
                                     if (this.closeThreats.Count() > 0)
                                     {
@@ -587,7 +528,7 @@ namespace TorannMagic
                     }
                 }
             }
-            exitTick:;
+        exitTick:;
             age++;
         }
 
@@ -599,14 +540,14 @@ namespace TorannMagic
         public override void PostPreApplyDamage(DamageInfo dinfo, out bool absorbed)
         {
             base.PostPreApplyDamage(dinfo, out absorbed);
-            if(dinfo.Instigator != null)
+            if (dinfo.Instigator != null)
             {
                 Thing instigatorThing = dinfo.Instigator;
-                if(instigatorThing is Building)
+                if (instigatorThing is Building)
                 {
                     if (instigatorThing.Faction != null && instigatorThing.Faction != this.Pawn.Faction)
                     {
-                        this.buildingThreats.AddDistinct(instigatorThing as Building);
+                        this.buildingThreats.Add(instigatorThing as Building);
                     }
                 }
             }
@@ -623,7 +564,7 @@ namespace TorannMagic
                 {
                     if (!allPawns[i].Dead && !allPawns[i].Downed)
                     {
-                        if (allPawns[i].Faction != null && (allPawns[i].Faction.HostileTo(this.Pawn.Faction)) && !allPawns[i].IsPrisoner)
+                        if (allPawns[i].Faction != null && allPawns[i].Faction.HostileTo(this.Pawn.Faction) && !allPawns[i].IsPrisoner)
                         {
                             if ((allPawns[i].Position - this.Pawn.Position).LengthHorizontal <= this.Props.maxRangeForCloseThreat)
                             {
@@ -659,34 +600,41 @@ namespace TorannMagic
                     }
                 }
             }
-            for (int i = 0; i < this.buildingThreats.Count(); i++)
+
+            var toRemove = new List<Building>();
+            foreach (var buildingThreat in this.buildingThreats)
             {
-                if (this.buildingThreats[i].DestroyedOrNull())
+                if (buildingThreat.DestroyedOrNull())
                 {
-                    this.buildingThreats.Remove(this.buildingThreats[i]);
+                    toRemove.Add(buildingThreat);
                 }
+            }
+
+            foreach (var x in toRemove)
+            {
+                this.buildingThreats.Remove(x);
             }
         }
 
         public bool TargetIsValid(Thing target)
         {
-            if(target.DestroyedOrNull())
+            if (target.DestroyedOrNull())
             {
                 return false;
             }
-            if(!target.Spawned)
+            if (!target.Spawned)
             {
                 return false;
             }
-            if(target is Pawn)
+            if (target is Pawn)
             {
                 return !(target as Pawn).Downed;
             }
-            if(target.Position.DistanceToEdge(this.Pawn.Map) < 8)
+            if (target.Position.DistanceToEdge(this.Pawn.Map) < 8)
             {
                 return false;
             }
-            if(target.Faction != null)
+            if (target.Faction != null)
             {
                 return target.Faction != this.Pawn.Faction && target.Faction.HostileTo(this.Pawn.Faction);
             }
@@ -695,15 +643,14 @@ namespace TorannMagic
 
         public Thing FindNearbyObject(ThingCategoryDef tcd, float radius)
         {
-            List<IntVec3> searchCells = GenRadial.RadialCellsAround(this.Pawn.Position, radius, true).ToList();
+            IEnumerable<IntVec3> searchCells = GenRadial.RadialCellsAround(this.Pawn.Position, radius, true);
             List<Thing> returnThings = new List<Thing>();
-            returnThings.Clear();
-            for (int i = 0; i < searchCells.Count(); i++)
+            foreach (IntVec3 searchCell in searchCells)
             {
-                if (searchCells[i].IsValid && searchCells[i].InBounds(this.Pawn.Map))
+                if (searchCell.IsValid && searchCell.InBounds(this.Pawn.Map))
                 {
-                    List<Thing> cellList = searchCells[i].GetThingList(this.Pawn.Map);
-                    for (int j = 0; j<cellList.Count(); j++)
+                    List<Thing> cellList = searchCell.GetThingList(this.Pawn.Map);
+                    for (int j = 0; j < cellList.Count; j++)
                     {
                         try
                         {
@@ -713,17 +660,17 @@ namespace TorannMagic
                                 {
                                     returnThings.Add(cellList[j]);
                                 }
-                                if(cellList[j] is Corpse)
+                                if (cellList[j] is Corpse)
                                 {
                                     returnThings.Add(cellList[j]);
                                 }
                             }
-                            if(cellList[j].def == TorannMagicDefOf.TM_SkeletonR && TM_Calc.HasLoSFromTo(this.Pawn.Position, this.rangedTarget, this.Pawn, 4, this.Props.maxRangeForFarThreat))
+                            if (cellList[j].def == TorannMagicDefOf.TM_SkeletonR && TM_Calc.HasLoSFromTo(this.Pawn.Position, this.rangedTarget, this.Pawn, 4, this.Props.maxRangeForFarThreat))
                             {
                                 returnThings.Add(cellList[j]);
                             }
                         }
-                        catch (NullReferenceException ex)
+                        catch (NullReferenceException)
                         {
                             //Log.Message("threw exception " + ex);
                         }
@@ -740,13 +687,11 @@ namespace TorannMagic
         public void PullObject(Thing t)
         {
             Thing summonableThing = t;
-            Pawn victim = null;
             if (summonableThing != null)
             {
-                victim = t as Pawn;
+                Pawn victim = t as Pawn;
                 if (victim != null)
                 {
-                    DamageInfo dinfo2 = new DamageInfo(DamageDefOf.Stun, 10, 10, -1, this.Pawn, null, null, DamageInfo.SourceCategory.ThingOrUnknown, victim);
                     if (!victim.RaceProps.Humanlike || victim.Faction == this.Pawn.Faction)
                     {
                         FlyingObject_Spinning flyingObject = (FlyingObject_Spinning)GenSpawn.Spawn(ThingDef.Named("FlyingObject_Spinning"), victim.Position, this.Pawn.Map, WipeMode.Vanish);

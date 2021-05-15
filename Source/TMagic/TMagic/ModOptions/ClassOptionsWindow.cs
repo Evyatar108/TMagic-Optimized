@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System.Linq;
 using UnityEngine;
 using Verse;
 
@@ -21,33 +19,33 @@ namespace TorannMagic.ModOptions
             base.doCloseButton = true;
             base.doCloseX = true;
             base.absorbInputAroundWindow = true;
-            base.forcePause = true;            
+            base.forcePause = true;
         }
 
         public override void DoWindowContents(Rect inRect)
         {
             int num = 0;
             float rowHeight = 28f;
-            Rect sRect = new Rect(inRect.x, inRect.y, inRect.width - 36f, inRect.height + 296f + TM_ClassUtility.CustomClasses().Count * 40);
+            Rect sRect = new Rect(inRect.x, inRect.y, inRect.width - 36f, inRect.height + 296f + (TM_ClassUtility.CustomClasses().Count * 40));
             scrollPosition = GUI.BeginScrollView(inRect, scrollPosition, sRect, false, true);
             //GUI.BeginGroup(inRect);
-            
+
             Text.Font = GameFont.Medium;
             float x = Text.CalcSize("TM_ClassOptions".Translate()).x;
-            Rect headerRect = new Rect(inRect.width / 2f - (x / 2), inRect.y, inRect.width, ClassOptionsWindow.HeaderSize);
+            Rect headerRect = new Rect((inRect.width / 2f) - (x / 2), inRect.y, inRect.width, ClassOptionsWindow.HeaderSize);
             Widgets.Label(headerRect, "TM_ClassOptions".Translate());
             Text.Font = GameFont.Small;
             GUI.color = Color.yellow;
             x = Text.CalcSize("TM_ClassWarning".Translate()).x;
-            Rect warningRect = new Rect(inRect.width / 2f - (x / 2), inRect.y + ClassOptionsWindow.HeaderSize + 4f, inRect.width, ClassOptionsWindow.TextSize);
+            Rect warningRect = new Rect((inRect.width / 2f) - (x / 2), inRect.y + ClassOptionsWindow.HeaderSize + 4f, inRect.width, ClassOptionsWindow.TextSize);
             Widgets.Label(warningRect, "TM_ClassWarning".Translate());
             x = Text.CalcSize("TM_RequiresRestart".Translate()).x;
-            Rect restartRect = new Rect(inRect.width / 2f - (x / 2), inRect.y + ClassOptionsWindow.HeaderSize + ClassOptionsWindow.TextSize + 4f, inRect.width, ClassOptionsWindow.TextSize);
+            Rect restartRect = new Rect((inRect.width / 2f) - (x / 2), inRect.y + ClassOptionsWindow.HeaderSize + ClassOptionsWindow.TextSize + 4f, inRect.width, ClassOptionsWindow.TextSize);
             Widgets.Label(restartRect, "TM_RequiresRestart".Translate());
             GUI.color = Color.white;
             Rect rect1 = new Rect(inRect);
             rect1.width /= 3f;
-            num+=3;
+            num += 3;
             GUI.color = Color.magenta;
             Rect classRect = Controller.UIHelper.GetRowRect(rect1, rowHeight, num);
             Widgets.Label(classRect, "TM_EnabledMages".Translate());
@@ -171,7 +169,7 @@ namespace TorannMagic.ModOptions
             Widgets.DrawLineHorizontal(inRect.x - 10f, rowHeight * num, inRect.width - 15f);
             num++;
             Rect slRect2 = Controller.UIHelper.GetRowRect(slRect1, rowHeight, num);
-            Settings.Instance.supportTraitChance = Widgets.HorizontalSlider(slRect2, Settings.Instance.supportTraitChance, 0f, 1f, false, "supportTraitChance".Translate() + " " + (Settings.Instance.supportTraitChance).ToString("P1"), "0", "1", .01f);
+            Settings.Instance.supportTraitChance = Widgets.HorizontalSlider(slRect2, Settings.Instance.supportTraitChance, 0f, 1f, false, "supportTraitChance".Translate() + " " + Settings.Instance.supportTraitChance.ToString("P1"), "0", "1", .01f);
             //Rect slRect2ShiftRight = Controller.UIHelper.GetRowRect(slRect1, rowHeight, num);
             num++;
             Rect rowRect19 = Controller.UIHelper.GetRowRect(rowRect18, rowHeight, num); ;
@@ -190,24 +188,24 @@ namespace TorannMagic.ModOptions
             Widgets.Label(customRect, "TM_CustomClasses".Translate());
             GUI.color = Color.white;
             num++;
-            for(int i = 0; i < TM_ClassUtility.CustomClasses().Count; i++)
+            for (int i = 0; i < TM_ClassUtility.CustomClasses().Count; i++)
             {
                 TMDefs.TM_CustomClass cClass = TM_ClassUtility.CustomClasses()[i];
                 bool classEnabled = Settings.Instance.CustomClass[cClass.classTrait.ToString()];
-                if(cClass.classTrait == TorannMagicDefOf.TM_Brightmage)
+                if (cClass.classTrait == TorannMagicDefOf.TM_Brightmage)
                 {
                     classEnabled = Settings.Instance.Brightmage;
                 }
-                if(cClass.classTrait == TorannMagicDefOf.TM_Shaman)
+                if (cClass.classTrait == TorannMagicDefOf.TM_Shaman)
                 {
                     classEnabled = Settings.Instance.Shaman;
                 }
-                if(cClass.classTrait == TorannMagicDefOf.TM_TheShadow)
+                if (cClass.classTrait == TorannMagicDefOf.TM_TheShadow)
                 {
                     classEnabled = Settings.Instance.Shadow;
                 }
                 if (cClass.shouldShow)
-                {                    
+                {
                     //if (cClass.isMage && cClass.isFighter)
                     //{
                     //    GUI.color = Color.yellow;
@@ -225,7 +223,7 @@ namespace TorannMagic.ModOptions
                     //    GUI.color = Color.gray;
                     //}
                     Rect customRect1 = Controller.UIHelper.GetRowRect(customRect, rowHeight, num);
-                    Widgets.CheckboxLabeled(customRect1, cClass.classTrait.degreeDatas.FirstOrDefault().label, ref classEnabled, false);                    
+                    Widgets.CheckboxLabeled(customRect1, cClass.classTrait.degreeDatas.FirstOrDefault().label, ref classEnabled, false);
                     num++;
                 }
                 if (classEnabled != Settings.Instance.CustomClass[cClass.classTrait.ToString()])
@@ -235,14 +233,14 @@ namespace TorannMagic.ModOptions
                 }
                 //GUI.color = Color.white;
             }
-            
+
             //GUI.EndGroup();
             GUI.EndScrollView();
         }
 
         private string Rarity(float val)
         {
-            string rarity = "";
+            string rarity;
             if (val == 0)
             {
                 rarity = "None";
@@ -269,5 +267,5 @@ namespace TorannMagic.ModOptions
             }
             return rarity;
         }
-    }   
+    }
 }

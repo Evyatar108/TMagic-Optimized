@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Verse;
-using Verse.AI;
 using Verse.AI.Group;
 using System.Diagnostics;
 using UnityEngine;
@@ -55,7 +54,7 @@ namespace TorannMagic
             Scribe_Values.Look<bool>(ref this.notifier, "notifier", false, false);
             Scribe_Values.Look<bool>(ref this.initialized, "initialized", false, false);
         }
-        
+
         public float ArcaneEnergyCur
         {
             get
@@ -73,10 +72,10 @@ namespace TorannMagic
             base.SpawnSetup(map, respawningAfterLoad);
             //LessonAutoActivator.TeachOpportunity(ConceptDef.Named("TM_Portals"), OpportunityType.GoodToKnow);
         }
-                
+
         public override void Tick()
         {
-            if(!initialized)
+            if (!initialized)
             {
                 DetermineElementalType();
                 BeginAssaultCondition();
@@ -86,11 +85,11 @@ namespace TorannMagic
                 {
                     this.STDMultiplier = (float)(Find.Storyteller.difficulty.difficulty / 20f);
                 }
-                if(settings.riftChallenge < 2f)
+                if (settings.riftChallenge < 2f)
                 {
                     this.difficultyMultiplier = 1f;
                 }
-                else if(settings.riftChallenge < 3f)
+                else if (settings.riftChallenge < 3f)
                 {
                     this.difficultyMultiplier = .85f;
                 }
@@ -103,7 +102,7 @@ namespace TorannMagic
                 this.ticksTillNextEvent = (int)(Rand.Range(160, 300) * this.eventFrequencyMultiplier);
                 initialized = true;
             }
-            if(Find.TickManager.TicksGame % 8 == 0)
+            if (Find.TickManager.TicksGame % 8 == 0)
             {
                 this.assaultTimer += 8;
                 this.eventTimer += 8;
@@ -136,13 +135,13 @@ namespace TorannMagic
                 }
 
             }
-            if(this.eventTimer > this.ticksTillNextEvent)
+            if (this.eventTimer > this.ticksTillNextEvent)
             {
                 DoMapEvent();
                 this.eventTimer = 0;
                 this.ticksTillNextEvent = (int)(Rand.Range(160, 300) * this.eventFrequencyMultiplier);
             }
-            if(this.notifier == false && this.assaultTimer > (.9f * this.ticksTillNextAssault))
+            if (this.notifier == false && this.assaultTimer > (.9f * this.ticksTillNextAssault))
             {
                 Messages.Message("TM_AssaultPending".Translate(), MessageTypeDefOf.ThreatSmall);
                 this.notifier = true;
@@ -170,9 +169,9 @@ namespace TorannMagic
                         animalList[j].mindState.mentalStateHandler.TryStartMentalState(MentalStateDefOf.ManhunterPermanent, null, true, false, null);
                         i = animalList.Count;
                     }
-                }                
+                }
             }
-            else if(this.rnd < 4) //fire
+            else if (this.rnd < 4) //fire
             {
                 FindGoodCenterLocation();
                 if (Rand.Chance(.6f))
@@ -184,7 +183,7 @@ namespace TorannMagic
                     SkyfallerMaker.SpawnSkyfaller(TorannMagicDefOf.TM_Firestorm_Tiny, this.centerLocation.ToIntVec3, this.Map);
                 }
             }
-            else if(this.rnd < 6) //water
+            else if (this.rnd < 6) //water
             {
                 FindGoodCenterLocation();
                 if (Rand.Chance(.6f))
@@ -197,7 +196,7 @@ namespace TorannMagic
                 }
             }
             else //air
-            {                
+            {
                 FindGoodCenterLocation();
                 Map.weatherManager.eventHandler.AddEvent(new WeatherEvent_LightningStrike(this.Map, this.centerLocation.ToIntVec3));
                 GenExplosion.DoExplosion(this.centerLocation.ToIntVec3, this.Map, this.areaRadius, DamageDefOf.Bomb, null, Rand.Range(6, 16), 0, SoundDefOf.Thunder_OffMap, null, null, null, null, 0f, 1, false, null, 0f, 1, 0.1f, true);
@@ -227,11 +226,11 @@ namespace TorannMagic
             bool flag2 = loc.IsValid;
             bool flag3 = !loc.Fogged(base.Map);
             bool flag4 = loc.DistanceToEdge(base.Map) > 2;
-            if(flag1 && flag2 && flag3 && flag4)
+            if (flag1 && flag2 && flag3 && flag4)
             {
-                if(loc.Roofed(base.Map))
+                if (loc.Roofed(base.Map))
                 {
-                    return false;                    
+                    return false;
                 }
                 return true;
             }
@@ -251,10 +250,10 @@ namespace TorannMagic
                 if (num >= num2)
                 {
                     break;
-                }                
+                }
             }
 
-            return num >= num2 && (IsGoodLocationForStrike(loc.ToIntVec3));
+            return num >= num2 && IsGoodLocationForStrike(loc.ToIntVec3);
         }
 
         [DebuggerHidden]
@@ -264,7 +263,7 @@ namespace TorannMagic
             {
                 for (int z = center.z - this.areaRadius; z <= center.z + this.areaRadius; z++)
                 {
-                    if ((center.x - x) * (center.x - x) + (center.z - z) * (center.z - z) <= this.areaRadius * this.areaRadius)
+                    if (((center.x - x) * (center.x - x)) + ((center.z - z) * (center.z - z)) <= this.areaRadius * this.areaRadius)
                     {
                         yield return new IntVec3(x, 0, z);
                     }
@@ -275,18 +274,18 @@ namespace TorannMagic
         public void BeginAssaultCondition()
         {
             List<GameCondition> currentGameConditions = this.Map.gameConditionManager.ActiveConditions;
-            WeatherDef weatherDef = new WeatherDef();
+            WeatherDef weatherDef;
             if (this.rnd < 2) //earth
             {
-                if(!this.Map.GameConditionManager.ConditionIsActive(GameConditionDefOf.ToxicFallout))
+                if (!this.Map.GameConditionManager.ConditionIsActive(GameConditionDefOf.ToxicFallout))
                 {
                     this.Map.GameConditionManager.RegisterCondition(GameConditionMaker.MakeCondition(GameConditionDefOf.ToxicFallout, 500000));
                 }
                 this.eventFrequencyMultiplier = 4;
             }
-            else if(this.rnd < 4) //fire
+            else if (this.rnd < 4) //fire
             {
-                for(int i = 0; i < currentGameConditions.Count; i++)
+                for (int i = 0; i < currentGameConditions.Count; i++)
                 {
                     if (currentGameConditions[i].def == GameConditionDefOf.ColdSnap)
                     {
@@ -300,9 +299,9 @@ namespace TorannMagic
                 }
                 this.eventFrequencyMultiplier = .5f;
                 this.areaRadius = 2;
-                
+
             }
-            else if(this.rnd < 6) //water
+            else if (this.rnd < 6) //water
             {
                 for (int i = 0; i < currentGameConditions.Count; i++)
                 {
@@ -335,7 +334,7 @@ namespace TorannMagic
         {
             //end conditions
             List<GameCondition> currentGameConditions = this.Map.gameConditionManager.ActiveConditions;
-            for(int i =0; i < currentGameConditions.Count; i++)
+            for (int i = 0; i < currentGameConditions.Count; i++)
             {
                 if (currentGameConditions[i].def == GameConditionDefOf.ColdSnap || currentGameConditions[i].def == GameConditionDefOf.HeatWave || currentGameConditions[i].def == GameConditionDefOf.ToxicFallout)
                 {
@@ -348,7 +347,6 @@ namespace TorannMagic
         public void DetermineElementalType()
         {
             System.Random random = new System.Random();
-            random = new System.Random();
             this.rnd = GenMath.RoundRandom(random.Next(0, 8));
         }
 
@@ -356,23 +354,23 @@ namespace TorannMagic
         {
             float wealthMultiplier = .7f;
             float wealth = this.Map.PlayerWealthForStoryteller;
-            if(wealth > 20000)
+            if (wealth > 20000)
             {
                 wealthMultiplier = .8f;
             }
-            if(wealth > 50000)
+            if (wealth > 50000)
             {
                 wealthMultiplier = 1f;
             }
-            if(wealth > 100000)
+            if (wealth > 100000)
             {
                 wealthMultiplier = 1.25f;
             }
-            if(wealth > 250000)
+            if (wealth > 250000)
             {
                 wealthMultiplier = 1.5f;
             }
-            if(wealth > 500000)
+            if (wealth > 500000)
             {
                 wealthMultiplier = 2f;
             }
@@ -383,22 +381,22 @@ namespace TorannMagic
             ModOptions.SettingsRef settingsRef = new ModOptions.SettingsRef();
             float geChance = 0.007f * wealthMultiplier;
             float riftChallenge = Mathf.Min(settingsRef.riftChallenge, 1f);
-            if (settingsRef.riftChallenge > 1 )
+            if (settingsRef.riftChallenge > 1)
             {
-                geChance *= (.75f * riftChallenge);
-            }  
+                geChance *= .75f * riftChallenge;
+            }
             else
             {
                 geChance = 0;
             }
-            float eChance = 0.035f * riftChallenge * (.75f*wealthMultiplier);
-            float leChance = 0.12f * riftChallenge * (.75f*wealthMultiplier);            
+            float eChance = 0.035f * riftChallenge * (.75f * wealthMultiplier);
+            float leChance = 0.12f * riftChallenge * (.75f * wealthMultiplier);
 
             IntVec3 curCell;
             IEnumerable<IntVec3> targets = GenRadial.RadialCellsAround(this.Position, 3, true);
-            for (int j = 0; j < targets.Count(); j++)
+            foreach (var cell in targets)
             {
-                curCell = targets.ToArray<IntVec3>()[j];
+                curCell = cell;
                 if (curCell.InBounds(this.Map) && curCell.IsValid && curCell.Walkable(this.Map))
                 {
                     SpawnThings rogueElemental = new SpawnThings();
@@ -515,7 +513,7 @@ namespace TorannMagic
                         {
                             rogueElemental.def = TorannMagicDefOf.TM_GreaterWind_ElementalR;
                             rogueElemental.kindDef = PawnKindDef.Named("TM_GreaterWind_Elemental");
-                            MoteMaker.ThrowSmoke(curCell.ToVector3(), this.Map, 1 + 1 * 2);
+                            MoteMaker.ThrowSmoke(curCell.ToVector3(), this.Map, 1 + (1 * 2));
                             SoundDefOf.Ambient_AltitudeWind.sustainFadeoutTime.Equals(30.0f);
                             MoteMaker.ThrowTornadoDustPuff(curCell.ToVector3(), this.Map, 1, Color.white);
                         }
@@ -523,7 +521,7 @@ namespace TorannMagic
                         {
                             rogueElemental.def = TorannMagicDefOf.TM_Wind_ElementalR;
                             rogueElemental.kindDef = PawnKindDef.Named("TM_Wind_Elemental");
-                            MoteMaker.ThrowSmoke(curCell.ToVector3(), this.Map, 1 + 1 * 2);
+                            MoteMaker.ThrowSmoke(curCell.ToVector3(), this.Map, 1 + (1 * 2));
                             SoundDefOf.Ambient_AltitudeWind.sustainFadeoutTime.Equals(30.0f);
                             MoteMaker.ThrowTornadoDustPuff(curCell.ToVector3(), this.Map, 1, Color.white);
                         }
@@ -531,7 +529,7 @@ namespace TorannMagic
                         {
                             rogueElemental.def = TorannMagicDefOf.TM_LesserWind_ElementalR;
                             rogueElemental.kindDef = PawnKindDef.Named("TM_LesserWind_Elemental");
-                            MoteMaker.ThrowSmoke(curCell.ToVector3(), this.Map, 1 + 1 * 2);
+                            MoteMaker.ThrowSmoke(curCell.ToVector3(), this.Map, 1 + (1 * 2));
                             SoundDefOf.Ambient_AltitudeWind.sustainFadeoutTime.Equals(30.0f);
                             MoteMaker.ThrowTornadoDustPuff(curCell.ToVector3(), this.Map, 1, Color.white);
                         }
@@ -593,8 +591,8 @@ namespace TorannMagic
                                 LordJob_AssaultColony lordJob = new LordJob_AssaultColony(newPawn.Faction, false, false, false, true, false);
                                 lord = LordMaker.MakeNewLord(faction, lordJob, this.Map, null);
                             }
-                            lord.AddPawn(newPawn);                           
-                        }                      
+                            lord.AddPawn(newPawn);
+                        }
                     }
                 }
                 else
@@ -622,10 +620,10 @@ namespace TorannMagic
             {
                 Graphics.DrawMesh(MeshPool.plane10, matrix, Building_TMElementalRift.portalMat_2, 0);
             }
-            else 
+            else
             {
                 Graphics.DrawMesh(MeshPool.plane10, matrix, Building_TMElementalRift.portalMat_3, 0);
-            }            
+            }
         }
     }
 }

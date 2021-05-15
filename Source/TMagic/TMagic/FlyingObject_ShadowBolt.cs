@@ -1,5 +1,4 @@
 ﻿using RimWorld;
-using System;
 using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
@@ -46,7 +45,7 @@ namespace TorannMagic
 
         public bool explosion = false;
 
-        private bool initialized = true;        
+        private bool initialized = true;
 
         protected new int StartingTicksToImpact
         {
@@ -70,12 +69,12 @@ namespace TorannMagic
             }
         }
 
-        public new  Vector3 ExactPosition
+        public new Vector3 ExactPosition
         {
             get
             {
-                Vector3 b = (this.destination - this.origin) * (1f - (float)this.ticksToImpact / (float)this.StartingTicksToImpact);
-                return this.origin + b + Vector3.up * this.def.Altitude;
+                Vector3 b = (this.destination - this.origin) * (1f - ((float)this.ticksToImpact / (float)this.StartingTicksToImpact));
+                return this.origin + b + (Vector3.up * this.def.Altitude);
             }
         }
 
@@ -130,7 +129,7 @@ namespace TorannMagic
 
         public void GetVector()
         {
-            Vector3 heading = (this.destination - this.ExactPosition);
+            Vector3 heading = this.destination - this.ExactPosition;
             float distance = heading.magnitude;
             this.direction = heading / distance;
             this.directionAngle = (Quaternion.AngleAxis(90, Vector3.up) * this.direction).ToAngleFlat();
@@ -159,7 +158,7 @@ namespace TorannMagic
             MagicPowerSkill ver = pawn.GetComp<CompAbilityUserMagic>().MagicData.MagicPowerSkill_ShadowBolt.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_ShadowBolt_ver");
             verVal = ver.level;
             pwrVal = pwr.level;
-            
+
             if (pawn.story.traits.HasTrait(TorannMagicDefOf.Faceless))
             {
                 MightPowerSkill mpwr = pawn.GetComp<CompAbilityUserMight>().MightData.MightPowerSkill_Mimic.FirstOrDefault((MightPowerSkill x) => x.label == "TM_Mimic_pwr");
@@ -179,7 +178,7 @@ namespace TorannMagic
             this.origin = origin;
             this.impactDamage = newDamageInfo;
             this.speed = this.def.projectile.speed;
-            this.proximityRadius += (.4f * verVal);
+            this.proximityRadius += .4f * verVal;
             this.proximityFrequency -= verVal;
             this.flyingThing = flyingThing;
             bool flag = targ.Thing != null;
@@ -187,7 +186,7 @@ namespace TorannMagic
             {
                 this.assignedTarget = targ.Thing;
             }
-            float distanceAccuracyModifier = (targ.Cell.ToVector3Shifted() - this.pawn.Position.ToVector3Shifted()).MagnitudeHorizontal() *.1f;
+            float distanceAccuracyModifier = (targ.Cell.ToVector3Shifted() - this.pawn.Position.ToVector3Shifted()).MagnitudeHorizontal() * .1f;
             this.destination = targ.Cell.ToVector3Shifted();
             this.ticksToImpact = this.StartingTicksToImpact;
             this.Initialize();
@@ -211,10 +210,10 @@ namespace TorannMagic
             }
             else
             {
-                if(Find.TickManager.TicksGame % this.proximityFrequency ==0)
+                if (Find.TickManager.TicksGame % this.proximityFrequency == 0)
                 {
                     DamageThingsAtPosition();
-                }                
+                }
                 bool flag2 = this.ticksToImpact <= 0;
                 if (flag2)
                 {
@@ -274,25 +273,25 @@ namespace TorannMagic
             if (flag)
             {
                 Pawn pawn;
-                bool flag2 = (pawn = (base.Position.GetThingList(base.Map).FirstOrDefault((Thing x) => x == this.assignedTarget) as Pawn)) != null;
+                bool flag2 = (pawn = base.Position.GetThingList(base.Map).FirstOrDefault((Thing x) => x == this.assignedTarget) as Pawn) != null;
                 if (flag2)
                 {
                     hitThing = pawn;
                 }
-            }        
-            if(hitThing != null)
-            {
-                damageEntities(hitThing, Mathf.RoundToInt(Rand.Range(this.def.projectile.GetDamageAmount(1,null) * .8f, this.def.projectile.GetDamageAmount(1,null) * 1.4f) * this.arcaneDmg));
             }
-            TM_MoteMaker.ThrowShadowCleaveMote(this.ExactPosition, this.Map, 2f + (.4f * pwrVal), .05f, .1f, .3f, 0, (5f+ pwrVal), this.directionAngle);
+            if (hitThing != null)
+            {
+                damageEntities(hitThing, Mathf.RoundToInt(Rand.Range(this.def.projectile.GetDamageAmount(1, null) * .8f, this.def.projectile.GetDamageAmount(1, null) * 1.4f) * this.arcaneDmg));
+            }
+            TM_MoteMaker.ThrowShadowCleaveMote(this.ExactPosition, this.Map, 2f + (.4f * pwrVal), .05f, .1f, .3f, 0, 5f + pwrVal, this.directionAngle);
             TorannMagicDefOf.TM_SoftExplosion.PlayOneShot(new TargetInfo(this.ExactPosition.ToIntVec3(), this.pawn.Map, false));
-            int num = GenRadial.NumCellsInRadius(1+(.4f* pwrVal));
+            int num = GenRadial.NumCellsInRadius(1 + (.4f * pwrVal));
 
             Vector3 cleaveVector;
             IntVec3 intVec;
             for (int i = 0; i < num; i++)
             {
-                cleaveVector = this.ExactPosition + (Quaternion.AngleAxis(-45, Vector3.up) * ((1.5f + (.5f*pwrVal)) * this.direction));
+                cleaveVector = this.ExactPosition + (Quaternion.AngleAxis(-45, Vector3.up) * ((1.5f + (.5f * pwrVal)) * this.direction));
                 intVec = cleaveVector.ToIntVec3() + GenRadial.RadialPattern[i];
                 //GenExplosion.DoExplosion(intVec, base.Map, .4f, TMDamageDefOf.DamageDefOf.TM_Shadow, this.launcher as Pawn, Mathf.RoundToInt((Rand.Range(.6f * this.def.projectile.GetDamageAmount(1,null), 1.1f * this.def.projectile.GetDamageAmount(1,null)) + (5f * pwrVal)) * this.arcaneDmg), this.def.projectile.soundExplode, def, null, null, 0f, 1, false, null, 0f, 0, 0.0f, true);
 
@@ -304,7 +303,7 @@ namespace TorannMagic
                     {
                         if (hitList[j] is Pawn && hitList[j] != this.pawn)
                         {
-                            damageEntities(hitList[j], Mathf.RoundToInt((Rand.Range(this.def.projectile.GetDamageAmount(1,null) * .6f, this.def.projectile.GetDamageAmount(1,null) * .8f) * (float)(1f + .1 * pwrVal) * this.arcaneDmg)));
+                            damageEntities(hitList[j], Mathf.RoundToInt(Rand.Range(this.def.projectile.GetDamageAmount(1, null) * .6f, this.def.projectile.GetDamageAmount(1, null) * .8f) * (float)(1f + (.1 * pwrVal)) * this.arcaneDmg));
                         }
                     }
                 }
@@ -320,7 +319,7 @@ namespace TorannMagic
                     {
                         if (hitList[j] is Pawn && hitList[j] != this.pawn)
                         {
-                            damageEntities(hitList[j], Mathf.RoundToInt((Rand.Range(this.def.projectile.GetDamageAmount(1,null) * .5f, this.def.projectile.GetDamageAmount(1,null) * .7f) * (float)(1f + .1 * pwrVal) * this.arcaneDmg)));
+                            damageEntities(hitList[j], Mathf.RoundToInt(Rand.Range(this.def.projectile.GetDamageAmount(1, null) * .5f, this.def.projectile.GetDamageAmount(1, null) * .7f) * (float)(1f + (.1 * pwrVal)) * this.arcaneDmg));
                         }
                     }
                 }
@@ -336,7 +335,7 @@ namespace TorannMagic
                     {
                         if (hitList[j] is Pawn && hitList[j] != this.pawn)
                         {
-                            damageEntities(hitList[j], Mathf.RoundToInt((Rand.Range(this.def.projectile.GetDamageAmount(1,null) * .5f, this.def.projectile.GetDamageAmount(1,null) * .7f) * (float)(1f + .1 * pwrVal) * this.arcaneDmg)));
+                            damageEntities(hitList[j], Mathf.RoundToInt(Rand.Range(this.def.projectile.GetDamageAmount(1, null) * .5f, this.def.projectile.GetDamageAmount(1, null) * .7f) * (float)(1f + (.1 * pwrVal)) * this.arcaneDmg));
                         }
                     }
                 }
@@ -352,13 +351,12 @@ namespace TorannMagic
             for (int i = 0; i < num; i++)
             {
                 curCell = this.ExactPosition.ToIntVec3() + GenRadial.RadialPattern[i];
-                List<Thing> hitList = new List<Thing>();
-                hitList = curCell.GetThingList(base.Map);
+                List<Thing> hitList = curCell.GetThingList(base.Map);
                 for (int j = 0; j < hitList.Count; j++)
                 {
                     if (hitList[j] is Pawn && hitList[j] != this.pawn && hitList[j].Faction != this.pawn.Faction)
                     {
-                        damageEntities(hitList[j], Mathf.RoundToInt((Rand.Range(this.def.projectile.GetDamageAmount(1,null) * .4f, this.def.projectile.GetDamageAmount(1,null) * .6f)) * this.arcaneDmg));
+                        damageEntities(hitList[j], Mathf.RoundToInt(Rand.Range(this.def.projectile.GetDamageAmount(1, null) * .4f, this.def.projectile.GetDamageAmount(1, null) * .6f) * this.arcaneDmg));
                         TM_MoteMaker.ThrowShadowCleaveMote(this.ExactPosition, this.Map, Rand.Range(.2f, .4f), .01f, .2f, .4f, 500, 0, 0);
                         TorannMagicDefOf.TM_Vibration.PlayOneShot(new TargetInfo(this.ExactPosition.ToIntVec3(), pawn.Map, false));
                     }
@@ -368,7 +366,7 @@ namespace TorannMagic
 
         public void damageEntities(Thing e, int amt)
         {
-            DamageInfo dinfo = new DamageInfo(TMDamageDefOf.DamageDefOf.TM_Shadow, amt, 2, (float)(1f - this.directionAngle/360f), this.pawn, null, null, DamageInfo.SourceCategory.ThingOrUnknown);
+            DamageInfo dinfo = new DamageInfo(TMDamageDefOf.DamageDefOf.TM_Shadow, amt, 2, (float)(1f - (this.directionAngle / 360f)), this.pawn, null, null, DamageInfo.SourceCategory.ThingOrUnknown);
             bool flag = e != null;
             if (flag)
             {

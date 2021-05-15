@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using Verse;
 using RimWorld;
 using UnityEngine;
@@ -53,7 +51,7 @@ namespace TorannMagic
                     this.Initialize();
                 }
             }
-            if(Find.TickManager.TicksGame % 600 == 0)
+            if (Find.TickManager.TicksGame % 600 == 0)
             {
                 MagicPowerSkill pwr = this.Pawn.GetComp<CompAbilityUserMagic>().MagicData.MagicPowerSkill_Inspire.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_Inspire_pwr");
                 MagicPowerSkill ver = this.Pawn.GetComp<CompAbilityUserMagic>().MagicData.MagicPowerSkill_Inspire.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_Inspire_ver");
@@ -70,7 +68,7 @@ namespace TorannMagic
 
                 IntVec3 curCell = cellRect.RandomCell;
                 Pawn inspiredPawn = curCell.GetFirstPawn(map);
-                if(inspiredPawn != null && inspiredPawn.IsColonist && inspiredPawn.RaceProps.Humanlike && !inspiredPawn.Inspired && inspiredPawn != this.Pawn)
+                if (inspiredPawn != null && inspiredPawn.IsColonist && inspiredPawn.RaceProps.Humanlike && !inspiredPawn.Inspired && inspiredPawn != this.Pawn)
                 {
                     InspirationDef id = TM_Calc.GetRandomAvailableInspirationDef(inspiredPawn);
                     bool flag1 = id.defName == "ID_MiningFrenzy" || id.defName == "ID_FarmingFrenzy";
@@ -83,20 +81,20 @@ namespace TorannMagic
                         inspiredPawn.mindState.inspirationHandler.TryStartInspiration(id);
                         TM_MoteMaker.ThrowExclamationMote(drawPosAbove, inspiredPawn.Map, .5f);
                     }
-                    else if( verVal == 1 && !flag2 && !flag3)
+                    else if (verVal == 1 && !flag2 && !flag3)
                     {
                         inspiredPawn.mindState.inspirationHandler.TryStartInspiration(id);
                         TM_MoteMaker.ThrowExclamationMote(drawPosAbove, inspiredPawn.Map, .7f);
                     }
-                    else if( verVal == 2 && !flag3)
+                    else if (verVal == 2 && !flag3)
                     {
                         inspiredPawn.mindState.inspirationHandler.TryStartInspiration(id);
                         TM_MoteMaker.ThrowExclamationMote(drawPosAbove, inspiredPawn.Map, Rand.Range(.5f, .7f));
                         TM_MoteMaker.ThrowExclamationMote(drawPosAbove, inspiredPawn.Map, Rand.Range(.5f, .7f));
                     }
-                    else if(verVal == 3)
+                    else if (verVal == 3)
                     {
-                        inspiredPawn.mindState.inspirationHandler.TryStartInspiration(id);                        
+                        inspiredPawn.mindState.inspirationHandler.TryStartInspiration(id);
                         TM_MoteMaker.ThrowExclamationMote(drawPosAbove, inspiredPawn.Map, Rand.Range(.5f, .7f));
                         TM_MoteMaker.ThrowExclamationMote(drawPosAbove, inspiredPawn.Map, Rand.Range(.5f, .7f));
                         TM_MoteMaker.ThrowExclamationMote(drawPosAbove, inspiredPawn.Map, Rand.Range(.5f, .7f));
@@ -104,10 +102,10 @@ namespace TorannMagic
                     else
                     {
                         //failed inspiration due to type
-                    }                    
+                    }
                 }
             }
         }
-        
+
     }
 }

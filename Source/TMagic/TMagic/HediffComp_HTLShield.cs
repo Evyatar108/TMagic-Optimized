@@ -1,10 +1,4 @@
-﻿using RimWorld;
-using Verse;
-using UnityEngine;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using HarmonyLib;
+﻿using Verse;
 
 namespace TorannMagic
 {
@@ -17,8 +11,6 @@ namespace TorannMagic
         private bool removeNow = false;
 
         private int eventFrequency = 180;
-
-        private float lastSeverity = 0;
 
         public string labelCap
         {
@@ -39,7 +31,7 @@ namespace TorannMagic
         private void Initialize()
         {
 
-        }        
+        }
 
         public override void CompPostTick(ref float severityAdjustment)
         {
@@ -55,14 +47,14 @@ namespace TorannMagic
 
                 if (Find.TickManager.TicksGame % this.eventFrequency == 0)
                 {
-                    severityAdjustment -= Rand.Range(2.5f, 4f);                  
+                    severityAdjustment -= Rand.Range(2.5f, 4f);
                 }
             }
             else
             {
                 this.initializeDelay++;
             }
-        }        
+        }
 
         public override bool CompShouldRemove
         {
@@ -70,6 +62,6 @@ namespace TorannMagic
             {
                 return base.CompShouldRemove || this.removeNow || this.parent.Severity <= .001f;
             }
-        }        
+        }
     }
 }

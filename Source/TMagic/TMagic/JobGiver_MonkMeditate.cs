@@ -1,7 +1,6 @@
 ﻿using System;
 using Verse;
 using Verse.AI;
-using Verse.AI.Group;
 using RimWorld;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,19 +8,19 @@ using AbilityUser;
 
 namespace TorannMagic
 {
-    public class JobGiver_MonkMeditate : ThinkNode_JobGiver 
+    public class JobGiver_MonkMeditate : ThinkNode_JobGiver
     {
         int verVal = 0;
         public override float GetPriority(Pawn pawn)
         {
-            
+
             Hediff chiHD = pawn.health.hediffSet.GetFirstHediffOfDef(TorannMagicDefOf.TM_ChiHD);
             CompAbilityUserMight comp = pawn.GetComp<CompAbilityUserMight>();
             if (chiHD == null)
             {
                 return 0f;
             }
-            if(comp == null)
+            if (comp == null)
             {
                 return 0f;
             }
@@ -36,12 +35,12 @@ namespace TorannMagic
             TimeAssignmentDef timeAssignmentDef;
             if (pawn.RaceProps.Humanlike)
             {
-                timeAssignmentDef = ((pawn.timetable != null) ? pawn.timetable.CurrentAssignment : TimeAssignmentDefOf.Anything);
+                timeAssignmentDef = (pawn.timetable != null) ? pawn.timetable.CurrentAssignment : TimeAssignmentDefOf.Anything;
             }
             else
             {
                 int num = GenLocalDate.HourOfDay(pawn);
-                timeAssignmentDef = ((num >= 7 && num <= 21) ? TimeAssignmentDefOf.Anything : TimeAssignmentDefOf.Sleep);
+                timeAssignmentDef = (num >= 7 && num <= 21) ? TimeAssignmentDefOf.Anything : TimeAssignmentDefOf.Sleep;
             }
             float curLevel = chiHD.Severity;
             if (timeAssignmentDef == TimeAssignmentDefOf.Anything)
@@ -50,7 +49,7 @@ namespace TorannMagic
                 {
                     return 8f;
                 }
-                else if(curLevel < 70.0f)
+                else if (curLevel < 70.0f)
                 {
                     return 4f;
                 }
@@ -74,7 +73,7 @@ namespace TorannMagic
                 {
                     return 8f;
                 }
-                else if(curLevel < 70 && verVal >= 2)
+                else if (curLevel < 70 && verVal >= 2)
                 {
                     return 6f;
                 }
@@ -92,19 +91,19 @@ namespace TorannMagic
                     return null;
                 }
                 Need_Joy curJoy = pawn.needs.joy;
-                if(curJoy == null)
+                if (curJoy == null)
                 {
                     return null;
                 }
-                if(curJoy.CurLevel >= .8f)
+                if (curJoy.CurLevel >= .8f)
                 {
                     return null;
                 }
-                if(pawn.CurJob != null && pawn.CurJob.playerForced)
+                if (pawn.CurJob != null && pawn.CurJob.playerForced)
                 {
                     return null;
                 }
-                if(pawn.timetable != null && !(pawn.timetable.CurrentAssignment.allowJoy && pawn.timetable.CurrentAssignment.allowRest))
+                if (pawn.timetable != null && !(pawn.timetable.CurrentAssignment.allowJoy && pawn.timetable.CurrentAssignment.allowRest))
                 {
                     return null;
                 }
@@ -112,7 +111,7 @@ namespace TorannMagic
                 if (comp != null)
                 {
                     MightPower mightPower = comp.MightData.MightPowersM.FirstOrDefault<MightPower>((MightPower x) => x.abilityDef == TorannMagicDefOf.TM_Meditate);
-                     
+
                     if (mightPower == null)
                     {
                         return null;
@@ -136,12 +135,12 @@ namespace TorannMagic
                     {
                         if (building_Bed.GetRoom() != null && !building_Bed.GetRoom().PsychologicallyOutdoors)
                         {
-                            List<IntVec3> roomCells = building_Bed.GetRoom().Cells.ToList();
-                            for (int i = 0; i < roomCells.Count; i++)
+                            IEnumerable<IntVec3> roomCells = building_Bed.GetRoom().Cells;
+                            foreach (var cell in roomCells)
                             {
-                                if (roomCells[i].IsValid && roomCells[i].Walkable(pawn.Map) && roomCells[i].GetFirstBuilding(pawn.Map) == null)
+                                if (cell.IsValid && cell.Walkable(pawn.Map) && cell.GetFirstBuilding(pawn.Map) == null)
                                 {
-                                    return new Job(TorannMagicDefOf.JobDriver_TM_Meditate, roomCells[i]);
+                                    return new Job(TorannMagicDefOf.JobDriver_TM_Meditate, cell);
                                 }
                             }
                         }

@@ -8,10 +8,6 @@ namespace TorannMagic
     [StaticConstructorOnStartup]
     public class Building_TMPowerNode : Building
     {
-
-        private float arcaneEnergyCur = 0;
-        private float arcaneEnergyMax = 1;
-
         private static readonly Material powernodeMat_1 = MaterialPool.MatFrom("Other/energynode_1", false);
         private static readonly Material powernodeMat_2 = MaterialPool.MatFrom("Other/energynode_2", false);
         private static readonly Material powernodeMat_3 = MaterialPool.MatFrom("Other/energynode_3", false);
@@ -42,15 +38,15 @@ namespace TorannMagic
 
         public override void Tick()
         {
-            if(!initialized)
+            if (!initialized)
             {
                 initialized = true;
                 this.nextSearch = Find.TickManager.TicksGame + Rand.Range(180, 220);
             }
-            if(Find.TickManager.TicksGame % 8 == 0)
+            if (Find.TickManager.TicksGame % 8 == 0)
             {
                 this.matRng++;
-                if(this.matRng >= 4)
+                if (this.matRng >= 4)
                 {
                     matRng = 0;
                 }
@@ -103,7 +99,7 @@ namespace TorannMagic
 
             }
             base.Tick();
-        }        
+        }
 
         public override void Draw()
         {
@@ -125,10 +121,10 @@ namespace TorannMagic
             {
                 Graphics.DrawMesh(MeshPool.plane10, matrix, Building_TMPowerNode.powernodeMat_3, 0);
             }
-            else 
+            else
             {
                 Graphics.DrawMesh(MeshPool.plane10, matrix, Building_TMPowerNode.powernodeMat_4, 0);
-            }            
+            }
         }
     }
 }

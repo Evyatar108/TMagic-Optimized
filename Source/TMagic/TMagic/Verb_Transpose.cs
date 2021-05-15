@@ -1,5 +1,4 @@
 ﻿using RimWorld;
-using System;
 using Verse;
 using AbilityUser;
 using UnityEngine;
@@ -7,20 +6,19 @@ using System.Linq;
 
 namespace TorannMagic
 {
-    class Verb_Transpose : Verb_UseAbility  
+    class Verb_Transpose : Verb_UseAbility
     {
         bool arg_41_0;
         bool arg_42_0;
         private bool validTarg = false;
 
         public override bool CanHitTargetFrom(IntVec3 root, LocalTargetInfo targ)
-        {            
-            if ( targ.IsValid && targ.CenterVector3.InBounds(base.CasterPawn.Map) && !targ.Cell.Fogged(base.CasterPawn.Map) && targ.Cell.Walkable(base.CasterPawn.Map) && targ.Thing != this.CasterPawn)
+        {
+            if (targ.IsValid && targ.CenterVector3.InBounds(base.CasterPawn.Map) && !targ.Cell.Fogged(base.CasterPawn.Map) && targ.Cell.Walkable(base.CasterPawn.Map) && targ.Thing != this.CasterPawn)
             {
                 if ((root - targ.Cell).LengthHorizontal < this.verbProps.range)
                 {
-                    ShootLine shootLine;
-                    validTarg = this.TryFindShootLineFromTo(root, targ, out shootLine);
+                    validTarg = this.TryFindShootLineFromTo(root, targ, out _);
                 }
                 else
                 {
@@ -46,8 +44,8 @@ namespace TorannMagic
                 IntVec3 arg_29_0 = this.currentTarget.Cell;
                 Vector3 vector = this.currentTarget.CenterVector3;
                 arg_40_0 = this.currentTarget.Cell.IsValid;
-                arg_41_0 = vector.InBounds(base.CasterPawn.Map);                
-                arg_42_0 = targetThing is Pawn; 
+                arg_41_0 = vector.InBounds(base.CasterPawn.Map);
+                arg_42_0 = targetThing is Pawn;
             }
             else
             {
@@ -64,7 +62,7 @@ namespace TorannMagic
                     Pawn targetPawn = targetThing as Pawn;
                     bool drafted = p.Drafted;
                     bool tDrafted = false;
-                    if(targetThing is Pawn && targetPawn.IsColonist && targetPawn.Drafted)
+                    if (targetThing is Pawn && targetPawn.IsColonist && targetPawn.Drafted)
                     {
                         tDrafted = true;
                     }
@@ -88,7 +86,7 @@ namespace TorannMagic
                             {
                                 HealthUtility.AdjustSeverity(p, HediffDef.Named("TM_DisorientedVomit"), 1f);
                             }
-                            HealthUtility.AdjustSeverity(p, TorannMagicDefOf.TM_ReversalHD, 2f + (ver.level));
+                            HealthUtility.AdjustSeverity(p, TorannMagicDefOf.TM_ReversalHD, 2f + ver.level);
                             if (targetPawn.HostileTo(this.CasterPawn) && targetPawn.needs.food != null)
                             {
                                 if (Rand.Chance(TM_Calc.GetSpellSuccessChance(this.CasterPawn, targetPawn, true)))
@@ -107,7 +105,7 @@ namespace TorannMagic
                                     HealthUtility.AdjustSeverity(targetPawn, HediffDef.Named("TM_DisorientedVomit"), 1f);
                                 }
                             }
-                            
+
                         }
                         else
                         {
@@ -126,9 +124,9 @@ namespace TorannMagic
                         Log.Message("Exception occured when trying to transpose - recovered pawns at original positions");
                         if (!this.CasterPawn.Spawned)
                         {
-                            GenSpawn.Spawn(p, cell, map);                            
+                            GenSpawn.Spawn(p, cell, map);
                         }
-                        if(!targetPawn.Spawned)
+                        if (!targetPawn.Spawned)
                         {
                             GenSpawn.Spawn(targetPawn, targetCell, map);
                         }
@@ -142,7 +140,7 @@ namespace TorannMagic
                 }
                 else
                 {
-                    
+
                     Messages.Message("InvalidTargetLocation".Translate(), MessageTypeDefOf.RejectInput);
                 }
             }

@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using Verse;
 using RimWorld;
-using UnityEngine;
 
 namespace TorannMagic
 {
@@ -53,7 +50,7 @@ namespace TorannMagic
             {
                 if (!initialized)
                 {
-                    if(this.Pawn.def == TorannMagicDefOf.TM_SpiritCrowR)
+                    if (this.Pawn.def == TorannMagicDefOf.TM_SpiritCrowR)
                     {
                         _nakedGraphicCycle.Clear();
                         _nakedGraphicCycle.Add(Pawn.kindDef.lifeStages[0].bodyGraphicData.Graphic);

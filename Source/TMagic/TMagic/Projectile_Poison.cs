@@ -43,7 +43,7 @@ namespace TorannMagic
             Map map = base.Map;
             base.Impact(hitThing);
             ThingDef def = this.def;
-                        
+
             caster = this.launcher as Pawn;
             pwr = caster.GetComp<CompAbilityUserMagic>().MagicData.MagicPowerSkill_Poison.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_Poison_pwr");
             ver = caster.GetComp<CompAbilityUserMagic>().MagicData.MagicPowerSkill_Poison.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_Poison_ver");
@@ -68,11 +68,11 @@ namespace TorannMagic
                 hitPawn = hitThing as Pawn;
                 if (hitThing != null && hitPawn.needs.food != null)
                 {
-                    duration += (verVal * 180);                    
+                    duration += verVal * 180;
                     Initialize(hitPawn);
                     oldPosition = hitPawn.Position;
-                    damageEntities(hitPawn, null, 4 , TMDamageDefOf.DamageDefOf.TM_Poison);
-                    HealthUtility.AdjustSeverity(hitPawn, TorannMagicDefOf.TM_Poisoned_HD, Rand.Range(1f + verVal, 4f + (2f * verVal)));                    
+                    damageEntities(hitPawn, null, 4, TMDamageDefOf.DamageDefOf.TM_Poison);
+                    HealthUtility.AdjustSeverity(hitPawn, TorannMagicDefOf.TM_Poisoned_HD, Rand.Range(1f + verVal, 4f + (2f * verVal)));
                     initialized = true;
                     TM_MoteMaker.ThrowPoisonMote(hitPawn.Position.ToVector3(), map, 2.2f);
                     if (hitPawn.IsColonist && !caster.IsColonist)
@@ -96,7 +96,7 @@ namespace TorannMagic
                     {
                         if (hitPawn.health.hediffSet.HasHediff(TorannMagicDefOf.TM_Poisoned_HD, false))
                         {
-                            int dmg = (int)(((hitPawn.Position - oldPosition).LengthHorizontal) * (1 + (.25f * pwrVal)));
+                            int dmg = (int)((hitPawn.Position - oldPosition).LengthHorizontal * (1 + (.25f * pwrVal)));
                             int rndPart = (int)Rand.RangeInclusive(0, 4);
                             damageEntities(hitPawn, vulnerableParts[rndPart], dmg, TMDamageDefOf.DamageDefOf.TM_Poison);
                             TM_MoteMaker.ThrowPoisonMote(hitPawn.Position.ToVector3(), map, 1f);
@@ -123,7 +123,7 @@ namespace TorannMagic
                     this.Destroy(DestroyMode.Vanish);
                 }
             }
-            
+
         }
 
         public void Initialize(Pawn victim)
@@ -131,7 +131,7 @@ namespace TorannMagic
             BodyPartRecord vitalPart = null;
             if (victim != null && !victim.Dead)
             {
-                
+
                 IEnumerable<BodyPartRecord> partSearch = victim.def.race.body.AllParts;
                 vitalPart = partSearch.FirstOrDefault<BodyPartRecord>((BodyPartRecord x) => x.def.tags.Contains(BodyPartTagDefOf.BloodPumpingSource));
                 if (vitalPart != null)

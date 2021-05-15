@@ -55,7 +55,7 @@ namespace TorannMagic
             for (int i = 0; i < list.Count; i++)
             {
                 float d = amplitude * (float)perlin.GetValue((double)i, 0.0, 0.0);
-                Vector2 item = list[i] + d * Vector2.right;
+                Vector2 item = list[i] + (d * Vector2.right);
                 TM_MeshMaker.verts2D.Add(item);
             }
         }
@@ -64,7 +64,6 @@ namespace TorannMagic
         {
             //List<Vector2> list = GenList.ListFullCopy<Vector2>(TM_MeshMaker.verts2D);
             List<Vector2> list = TM_MeshMaker.verts2D.ListFullCopy<Vector2>();
-            Vector3 vector = default(Vector3);
             Vector2 a = default(Vector2);
             TM_MeshMaker.verts2D.Clear();
             for (int i = 0; i < list.Count; i++)
@@ -72,12 +71,12 @@ namespace TorannMagic
                 bool flag = i <= list.Count - 2;
                 if (flag)
                 {
-                    vector = Quaternion.AngleAxis(90f, Vector3.up) * (list[i] - list[i + 1]);
+                    Vector3 vector = Quaternion.AngleAxis(90f, Vector3.up) * (list[i] - list[i + 1]);
                     a = new Vector2(vector.y, vector.z);
                     a.Normalize();
                 }
-                Vector2 item = list[i] - 1f * a;
-                Vector2 item2 = list[i] + 1f * a;
+                Vector2 item = list[i] - (1f * a);
+                Vector2 item2 = list[i] + (1f * a);
                 TM_MeshMaker.verts2D.Add(item);
                 TM_MeshMaker.verts2D.Add(item2);
             }

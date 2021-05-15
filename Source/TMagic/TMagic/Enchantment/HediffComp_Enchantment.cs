@@ -1,7 +1,4 @@
 ﻿using Verse;
-using RimWorld;
-using System.Linq;
-using System.Text;
 
 namespace TorannMagic.Enchantment
 {
@@ -10,7 +7,7 @@ namespace TorannMagic.Enchantment
         private bool initializing = true;
         private bool removeNow = false;
 
-        private string enchantment ="";
+        private string enchantment = "";
 
         CompAbilityUserMagic compMagic;
         CompAbilityUserMight compMight;
@@ -35,7 +32,7 @@ namespace TorannMagic.Enchantment
         {
             get
             {
-                if(compMagic != null && compMagic.IsMagicUser)
+                if (compMagic != null && compMagic.IsMagicUser)
                 {
                     return true;
                 }
@@ -92,13 +89,13 @@ namespace TorannMagic.Enchantment
                     this.Initialize();
                 }
             }
-            if(Find.TickManager.TicksGame % 120 == 0)
+            if (Find.TickManager.TicksGame % 120 == 0)
             {
                 compMagic = this.Pawn.GetComp<CompAbilityUserMagic>();
                 compMight = this.Pawn.GetComp<CompAbilityUserMight>();
                 DetermineEnchantments();
             }
-            if(Find.TickManager.TicksGame % 480 == 0 && this.enchantment == "unknown")
+            if (Find.TickManager.TicksGame % 480 == 0 && this.enchantment == "unknown")
             {
                 this.removeNow = true;
             }
@@ -270,7 +267,7 @@ namespace TorannMagic.Enchantment
             {
                 Log.Message("enchantment unknkown");
                 this.enchantment = "unknown";
-            }           
+            }
 
         }
 
@@ -285,13 +282,13 @@ namespace TorannMagic.Enchantment
             }
             if (mitVal != 1f)
             {
-                txtMight = (mitVal* 100).ToString("0.##") + "%";                 
+                txtMight = (mitVal * 100).ToString("0.##") + "%";
             }
 
             if (txtMagic != "" && txtMight != "")
             {
                 if (magVal != mitVal)
-                { 
+                {
                     this.enchantment = txtMagic + " | " + txtMight;
                 }
                 else
@@ -303,8 +300,8 @@ namespace TorannMagic.Enchantment
             {
                 this.enchantment = txtMagic + txtMight;
             }
-            
-            if(this.enchantment == "")
+
+            if (this.enchantment == "")
             {
                 this.removeNow = true;
             }

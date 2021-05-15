@@ -1,5 +1,4 @@
-﻿using System;
-using Verse;
+﻿using Verse;
 using Verse.AI;
 using RimWorld;
 using System.Collections.Generic;
@@ -43,19 +42,19 @@ namespace TorannMagic
                         IEnumerable<Pawn> breakingPawnsExtreme = BreakRiskAlertUtility.PawnsAtRiskExtreme;
                         foreach (Pawn current in breakingPawnsExtreme)
                         {
-                            if(current == pawn2)
+                            if (current == pawn2)
                             {
                                 bool flag = true;
                                 LocalTargetInfo target = pawn2;
                                 List<Thought_Memory> pawn2Memories = pawn.needs.mood.thoughts.memories.Memories;
-                                for(int i = 0; i < pawn2Memories.Count; i++)
+                                for (int i = 0; i < pawn2Memories.Count; i++)
                                 {
                                     if (pawn2Memories[i].def.defName == "TM_EntertainedTD" && pawn2Memories[i].MoodOffset() > 11f)
                                     {
-                                        flag = false;                                    
+                                        flag = false;
                                     }
-                                }   
-                                if(flag && pawn.CanReserve(target, 1, -1, null, forced))
+                                }
+                                if (flag && pawn.CanReserve(target, 1, -1, null, forced))
                                 {
                                     return true;
                                 }
@@ -99,7 +98,7 @@ namespace TorannMagic
                                 }
                                 if (flag)
                                 {
-                                   
+
                                     return true;
                                 }
                                 return false;
@@ -119,7 +118,7 @@ namespace TorannMagic
             //{
             //    return null;
             //}
-            return new Job(TorannMagicDefOf.JobDriver_Entertain, t);        
+            return new Job(TorannMagicDefOf.JobDriver_Entertain, t);
         }
     }
 }

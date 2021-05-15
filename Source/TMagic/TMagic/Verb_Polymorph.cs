@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using RimWorld;
 using AbilityUser;
 using Verse;
-using Verse.AI;
 using UnityEngine;
 
 
@@ -54,7 +51,7 @@ namespace TorannMagic
             pwrVal = pwr.level;
             CompAbilityUserMagic comp = base.CasterPawn.GetComp<CompAbilityUserMagic>();
             this.arcaneDmg = base.CasterPawn.GetComp<CompAbilityUserMagic>().arcaneDmg;
-            this.duration += Mathf.RoundToInt(600 * verVal * this.arcaneDmg); 
+            this.duration += Mathf.RoundToInt(600 * verVal * this.arcaneDmg);
 
             if (base.CasterPawn.story.traits.HasTrait(TorannMagicDefOf.Faceless))
             {
@@ -90,14 +87,14 @@ namespace TorannMagic
                         float enchantChance = .5f;
                         if (!TM_Calc.IsRobotPawn(newPawn))
                         {
-                            enchantChance = (.5f + (.1f * pwrVal) * TM_Calc.GetSpellSuccessChance(this.CasterPawn, newPawn));
+                            enchantChance = .5f + (.1f * pwrVal * TM_Calc.GetSpellSuccessChance(this.CasterPawn, newPawn));
                         }
                         else
                         {
-                            enchantChance = (.0f + (.2f * pwrVal) * TM_Calc.GetSpellSuccessChance(this.CasterPawn, newPawn));
+                            enchantChance = .0f + (.2f * pwrVal * TM_Calc.GetSpellSuccessChance(this.CasterPawn, newPawn));
                         }
                         if (Rand.Chance(enchantChance) && newPawn.GetComp<CompPolymorph>() != null)
-                        { 
+                        {
                             FactionDef fDef = null;
                             if (newPawn.Faction != null)
                             {
@@ -120,7 +117,7 @@ namespace TorannMagic
 
                             Pawn polymorphedPawn = TM_Action.PolymorphPawn(this.CasterPawn, newPawn, newPawn, spawnThing, newPawn.Position, true, duration, newPawn.Faction);
 
-                            if (polymorphedPawn.Faction != this.CasterPawn.Faction && polymorphedPawn.mindState != null && Rand.Chance(Mathf.Clamp((.2f * this.pwrVal), 0f, .5f)))
+                            if (polymorphedPawn.Faction != this.CasterPawn.Faction && polymorphedPawn.mindState != null && Rand.Chance(Mathf.Clamp(.2f * this.pwrVal, 0f, .5f)))
                             {
                                 polymorphedPawn.mindState.mentalStateHandler.TryStartMentalState(MentalStateDefOf.Berserk, "wild beast!", true, false, null, true);
                             }
@@ -133,7 +130,7 @@ namespace TorannMagic
                             MoteMaker.ThrowSmoke(newPawn.DrawPos, newPawn.Map, 2);
                             MoteMaker.ThrowMicroSparks(newPawn.DrawPos, newPawn.Map);
                             MoteMaker.ThrowHeatGlow(newPawn.Position, newPawn.Map, 2);
-                            
+
                             newPawn.DeSpawn();
                             if (polymorphedPawn.IsColonist && !base.CasterPawn.IsColonist)
                             {
@@ -145,13 +142,13 @@ namespace TorannMagic
                             MoteMaker.ThrowText(newPawn.DrawPos, newPawn.Map, "TM_ResistedSpell".Translate(), -1);
                         }
                     }
-                                        
+
                 }
             }
             this.PostCastShot(flag, out flag);
             return flag;
-        }   
-        
+        }
+
         private void GetPolyMinMax(Pawn pawn)
         {
             if (this.verVal >= 3)
@@ -206,6 +203,6 @@ namespace TorannMagic
                     this.max = 60;
                 }
             }
-        }        
+        }
     }
 }

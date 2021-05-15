@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using RimWorld;
-using Verse;
+﻿using Verse;
 
 namespace TorannMagic
 {
@@ -69,12 +65,12 @@ namespace TorannMagic
                 {
                     TM_MoteMaker.ThrowArcaneMote(this.Pawn.DrawPos, this.Pawn.Map, Rand.Range(.6f, 1f));
                 }
-            }            
+            }
         }
 
         public override void CompPostTick(ref float severityAdjustment)
         {
-            base.CompPostTick(ref severityAdjustment);            
+            base.CompPostTick(ref severityAdjustment);
             bool flag = base.Pawn != null;
             if (flag)
             {
@@ -87,7 +83,7 @@ namespace TorannMagic
             bool flag4 = Find.TickManager.TicksGame % 600 == 0;
             if (flag4)
             {
-                if(bonderPawn != null && !bonderPawn.Dead && !bonderPawn.Destroyed && (bonderPawn.health.hediffSet.HasHediff(HediffDef.Named("TM_SDSoulBondPhysicalHD"),false) || bonderPawn.health.hediffSet.HasHediff(HediffDef.Named("TM_WDSoulBondMentalHD"),false)))
+                if (bonderPawn != null && !bonderPawn.Dead && !bonderPawn.Destroyed && (bonderPawn.health.hediffSet.HasHediff(HediffDef.Named("TM_SDSoulBondPhysicalHD"), false) || bonderPawn.health.hediffSet.HasHediff(HediffDef.Named("TM_WDSoulBondMentalHD"), false)))
                 {
                     //do nothing
                 }

@@ -1,14 +1,13 @@
 ﻿using RimWorld;
 using Verse;
 using AbilityUser;
-using UnityEngine;
 using System.Linq;
 using System.Collections.Generic;
 
 namespace TorannMagic
 {
     [StaticConstructorOnStartup]
-    class Verb_DeathMark : Verb_UseAbility  
+    class Verb_DeathMark : Verb_UseAbility
     {
 
         private int verVal;
@@ -58,22 +57,22 @@ namespace TorannMagic
 
             if (this.currentTarget != null && base.CasterPawn != null)
             {
-                
+
                 Map map = this.CasterPawn.Map;
                 this.TargetsAoE.Clear();
                 //this.UpdateTargets();
                 this.FindTargets();
                 ModOptions.SettingsRef settingsRef = new ModOptions.SettingsRef();
-                for(int i =0; i < this.TargetsAoE.Count; i++)
+                for (int i = 0; i < this.TargetsAoE.Count; i++)
                 {
                     if (this.TargetsAoE[i].Thing is Pawn)
                     {
                         Pawn victim = this.TargetsAoE[i].Thing as Pawn;
-                        if(!victim.RaceProps.IsMechanoid)
+                        if (!victim.RaceProps.IsMechanoid)
                         {
                             if (Rand.Chance(TM_Calc.GetSpellSuccessChance(this.CasterPawn, victim, true)))
                             {
-                                HealthUtility.AdjustSeverity(victim, HediffDef.Named("TM_DeathMarkCurse"), (Rand.Range(1f + pwrVal, 4 + 2 * pwrVal) * this.arcaneDmg));
+                                HealthUtility.AdjustSeverity(victim, HediffDef.Named("TM_DeathMarkCurse"), Rand.Range(1f + pwrVal, 4 + (2 * pwrVal)) * this.arcaneDmg);
                                 TM_MoteMaker.ThrowSiphonMote(victim.DrawPos, victim.Map, 1.4f);
                                 if (comp.Pawn.health.hediffSet.HasHediff(HediffDef.Named("TM_LichHD"), false))
                                 {

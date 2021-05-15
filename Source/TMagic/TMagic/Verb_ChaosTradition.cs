@@ -1,15 +1,11 @@
-﻿using RimWorld;
-using System;
-using Verse;
+﻿using Verse;
 using AbilityUser;
 using UnityEngine;
-using System.Collections.Generic;
 using System.Linq;
-using HarmonyLib;
 
 namespace TorannMagic
 {
-    public class Verb_ChaosTradition : Verb_UseAbility  
+    public class Verb_ChaosTradition : Verb_UseAbility
     {
         private int verVal;
         private int pwrVal;
@@ -23,7 +19,7 @@ namespace TorannMagic
         {
             bool result = false;
             Map map = this.CasterPawn.Map;
-            CompAbilityUserMagic comp = this.CasterPawn.GetComp<CompAbilityUserMagic>();            
+            CompAbilityUserMagic comp = this.CasterPawn.GetComp<CompAbilityUserMagic>();
 
             if (this.CasterPawn != null && !this.CasterPawn.Downed && comp != null && comp.MagicData != null)
             {
@@ -35,23 +31,23 @@ namespace TorannMagic
                 gEff = comp.MagicData.MagicPowerSkill_global_eff.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_global_eff_pwr").level;
                 gSpirit = comp.MagicData.MagicPowerSkill_global_spirit.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_global_spirit_pwr").level;
 
-                TM_Action.ClearSustainedMagicHediffs(comp);                
+                TM_Action.ClearSustainedMagicHediffs(comp);
                 TM_Calc.AssignChaosMagicPowers(comp);
 
-                if(effVal >= 3)
+                if (effVal >= 3)
                 {
                     HealthUtility.AdjustSeverity(this.CasterPawn, TorannMagicDefOf.TM_ChaosTraditionHD, 8f);
                 }
-                if(effVal >= 2)
+                if (effVal >= 2)
                 {
                     comp.Mana.CurLevel += .25f * comp.mpRegenRate;
                 }
-                if(effVal >= 1)
-                { 
+                if (effVal >= 1)
+                {
                     HealthUtility.AdjustSeverity(this.CasterPawn, TorannMagicDefOf.TM_ChaoticMindHD, 24f);
                 }
 
-                comp.MagicData.MagicAbilityPoints -= ((2*(pwrVal + verVal + effVal)) + gSpirit + gRegen + gEff);
+                comp.MagicData.MagicAbilityPoints -= (2 * (pwrVal + verVal + effVal)) + gSpirit + gRegen + gEff;
                 comp.MagicData.MagicPowerSkill_ChaosTradition.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_ChaosTradition_pwr").level = pwrVal;
                 comp.MagicData.MagicPowerSkill_ChaosTradition.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_ChaosTradition_ver").level = verVal;
                 comp.MagicData.MagicPowerSkill_ChaosTradition.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_ChaosTradition_eff").level = effVal;
@@ -60,7 +56,7 @@ namespace TorannMagic
                 comp.MagicData.MagicPowerSkill_global_eff.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_global_eff_pwr").level = gEff;
                 comp.MagicData.MagicPowerSkill_global_spirit.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_global_spirit_pwr").level = gSpirit;
 
-                if(comp.MagicData.MagicAbilityPoints < 0)
+                if (comp.MagicData.MagicAbilityPoints < 0)
                 {
                     comp.MagicData.MagicAbilityPoints = 0;
                 }
@@ -75,22 +71,22 @@ namespace TorannMagic
 
             this.burstShotsLeft = 0;
             return result;
-        }  
-        
+        }
+
         public void ClearSpellRemnants(CompAbilityUserMagic comp)
         {
             if (comp != null)
             {
                 if (comp.Pawn.equipment != null && comp.Pawn.equipment.Primary != null && comp.Pawn.equipment.Primary.def.defName.Contains("TM_TechnoWeapon_Base"))
-                {                        
+                {
                     comp.technoWeaponThing = null;
                     comp.technoWeaponThingDef = null;
                     comp.technoWeaponDefNum = -1;
-                    if(!comp.Pawn.equipment.Primary.DestroyedOrNull())
+                    if (!comp.Pawn.equipment.Primary.DestroyedOrNull())
                     {
                         comp.Pawn.equipment.Primary.Destroy(DestroyMode.Vanish);
                     }
-                }                
+                }
 
                 if (comp.MagicUserLevel >= 20)
                 {
@@ -120,13 +116,13 @@ namespace TorannMagic
                             {
                                 comp.stoneskinPawns[i].health.RemoveHediff(hd);
                             }
-                        }                        
+                        }
                     }
                 }
 
-                if(comp.weaponEnchants != null && comp.weaponEnchants.Count > 0)
+                if (comp.weaponEnchants != null && comp.weaponEnchants.Count > 0)
                 {
-                    for(int i = 0; i < comp.weaponEnchants.Count; i++)
+                    for (int i = 0; i < comp.weaponEnchants.Count; i++)
                     {
                         Verb_DispelEnchantWeapon.RemoveExistingEnchantment(comp.weaponEnchants[i]);
                     }
@@ -136,13 +132,13 @@ namespace TorannMagic
 
                 if (comp.enchanterStones != null && comp.enchanterStones.Count > 0)
                 {
-                    for (int i = 0; i < comp.enchanterStones.Count; i++)
+                    foreach (var enchanterStone in comp.enchanterStones)
                     {
-                        if(comp.enchanterStones[i].Map != null)
+                        if (enchanterStone.Map != null)
                         {
-                            TM_Action.TransmutateEffects(comp.enchanterStones[i].Position, comp.Pawn);
+                            TM_Action.TransmutateEffects(enchanterStone.Position, comp.Pawn);
                         }
-                        comp.enchanterStones[i].Destroy(DestroyMode.Vanish);
+                        enchanterStone.Destroy(DestroyMode.Vanish);
                     }
                     comp.enchanterStones.Clear();
                     comp.RemovePawnAbility(TorannMagicDefOf.TM_DismissEnchanterStones);

@@ -17,8 +17,6 @@ namespace TorannMagic
                 List<TraitDef> restrictedTraits = null;
                 if (this.parent.def.HasModExtension<DefModExtension_LearnAbilityRequiredTraits>())
                 {
-                    restrictedTraits = new List<TraitDef>();
-                    restrictedTraits.Clear();
                     restrictedTraits = this.parent.def.GetModExtension<DefModExtension_LearnAbilityRequiredTraits>().traits;
                 }
                 bool hasRequiredTrait = true;
@@ -40,12 +38,12 @@ namespace TorannMagic
                     {
                         TMAbilityDef ad = (TMAbilityDef)comp.MagicData.AllMagicPowers[i].abilityDef;
                         if (ad.learnItem == parent.def)
-                        {                           
+                        {
                             if (!TM_Data.RestrictedAbilities.Contains(parent.def) && !comp.MagicData.AllMagicPowers[i].learned && hasRequiredTrait)
                             {
                                 itemUsed = true;
                                 comp.MagicData.AllMagicPowers[i].learned = true;
-                                if(ad.shouldInitialize)
+                                if (ad.shouldInitialize)
                                 {
                                     comp.RemovePawnAbility(ad);
                                     comp.AddPawnAbility(ad);
@@ -56,11 +54,11 @@ namespace TorannMagic
                             }
                             else if ((TM_Data.RestrictedAbilities.Contains(parent.def) || hasRequiredTrait) && !comp.MagicData.AllMagicPowers[i].learned)
                             {
-                                if(comp.customClass.learnableSpells.Contains(parent.def))
+                                if (comp.customClass.learnableSpells.Contains(parent.def))
                                 {
                                     itemUsed = true;
                                     comp.MagicData.AllMagicPowers[i].learned = true;
-                                    if(ad.shouldInitialize)
+                                    if (ad.shouldInitialize)
                                     {
                                         comp.RemovePawnAbility(ad);
                                         comp.AddPawnAbility(ad);
@@ -74,7 +72,7 @@ namespace TorannMagic
                                     Messages.Message("CannotLearnSpell".Translate(), MessageTypeDefOf.RejectInput);
                                     break;
                                 }
-                            }                            
+                            }
                             else
                             {
                                 if (!hasRequiredTrait)
@@ -93,7 +91,7 @@ namespace TorannMagic
                     if (!itemUsed)
                     {
 
-                        Messages.Message("CannotLearnSpell".Translate(), MessageTypeDefOf.RejectInput);                        
+                        Messages.Message("CannotLearnSpell".Translate(), MessageTypeDefOf.RejectInput);
                         return;
                     }
                 }

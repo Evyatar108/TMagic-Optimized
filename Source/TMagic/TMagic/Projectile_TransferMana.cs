@@ -15,7 +15,7 @@ namespace TorannMagic
 
             Pawn hitPawn = hitThing as Pawn;
             Pawn caster = this.launcher as Pawn;
-            CompAbilityUserMagic compHitPawn = hitPawn.GetComp<CompAbilityUserMagic>();            
+            CompAbilityUserMagic compHitPawn = hitPawn.GetComp<CompAbilityUserMagic>();
             CompAbilityUserMagic compCaster = caster.GetComp<CompAbilityUserMagic>();
 
             if (hitPawn != null && compHitPawn != null)
@@ -26,7 +26,7 @@ namespace TorannMagic
                     compHitPawn.Mana.CurLevel += (.2f + (.01f * regen.level)) * compCaster.arcaneDmg;
                     TM_MoteMaker.ThrowManaPuff(hitPawn.DrawPos, hitPawn.Map, 1f);
                     TM_MoteMaker.ThrowManaPuff(hitPawn.DrawPos, hitPawn.Map, 1f);
-                    if(compCaster.MagicData != null && compCaster.MagicData.MagicPowerSkill_Cantrips.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_Cantrips_pwr").level >= 6)
+                    if (compCaster.MagicData != null && compCaster.MagicData.MagicPowerSkill_Cantrips.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_Cantrips_pwr").level >= 6)
                     {
                         float sev = Rand.Range(0, 10) * compCaster.arcaneDmg;
                         HealthUtility.AdjustSeverity(hitPawn, TorannMagicDefOf.TM_Manipulation, sev);

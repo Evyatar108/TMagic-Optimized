@@ -1,9 +1,6 @@
 ﻿using System.Collections.Generic;
 using Verse.AI;
-using RimWorld;
 using Verse;
-using AbilityUser;
-using System.Linq;
 
 
 namespace TorannMagic
@@ -24,7 +21,7 @@ namespace TorannMagic
             {
                 initAction = () =>
                 {
-                    if(this.age > this.durationTicks)
+                    if (this.age > this.durationTicks)
                     {
                         this.EndJobWith(JobCondition.InterruptForced);
                     }
@@ -46,10 +43,10 @@ namespace TorannMagic
                 {
                     return 1f;
                 }
-                return 1f - (float)doFor.actor.jobs.curDriver.ticksLeftThisToil / this.durationTicks;
+                return 1f - ((float)doFor.actor.jobs.curDriver.ticksLeftThisToil / this.durationTicks);
 
             }, false, 0f);
-            yield return doFor;         
+            yield return doFor;
         }
     }
 }

@@ -40,19 +40,18 @@ namespace TorannMagic
         {
             base.SpawnSetup(map, respawningAfterLoad);
             replicatedRecipes = new List<RecipeDef>();
-            replicatedRecipes.Clear();
         }
 
         public override IEnumerable<Gizmo> GetGizmos()
         {
-            
+
             var gizmoList = base.GetGizmos().ToList();
             if (ResearchProjectDef.Named("TM_ForgeReplication").IsFinished)
             {
                 bool canScan = true;
-                for(int i =0; i < this.BillStack.Count; i++)
+                for (int i = 0; i < this.BillStack.Count; i++)
                 {
-                    if(this.BillStack[i].recipe.defName == "ArcaneForge_Replication")
+                    if (this.BillStack[i].recipe.defName == "ArcaneForge_Replication")
                     {
                         canScan = false;
                     }
@@ -121,7 +120,7 @@ namespace TorannMagic
                 }
             }
 
-            return gizmoList;            
+            return gizmoList;
         }
 
         private void ClearReplication()
@@ -131,9 +130,9 @@ namespace TorannMagic
                 if (this.BillStack[i].recipe.defName == "ArcaneForge_Replication")
                 {
                     List<Pawn> mapPawns = this.Map.mapPawns.AllPawnsSpawned;
-                    for(int j =0; j < mapPawns.Count; j++)
+                    for (int j = 0; j < mapPawns.Count; j++)
                     {
-                        if(mapPawns[j].IsColonist && mapPawns[j].RaceProps.Humanlike && mapPawns[j].CurJob != null && mapPawns[j].CurJob.bill != null)
+                        if (mapPawns[j].IsColonist && mapPawns[j].RaceProps.Humanlike && mapPawns[j].CurJob != null && mapPawns[j].CurJob.bill != null)
                         {
                             if (mapPawns[j].CurJob.bill.recipe.defName == this.BillStack[i].recipe.defName)
                             {
@@ -141,12 +140,10 @@ namespace TorannMagic
                             }
                         }
                     }
-                    
-                    this.BillStack.Bills.Remove(this.BillStack[i]);
                 }
             }
-            
-            
+
+            this.BillStack.Bills.RemoveAll(x => x.recipe.defName == "ArcaneForge_Replication");
         }
 
         public void Replicate(ThingDef repThingDef = null, ThingDef repStuffDef = null)
@@ -167,10 +164,9 @@ namespace TorannMagic
             RecipeDef forgeRecipe = TorannMagicDefOf.ArcaneForge_Replication;
             RecipeDef replicant = null;
             List<RecipeDef> potentialRecipes = new List<RecipeDef>();
-            potentialRecipes.Clear();
 
             IEnumerable<RecipeDef> enumerable = from def in DefDatabase<RecipeDef>.AllDefs
-                                                where (!(def is MagicRecipeDef) && def.defName.Contains(replicatedThingDef.defName) && !def.defName.Contains("Administer") && !def.label.Contains("Replicate") && !def.label.Contains("Install") && !def.label.Contains("install"))
+                                                where !(def is MagicRecipeDef) && def.defName.Contains(replicatedThingDef.defName) && !def.defName.Contains("Administer") && !def.label.Contains("Replicate") && !def.label.Contains("Install") && !def.label.Contains("install")
                                                 select def;
 
             foreach (RecipeDef current in enumerable)
@@ -181,12 +177,12 @@ namespace TorannMagic
             RecipeDef gemstoneRecipe = null;
             gemstoneRecipe = CheckForGemstone(replicatedThingDef);
 
-            if(gemstoneRecipe != null)
+            if (gemstoneRecipe != null)
             {
                 potentialRecipes.Add(gemstoneRecipe);
             }
 
-            if(potentialRecipes != null && replicatedThingDef != null && potentialRecipes.Count > 0)
+            if (potentialRecipes != null && replicatedThingDef != null && potentialRecipes.Count > 0)
             {
                 replicant = potentialRecipes.RandomElement();
 
@@ -230,9 +226,9 @@ namespace TorannMagic
                 forgeRecipe.products = replicant.products;
                 this.copiedThingDef = replicatedThingDef;
                 this.copiedStuffDef = replicatedStuffDef;
-                this.hasSavedRecipe = true;                
+                this.hasSavedRecipe = true;
 
-                EndReplicate:;
+            EndReplicate:;
 
                 if (forgeRecipe.ingredients.Count == 0)
                 {
@@ -262,13 +258,13 @@ namespace TorannMagic
             {
                 Messages.Message("TM_FoundNoReplicateRecipe".Translate(this.targetThing.def.defName), MessageTypeDefOf.CautionInput);
             }
-      
+
         }
 
         private void CheckForUnfinishedThing()
         {
             Thing unfinishedThing = this.Position.GetFirstItem(this.Map);
-            if(unfinishedThing != null && unfinishedThing.def.isUnfinishedThing)
+            if (unfinishedThing != null && unfinishedThing.def.isUnfinishedThing)
             {
                 unfinishedThing.Destroy(DestroyMode.Cancel);
             }
@@ -312,7 +308,7 @@ namespace TorannMagic
             {
                 gemType = "ArcaneDmgGem";
             }
-            if(td.defName.Contains("_major"))
+            if (td.defName.Contains("_major"))
             {
                 gemQual = "Major";
             }
@@ -326,7 +322,7 @@ namespace TorannMagic
 
 
             IEnumerable<RecipeDef> enumerable = from def in DefDatabase<RecipeDef>.AllDefs
-                                                where (def.defName == gemString)
+                                                where def.defName == gemString
                                                 select def;
 
             foreach (RecipeDef current in enumerable)
@@ -339,8 +335,7 @@ namespace TorannMagic
 
         private void RestoreForgeRecipeAfterLoad()
         {
-            RecipeDef forgeRecipe = TorannMagicDefOf.ArcaneForge_Replication;            
-            if(this.hasSavedRecipe)
+            if (this.hasSavedRecipe)
             {
                 Replicate(this.copiedThingDef, this.copiedStuffDef);
             }

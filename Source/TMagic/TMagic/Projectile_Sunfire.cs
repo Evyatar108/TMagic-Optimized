@@ -1,10 +1,7 @@
 ﻿using Verse;
 using Verse.Sound;
 using RimWorld;
-using RimWorld.Planet;
 using AbilityUser;
-using System;
-using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -86,17 +83,17 @@ namespace TorannMagic
             int mapTime = GenLocalDate.HourOfDay(caster.Map);
             if (mapTime > 13)
             {
-                this.angle = ((float)Mathf.Abs(mapTime - 12f) * -5f);
+                this.angle = (float)Mathf.Abs(mapTime - 12f) * -5f;
             }
-            else if( mapTime < 12)
+            else if (mapTime < 12)
             {
-                this.angle = ((float)Mathf.Abs(12 - mapTime) * 5f);
+                this.angle = (float)Mathf.Abs(12 - mapTime) * 5f;
             }
             else
             {
                 this.angle = 0f;
             }
-            this.radius += (.15f * this.def.projectile.explosionRadius);
+            this.radius += .15f * this.def.projectile.explosionRadius;
             this.CheckSpawnSustainer();
             this.InitializeBeams();
         }
@@ -110,16 +107,16 @@ namespace TorannMagic
             sfBeamsStartTick.Clear();
             sfBeamsStep.Clear();
             Vector3 centerPos = base.Position.ToVector3Shifted();
-            int beamCount = 8 + (Mathf.RoundToInt(this.def.projectile.explosionRadius)*2) + (4*verVal);
-            for(int i =0; i < beamCount; i++)
-            {                
+            int beamCount = 8 + (Mathf.RoundToInt(this.def.projectile.explosionRadius) * 2) + (4 * verVal);
+            for (int i = 0; i < beamCount; i++)
+            {
                 Vector3 rndPos = centerPos;
                 rndPos.x += Rand.Range(-this.radius, this.radius);
                 rndPos.z += Rand.Range(-this.radius, this.radius);
-                if(!rndPos.InBounds(this.Map))
+                if (!rndPos.InBounds(this.Map))
                 {
                     continue;
-                }                
+                }
                 Vector3 dstPos = rndPos;
                 dstPos.x += Rand.Range(-this.radius, this.radius);
                 dstPos.z += Rand.Range(-this.radius, this.radius);
@@ -127,7 +124,7 @@ namespace TorannMagic
                 {
                     continue;
                 }
-                int step = Rand.Range(25+(3*verVal), 40);
+                int step = Rand.Range(25 + (3 * verVal), 40);
                 sfBeamsStep.Add(step);
                 sfBeamsStartTick.Add(i * Rand.Range(15, 20));
                 sfBeams.Add(rndPos);
@@ -139,8 +136,6 @@ namespace TorannMagic
 
         protected override void Impact(Thing hitThing)
         {
-            Map map = base.Map;
-            ThingDef def = this.def;
             if (!this.initialized)
             {
                 Initialize();
@@ -158,13 +153,13 @@ namespace TorannMagic
                 }
             }
 
-            if(this.sfBeams != null && this.sfBeams.Count > 0)
+            if (this.sfBeams != null && this.sfBeams.Count > 0)
             {
                 DoSunfireActions();
             }
-            
-            if(sfBeams == null || sfBeams.Count <= 0 || this.ignoreAge)
-            { 
+
+            if (sfBeams == null || sfBeams.Count <= 0 || this.ignoreAge)
+            {
                 this.ignoreAge = true;
                 Destroy(DestroyMode.Vanish);
             }
@@ -195,7 +190,7 @@ namespace TorannMagic
                             SunfireDamage(sfBeams[i].ToIntVec3());
                             TM_MoteMaker.ThrowGenericMote(ThingDefOf.Mote_DustPuff, sfBeams[i], this.Map, .4f, .2f, .1f, .2f, Rand.Range(-100, 100), 2f, Rand.Range(0, 360), 0);
                             sfBeams[i] += sfBeamsROM[i];
-                            sfBeamsROM[i] += (sfBeamsCurve[i] * (20f - sfBeamsStep[i]));
+                            sfBeamsROM[i] += sfBeamsCurve[i] * (20f - sfBeamsStep[i]);
                         }
                     }
                 }
@@ -220,22 +215,22 @@ namespace TorannMagic
         {
             List<Thing> tList = c.GetThingList(this.Map);
             float baseDamage = 4f * lightPotency * this.arcaneDmg;
-            for(int i = 0; i < tList.Count; i++)
+            for (int i = 0; i < tList.Count; i++)
             {
-                if(tList[i] is Pawn)
+                if (tList[i] is Pawn)
                 {
                     Pawn p = tList[i] as Pawn;
                     BodyPartRecord bpr = p.health.hediffSet.GetRandomNotMissingPart(TMDamageDefOf.DamageDefOf.TM_BurningLight, BodyPartHeight.Undefined, BodyPartDepth.Outside);
                     if (bpr != null)
                     {
-                        TM_Action.DamageEntities(tList[i], bpr, baseDamage + pwrVal, (.1f * pwrVal), TMDamageDefOf.DamageDefOf.TM_BurningLight, caster);
+                        TM_Action.DamageEntities(tList[i], bpr, baseDamage + pwrVal, .1f * pwrVal, TMDamageDefOf.DamageDefOf.TM_BurningLight, caster);
                     }
                 }
-                if(tList[i] is Building)
+                if (tList[i] is Building)
                 {
                     TM_Action.DamageEntities(tList[i], null, 4 * (baseDamage + pwrVal), TMDamageDefOf.DamageDefOf.TM_BurningLight, caster);
                 }
-                if(Rand.Chance(.02f))
+                if (Rand.Chance(.02f))
                 {
                     if (FireUtility.CanEverAttachFire(tList[i]))
                     {
@@ -245,7 +240,7 @@ namespace TorannMagic
                     {
                         FireUtility.TryStartFireIn(c, this.Map, .2f);
                     }
-                }                
+                }
             }
         }
 
@@ -262,18 +257,18 @@ namespace TorannMagic
 
         public void DrawBeams(int i)
         {
-            float lanceWidth = .5f;                                                              
+            float lanceWidth = .5f;
             if (this.age - sfBeamsStartTick[i] <= 10)
             {
                 lanceWidth *= (float)(this.age - sfBeamsStartTick[i]) / 10f;
             }
             if (this.sfBeamsStep[i] < 10)
             {
-                lanceWidth *= (float)(sfBeamsStep[i]) / 10f;
+                lanceWidth *= (float)sfBeamsStep[i] / 10f;
             }
             float lanceLength = ((float)base.Map.Size.z - sfBeams[i].z) * 1.4f;
             Vector3 a = Vector3Utility.FromAngleFlat(this.angle - 90f);  //angle of beam
-            Vector3 lanceVector = sfBeams[i] + a * lanceLength * 0.5f;
+            Vector3 lanceVector = sfBeams[i] + (a * lanceLength * 0.5f);
             Matrix4x4 matrix = default(Matrix4x4);
             matrix.SetTRS(lanceVector, Quaternion.Euler(0f, this.angle, 0f), new Vector3(lanceWidth, 1f, lanceLength));   //drawer for beam
             Graphics.DrawMesh(MeshPool.plane10, matrix, Projectile_Sunfire.BeamMat, 0, null, 0, Projectile_Sunfire.MatPropertyBlock);

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using RimWorld;
+﻿using RimWorld;
 using Verse;
 using Verse.Sound;
 using UnityEngine;
@@ -43,12 +40,12 @@ namespace TorannMagic
             {
                 this.maxSev = Mathf.RoundToInt(this.parent.Severity);
                 //MoteMaker.ThrowHeatGlow(base.Pawn.DrawPos.ToIntVec3(), base.Pawn.Map, 2f);
-            }            
+            }
         }
 
         public override void CompPostTick(ref float severityAdjustment)
         {
-            base.CompPostTick(ref severityAdjustment);            
+            base.CompPostTick(ref severityAdjustment);
             bool flag = base.Pawn != null;
             if (flag)
             {
@@ -62,12 +59,12 @@ namespace TorannMagic
             if (Find.Selector.FirstSelectedObject == this.Pawn)
             {
                 HediffStage hediffStage = this.Pawn.health.hediffSet.GetFirstHediffOfDef(HediffDef.Named("TM_StoneskinHD"), false).CurStage;
-                hediffStage.label = this.parent.Severity.ToString("0") + " charges";               
+                hediffStage.label = this.parent.Severity.ToString("0") + " charges";
             }
-            
-            if(Find.TickManager.TicksGame % 1800 == 0)
+
+            if (Find.TickManager.TicksGame % 1800 == 0)
             {
-                if(this.parent.Severity < this.maxSev)
+                if (this.parent.Severity < this.maxSev)
                 {
                     this.parent.Severity++;
                 }

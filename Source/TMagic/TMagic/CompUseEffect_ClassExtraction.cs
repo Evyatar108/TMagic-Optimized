@@ -1,7 +1,5 @@
 ﻿using RimWorld;
 using Verse;
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using TorannMagic.Enchantment;
 
@@ -14,21 +12,21 @@ namespace TorannMagic
             CompAbilityUserMagic compMagic = user.GetComp<CompAbilityUserMagic>();
             CompAbilityUserMight compMight = user.GetComp<CompAbilityUserMight>();
             int essenceXP = 0;
-            if(compMagic != null && compMagic.IsMagicUser && compMagic.MagicUserXP != 0 && compMagic.MagicData != null)
+            if (compMagic != null && compMagic.IsMagicUser && compMagic.MagicUserXP != 0 && compMagic.MagicData != null)
             {
                 essenceXP += Rand.Range(300, 500);
-                for(int i = 0; i < compMagic.MagicData.MagicPowersStandalone.Count; i++)
+                for (int i = 0; i < compMagic.MagicData.MagicPowersStandalone.Count; i++)
                 {
                     MagicPower mp = compMagic.MagicData.MagicPowersStandalone[i];
-                    if(mp.learned)
+                    if (mp.learned)
                     {
-                        essenceXP += Rand.Range(80, 120);                       
+                        essenceXP += Rand.Range(80, 120);
                     }
                 }
                 essenceXP += Mathf.RoundToInt(compMagic.MagicUserXP / Rand.Range(1.7f, 2.3f));
                 Thing mes = ThingMaker.MakeThing(TorannMagicDefOf.TM_MagicArtifact_MagicEssence, null);
                 CompEnchantedItem itemComp = mes.TryGetComp<CompEnchantedItem>();
-                if(itemComp != null && itemComp.HasEnchantment)
+                if (itemComp != null && itemComp.HasEnchantment)
                 {
                     itemComp.magicEssence = essenceXP;
                 }
@@ -54,7 +52,6 @@ namespace TorannMagic
                     itemComp.mightEssence = essenceXP;
                 }
                 GenPlace.TryPlaceThing(mes, this.parent.Position, this.parent.Map, ThingPlaceMode.Near);
-                essenceXP = 0;
             }
 
             ModOptions.TM_DebugTools.RemoveClass(user);

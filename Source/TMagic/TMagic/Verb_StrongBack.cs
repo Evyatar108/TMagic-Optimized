@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using RimWorld;
 using AbilityUser;
 using Verse;
-using UnityEngine;
 
 
 namespace TorannMagic
@@ -19,7 +17,7 @@ namespace TorannMagic
             bool flag = pawn != null && !pawn.Dead;
             if (flag)
             {
-                if(pawn.health.hediffSet.HasHediff(TorannMagicDefOf.TM_HediffStrongBack))
+                if (pawn.health.hediffSet.HasHediff(TorannMagicDefOf.TM_HediffStrongBack))
                 {
                     using (IEnumerator<Hediff> enumerator = pawn.health.hediffSet.GetHediffs<Hediff>().GetEnumerator())
                     {
@@ -44,7 +42,7 @@ namespace TorannMagic
                     {
                         val = 2.5f;
                     }
-                    
+
                     HealthUtility.AdjustSeverity(pawn, TorannMagicDefOf.TM_HediffStrongBack, val);
                     MoteMaker.ThrowDustPuff(pawn.Position, pawn.Map, 1f);
                 }

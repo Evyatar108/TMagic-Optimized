@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using RimWorld;
+﻿using RimWorld;
 using UnityEngine;
 using Verse;
 
@@ -84,7 +81,7 @@ namespace TorannMagic.WorldTransport
             matrix.SetTRS(drawPos, Quaternion.Euler(0f, this.angle, 0f), new Vector3(lanceWidth, 1f, beamLength));   //drawer for beam
             Graphics.DrawMesh(MeshPool.plane10, matrix, TM_DropPodIncoming.BeamMat, 0, null, 0, TM_DropPodIncoming.MatPropertyBlock);
             Matrix4x4 matrix2 = default(Matrix4x4);
-            matrix2.SetTRS(base.Position.ToVector3Shifted() + Vector3Utility.FromAngleFlat(this.angle + 90) * .5f * lanceWidth, Quaternion.Euler(0f, this.angle, 0f), new Vector3(lanceWidth, 1f, lanceWidth));                 //drawer for beam start
+            matrix2.SetTRS(base.Position.ToVector3Shifted() + (Vector3Utility.FromAngleFlat(this.angle + 90) * .5f * lanceWidth), Quaternion.Euler(0f, this.angle, 0f), new Vector3(lanceWidth, 1f, lanceWidth));                 //drawer for beam start
             Graphics.DrawMesh(MeshPool.plane10, matrix2, TM_DropPodIncoming.BeamEndMat, 0, null, 0, TM_DropPodIncoming.MatPropertyBlock);
         }
     }

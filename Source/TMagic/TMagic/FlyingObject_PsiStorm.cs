@@ -1,10 +1,8 @@
 ﻿using RimWorld;
-using System;
 using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using Verse;
-using Verse.Sound;
 
 namespace TorannMagic
 {
@@ -26,8 +24,6 @@ namespace TorannMagic
         private List<float> boltMagnitude = new List<float>();
 
         List<IntVec3> strikeCells;
-
-        private int effectsTick = 0;
         private int boltDelayTicks = 10;
         private int nextStrikeGenTick = 0;
         private float magnitudeAdjuster = 1f;
@@ -44,7 +40,6 @@ namespace TorannMagic
 
         private int pwrVal = 0;
         private int verVal = 0;
-        private int effVal = 0;
         float radius = 1.4f;
 
         private float proximityRadius = .4f;
@@ -113,17 +108,23 @@ namespace TorannMagic
             this.strikeCells = new List<IntVec3>();
             this.boltTick = new List<int>();
             this.boltMagnitude = new List<float>();
-            this.strikeCells.Clear();
             this.strikeCells = GenRadial.RadialCellsAround(this.centerLoc, 7, true).ToList();
-            for(int i =0; i < this.strikeCells.Count(); i++)
+
+            var cellsToRemove = new HashSet<IntVec3>();
+            for (int i = 0; i < this.strikeCells.Count; i++)
             {
-                if(!this.strikeCells[i].InBounds(this.pawn.Map) || !this.strikeCells[i].IsValid)
+                var strikeCell = this.strikeCells[i];
+                if (!strikeCell.InBounds(this.pawn.Map) || !strikeCell.IsValid)
                 {
+                    cellsToRemove.Add(strikeCell);
                     this.strikeCells.Remove(this.strikeCells[i]);
                 }
             }
+
+            this.strikeCells.RemoveAll(x => cellsToRemove.Contains(x));
+
             flyingThing.ThingID += Rand.Range(0, 214).ToString();
-        }       
+        }
 
         public void Launch(Thing launcher, LocalTargetInfo targ, Thing flyingThing, DamageInfo? impactDamage)
         {
@@ -139,7 +140,7 @@ namespace TorannMagic
         {
             bool spawned = flyingThing.Spawned;
             pawn = launcher as Pawn;
-            
+
             CompAbilityUserMight comp = pawn.GetComp<CompAbilityUserMight>();
             ModOptions.SettingsRef settingsRef = new ModOptions.SettingsRef();
             this.arcaneDmg = comp.mightPwr;
@@ -187,26 +188,26 @@ namespace TorannMagic
             Vector3 offsetVec = default(Vector3);
             if (this.centerLoc.x < this.pawn.Position.x)
             {
-                offsetVec.x = .4f;                
+                offsetVec.x = .4f;
             }
             else
             {
                 offsetVec.x = -.4f;
             }
             offsetVec.z = .866f;
-            this.orbPosition = (this.centerLoc.ToVector3Shifted() + (this.initialOffsetMagnitude * offsetVec));
-            if(!this.orbPosition.InBounds(this.pawn.Map) || !this.orbPosition.ToIntVec3().IsValid)
+            this.orbPosition = this.centerLoc.ToVector3Shifted() + (this.initialOffsetMagnitude * offsetVec);
+            if (!this.orbPosition.InBounds(this.pawn.Map) || !this.orbPosition.ToIntVec3().IsValid)
             {
                 offsetVec.x *= -1f;
-                this.orbPosition = (this.centerLoc.ToVector3Shifted() + (this.initialOffsetMagnitude * offsetVec));
+                this.orbPosition = this.centerLoc.ToVector3Shifted() + (this.initialOffsetMagnitude * offsetVec);
                 if (!this.orbPosition.InBounds(this.pawn.Map) || !this.orbPosition.ToIntVec3().IsValid)
                 {
                     offsetVec.z *= -1f;
-                    this.orbPosition = (this.centerLoc.ToVector3Shifted() + (this.initialOffsetMagnitude * offsetVec));
+                    this.orbPosition = this.centerLoc.ToVector3Shifted() + (this.initialOffsetMagnitude * offsetVec);
                     if (!this.orbPosition.InBounds(this.pawn.Map) || !this.orbPosition.ToIntVec3().IsValid)
                     {
                         offsetVec.x *= -1f;
-                        this.orbPosition = (this.centerLoc.ToVector3Shifted() + (this.initialOffsetMagnitude * offsetVec));
+                        this.orbPosition = this.centerLoc.ToVector3Shifted() + (this.initialOffsetMagnitude * offsetVec);
                         if (!this.orbPosition.InBounds(this.pawn.Map) || !this.orbPosition.ToIntVec3().IsValid)
                         {
                             Log.Message("No valid cell found to begin psionic storm.");
@@ -223,22 +224,22 @@ namespace TorannMagic
             //base.Tick();
             age++;
             if (!pawn.DestroyedOrNull() && !pawn.Dead && !pawn.Downed && this.age > 0)
-            { 
+            {
                 //if job def is on pawn...
                 if (Find.TickManager.TicksGame % 3 == 0)
                 {
                     DrawEffects(this.orbPosition, this.pawn.Map);
                 }
 
-                if(this.nextStrikeGenTick < Find.TickManager.TicksGame)
+                if (this.nextStrikeGenTick < Find.TickManager.TicksGame)
                 {
                     this.nextStrikeGenTick = Find.TickManager.TicksGame + 360;
-                    GenerateNewBolt();                    
+                    GenerateNewBolt();
                 }
 
                 DrawBoltMeshes();
             }
-            else if(this.age > this.duration)
+            else if (this.age > this.duration)
             {
                 Destroy(DestroyMode.Vanish);
             }
@@ -252,10 +253,10 @@ namespace TorannMagic
         {
             for (int i = 0; i < this.boltPosition.Count(); i++)
             {
-                if(this.boltTick[i] < 0)
+                if (this.boltTick[i] < 0)
                 {
                     this.boltTick[i] = this.boltDelayTicks;
-                    if(this.boltPosition[i].ToIntVec3() == this.boltDestination[i] || ((this.boltDestination[i] - this.boltOrigin[i]).LengthHorizontal <= (this.boltPosition[i].ToIntVec3() - this.boltOrigin[i]).LengthHorizontal))
+                    if (this.boltPosition[i].ToIntVec3() == this.boltDestination[i] || ((this.boltDestination[i] - this.boltOrigin[i]).LengthHorizontal <= (this.boltPosition[i].ToIntVec3() - this.boltOrigin[i]).LengthHorizontal))
                     {
                         //clears this instance of a bolt
                         this.boltOrigin.Remove(this.boltOrigin[i]);
@@ -461,7 +462,7 @@ namespace TorannMagic
 
         public void damageEntities(Thing e, int amt)
         {
-            DamageInfo dinfo = new DamageInfo(TMDamageDefOf.DamageDefOf.TM_Shadow, amt, 2, (float)(1f - this.directionAngle / 360f), null, null, null, DamageInfo.SourceCategory.ThingOrUnknown);
+            DamageInfo dinfo = new DamageInfo(TMDamageDefOf.DamageDefOf.TM_Shadow, amt, 2, (float)(1f - (this.directionAngle / 360f)), null, null, null, DamageInfo.SourceCategory.ThingOrUnknown);
             bool flag = e != null;
             if (flag)
             {

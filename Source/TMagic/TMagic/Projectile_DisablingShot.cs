@@ -4,8 +4,6 @@ using System;
 using AbilityUser;
 using System.Linq;
 using System.Collections.Generic;
-using Verse.AI;
-using Verse.AI.Group;
 
 namespace TorannMagic
 {
@@ -42,13 +40,13 @@ namespace TorannMagic
                 //}
                 if (victim != null && !victim.Dead && Rand.Chance(this.launcher.GetStatValue(StatDefOf.ShootingAccuracyPawn, true)))
                 {
-                    int dmg = (this.def.projectile.GetDamageAmount(1, null));
+                    int dmg = this.def.projectile.GetDamageAmount(1, null);
                     if (victim.RaceProps.IsFlesh)
                     {
                         System.Random rnd = new System.Random();
                         if (verVal > 0 && victim.needs.food != null)
                         {
-                            int randomTranqSev = GenMath.RoundRandom(rnd.Next((int)(verVal * .5f * str.level), (int)((verVal + .5f * str.level) * 3)));
+                            int randomTranqSev = GenMath.RoundRandom(rnd.Next((int)(verVal * .5f * str.level), (int)((verVal + (.5f * str.level)) * 3)));
                             LegShot(victim, randomTranqSev, TMDamageDefOf.DamageDefOf.TM_Tranquilizer);
                         }
                         else
@@ -66,20 +64,20 @@ namespace TorannMagic
                     Log.Message("No valid target for Disabling Shot");
                 }
             }
-            catch(NullReferenceException ex)
+            catch (NullReferenceException)
             {
 
             }
         }
 
         public void LegShot(Pawn victim, int dmg, DamageDef dmgType)
-        {            
-            if (!victim.Dead )
+        {
+            if (!victim.Dead)
             {
-                IEnumerable<BodyPartRecord> partSearch = victim.def.race.body.AllParts;
-                if( Rand.Chance(.5f)) { vitalPart = partSearch.FirstOrDefault<BodyPartRecord>((BodyPartRecord x) => x.def.tags.Contains(BodyPartTagDefOf.MovingLimbCore)); }
-                else { vitalPart = partSearch.LastOrDefault<BodyPartRecord>((BodyPartRecord x) => x.def.tags.Contains(BodyPartTagDefOf.MovingLimbCore)); }                
-                
+                IList<BodyPartRecord> partSearch = victim.def.race.body.AllParts;
+                if (Rand.Chance(.5f)) { vitalPart = partSearch.FirstOrDefault<BodyPartRecord>((BodyPartRecord x) => x.def.tags.Contains(BodyPartTagDefOf.MovingLimbCore)); }
+                else { vitalPart = partSearch.LastOrDefault<BodyPartRecord>((BodyPartRecord x) => x.def.tags.Contains(BodyPartTagDefOf.MovingLimbCore)); }
+
                 if (vitalPart != null)
                 {
                     this.damageEntities(victim, vitalPart, dmg, dmgType);
@@ -104,7 +102,7 @@ namespace TorannMagic
             DamageInfo dinfo;
             if (victim != null && hitPart != null)
             {
-                dinfo = new DamageInfo(type, amt, 0, (float)-1, this.launcher as Pawn, hitPart, null, DamageInfo.SourceCategory.ThingOrUnknown);             
+                dinfo = new DamageInfo(type, amt, 0, (float)-1, this.launcher as Pawn, hitPart, null, DamageInfo.SourceCategory.ThingOrUnknown);
             }
             else
             {
@@ -116,7 +114,7 @@ namespace TorannMagic
             {
                 Faction faction = victim.Faction;
                 faction.TrySetRelationKind(this.launcher.Faction, FactionRelationKind.Hostile, true, null);
-            }           
+            }
 
         }
     }

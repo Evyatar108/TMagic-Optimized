@@ -46,7 +46,7 @@ namespace TorannMagic
             }
             if (Find.TickManager.TicksGame % 30 == 0)
             {
-                if(this.Pawn.CurJob != null && this.Pawn.CurJob.targetA != null && this.Pawn.CurJob.targetA.Thing is Pawn)
+                if (this.Pawn.CurJob != null && this.Pawn.CurJob.targetA != null && this.Pawn.CurJob.targetA.Thing is Pawn)
                 {
                     severityAdjustment -= 20;
                 }

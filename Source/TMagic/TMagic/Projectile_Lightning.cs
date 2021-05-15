@@ -1,30 +1,24 @@
 ﻿using AbilityUser;
 using RimWorld;
-using System.Linq;
 using Verse;
 using UnityEngine;
 using System.Collections.Generic;
-using System;
-using Verse.Sound;
 
 namespace TorannMagic
 {
-	public class Projectile_Lightning : Projectile_AbilityBase
-	{
+    public class Projectile_Lightning : Projectile_AbilityBase
+    {
 
         List<IntVec3> strikeLocs = new List<IntVec3>();
         List<IntVec3> newStrikeLocs = new List<IntVec3>();
         List<Mesh> strikeMeshes = new List<Mesh>();
         Vector3 direction = default(Vector3);
 
-		private int age = -1;
+        private int age = -1;
 
         private int maxStrikes = 1;
-        private int maxForks = 1;
         private int strikeTick = 0;
-		private int strikeInt = 0;
-        private float hopRadius = 4f;
-
+        private int strikeInt = 0;
         public int verVal;
         public int pwrVal;
         public float arcaneDmg = 1;
@@ -50,13 +44,13 @@ namespace TorannMagic
         }
 
         public override void Destroy(DestroyMode mode = DestroyMode.Vanish)
-		{
+        {
             bool flag = (this.strikeInt >= this.maxStrikes) && Find.TickManager.TicksGame >= (lastStrikeTick + strikeDelay);
-			if (flag)
-			{
+            if (flag)
+            {
                 base.Destroy(mode);
-			}
-		}
+            }
+        }
 
         private void Initialize(Thing t)
         {
@@ -70,7 +64,7 @@ namespace TorannMagic
                     pwrVal = TM_Calc.GetMagicSkillLevel(p, comp.MagicData.MagicPowerSkill_ChainLightning, "TM_ChainLightning", "_pwr", true);
                     verVal = TM_Calc.GetMagicSkillLevel(p, comp.MagicData.MagicPowerSkill_ChainLightning, "TM_ChainLightning", "_ver", true);
                     this.arcaneDmg = comp.arcaneDmg;
-                }                
+                }
             }
             newStrikeLocs = new List<IntVec3>();
             newStrikeLocs.Clear();
@@ -82,9 +76,8 @@ namespace TorannMagic
             chainedThings.Clear();
         }
 
-		protected override void Impact(Thing hitThing)
-		{			         
-            Map map = base.Map;
+        protected override void Impact(Thing hitThing)
+        {
             IntVec3 strikePos = default(IntVec3);
             if (!this.launcher.DestroyedOrNull())
             {
@@ -144,7 +137,7 @@ namespace TorannMagic
         {
             if (start != default(IntVec3))
             {
-                Graphics.DrawMesh(mesh, start.ToVector3ShiftedWithAltitude(AltitudeLayer.MoteLow), Quaternion.Euler(0f, angle, 0f), FadedMaterialPool.FadedVersionOf(mat, fadedBrightness), 0); 
+                Graphics.DrawMesh(mesh, start.ToVector3ShiftedWithAltitude(AltitudeLayer.MoteLow), Quaternion.Euler(0f, angle, 0f), FadedMaterialPool.FadedVersionOf(mat, fadedBrightness), 0);
             }
         }
 
@@ -156,7 +149,7 @@ namespace TorannMagic
                 List<Thing> thingList = c.GetThingList(this.Map);
                 if (thingList != null && thingList.Count > 0)
                 {
-                    int damage = Mathf.RoundToInt(Mathf.Max(Rand.Range(this.maxStrikes + pwrVal, (5 * maxStrikes) + pwrVal) - (2 * strikeInt) * arcaneDmg, 0));
+                    int damage = Mathf.RoundToInt(Mathf.Max(Rand.Range(this.maxStrikes + pwrVal, (5 * maxStrikes) + pwrVal) - (2 * strikeInt * arcaneDmg), 0));
                     for (int i = 0; i < thingList.Count; i++)
                     {
                         Thing t = thingList[i];
@@ -178,28 +171,28 @@ namespace TorannMagic
         public void RandomStrikes(IntVec3 from, Thing caster)
         {
             int rndStrikes = Rand.RangeInclusive(2, 4);
-            for(int i = 0; i < rndStrikes; i++)
+            for (int i = 0; i < rndStrikes; i++)
             {
-                Vector3 dir = (Quaternion.AngleAxis(Rand.Range(0, 360), Vector3.up) * this.direction);
+                Vector3 dir = Quaternion.AngleAxis(Rand.Range(0, 360), Vector3.up) * this.direction;
                 float range = Rand.Range(2f, 6f);
                 IntVec3 hitCell = from + (dir * range).ToIntVec3();
                 //Log.Message("random strike " + hitCell);
                 //DamageCell(hitCell, caster);
-                GenExplosion.DoExplosion(hitCell, this.Map, 1f, TMDamageDefOf.DamageDefOf.TM_Lightning, caster, Mathf.RoundToInt(Rand.Range(3 + pwrVal, 6 + pwrVal) * arcaneDmg), 1.2f, null); 
+                GenExplosion.DoExplosion(hitCell, this.Map, 1f, TMDamageDefOf.DamageDefOf.TM_Lightning, caster, Mathf.RoundToInt(Rand.Range(3 + pwrVal, 6 + pwrVal) * arcaneDmg), 1.2f, null);
                 this.Map.weatherManager.eventHandler.AddEvent(new TM_WeatherEvent_MeshGeneric(this.Map, TM_MatPool.thinLightning, from, hitCell, 2f, AltitudeLayer.MoteLow, strikeDelay, strikeDelay, 2));
             }
         }
 
         public Mesh RandomBoltMesh(float range)
         {
-            return TM_MeshMaker.NewBoltMesh(range, 3);            
+            return TM_MeshMaker.NewBoltMesh(range, 3);
         }
 
         public float GetFadedBrightness
         {
             get
             {
-                return 1f + ((float)(lastStrikeTick -  Find.TickManager.TicksGame) / (float)(strikeDelay));
+                return 1f + ((float)(lastStrikeTick - Find.TickManager.TicksGame) / (float)strikeDelay);
             }
         }
     }

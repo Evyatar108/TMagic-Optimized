@@ -1,9 +1,6 @@
-﻿using RimWorld;
-using Verse;
-using UnityEngine;
+﻿using Verse;
 using System.Collections.Generic;
 using System.Linq;
-using HarmonyLib;
 
 namespace TorannMagic
 {
@@ -53,7 +50,7 @@ namespace TorannMagic
             {
                 this.Pawn.health.RemoveHediff(this.parent);
             }
-        }        
+        }
 
         public override void CompPostTick(ref float severityAdjustment)
         {
@@ -67,7 +64,7 @@ namespace TorannMagic
                     this.Initialize();
                 }
 
-                if(base.Pawn.Map != null)
+                if (base.Pawn.Map != null)
                 {
                     if (Find.TickManager.TicksGame > this.nextApplyTick)
                     {
@@ -87,8 +84,8 @@ namespace TorannMagic
                             }
                         }
                         CompAbilityUserMight comp = this.Pawn.GetComp<CompAbilityUserMight>();
-                        comp.MightUserXP += Rand.Range(2, 5);                        
-                    }        
+                        comp.MightUserXP += Rand.Range(2, 5);
+                    }
                 }
                 else //map null
                 {
@@ -111,15 +108,15 @@ namespace TorannMagic
                     }
                 }
 
-                if(Find.TickManager.TicksGame % 1200 == 0)
+                if (Find.TickManager.TicksGame % 1200 == 0)
                 {
                     DetermineHediff();
                 }
             }
-        }     
+        }
 
         private void DetermineHediff()
-        {           
+        {
             CompAbilityUserMight comp = this.Pawn.GetComp<CompAbilityUserMight>();
             if (parent.def == TorannMagicDefOf.TM_CommanderAuraHD && comp != null)
             {
@@ -137,11 +134,11 @@ namespace TorannMagic
                 {
                     HealthUtility.AdjustSeverity(p, TorannMagicDefOf.TM_CommanderHD_III, .5f + (.05f * verVal));
                 }
-                else if(this.pwrVal >= 2)
+                else if (this.pwrVal >= 2)
                 {
                     HealthUtility.AdjustSeverity(p, TorannMagicDefOf.TM_CommanderHD_II, .5f + (.05f * verVal));
                 }
-                else if(this.pwrVal >= 1)
+                else if (this.pwrVal >= 1)
                 {
                     HealthUtility.AdjustSeverity(p, TorannMagicDefOf.TM_CommanderHD_I, .5f + (.05f * verVal));
                 }
@@ -149,7 +146,7 @@ namespace TorannMagic
                 {
                     HealthUtility.AdjustSeverity(p, TorannMagicDefOf.TM_CommanderHD, .5f + (.05f * verVal));
                 }
-            }            
+            }
         }
 
         public void DoMotivationalSpeech(Pawn p)

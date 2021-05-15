@@ -8,7 +8,7 @@ using UnityEngine;
 namespace TorannMagic
 {
     [StaticConstructorOnStartup]
-    class Projectile_Teleport : Projectile_AbilityBase , IExposable
+    class Projectile_Teleport : Projectile_AbilityBase, IExposable
     {
 
         private int destructTimer = 4800;
@@ -26,7 +26,7 @@ namespace TorannMagic
             bool flag = this.age < destructTimer;
             if (!flag)
             {
-                Messages.Message("PortalCollapseFinal".Translate(), MessageTypeDefOf.SilentInput);                
+                Messages.Message("PortalCollapseFinal".Translate(), MessageTypeDefOf.SilentInput);
                 base.Destroy(mode);
             }
         }
@@ -55,8 +55,8 @@ namespace TorannMagic
             IntVec3 centerCell = cellRect.CenterCell;
             if (pawn.story.traits.HasTrait(TorannMagicDefOf.TM_Wanderer) || (comp.customClass != null && comp.customClass.classMageAbilities.Contains(TorannMagicDefOf.TM_Cantrips)))
             {
-                int tmpPwrVal = (int)((pawn.GetComp<CompAbilityUserMagic>().MagicData.MagicPowerSkill_Cantrips.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_Cantrips_pwr").level) / 5);
-                int tmpVerVal = (int)((pawn.GetComp<CompAbilityUserMagic>().MagicData.MagicPowerSkill_Cantrips.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_Cantrips_ver").level) / 5);
+                int tmpPwrVal = (int)(pawn.GetComp<CompAbilityUserMagic>().MagicData.MagicPowerSkill_Cantrips.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_Cantrips_pwr").level / 5);
+                int tmpVerVal = (int)(pawn.GetComp<CompAbilityUserMagic>().MagicData.MagicPowerSkill_Cantrips.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_Cantrips_ver").level / 5);
                 pwrVal = (tmpPwrVal > pwrVal) ? tmpPwrVal : pwrVal;
                 verVal = (tmpVerVal > verVal) ? tmpVerVal : verVal;
             }
@@ -70,7 +70,7 @@ namespace TorannMagic
                 arg_pos_3 = centerCell;
                 centerCell = cellRect.CenterCell;
 
-                if ((arg_pos_1.IsValid && arg_pos_1.Standable(map)) && (arg_pos_2.IsValid && arg_pos_2.Standable(map)) && (arg_pos_3.IsValid && arg_pos_3.Standable(map)))
+                if (arg_pos_1.IsValid && arg_pos_1.Standable(map) && arg_pos_2.IsValid && arg_pos_2.Standable(map) && arg_pos_3.IsValid && arg_pos_3.Standable(map))
                 {
                     AbilityUser.SpawnThings tempPod = new SpawnThings();
                     IntVec3 shiftPos = centerCell;
@@ -96,10 +96,10 @@ namespace TorannMagic
                     try
                     {
                         this.SingleSpawnLoop(tempPod, shiftPos, map);
-                        Building teleporter = shiftPos.GetFirstBuilding(map);                        
+                        Building teleporter = shiftPos.GetFirstBuilding(map);
                         int num = teleporter.TryGetComp<CompRefuelable>().GetFuelCountToFullyRefuel();
                         teleporter.TryGetComp<CompRefuelable>().Refuel(num);
-                        
+
                     }
                     catch
                     {
@@ -107,12 +107,12 @@ namespace TorannMagic
                         PortalCollapse(shiftPos, map, 3);
                         if (pawn != null)
                         {
-                            comp.Mana.CurLevel += comp.ActualManaCost(TorannMagicDefOf.TM_Teleport);                            
+                            comp.Mana.CurLevel += comp.ActualManaCost(TorannMagicDefOf.TM_Teleport);
                         }
                         this.age = this.destructTimer;
                         return;
                     }
-                    
+
 
                     if (verVal == 1)
                     {
@@ -175,7 +175,7 @@ namespace TorannMagic
                     //    }
                     //}
 
-                    msg = "PortalCollapseIn".Translate( ((destructTimer - this.age) / 60).ToString()
+                    msg = "PortalCollapseIn".Translate(((destructTimer - this.age) / 60).ToString()
                         );
                     Messages.Message(msg, MessageTypeDefOf.NeutralEvent);
                     this.primed = false;
@@ -199,7 +199,7 @@ namespace TorannMagic
             {
                 if (this.age == (destructTimer * 0.5))
                 {
-                    msg = "PortalCollapseIn".Translate( 
+                    msg = "PortalCollapseIn".Translate(
                         ((destructTimer - this.age) / 60).ToString()
                         );
                     Messages.Message(msg, MessageTypeDefOf.NeutralEvent);
@@ -294,13 +294,13 @@ namespace TorannMagic
                     }
                     Thing thing = ThingMaker.MakeThing(def, stuff);
                     if (thing.def.defName != "Portfuel")
-                    { 
+                    {
                         thing.SetFaction(faction, null);
                     }
                     GenSpawn.Spawn(thing, position, map, Rot4.North, WipeMode.Vanish, false);
                 }
             }
-        }        
+        }
 
         public override void Tick()
         {

@@ -1,13 +1,12 @@
 ﻿using System.Text;
-using AbilityUser;
 using RimWorld;
 using Verse;
 using System.Collections.Generic;
 
 namespace TorannMagic
 {
-	public class TMAbilityDef : AbilityUser.AbilityDef
-	{
+    public class TMAbilityDef : AbilityUser.AbilityDef
+    {
         //Add new variables here to control skill levels
         public float manaCost = 0f;
         public float staminaCost = 0f;
@@ -38,18 +37,18 @@ namespace TorannMagic
         public List<TMAbilityDef> childAbilities = new List<TMAbilityDef>();
 
         public string GetPointDesc()
-		{
-			StringBuilder stringBuilder = new StringBuilder();
-			stringBuilder.AppendLine(this.GetDescription());
-			return stringBuilder.ToString();
-		}
+        {
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.AppendLine(this.GetDescription());
+            return stringBuilder.ToString();
+        }
 
         private bool cacheRestriction = true;
         private int nextRestrictionCheckTick = 0;
         public bool IsRestrictedByEquipment(Pawn p)
-        {             
+        {
             if (requiredWeaponsOrCategories != null && requiredWeaponsOrCategories.Count > 0)
-            {                
+            {
                 if (Find.TickManager.TicksGame >= nextRestrictionCheckTick)
                 {
                     nextRestrictionCheckTick = Find.TickManager.TicksGame + Rand.Range(59, 61);
@@ -60,7 +59,7 @@ namespace TorannMagic
                         {
                             if (p.equipment != null && p.equipment.Primary == null)
                             {
-                                return (cacheRestriction = false);
+                                return cacheRestriction = false;
                             }
                             return true;
                         }
@@ -68,7 +67,7 @@ namespace TorannMagic
                         {
                             if (TM_Calc.IsUsingMelee(p))
                             {
-                                return (cacheRestriction = false);
+                                return cacheRestriction = false;
                             }
                             return true;
                         }
@@ -80,7 +79,7 @@ namespace TorannMagic
                             }
                             if (TM_Calc.IsUsingMelee(p))
                             {
-                                return (cacheRestriction = false);
+                                return cacheRestriction = false;
                             }
                             return true;
                         }
@@ -88,7 +87,7 @@ namespace TorannMagic
                         {
                             if (TM_Calc.IsUsingRanged(p))
                             {
-                                return (cacheRestriction = false);
+                                return cacheRestriction = false;
                             }
                             return true;
                         }
@@ -96,7 +95,7 @@ namespace TorannMagic
                         {
                             if (TM_Calc.IsUsingBow(p))
                             {
-                                return (cacheRestriction = false);
+                                return cacheRestriction = false;
                             }
                             return true;
                         }
@@ -104,7 +103,7 @@ namespace TorannMagic
                         {
                             if (TM_Calc.IsUsingPistol(p))
                             {
-                                return (cacheRestriction = false);
+                                return cacheRestriction = false;
                             }
                             return true;
                         }
@@ -112,7 +111,7 @@ namespace TorannMagic
                         {
                             if (TM_Calc.IsUsingRifle(p))
                             {
-                                return (cacheRestriction = false);
+                                return cacheRestriction = false;
                             }
                             return true;
                         }
@@ -120,7 +119,7 @@ namespace TorannMagic
                         {
                             if (TM_Calc.IsUsingShotgun(p))
                             {
-                                return (cacheRestriction = false);
+                                return cacheRestriction = false;
                             }
                             return true;
                         }
@@ -128,7 +127,7 @@ namespace TorannMagic
                         {
                             if (TM_Calc.IsUsingMagicalFoci(p))
                             {
-                                return (cacheRestriction = false);
+                                return cacheRestriction = false;
                             }
                             return true;
                         }
@@ -138,7 +137,7 @@ namespace TorannMagic
                             {
                                 if (p.equipment.Primary.def.defName == str)
                                 {
-                                    return (cacheRestriction = false);
+                                    return cacheRestriction = false;
                                 }
                             }
                         }

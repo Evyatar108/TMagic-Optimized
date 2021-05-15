@@ -1,12 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Verse;
-using RimWorld;
 using UnityEngine;
-using HarmonyLib;
 
 namespace TorannMagic
 {
@@ -43,7 +38,7 @@ namespace TorannMagic
             Material material2 = new Material(material);
             references[material2] = new MaterialInfo
             {
-                stackTrace = (Prefs.DevMode ? Environment.StackTrace : "(unavailable)")
+                stackTrace = Prefs.DevMode ? Environment.StackTrace : "(unavailable)"
             };
             return material2;
         }

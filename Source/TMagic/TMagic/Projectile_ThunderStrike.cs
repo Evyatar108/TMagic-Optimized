@@ -1,9 +1,6 @@
 ﻿using Verse;
 using AbilityUser;
 using UnityEngine;
-using System.Linq;
-using RimWorld;
-using System.Collections.Generic;
 
 
 namespace TorannMagic
@@ -49,31 +46,30 @@ namespace TorannMagic
         {
             base.Impact(hitThing);
 
-            if(!this.initialized)
+            if (!this.initialized)
             {
                 Initialize(base.Position, this.launcher as Pawn);
             }
-            Vector3 directionOffset = default(Vector3);
-
-            if(initialized && this.nextLeftEventTick < Find.TickManager.TicksGame && this.nextLeftEventTick != 0)
+            Vector3 directionOffset;
+            if (initialized && this.nextLeftEventTick < Find.TickManager.TicksGame && this.nextLeftEventTick != 0)
             {
                 directionOffset = this.directionOffsetLeft * (this.directionMagnitudeOffset * this.iteration);
                 DoThunderStrike(directionOffset);
                 this.nextLeftEventTick = 0;
             }
-            if(initialized && this.nextRightEventTick < Find.TickManager.TicksGame && this.nextRightEventTick != 0)
+            if (initialized && this.nextRightEventTick < Find.TickManager.TicksGame && this.nextRightEventTick != 0)
             {
                 directionOffset = this.directionOffsetRight * (this.directionMagnitudeOffset * this.iteration);
                 DoThunderStrike(directionOffset);
                 this.nextRightEventTick = 0;
             }
             if (this.initialized && this.nextEventTick < Find.TickManager.TicksGame)
-            {               
-                
-                if(iteration == 1 && verVal > 0)
+            {
+
+                if (iteration == 1 && verVal > 0)
                 {
                     this.nextRightEventTick = Find.TickManager.TicksGame + Rand.Range(2, 6);
-                    this.nextLeftEventTick = Find.TickManager.TicksGame + Rand.Range(2, 6);                    
+                    this.nextLeftEventTick = Find.TickManager.TicksGame + Rand.Range(2, 6);
                 }
                 if (iteration == 3 && verVal > 1)
                 {
@@ -89,17 +85,16 @@ namespace TorannMagic
                 directionOffset = this.direction * (this.directionMagnitudeOffset * this.iteration);
                 DoThunderStrike(directionOffset);
 
-                this.nextEventTick = Find.TickManager.TicksGame + Rand.Range(2,5);                
-            }                       
+                this.nextEventTick = Find.TickManager.TicksGame + Rand.Range(2, 5);
+            }
 
         }
 
         private void DoThunderStrike(Vector3 directionOffset)
         {
-            IntVec3 currentPos = default(IntVec3);
             if (directionOffset != default(Vector3))
             {
-                currentPos = (this.origin + directionOffset).ToIntVec3();
+                IntVec3 currentPos = (this.origin + directionOffset).ToIntVec3();
                 if (currentPos != default(IntVec3) && currentPos.IsValid && currentPos.InBounds(base.Map) && currentPos.Walkable(base.Map) && currentPos.DistanceToEdge(base.Map) > 3)
                 {
                     CellRect cellRect = CellRect.CenteredOn(currentPos, 1);
@@ -107,7 +102,7 @@ namespace TorannMagic
                     IntVec3 rndCell = cellRect.RandomCell;
                     if (rndCell != null && rndCell != default(IntVec3) && rndCell.IsValid && rndCell.InBounds(base.Map) && rndCell.Walkable(base.Map) && rndCell.DistanceToEdge(base.Map) > 3)
                     {
-                        Map.weatherManager.eventHandler.AddEvent(new TM_WeatherEvent_MeshFlash(base.Map, rndCell, TM_MatPool.chiLightning, TMDamageDefOf.DamageDefOf.TM_ChiBurn, this.launcher, Mathf.RoundToInt(Rand.Range(8, 14) * (1 +(.12f * pwrVal)) * this.arcaneDmg), Rand.Range(1.5f, 2f)));
+                        Map.weatherManager.eventHandler.AddEvent(new TM_WeatherEvent_MeshFlash(base.Map, rndCell, TM_MatPool.chiLightning, TMDamageDefOf.DamageDefOf.TM_ChiBurn, this.launcher, Mathf.RoundToInt(Rand.Range(8, 14) * (1 + (.12f * pwrVal)) * this.arcaneDmg), Rand.Range(1.5f, 2f)));
                     }
                 }
             }
@@ -143,8 +138,8 @@ namespace TorannMagic
             {
                 Log.Warning("Failed to initialize " + this.def.defName);
                 this.iteration = this.maxIteration;
-            }            
-        }        
+            }
+        }
 
         public override void Tick()
         {
@@ -156,7 +151,7 @@ namespace TorannMagic
             if (this.iteration >= this.maxIteration)
             {
                 Pawn pawn = this.launcher as Pawn;
-                if(!pawn.DestroyedOrNull() && !pawn.Dead && pawn.Spawned)
+                if (!pawn.DestroyedOrNull() && !pawn.Dead && pawn.Spawned)
                 {
                     Hediff hediff = pawn.health.hediffSet.GetFirstHediffOfDef(TorannMagicDefOf.TM_HediffInvulnerable, false);
                     if (hediff != null)

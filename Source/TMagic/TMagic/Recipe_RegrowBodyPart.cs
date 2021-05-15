@@ -55,7 +55,7 @@ namespace TorannMagic
                 if (canRegrow)
                 {
                     MagicPowerSkill eff = surgeon.GetComp<CompAbilityUserMagic>().MagicData.MagicPowerSkill_RegrowLimb.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_RegrowLimb_eff");
-                    if (comp.Mana.CurLevel < (.9f - ((eff.level * TorannMagicDefOf.TM_RegrowLimb.efficiencyReductionPercent) * .9f)))
+                    if (comp.Mana.CurLevel < (.9f - (eff.level * TorannMagicDefOf.TM_RegrowLimb.efficiencyReductionPercent * .9f)))
                     {
                         comp.Mana.CurLevel = comp.Mana.CurLevel / 2;
 
@@ -72,7 +72,7 @@ namespace TorannMagic
                     }
                     else // regrowth surgery success
                     {
-                        comp.Mana.CurLevel -= ((.9f - ((eff.level * TorannMagicDefOf.TM_RegrowLimb.efficiencyReductionPercent) * .9f)) / comp.arcaneDmg);
+                        comp.Mana.CurLevel -= (.9f - (eff.level * TorannMagicDefOf.TM_RegrowLimb.efficiencyReductionPercent * .9f)) / comp.arcaneDmg;
                         int num = Mathf.RoundToInt(Rand.Range(160, 280) * comp.xpGain);
                         comp.MagicUserXP += num;
                         MoteMaker.ThrowText(surgeon.DrawPos, surgeon.MapHeld, "XP +" + num, -1f);
@@ -129,35 +129,35 @@ namespace TorannMagic
                     break;
                 case "Hand":
                     patient.health.AddHediff(HediffDef.Named("TM_HandRegrowth"), part, null);
-                    comp.Mana.CurLevel += (.4f);
+                    comp.Mana.CurLevel += .4f;
                     break;
                 case "Finger":
                     patient.health.AddHediff(HediffDef.Named("TM_FingerRegrowth"), part, null);
-                    comp.Mana.CurLevel += (.7f);
+                    comp.Mana.CurLevel += .7f;
                     break;
                 case "Toe":
                     patient.health.AddHediff(HediffDef.Named("TM_ToeRegrowth"), part, null);
-                    comp.Mana.CurLevel += (.7f);
+                    comp.Mana.CurLevel += .7f;
                     break;
                 case "Eye":
                     patient.health.AddHediff(HediffDef.Named("TM_EyeRegrowth"), part, null);
-                    comp.Mana.CurLevel += (.3f);
+                    comp.Mana.CurLevel += .3f;
                     break;
                 case "Ear":
                     patient.health.AddHediff(HediffDef.Named("TM_EarRegrowth"), part, null);
-                    comp.Mana.CurLevel += (.5f);
+                    comp.Mana.CurLevel += .5f;
                     break;
                 case "Nose":
                     patient.health.AddHediff(HediffDef.Named("TM_StandardRegrowth"), part, null);
-                    comp.Mana.CurLevel += (.6f);
+                    comp.Mana.CurLevel += .6f;
                     break;
                 case "Jaw":
                     patient.health.AddHediff(HediffDef.Named("TM_JawRegrowth"), part, null);
-                    comp.Mana.CurLevel += (.5f);
+                    comp.Mana.CurLevel += .5f;
                     break;
                 case "Ribcage":
                     patient.health.AddHediff(HediffDef.Named("TM_StandardRegrowth"), part, null);
-                    comp.Mana.CurLevel += (.6f);
+                    comp.Mana.CurLevel += .6f;
                     break;
                 case "Heart":
                     patient.health.AddHediff(HediffDef.Named("TM_HeartRegrowth"), part, null);
@@ -173,7 +173,7 @@ namespace TorannMagic
                     break;
                 case "Stomach":
                     patient.health.AddHediff(HediffDef.Named("TM_StomachRegrowth"), part, null);
-                    comp.Mana.CurLevel += (.3f);
+                    comp.Mana.CurLevel += .3f;
                     break;
                 case "Spine":
                     patient.health.AddHediff(HediffDef.Named("TM_SpineRegrowth"), part, null);

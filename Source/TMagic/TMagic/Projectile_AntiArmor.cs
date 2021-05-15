@@ -15,8 +15,6 @@ namespace TorannMagic
         IntVec3 newPos;
         bool xflag = false;
         bool zflag = false;
-        int value = 0;
-
         private int verVal;
         private int pwrVal;
 
@@ -64,7 +62,7 @@ namespace TorannMagic
                     int dmg = GetWeaponDmg(pawn);
                     bool flagFleshType = victim.RaceProps.FleshType != FleshTypeDefOf.Normal;
                     float num = TM_Calc.GetOverallArmor(victim, StatDefOf.ArmorRating_Sharp);
-                    bool flagArmorAmount =  num > 1f;
+                    bool flagArmorAmount = num > 1f;
                     if (flagArmorAmount || flagFleshType)
                     {
                         MoteMaker.ThrowMicroSparks(victim.Position.ToVector3(), map);
@@ -74,8 +72,8 @@ namespace TorannMagic
                         MoteMaker.ThrowMicroSparks(victim.Position.ToVector3(), map);
                         for (int i = 0; i < 1 + verVal; i++)
                         {
-                            GenExplosion.DoExplosion(newPos, map, Rand.Range((.1f) * (1 + verVal), (.3f) * (1 + verVal)), DamageDefOf.Bomb, this.launcher, (this.def.projectile.GetDamageAmount(1, null) / 4) * (1 + verVal), .4f, SoundDefOf.MetalHitImportant, def, this.equipmentDef, null, null, 0f, 1, false, null, 0f, 1, 0f, true);
-                            GenExplosion.DoExplosion(newPos, map, Rand.Range((.2f) * (1 + verVal), (.4f) * (1 + verVal)), DamageDefOf.Stun, this.launcher, (this.def.projectile.GetDamageAmount(1, null) / 2) * (1 + verVal), .4f, SoundDefOf.MetalHitImportant, def, this.equipmentDef, null, null, 0f, 1, false, null, 0f, 1, 0f, true);
+                            GenExplosion.DoExplosion(newPos, map, Rand.Range(.1f * (1 + verVal), .3f * (1 + verVal)), DamageDefOf.Bomb, this.launcher, this.def.projectile.GetDamageAmount(1, null) / 4 * (1 + verVal), .4f, SoundDefOf.MetalHitImportant, def, this.equipmentDef, null, null, 0f, 1, false, null, 0f, 1, 0f, true);
+                            GenExplosion.DoExplosion(newPos, map, Rand.Range(.2f * (1 + verVal), .4f * (1 + verVal)), DamageDefOf.Stun, this.launcher, this.def.projectile.GetDamageAmount(1, null) / 2 * (1 + verVal), .4f, SoundDefOf.MetalHitImportant, def, this.equipmentDef, null, null, 0f, 1, false, null, 0f, 1, 0f, true);
                             newPos = GetNewPos(newPos, pawn.Position.x <= victim.Position.x, pawn.Position.z <= victim.Position.z, false, 0, 0, xProb, 1 - xProb);
                             MoteMaker.ThrowMicroSparks(victim.Position.ToVector3(), base.Map);
                             MoteMaker.ThrowDustPuff(newPos, map, Rand.Range(1.2f, 2.4f));
@@ -92,7 +90,7 @@ namespace TorannMagic
                     Log.Message("No valid target for anti armor shot or missed");
                 }
             }
-            catch(NullReferenceException ex)
+            catch (NullReferenceException)
             {
                 //
             }
@@ -102,18 +100,16 @@ namespace TorannMagic
         {
             if (p.apparel != null && p.apparel.WornApparel != null && p.apparel.WornApparel.Count > 0)
             {
-                List<Apparel> apparel = p.apparel.WornApparel.InRandomOrder().ToList();
-                for(int i = 0; i < apparel.Count; i++)
+                IEnumerable<Apparel> apparels = p.apparel.WornApparel.InRandomOrder();
+                foreach (var apparel in apparels)
                 {
-                    Apparel item = apparel[i];
-                    if(itemsHit > 0)
+                    if (itemsHit > 0)
                     {
                         itemsHit--;
-                        item.HitPoints = Mathf.RoundToInt(Mathf.Clamp(item.HitPoints - (Rand.Range(averageDestroyHP * .5f, averageDestroyHP * 1.5f)), 0, item.MaxHitPoints));
+                        apparel.HitPoints = Mathf.RoundToInt(Mathf.Clamp(apparel.HitPoints - Rand.Range(averageDestroyHP * .5f, averageDestroyHP * 1.5f), 0, apparel.MaxHitPoints));
                     }
                 }
             }
-            
         }
 
         public static int GetWeaponDmg(Pawn pawn)
@@ -133,10 +129,10 @@ namespace TorannMagic
 
         public static int GetWeaponDmgMech(Pawn pawn, int dmg)
         {
-            
+
             //MightPowerSkill pwr = pawn.GetComp<CompAbilityUserMight>().MightData.MightPowerSkill_AntiArmor.FirstOrDefault((MightPowerSkill x) => x.label == "TM_AntiArmor_pwr");
             int pwrVal = TM_Calc.GetMightSkillLevel(pawn, pawn.GetComp<CompAbilityUserMight>().MightData.MightPowerSkill_AntiArmor, "TM_AntiArmor", "_pwr", true);
-            int mechDmg = dmg + Mathf.RoundToInt(dmg * (1 + .5f * pwrVal));
+            int mechDmg = dmg + Mathf.RoundToInt(dmg * (1 + (.5f * pwrVal)));
             return mechDmg;
         }
 
@@ -144,26 +140,22 @@ namespace TorannMagic
         {
             DamageInfo dinfo;
             amt = (int)((float)amt * Rand.Range(.5f, 1.5f));
-            if ( hitPart != null)
+            if (hitPart != null)
             {
                 dinfo = new DamageInfo(type, amt, 0, (float)-1, this.launcher as Pawn, hitPart, null, DamageInfo.SourceCategory.ThingOrUnknown);
             }
             else
             {
-                dinfo = new DamageInfo(type, amt, 0, this.ExactRotation.eulerAngles.y, this.launcher as Pawn, null, this.equipmentDef, DamageInfo.SourceCategory.ThingOrUnknown);                
+                dinfo = new DamageInfo(type, amt, 0, this.ExactRotation.eulerAngles.y, this.launcher as Pawn, null, this.equipmentDef, DamageInfo.SourceCategory.ThingOrUnknown);
             }
             victim.TakeDamage(dinfo);
         }
 
         private void XProb(IntVec3 target, Pawn pawn)
         {
-            float hyp = 0;
-            float angleRad = 0;
-            float angleDeg = 0;
-
-            hyp = Mathf.Sqrt((Mathf.Pow(pawn.Position.x - target.x, 2)) + (Mathf.Pow(pawn.Position.z - target.z, 2)));
-            angleRad = Mathf.Asin(Mathf.Abs(pawn.Position.x - target.x) / hyp);
-            angleDeg = Mathf.Rad2Deg * angleRad;
+            float hyp = Mathf.Sqrt(Mathf.Pow(pawn.Position.x - target.x, 2) + Mathf.Pow(pawn.Position.z - target.z, 2));
+            float angleRad = Mathf.Asin(Mathf.Abs(pawn.Position.x - target.x) / hyp);
+            float angleDeg = Mathf.Rad2Deg * angleRad;
             xProb = angleDeg / 90;
         }
 
@@ -175,8 +167,8 @@ namespace TorannMagic
 
             if (halfway)
             {
-                xvar = (-1 * xvar);
-                zvar = (-1 * zvar);
+                xvar = -1 * xvar;
+                zvar = -1 * zvar;
             }
 
             if (xdir && zdir)

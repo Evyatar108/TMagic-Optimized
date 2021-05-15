@@ -31,21 +31,21 @@ namespace TorannMagic
             yield return Toils_Goto.GotoThing(building, PathEndMode.ClosestTouch);
 
             Toil selectDestination = new Toil();
-            
+
             selectDestination.initAction = () =>
             {
-                
+
                 portalBldg = TargetA.Thing as Building_TMPortal;
                 if (portalBldg != null)
                 {
 
-                    
+
                 }
             };
             selectDestination.AddFinishAction(() =>
             {
                 if (portalBldg != null)
-                {                    
+                {
                     StartChoosingDestination();
                 }
             });
@@ -62,7 +62,7 @@ namespace TorannMagic
             int tile = this.pawn.Map.Tile;
             Find.WorldTargeter.BeginTargeting(new Func<GlobalTargetInfo, bool>(this.ChooseWorldTarget), true, JobDriver_PortalDestination.TargeterMouseAttachment, true, delegate
             {
-                GenDraw.DrawWorldRadiusRing(tile, (int)(this.portalBldg.MaxLaunchDistance));  //center, max launch distance
+                GenDraw.DrawWorldRadiusRing(tile, (int)this.portalBldg.MaxLaunchDistance);  //center, max launch distance
             }, delegate (GlobalTargetInfo target)
             {
                 if (!target.IsValid)
@@ -109,9 +109,9 @@ namespace TorannMagic
                 portalTarget.canTargetFires = false;
                 portalTarget.canTargetBuildings = false;
                 portalTarget.canTargetItems = false;
-                portalTarget.validator = ((TargetInfo x) => x.IsValid && !x.Cell.Fogged(map) && x.Cell.InBounds(map) && x.Cell.Walkable(map));  //TargetingParameters.ForDropPodsDestination()
+                portalTarget.validator = (TargetInfo x) => x.IsValid && !x.Cell.Fogged(map) && x.Cell.InBounds(map) && x.Cell.Walkable(map);  //TargetingParameters.ForDropPodsDestination()
                 Find.Targeter.BeginTargeting(portalTarget, delegate (LocalTargetInfo x)
-                {                    
+                {
                     portalBldg.PortalDestinationPosition = x.Cell;
                     portalBldg.PortalDestinationMap = map;
                     comp.Mana.CurLevel = comp.Mana.CurLevel - .7f;

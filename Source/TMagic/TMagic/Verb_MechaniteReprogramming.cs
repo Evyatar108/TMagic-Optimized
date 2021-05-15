@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using RimWorld;
 using AbilityUser;
 using Verse;
-using UnityEngine;
 
 
 namespace TorannMagic
@@ -42,14 +40,14 @@ namespace TorannMagic
         {
             Pawn caster = base.CasterPawn;
             Pawn pawn = this.currentTarget.Thing as Pawn;
-            CompAbilityUserMagic comp = pawn.TryGetComp <CompAbilityUserMagic>();
+            CompAbilityUserMagic comp = pawn.TryGetComp<CompAbilityUserMagic>();
 
             bool flag = pawn != null;
             if (flag)
             {
                 int num = 1;
 
-                if(!pawn.DestroyedOrNull() && pawn.health != null || pawn.health.hediffSet != null && !pawn.Dead) 
+                if ((!pawn.DestroyedOrNull() && pawn.health != null) || (pawn.health.hediffSet != null && !pawn.Dead))
                 {
                     bool success = false;
                     List<TMDefs.TM_CategoryHediff> mechaniteList = HediffCategoryList.Named("TM_Category_Hediffs").mechanites;
@@ -61,9 +59,9 @@ namespace TorannMagic
                             bool flag2 = num > 0;
 
 
-                            if (TM_Data.MechaniteList().Contains(rec.def))
+                            if (TM_Data.MechaniteList.Contains(rec.def))
                             {
-                                foreach(TMDefs.TM_CategoryHediff chd in mechaniteList)
+                                foreach (TMDefs.TM_CategoryHediff chd in mechaniteList)
                                 {
                                     if (chd.hediffDefname.Contains(rec.def.defName))
                                     {
@@ -77,7 +75,7 @@ namespace TorannMagic
                                             {
                                                 pwrVal = comp.MagicData.AllMagicPowerSkills.FirstOrDefault((MagicPowerSkill x) => x.label == chd.powerSkillName).level;
                                             }
-                                        }                                        
+                                        }
                                         if (verVal >= chd.requiredSkillLevel)
                                         {
                                             if (chd.removeOnCure)
@@ -85,7 +83,7 @@ namespace TorannMagic
                                                 if (Rand.Chance((chd.chanceToRemove + (chd.powerSkillAdjustment * pwrVal)) * arcaneDmg))
                                                 {
                                                     pawn.health.RemoveHediff(rec);
-                                                    if(chd.replacementHediffDefname != "")
+                                                    if (chd.replacementHediffDefname != "")
                                                     {
                                                         HealthUtility.AdjustSeverity(pawn, HediffDef.Named(chd.replacementHediffDefname), chd.replacementHediffSeverity);
                                                     }
@@ -101,8 +99,8 @@ namespace TorannMagic
                                             }
                                             else
                                             {
-                                                rec.Severity -= ((chd.severityReduction + (chd.powerSkillAdjustment * pwrVal)) * arcaneDmg);
-                                                if ((rec.Severity < 0))
+                                                rec.Severity -= (chd.severityReduction + (chd.powerSkillAdjustment * pwrVal)) * arcaneDmg;
+                                                if (rec.Severity < 0)
                                                 {
                                                     if (chd.replacementHediffDefname != "")
                                                     {
@@ -143,7 +141,7 @@ namespace TorannMagic
                                     success = true;
                                     break;
                                 }
-                            }                         
+                            }
                         }
                     }
                     if (success)
@@ -161,7 +159,7 @@ namespace TorannMagic
                 {
                     MoteMaker.ThrowText(pawn.DrawPos, pawn.Map, "Mechanite Reprogramming" + ": " + StringsToTranslate.AU_CastFailure, -1f);
                 }
-                
+
             }
             return false;
         }

@@ -3,7 +3,6 @@ using AbilityUser;
 using UnityEngine;
 using RimWorld;
 using System.Linq;
-using System.Collections.Generic;
 
 namespace TorannMagic
 {
@@ -34,8 +33,7 @@ namespace TorannMagic
             {
                 if ((root - targ.Cell).LengthHorizontal < this.verbProps.range)
                 {
-                    ShootLine shootLine;
-                    validTarg = this.TryFindShootLineFromTo(root, targ, out shootLine);
+                    validTarg = this.TryFindShootLineFromTo(root, targ, out _);
                 }
                 else
                 {
@@ -67,8 +65,8 @@ namespace TorannMagic
         {
             get
             {
-                Vector3 b = (this.destination - this.origin) * (1f - (float)this.ticksToImpact / (float)this.StartingTicksToImpact);
-                return this.origin + b + Vector3.up * 2;
+                Vector3 b = (this.destination - this.origin) * (1f - ((float)this.ticksToImpact / (float)this.StartingTicksToImpact));
+                return this.origin + b + (Vector3.up * 2);
             }
         }
 
@@ -102,7 +100,7 @@ namespace TorannMagic
             float weaponDPS = weaponComp.GetStatValue(StatDefOf.MeleeWeapon_AverageDPS, false) * .7f;
             float dmgMultiplier = weaponComp.GetStatValue(StatDefOf.MeleeWeapon_DamageMultiplier, false);
             float pawnDPS = pawn.GetStatValue(StatDefOf.MeleeDPS, false);
-            float skillMultiplier = (.7f + (.07f * pwrVal));
+            float skillMultiplier = .7f + (.07f * pwrVal);
             return dmgNum = Mathf.RoundToInt(skillMultiplier * dmgMultiplier * (pawnDPS + weaponDPS) * comp.mightPwr);
         }
 
@@ -148,7 +146,7 @@ namespace TorannMagic
                         TM_MoteMaker.ThrowGenericMote(ThingDef.Named("Mote_Cleave"), strikeVec, this.CasterPawn.Map, .6f + (.05f * i), .05f, .04f + (.03f * i), .15f, -10000, 30, angle, angle);
                     }
                     //MoteMaker.ThrowTornadoDustPuff(strikeVec, map, .6f, Color.white);
-                    for (int j = 0; j < 2+(2*verVal); j++)
+                    for (int j = 0; j < 2 + (2 * verVal); j++)
                     {
                         IntVec3 searchCell = strikeVec.ToIntVec3() + GenAdj.AdjacentCells8WayRandomized()[j];
                         TM_MoteMaker.ThrowGenericMote(ThingDef.Named("Mote_DirectionalDirt"), searchCell.ToVector3Shifted(), this.CasterPawn.Map, .1f + (.04f * i), .05f, .04f, .28f, 0, 4f - (.2f * i), angle, angle);
@@ -178,20 +176,20 @@ namespace TorannMagic
 
         private void DrawBlade(Vector3 center, float magnitude)
         {
-            Graphics.DrawMesh(MeshPool.plane10, center, this.ExactRotation, Verb_SeismicSlash.bladeMat, 0);           
+            Graphics.DrawMesh(MeshPool.plane10, center, this.ExactRotation, Verb_SeismicSlash.bladeMat, 0);
         }
 
         public void DrawStrike(IntVec3 center, Vector3 strikePos, Map map)
         {
             TM_MoteMaker.ThrowMultiStrike(strikePos, map, .5f);
             TM_MoteMaker.ThrowBloodSquirt(strikePos, map, 1.2f);
-        }        
+        }
 
         public void damageEntities(Pawn victim, BodyPartRecord hitPart, int amt, DamageDef type)
         {
             DamageInfo dinfo;
             amt = (int)((float)amt * Rand.Range(.7f, 1.3f));
-            dinfo = new DamageInfo(type, amt, 0, (float)-1, this.CasterPawn, hitPart, null, DamageInfo.SourceCategory.ThingOrUnknown);            
+            dinfo = new DamageInfo(type, amt, 0, (float)-1, this.CasterPawn, hitPart, null, DamageInfo.SourceCategory.ThingOrUnknown);
             dinfo.SetAllowDamagePropagation(false);
             victim.TakeDamage(dinfo);
         }

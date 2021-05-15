@@ -1,5 +1,4 @@
-﻿using System;
-using Verse;
+﻿using Verse;
 using UnityEngine;
 
 namespace TorannMagic
@@ -41,5 +40,5 @@ namespace TorannMagic
             this.compClass = typeof(CompLeaper);
         }
     }
-    
+
 }

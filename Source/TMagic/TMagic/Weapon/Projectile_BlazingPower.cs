@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using Verse;
+﻿using Verse;
 using RimWorld;
 using AbilityUser;
-using System.Linq;
 using UnityEngine;
 
 namespace TorannMagic.Weapon
@@ -33,7 +30,7 @@ namespace TorannMagic.Weapon
                     //{
                     //    DamageEntities(thingList[i], null, this.def.projectile.GetDamageAmount(1, null), TMDamageDefOf.DamageDefOf.TM_BlazingPower, pawn);
                     //}
-                    
+
                     GenExplosion.DoExplosion(base.Position, map, .8f, TMDamageDefOf.DamageDefOf.TM_BlazingPower, this.launcher, Mathf.RoundToInt(this.def.projectile.GetDamageAmount(1, null) * this.arcaneDmg), 2, SoundDefOf.Crunch, def, this.equipmentDef, null, null, 0f, 1, false, null, 0f, 1, 0.0f, true);
                 }
                 catch

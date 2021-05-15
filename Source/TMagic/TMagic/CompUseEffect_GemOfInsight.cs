@@ -1,7 +1,6 @@
 ﻿using RimWorld;
 using Verse;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace TorannMagic
 {
@@ -12,9 +11,9 @@ namespace TorannMagic
             CompAbilityUserMight compMight = user.GetComp<CompAbilityUserMight>();
             CompAbilityUserMagic compMagic = user.GetComp<CompAbilityUserMagic>();
 
-            if(!(compMagic.IsMagicUser || compMight.IsMightUser || user.story.traits.HasTrait(TorannMagicDefOf.TM_Gifted) || user.story.traits.HasTrait(TorannMagicDefOf.PhysicalProdigy) || user.story.traits.HasTrait(TorannMagicDefOf.Undead)))
+            if (!(compMagic.IsMagicUser || compMight.IsMightUser || user.story.traits.HasTrait(TorannMagicDefOf.TM_Gifted) || user.story.traits.HasTrait(TorannMagicDefOf.PhysicalProdigy) || user.story.traits.HasTrait(TorannMagicDefOf.Undead)))
             {
-                
+
                 if (parent.def != null && parent.def.defName == "GemstoneOfInsight_Magic")
                 {
                     if (user.story.traits.allTraits.Count > 7)
@@ -25,7 +24,7 @@ namespace TorannMagic
                     user.story.traits.GainTrait(new Trait(TorannMagicDefOf.TM_Gifted, 2, false));
                     this.parent.SplitOff(1).Destroy(DestroyMode.Vanish);
                 }
-                else if(parent.def != null && parent.def.defName == "GemstoneOfInsight_Might")
+                else if (parent.def != null && parent.def.defName == "GemstoneOfInsight_Might")
                 {
                     if (user.story.traits.allTraits.Count > 7)
                     {
@@ -40,7 +39,7 @@ namespace TorannMagic
                     Log.Message("TM_ItemUseFailed".Translate(
                         "Unrecognized Gemstone of Insight"
                     ));
-                }                
+                }
             }
             else
             {
@@ -52,7 +51,7 @@ namespace TorannMagic
 
         private void RemoveTrait(int index, List<Trait> traits)
         {
-            traits.Remove(traits[index]);            
+            traits.Remove(traits[index]);
         }
     }
 }

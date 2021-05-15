@@ -1,8 +1,6 @@
 ﻿using RimWorld;
-using System;
 using Verse;
 using AbilityUser;
-using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -24,7 +22,7 @@ namespace TorannMagic
             }
             else
             {
-                if( targ.Cell.IsValid && !targ.Cell.Fogged(base.caster.Map))
+                if (targ.Cell.IsValid && !targ.Cell.Fogged(base.caster.Map))
                 {
                     if ((casterPos - targ.Cell).LengthHorizontal > this.verbProps.range)
                     {
@@ -32,15 +30,14 @@ namespace TorannMagic
                     }
                     else
                     {
-                        ShootLine shootLine;
-                        result = base.TryFindShootLineFromTo(casterPos, targ, out shootLine);
+                        result = base.TryFindShootLineFromTo(casterPos, targ, out _);
                     }
                 }
                 else
                 {
                     result = false;
                 }
-                             
+
             }
             return result;
         }
@@ -67,17 +64,17 @@ namespace TorannMagic
             bool flag = arg_40_0;
             if (flag)
             {
-                if(pwrVal == 5)
+                if (pwrVal == 5)
                 {
                     List<Thing> list = GenerateMeteoriteComposition(pwrVal);
                     SkyfallerMaker.SpawnSkyfaller(ThingDef.Named("TM_Meteorite_III"), list, centerCell, map);
                 }
-                else if(pwrVal == 4)
+                else if (pwrVal == 4)
                 {
                     List<Thing> list = GenerateMeteoriteComposition(pwrVal);
                     SkyfallerMaker.SpawnSkyfaller(ThingDef.Named("TM_Meteorite_II"), list, centerCell, map);
                 }
-                else if(pwrVal == 3)
+                else if (pwrVal == 3)
                 {
                     List<Thing> list = GenerateMeteoriteComposition(pwrVal);
                     SkyfallerMaker.SpawnSkyfaller(ThingDef.Named("TM_Meteorite_I"), list, centerCell, map);
@@ -87,7 +84,7 @@ namespace TorannMagic
                     List<Thing> list = GenerateMeteoriteComposition(pwrVal);
                     SkyfallerMaker.SpawnSkyfaller(ThingDef.Named("TM_Meteorite"), list, centerCell, map);
                 }
-                
+
             }
             else
             {
@@ -101,7 +98,7 @@ namespace TorannMagic
         {
             List<Thing> meteoriteComposition = new List<Thing>();
             meteoriteComposition.Clear();
-            int compositionCount = GenRadial.RadialCellsAround(caster.Position, radius, false).ToList().Count;
+            int compositionCount = GenRadial.RadialCellsAround(caster.Position, radius, false).Count();
             int rnd = Rand.RangeInclusive(0, 4);
             ThingDef thingDef = null;
             try
@@ -129,7 +126,7 @@ namespace TorannMagic
             {
                 //if someone took these out...
                 IEnumerable<ThingDef> enumerable = from def in DefDatabase<ThingDef>.AllDefs
-                                                   where (def.thingCategories != null && def.thingCategories.Contains(ThingCategoryDefOf.StoneChunks))
+                                                   where def.thingCategories != null && def.thingCategories.Contains(ThingCategoryDefOf.StoneChunks)
                                                    select def;
                 thingDef = enumerable.RandomElement();
             }
@@ -164,21 +161,21 @@ namespace TorannMagic
             {
                 //if someone took these out...
                 IEnumerable<ThingDef> enumerable = from def in DefDatabase<ThingDef>.AllDefs
-                                                   where (def.mineable)
+                                                   where def.mineable
                                                    select def;
                 thingDef = enumerable.RandomElement();
             }
 
-            for (int i =0; i < compositionCount; i++)
+            for (int i = 0; i < compositionCount; i++)
             {
                 Thing tmpThing = null;
-                if(i == compositionCount - 1)
+                if (i == compositionCount - 1)
                 {
                     tmpThing = ThingMaker.MakeThing(preciousThingDef, null);
                 }
-                else if(i > compositionCount - 9)
+                else if (i > compositionCount - 9)
                 {
-                    if(Rand.Chance((.15f * verVal)))
+                    if (Rand.Chance(.15f * verVal))
                     {
                         tmpThing = ThingMaker.MakeThing(preciousThingDef, null);
                     }

@@ -5,12 +5,8 @@ using System.Linq;
 
 namespace TorannMagic
 {
-    class Verb_ArcaneBolt : Verb_UseAbility  
+    class Verb_ArcaneBolt : Verb_UseAbility
     {
-
-        bool validTarg;
-        private int verVal;
-        private int pwrVal;
 
         //public override bool CanHitTargetFrom(IntVec3 root, LocalTargetInfo targ)
         //{
@@ -44,7 +40,7 @@ namespace TorannMagic
             CompAbilityUserMagic comp = pawn.GetComp<CompAbilityUserMagic>();
             int burstCountMin = 1;
             ModOptions.SettingsRef settingsRef = new ModOptions.SettingsRef();
-            
+
             if (pawn.GetComp<CompAbilityUserMagic>().MagicData.MagicPowerSkill_Cantrips.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_Cantrips_pwr").level >= 2)
             {
                 burstCountMin++;
@@ -66,8 +62,8 @@ namespace TorannMagic
             this.burstShotsLeft--;
             //Log.Message("burst shots left " + this.burstShotsLeft);
             float burstCountFloat = (float)(15f - this.burstShotsLeft);
-            float mageLevelFloat = (float)(burstCountMin + (comp.MagicUserLevel/10f));
-            result = Rand.Chance(mageLevelFloat - burstCountFloat);            
+            float mageLevelFloat = (float)(burstCountMin + (comp.MagicUserLevel / 10f));
+            result = Rand.Chance(mageLevelFloat - burstCountFloat);
             return result;
         }
     }

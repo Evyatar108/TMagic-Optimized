@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using Verse;
+﻿using Verse;
 using RimWorld;
 using UnityEngine;
 using System.Collections.Generic;
@@ -18,13 +16,13 @@ namespace TorannMagic.Conditions
                 string str = "";
                 Map map = (Map)parms.target;
                 int duration = Mathf.RoundToInt(this.def.durationDays.RandomInRange * 60000f);
-                List<Faction> lichFaction = Find.FactionManager.AllFactions.ToList();
+                IEnumerable<Faction> lichFaction = Find.FactionManager.AllFactions;
                 bool factionFlag = false;
-                for (int i = 0; i < lichFaction.Count; i++)
+                foreach (var faction in lichFaction)
                 {
-                    if (lichFaction[i].def.defName == "TM_ElementalFaction")
+                    if (faction.def.defName == "TM_ElementalFaction")
                     {
-                        Faction.OfPlayer.TrySetRelationKind(lichFaction[i], FactionRelationKind.Hostile, false, null, null);
+                        Faction.OfPlayer.TrySetRelationKind(faction, FactionRelationKind.Hostile, false, null, null);
                         factionFlag = true;
                     }
                 }
@@ -41,7 +39,7 @@ namespace TorannMagic.Conditions
             }
             else
             {
-                return false; 
+                return false;
             }
         }
     }

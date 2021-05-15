@@ -1,9 +1,8 @@
 ﻿using RimWorld.BaseGen;
-using System;
 using System.Collections.Generic;
 using Verse;
 
-namespace TorannMagic 
+namespace TorannMagic
 {
     class GenStep_MagicAdventureGenerator : GenStep
     {

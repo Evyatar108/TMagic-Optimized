@@ -5,11 +5,11 @@ using System.Collections.Generic;
 
 namespace TorannMagic
 {
-	public class CompUseEffect_LearnMight : CompUseEffect
-	{
+    public class CompUseEffect_LearnMight : CompUseEffect
+    {
 
-		public override void DoEffect(Pawn user)
-		{
+        public override void DoEffect(Pawn user)
+        {
             if (parent.def != null)
             {
                 bool customClass = false;
@@ -43,7 +43,7 @@ namespace TorannMagic
                                 Log.Message("failed to initialize custom might class comp");
                             }
                             CompAbilityUserMagic mComp = user.TryGetComp<CompAbilityUserMagic>();
-                            if(mComp != null && TM_ClassUtility.CustomClasses()[i].isMage)
+                            if (mComp != null && TM_ClassUtility.CustomClasses()[i].isMage)
                             {
                                 mComp.customIndex = i;
                                 mComp.customClass = TM_ClassUtility.CustomClasses()[i];
@@ -148,14 +148,14 @@ namespace TorannMagic
                     }
                     if (cc != null && (cc.fullScript == TorannMagicDefOf.BookOfSuperSoldier || cc.tornScript == TorannMagicDefOf.BookOfSuperSoldier))
                     {
-                        
+
                     }
                     else
                     {
                         this.parent.SplitOff(1).Destroy(DestroyMode.Vanish);
                     }
                 }
-                else if(!customClass && !user.story.traits.HasTrait(TorannMagicDefOf.PhysicalProdigy))
+                else if (!customClass && !user.story.traits.HasTrait(TorannMagicDefOf.PhysicalProdigy))
                 {
                     Messages.Message("NotPhyAdeptPawn".Translate(), MessageTypeDefOf.RejectInput);
                 }
@@ -165,13 +165,13 @@ namespace TorannMagic
             else
             {
                 Messages.Message("NotPhyAdeptPawn".Translate(), MessageTypeDefOf.RejectInput);
-            }           
+            }
 
-		}
+        }
 
         private void FixTrait(Pawn pawn, List<Trait> traits)
         {
-            TraitStart:;
+        TraitStart:;
             for (int i = 0; i < traits.Count; i++)
             {
                 if (traits[i].def == TorannMagicDefOf.PhysicalProdigy)
@@ -183,99 +183,13 @@ namespace TorannMagic
                 {
                     traits.Remove(traits[i]);
                     goto TraitStart;
-                }                
-            }
-        }
-
-        private void ResolveClassPassions(Pawn p)
-        {
-            SkillRecord skill;
-            if (p.story.traits.HasTrait(TorannMagicDefOf.Bladedancer))
-            {
-                skill = p.skills.GetSkill(SkillDefOf.Melee);
-                if (skill.passion != Passion.Major)
-                {
-                    skill.passion = Passion.Major;
-                }
-                skill = p.skills.GetSkill(SkillDefOf.Shooting);
-                if (skill.passion != Passion.None)
-                {
-                    skill.passion = Passion.None;
-                }
-            }
-            if (p.story.traits.HasTrait(TorannMagicDefOf.TM_Sniper))
-            {
-                skill = p.skills.GetSkill(SkillDefOf.Melee);
-                if (skill.passion != Passion.None)
-                {
-                    skill.passion = Passion.None;
-                }
-                skill = p.skills.GetSkill(SkillDefOf.Shooting);
-                if (skill.passion != Passion.Major)
-                {
-                    skill.passion = Passion.Major;
-                }
-            }
-            if (p.story.traits.HasTrait(TorannMagicDefOf.Gladiator))
-            {
-                skill = p.skills.GetSkill(SkillDefOf.Melee);
-                if (skill.passion == Passion.None)
-                {
-                    skill.passion = Passion.Minor;
-                }
-                skill = p.skills.GetSkill(SkillDefOf.Shooting);
-                if (skill.passion == Passion.None)
-                {
-                    skill.passion = Passion.Minor;
-                }
-            }
-            if (p.story.traits.HasTrait(TorannMagicDefOf.Ranger))
-            {
-                skill = p.skills.GetSkill(SkillDefOf.Melee);
-                if (skill.passion == Passion.None)
-                {
-                    skill.passion = Passion.Minor;
-                }
-                skill = p.skills.GetSkill(SkillDefOf.Shooting);
-                if (skill.passion == Passion.None)
-                {
-                    skill.passion = Passion.Minor;
-                }
-            }
-            if (p.story.traits.HasTrait(TorannMagicDefOf.TM_SuperSoldier))
-            {
-                skill = p.skills.GetSkill(SkillDefOf.Melee);
-                if (skill.passion == Passion.None)
-                {
-                    skill.passion = Passion.Minor;
-                }
-                skill = p.skills.GetSkill(SkillDefOf.Shooting);
-                if (skill.passion == Passion.Minor)
-                {
-                    skill.passion = Passion.Major;
-                }
-                if (skill.passion == Passion.None)
-                {
-                    skill.passion = Passion.Minor;
-                }
-            }
-            if (p.story.traits.HasTrait(TorannMagicDefOf.TM_Commander))
-            {
-                skill = p.skills.GetSkill(SkillDefOf.Social);
-                if (skill.passion == Passion.Minor)
-                {
-                    skill.passion = Passion.Major;
-                }
-                if (skill.passion == Passion.None)
-                {
-                    skill.passion = Passion.Minor;
                 }
             }
         }
 
         public void ApplyTraitAdjustments(Pawn pawn, TraitDef traitDef)
         {
-            
+
         }
     }
 }

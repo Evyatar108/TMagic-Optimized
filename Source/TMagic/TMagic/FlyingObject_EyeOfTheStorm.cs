@@ -1,5 +1,4 @@
 ﻿using RimWorld;
-using System;
 using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
@@ -53,7 +52,7 @@ namespace TorannMagic
 
         public int weaponDmg = 0;
 
-        private bool initialized = true;        
+        private bool initialized = true;
 
         protected new int StartingTicksToImpact
         {
@@ -81,8 +80,8 @@ namespace TorannMagic
         {
             get
             {
-                Vector3 b = (this.destination - this.origin) * (1f - (float)this.ticksToImpact / (float)this.StartingTicksToImpact);
-                return this.origin + b + Vector3.up * this.def.Altitude;
+                Vector3 b = (this.destination - this.origin) * (1f - ((float)this.ticksToImpact / (float)this.StartingTicksToImpact));
+                return this.origin + b + (Vector3.up * this.def.Altitude);
             }
         }
 
@@ -100,7 +99,7 @@ namespace TorannMagic
             {
                 return this.ExactPosition;
             }
-        }       
+        }
 
         public override void ExposeData()
         {
@@ -193,12 +192,12 @@ namespace TorannMagic
             }
             else
             {
-                base.Position = this.ExactPosition.ToIntVec3();                
+                base.Position = this.ExactPosition.ToIntVec3();
                 DrawOrb(exactPosition, base.Map);
-                if(this.searchDelay < 0)
+                if (this.searchDelay < 0)
                 {
                     SearchForTargets(base.Position, 8f + (1 * verVal));
-                }                
+                }
                 bool flag2 = this.ticksToImpact <= 0;
                 if (flag2)
                 {
@@ -220,17 +219,15 @@ namespace TorannMagic
             orbVec.x += xOffset;
             orbVec.z += zOffset;
             MoteMaker.ThrowLightningGlow(orbVec, map, 0.5f + (0.15f * (float)verVal));
-            float num = Mathf.Lerp(1.2f, 1.55f, 5f);            
             vector.y = Altitudes.AltitudeFor(AltitudeLayer.MoteOverhead);
-            float angle = (float)Rand.Range(0, 360);
-            Vector3 s = new Vector3(0.8f + (.1f* ((float)pwrVal)), 0.8f + (.1f * ((float)pwrVal)), 0.8f + (.1f * ((float)pwrVal)));
+            Vector3 s = new Vector3(0.8f + (.1f * ((float)pwrVal)), 0.8f + (.1f * ((float)pwrVal)), 0.8f + (.1f * ((float)pwrVal)));
             Matrix4x4 matrix = default(Matrix4x4);
             matrix.SetTRS(vector, Quaternion.AngleAxis(0f, Vector3.up), s);
-            Graphics.DrawMesh(MeshPool.plane10, matrix, FlyingObject_EyeOfTheStorm.OrbMat, 0);  
+            Graphics.DrawMesh(MeshPool.plane10, matrix, FlyingObject_EyeOfTheStorm.OrbMat, 0);
         }
 
         public void SearchForTargets(IntVec3 center, float radius)
-        {            
+        {
             Pawn curPawnTarg = null;
             Building curBldgTarg = null;
             //IntVec3 curCell;
@@ -244,7 +241,6 @@ namespace TorannMagic
             //        curBldgTarg = curCell.GetFirstBuilding(base.Map);
             //    }               
             List<Pawn> targets = new List<Pawn>();
-            targets.Clear();
             if (this.age > this.lastStrike)
             {
                 targets = TM_Calc.FindAllPawnsAround(base.Map, center, radius);
@@ -259,9 +255,9 @@ namespace TorannMagic
                         for (int k = 0; k < Rand.Range(1, 8); k++)
                         {
                             IntVec3 randomCell = cellRect.RandomCell;
-                            GenExplosion.DoExplosion(randomCell, base.Map, Rand.Range(.4f, .8f), TMDamageDefOf.DamageDefOf.TM_Lightning, this.launcher, Mathf.RoundToInt(Rand.Range(5 + pwrVal, 9 + 3 * pwrVal) * this.arcaneDmg), 0, SoundDefOf.Thunder_OnMap, null, null, null, null, 0f, 1, false, null, 0f, 1, 0.1f, true);
+                            GenExplosion.DoExplosion(randomCell, base.Map, Rand.Range(.4f, .8f), TMDamageDefOf.DamageDefOf.TM_Lightning, this.launcher, Mathf.RoundToInt(Rand.Range(5 + pwrVal, 9 + (3 * pwrVal)) * this.arcaneDmg), 0, SoundDefOf.Thunder_OnMap, null, null, null, null, 0f, 1, false, null, 0f, 1, 0.1f, true);
                         }
-                        GenExplosion.DoExplosion(curPawnTarg.Position, base.Map, 1f, TMDamageDefOf.DamageDefOf.TM_Lightning, this.launcher, Mathf.RoundToInt(Rand.Range(5 + pwrVal, 9 + 3 * pwrVal) * this.arcaneDmg), 0, SoundDefOf.Thunder_OffMap, null, null, null, null, 0f, 1, false, null, 0f, 1, 0.1f, true);
+                        GenExplosion.DoExplosion(curPawnTarg.Position, base.Map, 1f, TMDamageDefOf.DamageDefOf.TM_Lightning, this.launcher, Mathf.RoundToInt(Rand.Range(5 + pwrVal, 9 + (3 * pwrVal)) * this.arcaneDmg), 0, SoundDefOf.Thunder_OffMap, null, null, null, null, 0f, 1, false, null, 0f, 1, 0.1f, true);
                         this.lastStrike = this.age + (this.maxStrikeDelay - (int)Rand.Range(0 + (pwrVal * 20), 50 + (pwrVal * 10)));
                     }
                     else
@@ -273,7 +269,7 @@ namespace TorannMagic
                 {
                     this.lastStrike += 10;
                 }
-            }                
+            }
 
             if (this.age > this.lastStrikeBldg)
             {
@@ -291,11 +287,11 @@ namespace TorannMagic
                     for (int k = 0; k < Rand.Range(1, 8); k++)
                     {
                         IntVec3 randomCell = cellRect.RandomCell;
-                        GenExplosion.DoExplosion(randomCell, base.Map, Rand.Range(.2f, .6f), TMDamageDefOf.DamageDefOf.TM_Lightning, this.launcher, Mathf.RoundToInt(Rand.Range(3 + 3 * pwrVal, 7 + 5 * pwrVal) * this.arcaneDmg), 0, SoundDefOf.Thunder_OffMap, null, null, null, null, 0f, 1, false, null, 0f, 1, 0.1f, true);
+                        GenExplosion.DoExplosion(randomCell, base.Map, Rand.Range(.2f, .6f), TMDamageDefOf.DamageDefOf.TM_Lightning, this.launcher, Mathf.RoundToInt(Rand.Range(3 + (3 * pwrVal), 7 + (5 * pwrVal)) * this.arcaneDmg), 0, SoundDefOf.Thunder_OffMap, null, null, null, null, 0f, 1, false, null, 0f, 1, 0.1f, true);
 
                     }
-                    GenExplosion.DoExplosion(curBldgTarg.Position, base.Map, 1f, TMDamageDefOf.DamageDefOf.TM_Lightning, this.launcher, Mathf.RoundToInt(Rand.Range(10 + 3 * pwrVal, 25 + 5 * pwrVal) * this.arcaneDmg), 0, SoundDefOf.Thunder_OffMap, null, null, null, null, 0f, 1, false, null, 0f, 1, 0.1f, true);
-                    this.lastStrikeBldg = this.age + (this.maxStrikeDelayBldg - (int)Rand.Range(0 + (pwrVal * 10), (pwrVal * 15)));
+                    GenExplosion.DoExplosion(curBldgTarg.Position, base.Map, 1f, TMDamageDefOf.DamageDefOf.TM_Lightning, this.launcher, Mathf.RoundToInt(Rand.Range(10 + (3 * pwrVal), 25 + (5 * pwrVal)) * this.arcaneDmg), 0, SoundDefOf.Thunder_OffMap, null, null, null, null, 0f, 1, false, null, 0f, 1, 0.1f, true);
+                    this.lastStrikeBldg = this.age + (this.maxStrikeDelayBldg - (int)Rand.Range(0 + (pwrVal * 10), pwrVal * 15));
                 }
                 else
                 {
@@ -326,12 +322,12 @@ namespace TorannMagic
 
         public void DrawStrikeFading()
         {
-            for(int i = 0; i < 10; i ++)
+            for (int i = 0; i < 10; i++)
             {
                 if (fadeTimer[i] > 0)
                 {
                     TM_MeshBolt meshBolt = new TM_MeshBolt(from[i], to[i], FlyingObject_EyeOfTheStorm.lightningMat);
-                    meshBolt.CreateFadedBolt(fadeTimer[i]/30);
+                    meshBolt.CreateFadedBolt(fadeTimer[i] / 30);
                     fadeTimer[i]--;
                     if (fadeTimer[i] == 0)
                     {
@@ -339,7 +335,7 @@ namespace TorannMagic
                         to[i] = default(Vector3);
                     }
                 }
-            }            
+            }
         }
 
         private void ImpactSomething()
@@ -370,7 +366,7 @@ namespace TorannMagic
             if (flag)
             {
                 Pawn hitPawn;
-                bool flag2 = (hitPawn = (base.Position.GetThingList(base.Map).FirstOrDefault((Thing x) => x == this.assignedTarget) as Pawn)) != null;
+                bool flag2 = (hitPawn = base.Position.GetThingList(base.Map).FirstOrDefault((Thing x) => x == this.assignedTarget) as Pawn) != null;
                 if (flag2)
                 {
                     hitThing = hitPawn;
@@ -399,7 +395,7 @@ namespace TorannMagic
             }
 
             List<IntVec3> dissipationList = GenRadial.RadialCellsAround(this.ExactPosition.ToIntVec3(), 12, false).ToList();
-            for (int i = 0; i < (15 + 4*pwrVal); i++)
+            for (int i = 0; i < (15 + (4 * pwrVal)); i++)
             {
                 IntVec3 strikeCell = dissipationList.RandomElement();
                 if (strikeCell.InBounds(base.Map) && strikeCell.IsValid && !strikeCell.Fogged(this.Map))
@@ -410,14 +406,14 @@ namespace TorannMagic
                         CellRect cellRect = CellRect.CenteredOn(strikeCell, 1);
                         cellRect.ClipInsideMap(base.Map);
                         IntVec3 randomCell = cellRect.RandomCell;
-                        GenExplosion.DoExplosion(randomCell, base.Map, Rand.Range(.2f, .6f), TMDamageDefOf.DamageDefOf.TM_Lightning, this.launcher, Mathf.RoundToInt(Rand.Range(3 + 3 * pwrVal, 7 + 5 * pwrVal) * this.arcaneDmg), 0, SoundDefOf.Thunder_OffMap, null, null, null, null, 0f, 1, false, null, 0f, 1, 0.1f, true);
+                        GenExplosion.DoExplosion(randomCell, base.Map, Rand.Range(.2f, .6f), TMDamageDefOf.DamageDefOf.TM_Lightning, this.launcher, Mathf.RoundToInt(Rand.Range(3 + (3 * pwrVal), 7 + (5 * pwrVal)) * this.arcaneDmg), 0, SoundDefOf.Thunder_OffMap, null, null, null, null, 0f, 1, false, null, 0f, 1, 0.1f, true);
                     }
                 }
             }
-            GenExplosion.DoExplosion(this.ExactPosition.ToIntVec3(), base.Map, 3f + verVal, TMDamageDefOf.DamageDefOf.TM_Lightning, this.launcher, Mathf.RoundToInt(Rand.Range(5 + 5 * pwrVal, 10 + 10 * pwrVal) * this.arcaneDmg), 0, SoundDefOf.Thunder_OffMap, null, null, null, null, 0f, 1, false, null, 0f, 1, 0.1f, true);
+            GenExplosion.DoExplosion(this.ExactPosition.ToIntVec3(), base.Map, 3f + verVal, TMDamageDefOf.DamageDefOf.TM_Lightning, this.launcher, Mathf.RoundToInt(Rand.Range(5 + (5 * pwrVal), 10 + (10 * pwrVal)) * this.arcaneDmg), 0, SoundDefOf.Thunder_OffMap, null, null, null, null, 0f, 1, false, null, 0f, 1, 0.1f, true);
 
 
             this.Destroy(DestroyMode.Vanish);
-        }        
+        }
     }
 }

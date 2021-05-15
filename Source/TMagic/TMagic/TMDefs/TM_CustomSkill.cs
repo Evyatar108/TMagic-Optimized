@@ -1,12 +1,4 @@
-﻿using RimWorld;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Verse;
-using UnityEngine;
-
-namespace TorannMagic.TMDefs
+﻿namespace TorannMagic.TMDefs
 {
     public class TM_CustomSkill
     {

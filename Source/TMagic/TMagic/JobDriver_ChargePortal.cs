@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Verse.AI;
-using System;
 using Verse;
 using RimWorld;
 using UnityEngine;
@@ -8,7 +7,7 @@ using UnityEngine;
 
 namespace TorannMagic
 {
-    internal class JobDriver_ChargePortal: JobDriver
+    internal class JobDriver_ChargePortal : JobDriver
     {
         private const TargetIndex building = TargetIndex.A;
         Building_TMPortal portalBldg;
@@ -82,14 +81,14 @@ namespace TorannMagic
                         TM_MoteMaker.ThrowGenericMote(TorannMagicDefOf.Mote_Shadow, pawn.DrawPos, pawn.Map, Rand.Range(.4f, .6f), Rand.Range(.1f, .2f), .04f, Rand.Range(.1f, .2f), 300, 5f, (Quaternion.AngleAxis(90, Vector3.up) * moteDirection).ToAngleFlat(), 0);
                     }
                     if (age > (chargeAge + ticksTillCharge))
-                    {                                               
-                        if(bldg.def.defName == "TM_Portal")
+                    {
+                        if (bldg.def.defName == "TM_Portal")
                         {
                             comp.Mana.CurLevel -= .01f;
                             portalBldg.ArcaneEnergyCur += .01f;
                             xpNum += 3;
                         }
-                        else if(bldg.def.defName == "TM_ArcaneCapacitor")
+                        else if (bldg.def.defName == "TM_ArcaneCapacitor")
                         {
                             comp.Mana.CurLevel -= .01f;
                             arcaneCapacitor.ArcaneEnergyCur += 1f;
@@ -103,7 +102,7 @@ namespace TorannMagic
                         else
                         {
                             age = duration;
-                        }                        
+                        }
                         chargeAge = age;
                     }
                     age++;

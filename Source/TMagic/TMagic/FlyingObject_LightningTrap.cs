@@ -1,5 +1,4 @@
 ﻿using RimWorld;
-using System;
 using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
@@ -19,10 +18,7 @@ namespace TorannMagic
         protected new Vector3 destination;
 
         private int searchDelay = 10;
-        private int maxStrikeDelay = 100;
-        private int maxStrikeDelayBldg = 60;
         private int lastStrike = 0;
-        private int lastStrikeBldg = 0;
         private int age = -1;
         private float arcaneDmg = 1;
         public Matrix4x4 drawingMatrix = default(Matrix4x4);
@@ -54,7 +50,7 @@ namespace TorannMagic
 
         public int weaponDmg = 0;
 
-        private bool initialized = true;        
+        private bool initialized = true;
 
         protected new int StartingTicksToImpact
         {
@@ -82,8 +78,8 @@ namespace TorannMagic
         {
             get
             {
-                Vector3 b = (this.destination - this.origin) * (1f - (float)this.ticksToImpact / (float)this.StartingTicksToImpact);
-                return this.origin + b + Vector3.up * this.def.Altitude;
+                Vector3 b = (this.destination - this.origin) * (1f - ((float)this.ticksToImpact / (float)this.StartingTicksToImpact));
+                return this.origin + b + (Vector3.up * this.def.Altitude);
             }
         }
 
@@ -101,7 +97,7 @@ namespace TorannMagic
             {
                 return this.ExactPosition;
             }
-        }       
+        }
 
         public override void ExposeData()
         {
@@ -197,13 +193,13 @@ namespace TorannMagic
             }
             else
             {
-                base.Position = this.ExactPosition.ToIntVec3();                
+                base.Position = this.ExactPosition.ToIntVec3();
                 DrawOrb(exactPosition, base.Map);
-                if(this.searchDelay < 0)
+                if (this.searchDelay < 0)
                 {
                     this.searchDelay = Rand.Range(20, 35);
                     SearchForTargets(this.origin.ToIntVec3(), 6f);
-                }                
+                }
                 bool flag2 = this.ticksToImpact <= 0;
                 if (flag2)
                 {
@@ -225,23 +221,20 @@ namespace TorannMagic
             orbVec.x += xOffset;
             orbVec.z += zOffset;
             MoteMaker.ThrowLightningGlow(orbVec, map, 0.4f);
-            float num = Mathf.Lerp(1.2f, 1.55f, 5f);            
             vector.y = Altitudes.AltitudeFor(AltitudeLayer.MoteOverhead);
-            float angle = (float)Rand.Range(0, 360);
             Vector3 s = new Vector3(0.4f, 0.4f, 0.4f);
             Matrix4x4 matrix = default(Matrix4x4);
             matrix.SetTRS(vector, Quaternion.AngleAxis(0f, Vector3.up), s);
-            Graphics.DrawMesh(MeshPool.plane10, matrix, FlyingObject_LightningTrap.OrbMat, 0);  
+            Graphics.DrawMesh(MeshPool.plane10, matrix, FlyingObject_LightningTrap.OrbMat, 0);
         }
 
         public void SearchForTargets(IntVec3 center, float radius)
         {
-            Pawn target = null;
             if (faction == null)
             {
                 faction = Faction.OfPlayer;
             }
-            target = TM_Calc.FindNearbyEnemy(center, this.Map, this.faction, radius, 0f);
+            Pawn target = TM_Calc.FindNearbyEnemy(center, Map, faction, radius, 0f);
             if (target != null)
             {
                 CellRect cellRect = CellRect.CenteredOn(target.Position, 2);
@@ -254,7 +247,7 @@ namespace TorannMagic
                 }
                 GenExplosion.DoExplosion(target.Position, base.Map, 1f, TMDamageDefOf.DamageDefOf.TM_Lightning, this.launcher, Mathf.RoundToInt(Rand.Range(5, 9) * this.arcaneDmg), 0, SoundDefOf.Thunder_OffMap, null, null, null, null, 0f, 1, false, null, 0f, 1, 0.1f, true);
                 this.lastStrike = this.age;
-            }            
+            }
             DrawStrikeFading();
         }
 
@@ -276,12 +269,12 @@ namespace TorannMagic
 
         public void DrawStrikeFading()
         {
-            for(int i = 0; i < 10; i ++)
+            for (int i = 0; i < 10; i++)
             {
                 if (fadeTimer[i] > 0)
                 {
                     TM_MeshBolt meshBolt = new TM_MeshBolt(from[i], to[i], FlyingObject_LightningTrap.lightningMat);
-                    meshBolt.CreateFadedBolt(fadeTimer[i]/30);
+                    meshBolt.CreateFadedBolt(fadeTimer[i] / 30);
                     fadeTimer[i]--;
                     if (fadeTimer[i] == 0)
                     {
@@ -289,7 +282,7 @@ namespace TorannMagic
                         to[i] = default(Vector3);
                     }
                 }
-            }            
+            }
         }
 
         private void ImpactSomething()
@@ -320,7 +313,7 @@ namespace TorannMagic
             if (flag)
             {
                 Pawn hitPawn;
-                bool flag2 = (hitPawn = (base.Position.GetThingList(base.Map).FirstOrDefault((Thing x) => x == this.assignedTarget) as Pawn)) != null;
+                bool flag2 = (hitPawn = base.Position.GetThingList(base.Map).FirstOrDefault((Thing x) => x == this.assignedTarget) as Pawn) != null;
                 if (flag2)
                 {
                     hitThing = hitPawn;
@@ -368,6 +361,6 @@ namespace TorannMagic
 
 
             this.Destroy(DestroyMode.Vanish);
-        }        
+        }
     }
 }

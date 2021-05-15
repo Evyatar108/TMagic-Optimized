@@ -1,9 +1,6 @@
-﻿using RimWorld;
-using Verse;
-using UnityEngine;
+﻿using Verse;
 using System.Collections.Generic;
 using System.Linq;
-using HarmonyLib;
 
 namespace TorannMagic
 {
@@ -54,7 +51,7 @@ namespace TorannMagic
             {
                 this.Pawn.health.RemoveHediff(this.parent);
             }
-        }        
+        }
 
         public override void CompPostTick(ref float severityAdjustment)
         {
@@ -89,7 +86,7 @@ namespace TorannMagic
                             }
                         }
                         CompAbilityUserMight comp = this.Pawn.GetComp<CompAbilityUserMight>();
-                        comp.MightUserXP += Rand.Range(2, 5);                        
+                        comp.MightUserXP += Rand.Range(2, 5);
                     }
                     else //map null
                     {
@@ -109,15 +106,15 @@ namespace TorannMagic
                     }
                 }
 
-                if(Find.TickManager.TicksGame % 1200 == 0)
+                if (Find.TickManager.TicksGame % 1200 == 0)
                 {
                     DetermineHediff();
                 }
             }
-        }     
+        }
 
         private void DetermineHediff()
-        {           
+        {
             CompAbilityUserMight comp = this.Pawn.GetComp<CompAbilityUserMight>();
             if (parent.def == TorannMagicDefOf.TM_ProvisionerAuraHD && comp != null)
             {
@@ -154,7 +151,7 @@ namespace TorannMagic
                         hdComp.verVal = verVal;
                     }
                 }
-                if(verVal >= 3)
+                if (verVal >= 3)
                 {
                     float sev = 1.15f;
                     bool flag = true;
@@ -175,18 +172,18 @@ namespace TorannMagic
                             }
                         }
                     }
-                    if(flag)
+                    if (flag)
                     {
                         HealthUtility.AdjustSeverity(p, TorannMagicDefOf.TM_EnergyRegenHD, sev);
                         HediffComp_EnergyRegen hd2 = p.health.hediffSet.GetFirstHediffOfDef(TorannMagicDefOf.TM_EnergyRegenHD, false).TryGetComp<HediffComp_EnergyRegen>();
                         if (hd2 != null)
                         {
-                            hd2.duration = 20 + pwrVal*2;
+                            hd2.duration = 20 + (pwrVal * 2);
                         }
 
                     }
                 }
-            }            
+            }
         }
     }
 }

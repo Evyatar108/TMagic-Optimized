@@ -1,26 +1,23 @@
 ﻿using RimWorld;
-using System;
 using Verse;
 using AbilityUser;
-using UnityEngine;
 using System.Collections.Generic;
 
 namespace TorannMagic
 {
-    public class Verb_Blur : Verb_UseAbility  
+    public class Verb_Blur : Verb_UseAbility
     {
-        
+
         protected override bool TryCastShot()
         {
             bool result = false;
             bool arg_40_0;
 
             Pawn pawn = this.CasterPawn;
-            Map map = this.CasterPawn.Map;
 
             if (pawn != null && !pawn.Downed)
             {
-                if(pawn.health.hediffSet.HasHediff(TorannMagicDefOf.TM_BlurHD, false))
+                if (pawn.health.hediffSet.HasHediff(TorannMagicDefOf.TM_BlurHD, false))
                 {
                     using (IEnumerator<Hediff> enumerator = pawn.health.hediffSet.GetHediffs<Hediff>().GetEnumerator())
                     {
@@ -68,7 +65,7 @@ namespace TorannMagic
             bool flag = arg_40_0;
             if (flag)
             {
-                
+
             }
             else
             {

@@ -2,10 +2,7 @@
 using Verse;
 using AbilityUser;
 using UnityEngine;
-using RimWorld;
-using System.Collections.Generic;
 using System;
-using System.Linq;
 
 namespace TorannMagic
 {
@@ -18,10 +15,8 @@ namespace TorannMagic
 
         protected override void Impact(Thing hitThing)
         {
-            Map map = base.Map;
             Pawn pawn = this.launcher as Pawn;
             base.Impact(hitThing);
-            ThingDef def = this.def;
             try
             {
                 if (pawn != null)
@@ -36,7 +31,7 @@ namespace TorannMagic
                     }
                 }
             }
-            catch (NullReferenceException ex)
+            catch (NullReferenceException)
             {
                 //
             }
@@ -52,7 +47,7 @@ namespace TorannMagic
                     if (pawn.equipment != null && pawn.equipment.Primary != null)
                     {
                         ThingWithComps weaponComp = pawn.equipment.Primary;
-                        if(weaponComp.def.IsRangedWeapon)
+                        if (weaponComp.def.IsRangedWeapon)
                         {
                             shouldSpin = false;
                         }
@@ -69,8 +64,8 @@ namespace TorannMagic
                 this.rotationOffset = this.rotationOffset - 360;
             }
             Mesh mesh = MeshPool.GridPlane(this.def.graphicData.drawSize);
-            Graphics.DrawMesh(mesh, DrawPos, (Quaternion.AngleAxis(rotationOffset, Vector3.up) * ExactRotation), def.DrawMatSingle, 0);
-            
+            Graphics.DrawMesh(mesh, DrawPos, Quaternion.AngleAxis(rotationOffset, Vector3.up) * ExactRotation, def.DrawMatSingle, 0);
+
             Comps_PostDraw();
         }
 
@@ -81,7 +76,7 @@ namespace TorannMagic
                 CompAbilityUserMight comp = pawn.GetComp<CompAbilityUserMight>();
                 if (comp != null)
                 {
-                    float dmgNum = 0;                    
+                    float dmgNum = 0;
                     if (pawn.equipment != null && pawn.equipment.Primary != null)
                     {
                         ThingWithComps weaponComp = pawn.equipment.Primary;
@@ -90,7 +85,7 @@ namespace TorannMagic
                             dmgNum = comp.weaponDamage * TorannMagicDefOf.TM_TempestStrike.weaponDamageFactor;
                         }
                         if (weaponComp.def.IsRangedWeapon)
-                        {                            
+                        {
                             float weaponDPS = comp.weaponDamage;
                             int shots = Mathf.Clamp(weaponComp.def.Verbs.FirstOrDefault().burstShotCount, 1, 5);
                             float shotMultiplier = 1f - ((float)shots / 15f);
@@ -107,7 +102,7 @@ namespace TorannMagic
                     {
                         dmgNum = dmgNum * 1.2f;
                     }
-                    
+
                     return Mathf.RoundToInt(dmgNum);
                 }
                 return 0;
@@ -115,7 +110,7 @@ namespace TorannMagic
             return 0;
         }
 
-    }    
+    }
 }
 
 

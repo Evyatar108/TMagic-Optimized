@@ -1,5 +1,4 @@
-﻿using RimWorld;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Verse;
@@ -11,7 +10,7 @@ namespace TorannMagic.Enchantment
         public CompEnchantmentMod(ModContentPack mcp) : base(mcp)
         {
             LongEventHandler.ExecuteWhenFinished(new Action(CompEnchantmentMod.AddComp));
-            LongEventHandler.ExecuteWhenFinished(new Action(CompEnchantmentMod.AddUniversalBodyparts));            
+            LongEventHandler.ExecuteWhenFinished(new Action(CompEnchantmentMod.AddUniversalBodyparts));
             LongEventHandler.ExecuteWhenFinished(new Action(CompEnchantmentMod.FillCloakPool));
         }
 
@@ -36,12 +35,12 @@ namespace TorannMagic.Enchantment
                                                where (def.IsMeleeWeapon || def.IsRangedWeapon || def.IsApparel) && !def.HasComp(typeof(CompEnchantedItem))
                                                select def;
             Type typeFromHandle = typeof(ITab_Enchantment);
-            InspectTabBase sharedInstance = InspectTabManager.GetSharedInstance(typeFromHandle);            
+            InspectTabBase sharedInstance = InspectTabManager.GetSharedInstance(typeFromHandle);
             foreach (ThingDef current in enumerable)
             {
                 //if (current.defName != "TM_ThrumboAxe" && current.defName != "TM_FireWand" && current.defName != "TM_IceWand" && current.defName != "TM_LightningWand" &&
                 //    current.defName != "TM_BlazingPowerStaff" && current.defName != "TM_DefenderStaff")
-                if(!current.defName.Contains("TM_"))
+                if (!current.defName.Contains("TM_"))
                 {
                     CompProperties_EnchantedItem item = new CompProperties_EnchantedItem
                     {
@@ -57,13 +56,13 @@ namespace TorannMagic.Enchantment
                     current.inspectorTabs.Add(typeFromHandle);
                     current.inspectorTabsResolved.Add(sharedInstance);
                 }
-            }        
+            }
         }
 
         private static void AddUniversalBodyparts()
         {
             IEnumerable<BodyPartDef> universalBodyParts = from def in DefDatabase<BodyPartDef>.AllDefs
-                                                          where (def.destroyableByDamage)
+                                                          where def.destroyableByDamage
                                                           select def;
             foreach (BodyPartDef current1 in universalBodyParts)
             {
@@ -71,14 +70,14 @@ namespace TorannMagic.Enchantment
             }
 
             IEnumerable<ThingDef> universalPawnTypes = from def in DefDatabase<ThingDef>.AllDefs
-                                                       where (def.category == ThingCategory.Pawn && !def.defName.Contains("TM_") && def.race.IsFlesh)
+                                                       where def.category == ThingCategory.Pawn && !def.defName.Contains("TM_") && def.race.IsFlesh
                                                        select def;
             foreach (ThingDef current2 in universalPawnTypes)
             {
                 TorannMagicDefOf.UniversalRegrowth.recipeUsers.AddDistinct(current2);
                 TorannMagicDefOf.AdministerOrbOfTheEternal.recipeUsers.AddDistinct(current2);
             }
-        }        
+        }
 
         private static void FillCloakPool()
         {

@@ -8,10 +8,6 @@ namespace TorannMagic
     [StaticConstructorOnStartup]
     public class Building_TMCooler : Building
     {
-
-        private float arcaneEnergyCur = 0;
-        private float arcaneEnergyMax = 1;
-
         private static readonly Material coolerMat_1 = MaterialPool.MatFrom("Other/cooler", false);
         private static readonly Material coolerMat_2 = MaterialPool.MatFrom("Other/coolerB", false);
         private static readonly Material coolerMat_3 = MaterialPool.MatFrom("Other/coolerC", false);
@@ -41,15 +37,15 @@ namespace TorannMagic
 
         public override void Tick()
         {
-            if(!initialized)
+            if (!initialized)
             {
                 initialized = true;
                 this.nextSearch = Find.TickManager.TicksGame + Rand.Range(400, 500);
             }
-            if(Find.TickManager.TicksGame % 8 == 0)
+            if (Find.TickManager.TicksGame % 8 == 0)
             {
                 this.matRng++;
-                if(this.matRng >= 3)
+                if (this.matRng >= 3)
                 {
                     matRng = 0;
                 }
@@ -72,12 +68,12 @@ namespace TorannMagic
                         }
                     }
                 }
-                if(buffCool)
+                if (buffCool)
                 {
                     List<Pawn> pList = TM_Calc.FindAllPawnsAround(this.Map, this.Position, 7, this.Faction, true);
-                    if(pList != null && pList.Count > 0)
+                    if (pList != null && pList.Count > 0)
                     {
-                        for(int i =0; i < pList.Count; i++)
+                        for (int i = 0; i < pList.Count; i++)
                         {
                             Pawn p = pList[i];
                             if (p.health != null && p.health.hediffSet != null)
@@ -87,7 +83,7 @@ namespace TorannMagic
                         }
                     }
                 }
-                if(buffFresh)
+                if (buffFresh)
                 {
                     List<Pawn> pList = TM_Calc.FindAllPawnsAround(this.Map, this.Position, 7, this.Faction, true);
                     if (pList != null && pList.Count > 0)
@@ -105,7 +101,7 @@ namespace TorannMagic
             }
             base.Tick();
 
-        }        
+        }
 
         public override void Draw()
         {
@@ -125,10 +121,10 @@ namespace TorannMagic
             {
                 Graphics.DrawMesh(MeshPool.plane10, matrix, Building_TMCooler.coolerMat_2, 0);
             }
-            else 
+            else
             {
                 Graphics.DrawMesh(MeshPool.plane10, matrix, Building_TMCooler.coolerMat_3, 0);
-            }            
+            }
         }
     }
 }

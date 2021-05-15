@@ -1,6 +1,4 @@
-﻿using System;
-using Verse;
-using Verse.AI;
+﻿using Verse.AI;
 using AbilityUser;
 
 
@@ -11,7 +9,7 @@ namespace TorannMagic
     {
         protected override bool TryCastShot()
         {
-            if(this.verbProps.targetParams.canTargetLocations)
+            if (this.verbProps.targetParams.canTargetLocations)
             {
                 Job job = new Job(TorannMagicDefOf.JobDriver_PsionicBarrier, this.currentTarget);
                 this.CasterPawn.jobs.TryTakeOrderedJob(job, JobTag.Misc);
@@ -20,7 +18,7 @@ namespace TorannMagic
             {
                 Job job = new Job(TorannMagicDefOf.JobDriver_PsionicBarrier, this.CasterPawn.Position);
                 this.CasterPawn.jobs.TryTakeOrderedJob(job, JobTag.Misc);
-            }                       
+            }
             this.Ability.PostAbilityAttempt();
 
             this.burstShotsLeft = 0;

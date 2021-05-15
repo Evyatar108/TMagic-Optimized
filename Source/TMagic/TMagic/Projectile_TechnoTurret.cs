@@ -4,8 +4,6 @@ using Verse;
 using System.Linq;
 using Verse.AI;
 using UnityEngine;
-using HarmonyLib;
-using System.Reflection;
 
 namespace TorannMagic
 {
@@ -39,7 +37,7 @@ namespace TorannMagic
                 verVal = mver.level;
             }
 
-            if ((pawn.Position.IsValid && pawn.Position.Standable(map)))
+            if (pawn.Position.IsValid && pawn.Position.Standable(map))
             {
                 AbilityUser.SpawnThings tempPod = new SpawnThings();
                 IntVec3 shiftPos = pawn.Position;
@@ -53,7 +51,7 @@ namespace TorannMagic
                     tempPod.def = ThingDef.Named("TM_TechnoTurret_Base_RL");
                     turretGun.def = ThingDef.Named("Gun_Mark-IV_RL");
                 }
-                if(this.verVal >= 10)
+                if (this.verVal >= 10)
                 {
                     tempPod.def = ThingDef.Named("TM_TechnoTurret_Base_RL_MTR");
                     turretGun.def = ThingDef.Named("Gun_Mark-IV_RL_MTR");
@@ -65,7 +63,7 @@ namespace TorannMagic
                 turretGun.def.SetStatBaseValue(StatDefOf.AccuracyLong, 0.35f + (.01f * pwrVal));
                 turretGun.def.Verbs.FirstOrDefault().burstShotCount = Mathf.RoundToInt((6 + (.4f * pwrVal)) * this.arcaneDmg);
                 turretGun.def.Verbs.FirstOrDefault().warmupTime = 1.5f - (.03f * pwrVal);
-                turretGun.def.Verbs.FirstOrDefault().range = (Mathf.RoundToInt((35 + verVal)*this.arcaneDmg));
+                turretGun.def.Verbs.FirstOrDefault().range = Mathf.RoundToInt((35 + verVal) * this.arcaneDmg);
 
                 tempPod.def.building.turretGunDef = turretGun.def;
 
@@ -110,13 +108,13 @@ namespace TorannMagic
             }
 
 
-            if ((turret != null && turret.Spawned && turret.Position.IsValid))
+            if (turret != null && turret.Spawned && turret.Position.IsValid)
             {
                 //turret.def.interactionCellOffset = (this.launcher.Position - base.Position);          
-                
+
                 Job job = new Job(JobDefOf.ManTurret, turret);
                 pawn.jobs.TryTakeOrderedJob(job, JobTag.Misc);
-                
+
                 //this.Ability.PostAbilityAttempt();
             }
             else

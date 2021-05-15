@@ -1,5 +1,4 @@
 ﻿using RimWorld;
-using System;
 using System.Collections.Generic;
 using Verse;
 
@@ -15,7 +14,7 @@ namespace TorannMagic.Thoughts
             lookTargets = null;
             CompAbilityUserMagic compInit = initiator.GetComp<CompAbilityUserMagic>();
             // base.Interacted(initiator, recipient, extraSentencePacks, );
-            int num =  Rand.Range(50, 100);
+            int num = Rand.Range(50, 100);
             compInit.MagicUserXP += num;
             MoteMaker.ThrowText(initiator.DrawPos, initiator.MapHeld, "XP +" + num, -1f);
         }

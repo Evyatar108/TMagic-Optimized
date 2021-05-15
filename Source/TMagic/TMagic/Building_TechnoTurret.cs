@@ -1,17 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 using RimWorld;
-using AbilityUser;
 using Verse;
-using Verse.AI;
 using UnityEngine;
 using Verse.Sound;
 
 
 namespace TorannMagic
-{   
+{
     [StaticConstructorOnStartup]
     public class Building_TechnoTurret : Building_TurretGun
     {
@@ -34,12 +29,10 @@ namespace TorannMagic
         private bool MannedByNonColonist => mannableComp != null && mannableComp.ManningPawn != null && mannableComp.ManningPawn.Faction != Faction.OfPlayer;
         private bool PlayerControlled => (base.Faction == Faction.OfPlayer || MannedByColonist) && !MannedByNonColonist;
         private bool Manned => MannedByColonist || MannedByNonColonist;
-        private bool holdFire;
         private bool WarmingUp => burstWarmupTicksLeft > 0;
         private bool CanSetForcedTarget => mannableComp != null && PlayerControlled;
         private bool CanToggleHoldFire => PlayerControlled;
-        private bool IsMortar => def.building.IsMortar;
-        private bool IsMortarOrProjectileFliesOverhead => AttackVerb.ProjectileFliesOverhead() || IsMortar;
+
         private bool initialized = false;
 
         public IntVec3 iCell = new IntVec3();
@@ -68,7 +61,7 @@ namespace TorannMagic
             base.Tick();
 
             //if (!manPawn.DestroyedOrNull() && !manPawn.Dead && !manPawn.Downed && manPawn.Position == this.InteractionCell)
-            if(Manned)
+            if (Manned)
             {
 
                 if (!initialized)
@@ -77,7 +70,7 @@ namespace TorannMagic
                     this.verVal = mannableComp.ManningPawn.GetComp<CompAbilityUserMagic>().MagicData.MagicPowerSkill_TechnoTurret.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_TechnoTurret_ver").level;
                     this.pwrVal = mannableComp.ManningPawn.GetComp<CompAbilityUserMagic>().MagicData.MagicPowerSkill_TechnoTurret.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_TechnoTurret_pwr").level;
                     this.effVal = mannableComp.ManningPawn.GetComp<CompAbilityUserMagic>().MagicData.MagicPowerSkill_TechnoTurret.FirstOrDefault((MagicPowerSkill x) => x.label == "TM_TechnoTurret_eff").level;
-                    
+
                     if (this.verVal >= 5)
                     {
                         this.rocketTicksToFire = 600 - ((verVal - 5) * 20);
@@ -87,9 +80,9 @@ namespace TorannMagic
                     if (this.verVal >= 10)
                     {
                         this.mortarTicksToFire = 900 - ((verVal - 10) * 40);
-                        this.mortarMaxRange += ((verVal - 10) * 5);
+                        this.mortarMaxRange += (verVal - 10) * 5;
                         this.mortarManaCost = .08f - (.002f * effVal);
-                    }                    
+                    }
                     this.initialized = true;
                 }
 
@@ -145,7 +138,7 @@ namespace TorannMagic
                                     Projectile newProjectile = (Projectile)GenSpawn.Spawn(ThingDef.Named("Bullet_Shell_TechnoTurretExplosive"), this.Position, this.Map, WipeMode.Vanish);
                                     newProjectile.Launch(this, rndTarget, target, ProjectileHitFlags.All, null);
                                 }
-                            }                            
+                            }
                             SoundInfo info = SoundInfo.InMap(new TargetInfo(this.Position, this.Map, false), MaintenanceType.None);
                             info.pitchFactor = 1.3f;
                             info.volumeFactor = .8f;
@@ -166,10 +159,6 @@ namespace TorannMagic
                     if (forcedTarget.IsValid && !CanSetForcedTarget)
                     {
                         ResetForcedTarget();
-                    }
-                    if (!CanToggleHoldFire)
-                    {
-                        holdFire = false;
                     }
                     if (forcedTarget.ThingDestroyed)
                     {
@@ -270,7 +259,7 @@ namespace TorannMagic
                     TM_Action.DamageEntities(mannableComp.ManningPawn, null, Rand.Range(2f, 5f), DamageDefOf.Burn, this);
                 }
             }
-            base.Destroy(mode);            
+            base.Destroy(mode);
         }
     }
 }

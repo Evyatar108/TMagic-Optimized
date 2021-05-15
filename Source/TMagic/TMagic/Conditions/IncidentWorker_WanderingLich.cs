@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using Verse;
+﻿using Verse;
 using RimWorld;
 using UnityEngine;
 using System.Collections.Generic;
@@ -22,20 +20,20 @@ namespace TorannMagic.Conditions
             if (settingsRef.wanderingLichChallenge > 0 || tempAllow)
             {
                 int duration = Mathf.RoundToInt(this.def.durationDays.RandomInRange * 60000f);
-                List<Faction> lichFaction = Find.FactionManager.AllFactions.ToList();
+                IEnumerable<Faction> lichFaction = Find.FactionManager.AllFactions;
                 bool factionFlag = false;
-                for (int i = 0; i < lichFaction.Count; i++)
+                foreach (var faction in lichFaction)
                 {
-                    if (lichFaction[i].def.defName == "TM_SkeletalFaction")
+                    if (faction.def.defName == "TM_SkeletalFaction")
                     {
-                        Faction.OfPlayer.TrySetRelationKind(lichFaction[i], FactionRelationKind.Hostile, false, null, null);
+                        Faction.OfPlayer.TrySetRelationKind(faction, FactionRelationKind.Hostile, false, null, null);
                         factionFlag = true;
                     }
                 }
                 if (!factionFlag)
                 {
                     return false;
-                }                
+                }
                 TM_Action.ForceFactionDiscoveryAndRelation(TorannMagicDefOf.TM_SkeletalFaction);
                 GameCondition_WanderingLich gameCondition_WanderingLich = (GameCondition_WanderingLich)GameConditionMaker.MakeCondition(GameConditionDef.Named("WanderingLich"), duration);
                 map.gameConditionManager.RegisterCondition(gameCondition_WanderingLich);
@@ -45,7 +43,7 @@ namespace TorannMagic.Conditions
             }
             else
             {
-                return false; 
+                return false;
             }
         }
     }

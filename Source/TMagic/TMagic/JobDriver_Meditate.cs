@@ -2,7 +2,6 @@
 using Verse.AI;
 using RimWorld;
 using Verse;
-using AbilityUser;
 using System.Linq;
 using UnityEngine;
 using System;
@@ -44,39 +43,39 @@ namespace TorannMagic
                 {
                     chiHD = this.pawn.health.hediffSet.GetFirstHediffOfDef(TorannMagicDefOf.TM_ChiHD, false);
                     CompAbilityUserMight comp = this.pawn.GetComp<CompAbilityUserMight>();
-                    if(comp != null && chiHD != null)
+                    if (comp != null && chiHD != null)
                     {
                         effVal = comp.MightData.MightPowerSkill_Meditate.FirstOrDefault((MightPowerSkill x) => x.label == "TM_Meditate_eff").level;
                         pwrVal = comp.MightData.MightPowerSkill_Meditate.FirstOrDefault((MightPowerSkill x) => x.label == "TM_Meditate_pwr").level;
-                        verVal = comp.MightData.MightPowerSkill_Meditate.FirstOrDefault((MightPowerSkill x) => x.label == "TM_Meditate_ver").level;                        
+                        verVal = comp.MightData.MightPowerSkill_Meditate.FirstOrDefault((MightPowerSkill x) => x.label == "TM_Meditate_ver").level;
                     }
                     else
                     {
                         Log.Warning("No Chi Hediff or Might Comp found.");
                         this.EndJobWith(JobCondition.Errored);
                     }
-                    if(this.age > this.durationTicks)
+                    if (this.age > this.durationTicks)
                     {
                         this.EndJobWith(JobCondition.InterruptForced);
                     }
                 },
                 tickAction = () =>
                 {
-                    if(Find.TickManager.TicksGame % 12 == 0)
+                    if (Find.TickManager.TicksGame % 12 == 0)
                     {
                         Vector3 rndPos = this.pawn.DrawPos;
-                        rndPos.x += (Rand.Range(-.5f, .5f));
+                        rndPos.x += Rand.Range(-.5f, .5f);
                         rndPos.z += Rand.Range(-.4f, .6f);
                         float direction = (this.pawn.DrawPos - rndPos).ToAngleFlat();
                         Vector3 startPos = rndPos;
                         TM_MoteMaker.ThrowGenericMote(TorannMagicDefOf.Mote_Chi_Grayscale, startPos, this.pawn.Map, Rand.Range(.1f, .22f), 0.2f, .3f, .2f, 30, .2f * (rndPos - this.pawn.DrawPos).MagnitudeHorizontal(), direction, direction);
                     }
-                    if(Find.TickManager.TicksGame % 60 == 0)
+                    if (Find.TickManager.TicksGame % 60 == 0)
                     {
                         List<Hediff> afflictionList = TM_Calc.GetPawnAfflictions(this.pawn);
                         List<Hediff> addictionList = TM_Calc.GetPawnAddictions(this.pawn);
 
-                        if(chiHD != null)
+                        if (chiHD != null)
                         {
                             if (chiHD.Severity > 1)
                             {
@@ -90,7 +89,7 @@ namespace TorannMagic
                         else
                         {
                             chiHD = this.pawn.health.hediffSet.GetFirstHediffOfDef(TorannMagicDefOf.TM_ChiHD, false);
-                            if(chiHD == null)
+                            if (chiHD == null)
                             {
                                 Log.Warning("No chi found on pawn performing meditate job");
                                 this.EndJobWith(JobCondition.InterruptForced);
@@ -99,7 +98,7 @@ namespace TorannMagic
                         CompAbilityUserMight comp = this.pawn.GetComp<CompAbilityUserMight>();
                         if (TM_Calc.IsPawnInjured(this.pawn, 0))
                         {
-                            TM_Action.DoAction_HealPawn(this.pawn, this.pawn, 1, Rand.Range(.25f, .4f) * chiMultiplier * (1+ (.1f *pwrVal)));
+                            TM_Action.DoAction_HealPawn(this.pawn, this.pawn, 1, Rand.Range(.25f, .4f) * chiMultiplier * (1 + (.1f * pwrVal)));
                             chiHD.Severity -= 1f;
                             comp.MightUserXP += (int)(2 * chiMultiplier);
                         }
@@ -107,19 +106,19 @@ namespace TorannMagic
                         {
                             Hediff hediff = afflictionList.RandomElement();
                             hediff.Severity -= .001f * chiMultiplier * (1 + (.1f * pwrVal));
-                            if(hediff.Severity <= 0)
+                            if (hediff.Severity <= 0)
                             {
                                 this.pawn.health.RemoveHediff(hediff);
                             }
                             HediffComp_Disappears hediffTicks = hediff.TryGetComp<HediffComp_Disappears>();
-                            if(hediffTicks != null)
+                            if (hediffTicks != null)
                             {
                                 int ticksToDisappear = Traverse.Create(root: hediffTicks).Field(name: "ticksToDisappear").GetValue<int>();
                                 ticksToDisappear -= Mathf.RoundToInt(10000 * (chiMultiplier * (1 + (.1f * pwrVal))));
                                 Traverse.Create(root: hediffTicks).Field(name: "ticksToDisappear").SetValue(ticksToDisappear);
                             }
                             chiHD.Severity -= 1f;
-                            comp.MightUserXP += (int)(2*chiMultiplier);
+                            comp.MightUserXP += (int)(2 * chiMultiplier);
                         }
                         else if (addictionList != null && addictionList.Count > 0)
                         {
@@ -132,7 +131,7 @@ namespace TorannMagic
                             chiHD.Severity -= 1f;
                             comp.MightUserXP += (int)(2 * chiMultiplier);
                         }
-                        else if(BreakRiskAlertUtility.PawnsAtRiskMinor.Contains(this.pawn) || BreakRiskAlertUtility.PawnsAtRiskMajor.Contains(this.pawn) || BreakRiskAlertUtility.PawnsAtRiskExtreme.Contains(this.pawn))
+                        else if (BreakRiskAlertUtility.PawnsAtRiskMinor.Contains(this.pawn) || BreakRiskAlertUtility.PawnsAtRiskMajor.Contains(this.pawn) || BreakRiskAlertUtility.PawnsAtRiskExtreme.Contains(this.pawn))
                         {
                             this.pawn.needs.mood.CurLevel += .004f * chiMultiplier * (1 + (.1f * verVal));
                             chiHD.Severity -= 1f;
@@ -140,24 +139,24 @@ namespace TorannMagic
                         }
                         else
                         {
-                            chiHD.Severity += (Rand.Range(.2f, .3f) * (1 + (effVal * .1f)));
+                            chiHD.Severity += Rand.Range(.2f, .3f) * (1 + (effVal * .1f));
                             try
                             {
-                                this.pawn.needs.rest.CurLevel += (.003f * (1 + (.1f * verVal)));
-                                this.pawn.needs.joy.CurLevel += (.004f * (1 + (.1f * verVal)));
+                                this.pawn.needs.rest.CurLevel += .003f * (1 + (.1f * verVal));
+                                this.pawn.needs.joy.CurLevel += .004f * (1 + (.1f * verVal));
                                 this.pawn.needs.mood.CurLevel += .001f * (1 + (.1f * verVal));
                             }
-                            catch(NullReferenceException ex)
+                            catch (NullReferenceException)
                             {
                                 //ex
                             }
                         }
 
                     }
-                    if(chiHD != null)
+                    if (chiHD != null)
                     {
                         HediffComp_Chi chiComp = chiHD.TryGetComp<HediffComp_Chi>();
-                        if(chiComp != null && chiHD.Severity >= chiComp.maxSev)
+                        if (chiComp != null && chiHD.Severity >= chiComp.maxSev)
                         {
                             this.age = durationTicks;
                         }
@@ -177,10 +176,10 @@ namespace TorannMagic
                 {
                     return 1f;
                 }
-                return 1f - (float)doFor.actor.jobs.curDriver.ticksLeftThisToil / this.durationTicks;
+                return 1f - ((float)doFor.actor.jobs.curDriver.ticksLeftThisToil / this.durationTicks);
 
             }, false, 0f);
-            yield return doFor;         
+            yield return doFor;
         }
     }
 }

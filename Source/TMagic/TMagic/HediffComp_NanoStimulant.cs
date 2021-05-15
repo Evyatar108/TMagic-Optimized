@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Verse;
-using RimWorld;
 using UnityEngine;
 
 namespace TorannMagic
@@ -35,7 +34,7 @@ namespace TorannMagic
         private void Initialize()
         {
             bool spawned = base.Pawn.Spawned;
-            
+
             if (spawned)
             {
                 this.hediffPwr = Mathf.RoundToInt(this.parent.Severity);
@@ -57,23 +56,23 @@ namespace TorannMagic
                 }
             }
             this.age++;
-            
+
             if (age == duration)
             {
                 HealthUtility.AdjustSeverity(base.Pawn, HediffDef.Named("TM_NanoStimulantWithdrawalHD"), 1 - (.03f * this.hediffPwr));
                 Pawn pawn = base.Pawn as Pawn;
-                
+
                 TM_MoteMaker.ThrowRegenMote(pawn.DrawPos, pawn.Map, 1f);
                 bool flag = pawn != null;
                 if (flag)
                 {
                     ModOptions.SettingsRef settingsRef = new ModOptions.SettingsRef();
                     int num = 2 + Mathf.RoundToInt(this.hediffPwr * .2f);
-                    if(settingsRef.AIHardMode && !pawn.IsColonist)
+                    if (settingsRef.AIHardMode && !pawn.IsColonist)
                     {
                         num = 5;
                     }
-  
+
                     using (IEnumerator<BodyPartRecord> enumerator = pawn.health.hediffSet.GetInjuredParts().GetEnumerator())
                     {
                         while (enumerator.MoveNext())
@@ -83,16 +82,16 @@ namespace TorannMagic
 
                             if (flag2)
                             {
-                                
+
                                 int num2 = 3 + Mathf.RoundToInt(this.hediffPwr * .35f); // + ver.level;
-                                if(settingsRef.AIHardMode && !pawn.IsColonist)
+                                if (settingsRef.AIHardMode && !pawn.IsColonist)
                                 {
                                     num2 = 5;
                                 }
                                 IEnumerable<Hediff_Injury> arg_BB_0 = pawn.health.hediffSet.GetHediffs<Hediff_Injury>();
                                 Func<Hediff_Injury, bool> arg_BB_1;
 
-                                arg_BB_1 = ((Hediff_Injury injury) => injury.Part == rec);
+                                arg_BB_1 = (Hediff_Injury injury) => injury.Part == rec;
 
                                 foreach (Hediff_Injury current in arg_BB_0.Where(arg_BB_1))
                                 {
@@ -102,8 +101,8 @@ namespace TorannMagic
                                         bool flag5 = current.CanHealNaturally() && !current.IsPermanent();
                                         if (flag5)
                                         {
-                                            
-                                            if(!pawn.IsColonist)
+
+                                            if (!pawn.IsColonist)
                                             {
                                                 current.Heal(10f);
                                             }
@@ -111,7 +110,7 @@ namespace TorannMagic
                                             {
                                                 current.Heal(2f + (.35f * hediffPwr));
                                             }
-                                            if(Rand.Chance(.4f + (.02f * hediffPwr)))
+                                            if (Rand.Chance(.4f + (.02f * hediffPwr)))
                                             {
                                                 current.Tended(Rand.Range(.4f + (.02f * this.hediffPwr), .5f + (.03f * this.hediffPwr)));
                                             }
@@ -124,7 +123,7 @@ namespace TorannMagic
                         }
                     }
                 }
-            }            
+            }
         }
 
         public override void CompExposeData()

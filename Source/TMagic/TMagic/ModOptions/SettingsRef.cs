@@ -1,7 +1,4 @@
-﻿using System;
-using Verse;
-using System.Collections.Generic;
-using RimWorld;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace TorannMagic.ModOptions

@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using UnityEngine;
+﻿using UnityEngine;
 using Verse;
 
 namespace TorannMagic.ModOptions
@@ -38,19 +35,19 @@ namespace TorannMagic.ModOptions
 
             Text.Font = GameFont.Medium;
             float x = Text.CalcSize("TM_EventOptions".Translate()).x;
-            Rect headerRect = new Rect(inRect.width / 2f - (x / 2), inRect.y, inRect.width, EventOptionsWindow.HeaderSize);
+            Rect headerRect = new Rect((inRect.width / 2f) - (x / 2), inRect.y, inRect.width, EventOptionsWindow.HeaderSize);
             Widgets.Label(headerRect, "TM_EventOptions".Translate());
             Text.Font = GameFont.Small;
             GUI.color = Color.white;
             Rect rect1 = new Rect(inRect);
             rect1.width /= 1.2f;
-            num+=2;            
+            num += 2;
             Rect rowRect1 = Controller.UIHelper.GetRowRect(rect1, rowHeight, num);
             Settings.Instance.riftChallenge = Widgets.HorizontalSlider(rowRect1, Settings.Instance.riftChallenge, 0, 3, false, "riftChallenge".Translate() + " " + Challenge(Settings.Instance.riftChallenge), "0", "3", 1);
             num++;
             Rect rowRect2 = Controller.UIHelper.GetRowRect(rowRect1, rowHeight, num);
             Settings.Instance.wanderingLichChallenge = Widgets.HorizontalSlider(rowRect2, Settings.Instance.wanderingLichChallenge, 0, 3, false, "lichChallenge".Translate() + " " + Challenge(Settings.Instance.wanderingLichChallenge), "0", "3", 1);
-            num++;            
+            num++;
             Rect rowRect3 = Controller.UIHelper.GetRowRect(rowRect2, rowHeight, num);
             Settings.Instance.demonAssaultChallenge = Widgets.HorizontalSlider(rowRect3, Settings.Instance.demonAssaultChallenge, 0, 3, false, "demonChallenge".Translate() + " " + Challenge(Settings.Instance.demonAssaultChallenge), "0", "3", 1);
             num++;
@@ -89,7 +86,7 @@ namespace TorannMagic.ModOptions
 
         private string Challenge(float val)
         {
-            string rarity = "";
+            string rarity;
             if (val == 0)
             {
                 rarity = "None (never happens)";
@@ -109,6 +106,6 @@ namespace TorannMagic.ModOptions
 
             return rarity;
         }
-    }   
+    }
 
 }

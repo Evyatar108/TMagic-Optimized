@@ -1,13 +1,12 @@
 ﻿using RimWorld;
 using Verse;
 using AbilityUser;
-using UnityEngine;
 using System.Linq;
 
 namespace TorannMagic
 {
     [StaticConstructorOnStartup]
-    class Verb_Dominate : Verb_UseAbility  
+    class Verb_Dominate : Verb_UseAbility
     {
 
         private int verVal;
@@ -50,7 +49,7 @@ namespace TorannMagic
             pwrVal = pwr.level;
             effVal = eff.level;
             ModOptions.SettingsRef settingsRef = new ModOptions.SettingsRef();
-            if(settingsRef.AIHardMode && !p.IsColonist)
+            if (settingsRef.AIHardMode && !p.IsColonist)
             {
                 verVal = 3;
                 pwrVal = 3;
@@ -67,9 +66,9 @@ namespace TorannMagic
             }
 
             if (this.currentTarget != null && p != null)
-            {                
+            {
                 Map map = this.CasterPawn.Map;
-                
+
                 if (hitPawn != null && hitPawn is Pawn && !hitPawn.Dead)
                 {
                     if (Rand.Chance(TM_Calc.GetSpellSuccessChance(p, hitPawn, true)))
@@ -147,6 +146,6 @@ namespace TorannMagic
 
             this.burstShotsLeft = 0;
             return result;
-        }        
+        }
     }
 }

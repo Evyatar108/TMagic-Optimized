@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using RimWorld;
 using AbilityUser;
@@ -11,8 +10,6 @@ namespace TorannMagic
 {
     public class Verb_SootheAnimal : Verb_UseAbility
     {
-
-        private int verVal;
         private int pwrVal;
 
         bool validTarg;
@@ -64,7 +61,7 @@ namespace TorannMagic
                     bool flag1 = (newPawn.mindState.mentalStateHandler.CurStateDef == MentalStateDefOf.ManhunterPermanent) || (newPawn.mindState.mentalStateHandler.CurStateDef == MentalStateDefOf.Manhunter);
                     if (flag1)
                     {
-                        if(newPawn.kindDef.RaceProps.Animal)
+                        if (newPawn.kindDef.RaceProps.Animal)
                         {
                             newPawn.mindState.mentalStateHandler.Reset();
                             newPawn.jobs.StopAll();
@@ -83,7 +80,7 @@ namespace TorannMagic
                             }
                         }
                     }
-                    if(!flag1)
+                    if (!flag1)
                     {
                         if (newPawn.kindDef.RaceProps.Animal && (this.TargetsAoE[i].Thing.Faction == null || this.TargetsAoE[i].Thing.HostileTo(base.CasterPawn.Faction)))
                         {
@@ -101,14 +98,13 @@ namespace TorannMagic
                             {
                                 TM_MoteMaker.ThrowManaPuff(newPawn.Position.ToVector3(), newPawn.Map, 1f);
                             }
-                            List<Pawn> potentialHostiles = new List<Pawn>();
-                            potentialHostiles.Clear();
+                            HashSet<Pawn> potentialHostiles = new HashSet<Pawn>();
                             for (int j = 0; j < newPawn.Map.mapPawns.AllPawnsSpawned.Count; j++)
                             {
                                 Pawn hostile = newPawn.Map.mapPawns.AllPawnsSpawned[j];
                                 if (hostile.Faction.HostileTo(Faction.OfPlayerSilentFail))
                                 {
-                                    potentialHostiles.AddDistinct(hostile);
+                                    potentialHostiles.Add(hostile);
                                 }
                             }
                             if (potentialHostiles.Count > 0)

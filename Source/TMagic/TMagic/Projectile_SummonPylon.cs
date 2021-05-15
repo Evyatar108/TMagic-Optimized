@@ -77,11 +77,11 @@ namespace TorannMagic
 
             if (!this.primed)
             {
-                duration += (verVal * 7200);
+                duration += verVal * 7200;
                 duration = (int)(duration * comp.arcaneDmg);
                 arg_pos_1 = centerCell;
 
-                if ((arg_pos_1.IsValid && arg_pos_1.Standable(map)))
+                if (arg_pos_1.IsValid && arg_pos_1.Standable(map))
                 {
                     AbilityUser.SpawnThings tempPod = new SpawnThings();
                     IntVec3 shiftPos = centerCell;
@@ -102,7 +102,7 @@ namespace TorannMagic
                     else
                     {
                         tempPod.def = ThingDef.Named("DefensePylon");
-                        
+
                     }
                     tempPod.spawnCount = 1;
                     try
@@ -117,7 +117,7 @@ namespace TorannMagic
                                 pawn.LabelShort,
                                 this.def.defName
                             ));
-                    }                 
+                    }
 
                     this.primed = true;
                 }

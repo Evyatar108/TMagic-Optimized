@@ -1,7 +1,5 @@
-﻿using System;
-using Verse;
+﻿using Verse;
 using System.Collections.Generic;
-using RimWorld;
 using UnityEngine;
 
 
@@ -10,7 +8,7 @@ namespace TorannMagic.ModOptions
     public class Settings : Verse.ModSettings
     {
         public float xpMultiplier = 1f;
-        public float needMultiplier = 1f;        
+        public float needMultiplier = 1f;
         public bool AICasting = true;
         public bool AIAggressiveCasting = true;
         public bool AIHardMode = false;
@@ -111,7 +109,7 @@ namespace TorannMagic.ModOptions
         public override void ExposeData()
         {
             Scribe_Values.Look<float>(ref this.xpMultiplier, "xpMultiplier", 1f, false);
-            Scribe_Values.Look<float>(ref this.needMultiplier, "needMultiplier", 1f, false);            
+            Scribe_Values.Look<float>(ref this.needMultiplier, "needMultiplier", 1f, false);
             Scribe_Values.Look<bool>(ref this.AICasting, "AICasting", true, false);
             Scribe_Values.Look<bool>(ref this.AIAggressiveCasting, "AIAggressiveCasting", true, false);
             Scribe_Values.Look<bool>(ref this.AIHardMode, "AIHardMode", false, false);

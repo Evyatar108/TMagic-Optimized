@@ -1,5 +1,4 @@
-﻿using RimWorld;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Verse;
 using UnityEngine;
@@ -33,16 +32,6 @@ namespace TorannMagic
             }
         }
 
-
-        private void Initialize()
-        {
-            bool spawned = base.Pawn.Spawned;
-            if (spawned)
-            {
-
-            }
-        }
-
         public override void CompPostTick(ref float severityAdjustment)
         {
             base.CompPostTick(ref severityAdjustment);
@@ -55,10 +44,10 @@ namespace TorannMagic
                     if (Find.TickManager.TicksGame % 2 == 0)
                     {
                         DrawEffects();
-                        if(Find.TickManager.TicksGame % 20 == 0)
+                        if (Find.TickManager.TicksGame % 20 == 0)
                         {
                             Hediff hd = this.Pawn.health.hediffSet.GetFirstHediffOfDef(TorannMagicDefOf.TM_NightshadeToxinHD);
-                            if(hd != null)
+                            if (hd != null)
                             {
                                 hd.Severity -= .04f;
                             }
@@ -66,19 +55,19 @@ namespace TorannMagic
                         if (Find.TickManager.TicksGame % 300 == 0)
                         {
                             IEnumerable<Hediff_Injury> injuries = this.Pawn.health.hediffSet.GetHediffs<Hediff_Injury>();
-                            if(injuries.Count() > 20 && this.parent.Severity < 1f)
+                            if (injuries.Count() > 20 && this.parent.Severity < 1f)
                             {
                                 HealthUtility.AdjustSeverity(this.Pawn, this.Def, -10);
                                 HealthUtility.AdjustSeverity(this.Pawn, this.Def, 1.5f);
                             }
-                            else if(injuries.Count() > 40 && this.parent.Severity < 2f)
+                            else if (injuries.Count() > 40 && this.parent.Severity < 2f)
                             {
                                 HealthUtility.AdjustSeverity(this.Pawn, this.Def, -10);
                                 HealthUtility.AdjustSeverity(this.Pawn, this.Def, 2.5f);
                             }
                         }
                     }
-                    if(ticksUntilDestruction <= 0)
+                    if (ticksUntilDestruction <= 0)
                     {
                         this.Pawn.Map.weatherManager.eventHandler.AddEvent(new TM_WeatherEvent_MeshFlash(base.Pawn.Map, base.Pawn.Position, TM_MatPool.redLightning));
                         base.Pawn.Destroy();

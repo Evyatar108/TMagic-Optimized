@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using RimWorld;
 using AbilityUser;
 using Verse;
-using Verse.AI;
 
 
 namespace TorannMagic
@@ -33,8 +30,8 @@ namespace TorannMagic
                 verVal = mver.level;
             }
             this.arcaneDmg = base.CasterPawn.GetComp<CompAbilityUserMagic>().arcaneDmg;
-            this.arcaneDmg *= (1 + (.1f * bpwr.level));
-            if(this.currentTarget.Thing != null && this.currentTarget.Thing is Pawn)
+            this.arcaneDmg *= 1 + (.1f * bpwr.level);
+            if (this.currentTarget.Thing != null && this.currentTarget.Thing is Pawn)
             {
                 Pawn victim = this.currentTarget.Thing as Pawn;
                 if (victim.RaceProps.BloodDef != null && victim != this.CasterPawn)
@@ -45,7 +42,7 @@ namespace TorannMagic
                     }
 
                     HealthUtility.AdjustSeverity(victim, TorannMagicDefOf.TM_BloodForBloodHD, (.5f + (.1f * pwrVal)) * this.arcaneDmg);
-                    if(victim.Faction == null && victim.RaceProps != null && victim.RaceProps.Animal && victim.mindState != null)
+                    if (victim.Faction == null && victim.RaceProps != null && victim.RaceProps.Animal && victim.mindState != null)
                     {
                         victim.mindState.mentalStateHandler.TryStartMentalState(MentalStateDefOf.Manhunter, null, true, false, null);
                     }
@@ -72,6 +69,6 @@ namespace TorannMagic
             this.PostCastShot(flag, out flag);
             return flag;
         }
-        
+
     }
 }
