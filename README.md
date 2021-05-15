@@ -6,8 +6,8 @@
 * Caching computations when possible:
    * Creating lists objects for enumerable when they are iterated more than once.
    * Caching global getters' computation as a static object if they are practiacally immutable.
-   * Replace DistanceTo() calls with DistanceToSquared() to reduce Math.Sqrt() calls.
    * Store indexing of arrays in local objects instead of performing multiple indexing calls.
+* Replace DistanceTo() calls with DistanceToSquared() to reduce Math.Sqrt() calls.
 * Replaced string concatination with an equivalent procedure using StringBuilder and string interpolation.
 * Reducing reflection operations when possible by using Traverse of the Harmony library.
 * Reduced nested loops when possible, avoiding redundant iterations.
